@@ -331,4 +331,12 @@ Mejoras candidatas (no implementadas):
 
 ## 📄 Licencia
 
-Proyecto de ejemplo. Adapta y reutiliza libremente.
+Distribuido bajo la **Licencia MIT**. Consulta el archivo [`LICENSE`](./LICENSE) para más detalles.
+
+```
+MIT License
+
+Copyright (c) 2026 j0sp0nc3
+```
+
+En resumen: puedes usar, copiar, modificar, fusionar, publicar, distribuir, sublicenciar y/o vender copias del software, siempre que incluyas el aviso de copyright y este aviso de permiso en todas las copias. El software se proporciona "tal cual", sin garantía de ningún tipo.
