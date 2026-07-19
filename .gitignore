@@ -1,0 +1,21 @@
+# Dependencias
+node_modules/
+
+# Entornos virtuales
+.venv/
+venv/
+env/
+
+# Archivos de build/salida
+dist/
+build/
+*.log
+
+# Editor / SO
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Tooling local (no parte del proyecto)
+.zcode/
