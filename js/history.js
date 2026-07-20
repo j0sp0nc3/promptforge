@@ -289,13 +289,13 @@ const History = {
 
   /** @private Generate an automatic label from the prompt */
   _autoLabel(prompt) {
-    if (!prompt) return 'Prompt vacío';
+    if (!prompt) return I18n.t('historyLabel.emptyPrompt');
     // Take first meaningful line, trimmed
     const firstLine = prompt.trim().split('\n')
       .map(l => l.replace(/<\/?[^>]+>/g, '').trim())
       .find(l => l.length > 5);
 
-    if (!firstLine) return 'Prompt sin título';
+    if (!firstLine) return I18n.t('historyLabel.untitled');
     return firstLine.length > 60 ? firstLine.substring(0, 57) + '...' : firstLine;
   },
 

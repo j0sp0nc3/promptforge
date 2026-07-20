@@ -25,17 +25,10 @@ const Charts = {
     fontFamily:  "'Inter', sans-serif",
   },
 
-  /* ── Spanish dimension labels ─────────────────────────────── */
-  _dimensionLabels: [
-    'Claridad',
-    'Especificidad',
-    'Estructura',
-    'Robustez',
-    'Contexto',
-    'Formato de salida',
-    'Cadena de pensamiento',
-    'Seguridad',
-  ],
+  /* ── Dimension labels (resolved via i18n at chart build time) ── */
+  get _dimensionLabels() {
+    return this._dimensionKeys.map(k => I18n.t(`dimensions.${k}`));
+  },
 
   /* ── Dimension keys (matching score object) ───────────────── */
   _dimensionKeys: [
@@ -87,7 +80,7 @@ const Charts = {
         labels: this._dimensionLabels,
         datasets: [
           {
-            label: 'Puntuación',
+            label: I18n.t('report.datasetLabel'),
             data: new Array(8).fill(0),
             backgroundColor: fillGradient,
             borderColor: borderGradient,
@@ -125,7 +118,7 @@ const Charts = {
             cornerRadius: 8,
             displayColors: false,
             callbacks: {
-              label: (tooltipItem) => `${tooltipItem.label}: ${tooltipItem.raw}/100`,
+              label: (tooltipItem) => I18n.t('report.tooltipDim', { label: tooltipItem.label, n: tooltipItem.raw }),
             },
           },
         },
@@ -216,7 +209,7 @@ const Charts = {
         labels: [],
         datasets: [
           {
-            label: 'Puntuación general',
+            label: I18n.t('report.datasetLabelHistory'),
             data: [],
             borderColor: this._theme.cyan,
             backgroundColor: areaGradient,
@@ -260,8 +253,8 @@ const Charts = {
             cornerRadius: 8,
             displayColors: false,
             callbacks: {
-              title: (items) => `Fecha: ${items[0].label}`,
-              label: (item) => `Puntuación: ${item.raw}/100`,
+              title: (items) => I18n.t('report.tooltipDate', { date: items[0].label }),
+              label: (item) => I18n.t('report.tooltipScore', { n: item.raw }),
             },
           },
         },
@@ -269,7 +262,7 @@ const Charts = {
           x: {
             title: {
               display: true,
-              text: 'Fecha',
+              text: I18n.t('report.axisDate'),
               color: this._theme.tickColor,
               font: { family: this._theme.fontFamily, size: 11, weight: '500' },
             },
@@ -292,7 +285,7 @@ const Charts = {
             max: 100,
             title: {
               display: true,
-              text: 'Puntuación',
+              text: I18n.t('report.axisScore'),
               color: this._theme.tickColor,
               font: { family: this._theme.fontFamily, size: 11, weight: '500' },
             },

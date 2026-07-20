@@ -4,14 +4,43 @@
 // ============================================================================
 
 const Templates = {
-  categories: ['Clasificación', 'Extracción', 'Generación', 'Análisis', 'Código', 'Agente', 'Evaluación'],
+  // Category keys are stable identifiers; the visible label is resolved via i18n.
+  categories: ['classification', 'extraction', 'generation', 'analysis', 'code', 'agent', 'evaluation'],
+
+  /** Resolve a stable category key to its translated label. */
+  getCategoryLabel(catKey) {
+    return I18n.t(`tplCategory.${catKey}`) || catKey;
+  },
+
+  /** Resolve the translated name of a template. */
+  getName(tpl) {
+    if (!tpl) return '';
+    return I18n.t(`templatesList.${tpl.id}.name`, { fallback: tpl.name }) !== `templatesList.${tpl.id}.name`
+      ? I18n.t(`templatesList.${tpl.id}.name`)
+      : tpl.name;
+  },
+
+  /** Resolve the translated description of a template. */
+  getDescription(tpl) {
+    if (!tpl) return '';
+    const k = `templatesList.${tpl.id}.desc`;
+    return I18n.t(k) !== k ? I18n.t(k) : tpl.description;
+  },
+
+  /** Resolve the translated tags of a template (returns array). */
+  getTags(tpl) {
+    if (!tpl) return [];
+    const k = `templatesList.${tpl.id}.tags`;
+    const v = I18n.t(k);
+    return v !== k ? v : (tpl.tags || []);
+  },
 
   templates: [
     // ── 1. Clasificador de texto ──────────────────────────────────────────
     {
       id: 'tpl-clasificador-texto',
       name: 'Clasificador de Texto',
-      category: 'Clasificación',
+      category: 'classification',
       description: 'Clasifica texto en categorías predefinidas con nivel de confianza y justificación.',
       tags: ['clasificación', 'NLP', 'categorías', 'texto', 'confianza'],
       variables: [
@@ -80,7 +109,7 @@ Salida:
     {
       id: 'tpl-extractor-entidades',
       name: 'Extractor de Entidades (NER)',
-      category: 'Extracción',
+      category: 'extraction',
       description: 'Extrae entidades nombradas de texto: personas, organizaciones, lugares, fechas, cantidades.',
       tags: ['NER', 'entidades', 'extracción', 'personas', 'organizaciones', 'lugares'],
       variables: [
@@ -166,7 +195,7 @@ Salida:
     {
       id: 'tpl-generador-contenido',
       name: 'Generador de Contenido',
-      category: 'Generación',
+      category: 'generation',
       description: 'Genera artículos, posts de blog y contenido editorial con tono y estructura personalizables.',
       tags: ['contenido', 'blog', 'artículo', 'redacción', 'marketing', 'SEO'],
       variables: [
@@ -247,7 +276,7 @@ NO: "El Trabajo Remoto: Una Guía Completa" (demasiado genérico)
     {
       id: 'tpl-analizador-sentimiento',
       name: 'Analizador de Sentimiento',
-      category: 'Análisis',
+      category: 'analysis',
       description: 'Analiza el sentimiento de texto con granularidad fina: polaridad, emoción, intensidad, aspectos.',
       tags: ['sentimiento', 'análisis', 'emociones', 'opinión', 'NLP', 'aspectos'],
       variables: [
@@ -330,7 +359,7 @@ Análisis:
     {
       id: 'tpl-resumidor-documentos',
       name: 'Resumidor de Documentos',
-      category: 'Análisis',
+      category: 'analysis',
       description: 'Resume documentos largos preservando información clave, con múltiples niveles de detalle.',
       tags: ['resumen', 'síntesis', 'documentos', 'abstracto', 'puntos clave'],
       variables: [
@@ -410,7 +439,7 @@ Para un informe de negocios, prioriza: problema → datos → recomendaciones �
     {
       id: 'tpl-revisor-codigo',
       name: 'Revisor de Código',
-      category: 'Código',
+      category: 'code',
       description: 'Revisa código fuente identificando bugs, problemas de seguridad, rendimiento y estilo.',
       tags: ['código', 'review', 'bugs', 'seguridad', 'rendimiento', 'calidad'],
       variables: [
@@ -495,7 +524,7 @@ Problema mal reportado:
     {
       id: 'tpl-generador-codigo',
       name: 'Generador de Código',
-      category: 'Código',
+      category: 'code',
       description: 'Genera código funcional desde una descripción en lenguaje natural con tests y documentación.',
       tags: ['código', 'generación', 'programación', 'tests', 'documentación'],
       variables: [
@@ -590,7 +619,7 @@ def validate_email(email: str) -> bool:
     {
       id: 'tpl-agente-conversacional',
       name: 'Agente Conversacional',
-      category: 'Agente',
+      category: 'agent',
       description: 'System prompt para un chatbot de atención al cliente con personalidad, políticas y escalamiento.',
       tags: ['chatbot', 'atención al cliente', 'agente', 'conversacional', 'soporte'],
       variables: [
@@ -666,7 +695,7 @@ Cliente: "Quiero hablar con alguien real"
     {
       id: 'tpl-rag-prompt',
       name: 'Prompt RAG (Retrieval-Augmented Generation)',
-      category: 'Agente',
+      category: 'agent',
       description: 'Prompt optimizado para generación aumentada por recuperación con manejo de contextos y citas.',
       tags: ['RAG', 'retrieval', 'contexto', 'citas', 'documentos', 'grounding'],
       variables: [
@@ -740,7 +769,7 @@ Mala respuesta (sin citas, conocimiento general):
     {
       id: 'tpl-evaluador-llm-judge',
       name: 'Evaluador LLM-as-Judge',
-      category: 'Evaluación',
+      category: 'evaluation',
       description: 'Evalúa la calidad de respuestas generadas por LLM usando criterios estandarizados y rúbricas.',
       tags: ['evaluación', 'calidad', 'judge', 'rúbrica', 'métricas', 'benchmark'],
       variables: [
@@ -844,7 +873,7 @@ Evaluación bien calibrada:
     {
       id: 'tpl-traductor-tecnico',
       name: 'Traductor Técnico',
-      category: 'Generación',
+      category: 'generation',
       description: 'Traduce textos técnicos preservando terminología especializada, formato y matices.',
       tags: ['traducción', 'técnico', 'idiomas', 'terminología', 'localización'],
       variables: [
@@ -923,7 +952,7 @@ Traduce el siguiente texto respetando el glosario y las restricciones:
     {
       id: 'tpl-extractor-datos-json',
       name: 'Extractor de Datos Estructurados (JSON)',
-      category: 'Extracción',
+      category: 'extraction',
       description: 'Extrae datos estructurados de texto libre y los organiza en un esquema JSON definido.',
       tags: ['extracción', 'JSON', 'datos estructurados', 'parsing', 'esquema'],
       variables: [

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PromptForge — Analizador de Prompts Avanzado</title>
-  <meta name="description" content="Analiza, evalúa y mejora tus prompts con scoring multidimensional, detección de anti-patrones y sugerencias inteligentes.">
+  <meta name="description" id="meta-description" content="Analiza, evalúa y mejora tus prompts con scoring multidimensional, detección de anti-patrones y sugerencias inteligentes.">
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -41,19 +41,23 @@
     <nav class="header-nav">
       <button class="nav-btn active" data-view="analyzer" id="nav-analyzer">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        Analizar
+        <span data-i18n="nav.analyze">Analizar</span>
       </button>
       <button class="nav-btn" data-view="templates" id="nav-templates">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-        Templates
+        <span data-i18n="nav.templates">Templates</span>
       </button>
       <button class="nav-btn" data-view="history" id="nav-history">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        Historial
+        <span data-i18n="nav.history">Historial</span>
       </button>
     </nav>
     <div class="header-right">
-      <button class="btn-icon" id="btn-export-menu" title="Exportar">
+      <div class="lang-switcher" id="lang-switcher">
+        <button class="lang-btn active" data-lang="es" type="button">ES</button>
+        <button class="lang-btn" data-lang="en" type="button">EN</button>
+      </div>
+      <button class="btn-icon" id="btn-export-menu" data-i18n-title="nav.export" title="Exportar">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       </button>
     </div>
@@ -71,27 +75,25 @@
           <div class="panel-header">
             <h2 class="panel-title">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
-              Tu Prompt
+              <span data-i18n="editor.title">Tu Prompt</span>
             </h2>
             <div class="panel-actions">
-              <button class="btn-sm btn-ghost" id="btn-paste" title="Pegar">
+              <button class="btn-sm btn-ghost" id="btn-paste" data-i18n-title="editor.paste" title="Pegar">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                Pegar
+                <span data-i18n="editor.paste">Pegar</span>
               </button>
-              <button class="btn-sm btn-ghost" id="btn-clear" title="Limpiar">
+              <button class="btn-sm btn-ghost" id="btn-clear" data-i18n-title="editor.clear" title="Limpiar">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
-                Limpiar
+                <span data-i18n="editor.clear">Limpiar</span>
               </button>
             </div>
           </div>
           <div class="editor-container">
-            <textarea 
-              id="prompt-input" 
-              class="prompt-textarea" 
-              placeholder="Escribe o pega tu prompt aquí para analizarlo...
-
-Ejemplo:
-Eres un experto en marketing digital. Analiza el siguiente texto y extrae las 5 ideas principales. Presenta los resultados en formato de lista numerada con una breve explicación de cada punto."
+            <textarea
+              id="prompt-input"
+              class="prompt-textarea"
+              placeholder="Escribe o pega tu prompt aquí para analizarlo..."
+              data-i18n-placeholder="editor.placeholder"
               spellcheck="false"
             ></textarea>
             <div class="editor-footer">
@@ -105,7 +107,7 @@ Eres un experto en marketing digital. Analiza el siguiente texto y extrae las 5 
               <div class="editor-actions">
                 <button class="btn btn-primary btn-analyze" id="btn-analyze">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                  Analizar Prompt
+                  <span data-i18n="editor.analyze">Analizar Prompt</span>
                 </button>
               </div>
             </div>
@@ -122,8 +124,8 @@ Eres un experto en marketing digital. Analiza el siguiente texto y extrae las 5 
                 <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
               </svg>
             </div>
-            <h3 class="empty-title">Escribe un prompt para comenzar</h3>
-            <p class="empty-text">Obtén un análisis completo con scoring en 8 dimensiones, detección de anti-patrones y sugerencias de mejora.</p>
+            <h3 class="empty-title" data-i18n="empty.title">Escribe un prompt para comenzar</h3>
+            <p class="empty-text" data-i18n="empty.text">Obtén un análisis completo con scoring en 8 dimensiones, detección de anti-patrones y sugerencias de mejora.</p>
           </div>
 
           <!-- Results Content (hidden initially) -->
@@ -143,7 +145,7 @@ Eres un experto en marketing digital. Analiza el siguiente texto y extrae las 5 
               </div>
               <div class="score-info">
                 <div class="score-grade" id="score-grade">—</div>
-                <div class="score-label">Puntuación General</div>
+                <div class="score-label" data-i18n="score.label">Puntuación General</div>
                 <div class="score-meta">
                   <span class="badge" id="badge-complexity">—</span>
                   <span class="badge" id="badge-language">—</span>
@@ -153,11 +155,11 @@ Eres un experto en marketing digital. Analiza el siguiente texto y extrae las 5 
 
             <!-- Tabs -->
             <div class="tab-bar" id="results-tabs">
-              <button class="tab active" data-tab="dimensions">Dimensiones</button>
-              <button class="tab" data-tab="radar">Radar</button>
-              <button class="tab" data-tab="antipatterns">Anti-patrones</button>
-              <button class="tab" data-tab="adversarial">Adversarial</button>
-              <button class="tab" data-tab="improved">Mejora</button>
+              <button class="tab active" data-tab="dimensions" data-i18n="tabs.dimensions">Dimensiones</button>
+              <button class="tab" data-tab="radar" data-i18n="tabs.radar">Radar</button>
+              <button class="tab" data-tab="antipatterns" data-i18n="tabs.antipatterns">Anti-patrones</button>
+              <button class="tab" data-tab="adversarial" data-i18n="tabs.adversarial">Adversarial</button>
+              <button class="tab" data-tab="improved" data-i18n="tabs.improved">Mejora</button>
             </div>
 
             <!-- Tab: Dimensions -->
@@ -175,16 +177,16 @@ Eres un experto en marketing digital. Analiza el siguiente texto y extrae las 5 
             </div>
 
             <!-- Tab: Anti-patterns -->
-            <div class="tab-content" id="tab-antipatterns">
+            <div class="tab-content active" id="tab-antipatterns">
               <div class="section-header">
-                <h3>Anti-patrones Detectados</h3>
+                <h3 data-i18n="sections.antipatternsDetected">Anti-patrones Detectados</h3>
                 <span class="count-badge" id="antipattern-count">0</span>
               </div>
               <div id="antipatterns-list" class="findings-list">
                 <!-- Generated by JS -->
               </div>
               <div class="section-header" style="margin-top: 1.5rem;">
-                <h3>Fortalezas Detectadas</h3>
+                <h3 data-i18n="sections.strengthsDetected">Fortalezas Detectadas</h3>
                 <span class="count-badge count-badge-success" id="strengths-count">0</span>
               </div>
               <div id="strengths-list" class="findings-list">
@@ -195,9 +197,9 @@ Eres un experto en marketing digital. Analiza el siguiente texto y extrae las 5 
             <!-- Tab: Adversarial -->
             <div class="tab-content" id="tab-adversarial">
               <div class="section-header">
-                <h3>Pruebas Adversariales</h3>
+                <h3 data-i18n="sections.adversarialTests">Pruebas Adversariales</h3>
                 <div class="resistance-badge" id="resistance-badge">
-                  Resistencia: <strong id="resistance-score">—</strong>
+                  <span data-i18n="sections.resistance">Resistencia:</span> <strong id="resistance-score">—</strong>
                 </div>
               </div>
               <div id="adversarial-list" class="findings-list">
@@ -208,7 +210,7 @@ Eres un experto en marketing digital. Analiza el siguiente texto y extrae las 5 
             <!-- Tab: Improved Prompt -->
             <div class="tab-content" id="tab-improved">
               <div class="section-header">
-                <h3>Prompt Mejorado</h3>
+                <h3 data-i18n="sections.improvedPrompt">Prompt Mejorado</h3>
                 <div class="improvement-badge" id="improvement-badge">
                   <!-- Score improvement shown here -->
                 </div>
@@ -221,11 +223,11 @@ Eres un experto en marketing digital. Analiza el siguiente texto y extrae las 5 
                 <div class="improved-actions">
                   <button class="btn btn-primary btn-sm" id="btn-apply-improvement">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                    Aplicar al Editor
+                    <span data-i18n="sections.applyToEditor">Aplicar al Editor</span>
                   </button>
                   <button class="btn btn-secondary btn-sm" id="btn-copy-improvement">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                    Copiar
+                    <span data-i18n="sections.copy">Copiar</span>
                   </button>
                 </div>
               </div>
@@ -239,10 +241,10 @@ Eres un experto en marketing digital. Analiza el siguiente texto y extrae las 5 
     <!-- ==================== TEMPLATES VIEW ==================== -->
     <div class="view" id="view-templates">
       <div class="templates-header">
-        <h2 class="view-title">Biblioteca de Templates</h2>
-        <p class="view-subtitle">Templates optimizados para casos de uso comunes. Haz clic en uno para cargarlo en el editor.</p>
+        <h2 class="view-title" data-i18n="templates.title">Biblioteca de Templates</h2>
+        <p class="view-subtitle" data-i18n="templates.subtitle">Templates optimizados para casos de uso comunes. Haz clic en uno para cargarlo en el editor.</p>
         <div class="templates-filter">
-          <button class="filter-btn active" data-category="all">Todos</button>
+          <button class="filter-btn active" data-category="all" data-i18n="templates.all">Todos</button>
           <div id="category-filters">
             <!-- Generated by JS -->
           </div>
@@ -256,15 +258,15 @@ Eres un experto en marketing digital. Analiza el siguiente texto y extrae las 5 
     <!-- ==================== HISTORY VIEW ==================== -->
     <div class="view" id="view-history">
       <div class="history-header">
-        <h2 class="view-title">Historial de Análisis</h2>
+        <h2 class="view-title" data-i18n="history.title">Historial de Análisis</h2>
         <div class="history-actions">
           <button class="btn btn-secondary btn-sm" id="btn-export-history">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Exportar
+            <span data-i18n="history.export">Exportar</span>
           </button>
           <button class="btn btn-ghost btn-sm" id="btn-clear-history">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg>
-            Limpiar
+            <span data-i18n="history.clear">Limpiar</span>
           </button>
         </div>
       </div>
@@ -280,8 +282,8 @@ Eres un experto en marketing digital. Analiza el siguiente texto y extrae las 5 
             <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
           </svg>
         </div>
-        <h3 class="empty-title">Sin historial aún</h3>
-        <p class="empty-text">Tus análisis aparecerán aquí después de evaluar tu primer prompt.</p>
+        <h3 class="empty-title" data-i18n="history.emptyTitle">Sin historial aún</h3>
+        <p class="empty-text" data-i18n="history.emptyText">Tus análisis aparecerán aquí después de evaluar tu primer prompt.</p>
       </div>
     </div>
 
@@ -291,24 +293,25 @@ Eres un experto en marketing digital. Analiza el siguiente texto y extrae las 5 
   <div class="dropdown-menu hidden" id="export-menu">
     <button class="dropdown-item" id="export-json">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-      Exportar JSON
+      <span data-i18n="export.json">Exportar JSON</span>
     </button>
     <button class="dropdown-item" id="export-markdown">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-      Exportar Markdown
+      <span data-i18n="export.markdown">Exportar Markdown</span>
     </button>
     <button class="dropdown-item" id="export-clipboard">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-      Copiar al portapapeles
+      <span data-i18n="export.clipboard">Copiar al portapapeles</span>
     </button>
     <hr class="dropdown-divider">
     <button class="dropdown-item" id="export-share">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-      Generar enlace compartible
+      <span data-i18n="export.share">Generar enlace compartible</span>
     </button>
   </div>
 
   <!-- Scripts -->
+  <script src="js/i18n.js"></script>
   <script src="js/patterns.js"></script>
   <script src="js/analyzer.js"></script>
   <script src="js/adversarial.js"></script>

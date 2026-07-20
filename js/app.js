@@ -8,6 +8,12 @@ const App = (() => {
   let currentView = 'analyzer';
 
   function init() {
+    // i18n must boot first so every later render speaks the right language.
+    I18n.init();
+    I18n.applyToDOM();
+    applyDocMetadata();
+
+    setupLanguageSwitcher();
     setupNavigation();
     setupEditor();
     setupTabs();
@@ -16,6 +22,56 @@ const App = (() => {
     setupHistoryView();
     checkShareURL();
     updateEditorStats();
+
+    // Re-render dynamic content when the language changes.
+    document.addEventListener('langchange', onLangChange);
+  }
+
+  // ── i18n helpers ────────────────────────────────────────────
+  function t(key, params) { return I18n.t(key, params); }
+
+  function applyDocMetadata() {
+    document.title = t('meta.title');
+    const meta = document.getElementById('meta-description');
+    if (meta) meta.setAttribute('content', t('meta.description'));
+  }
+
+  function onLangChange() {
+    applyDocMetadata();
+    // Charts bake their labels at build time, so destroy them so the next
+    // render rebuilds them in the new language.
+    if (typeof Charts !== 'undefined') Charts.destroy();
+    // Re-render the active view so dynamic strings pick up the new language.
+    if (currentView === 'templates') renderTemplatesView(getActiveCategoryFilter());
+    if (currentView === 'history') renderHistoryView();
+    if (currentAnalysis) renderResults();
+  }
+
+  function getActiveCategoryFilter() {
+    const active = document.querySelector('.filter-btn.active');
+    return active ? active.dataset.category : 'all';
+  }
+
+  function setupLanguageSwitcher() {
+    const switcher = document.getElementById('lang-switcher');
+    if (!switcher) return;
+
+    // Reflect the active language on load.
+    const current = I18n.getLang();
+    switcher.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === current);
+    });
+
+    switcher.addEventListener('click', (e) => {
+      const btn = e.target.closest('.lang-btn');
+      if (!btn) return;
+      const lang = btn.dataset.lang;
+      if (lang === I18n.getLang()) return;
+      I18n.setLang(lang);
+      switcher.querySelectorAll('.lang-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.lang === lang);
+      });
+    });
   }
 
   // ── Navigation ──────────────────────────────────────────
@@ -36,7 +92,7 @@ const App = (() => {
     document.getElementById(`view-${viewName}`).classList.add('active');
 
     if (viewName === 'history') renderHistoryView();
-    if (viewName === 'templates') renderTemplatesView();
+    if (viewName === 'templates') renderTemplatesView(getActiveCategoryFilter());
   }
 
   // ── Editor ──────────────────────────────────────────────
@@ -70,7 +126,7 @@ const App = (() => {
         updateEditorStats();
         textarea.focus();
       } catch {
-        showToast('No se pudo acceder al portapapeles', 'error');
+        showToast(t('toast.pasteError'), 'error');
       }
     });
   }
@@ -78,27 +134,26 @@ const App = (() => {
   function updateEditorStats() {
     const text = document.getElementById('prompt-input').value;
     const chars = text.length;
-    // Aligned with Analyzer._estimateTokens: split on whitespace, filter empties
     const words = text.trim() ? text.trim().split(/\s+/).filter(Boolean).length : 0;
     const tokens = Math.round(words * 1.3);
 
-    document.getElementById('stat-chars').textContent = `${chars} caracteres`;
-    document.getElementById('stat-words').textContent = `${words} palabras`;
-    document.getElementById('stat-tokens').textContent = `~${tokens} tokens`;
+    document.getElementById('stat-chars').textContent = t('stats.chars', { n: chars });
+    document.getElementById('stat-words').textContent = t('stats.words', { n: words });
+    document.getElementById('stat-tokens').textContent = t('stats.tokens', { n: tokens });
   }
 
   // ── Analysis Pipeline ───────────────────────────────────
   function runAnalysis() {
     const prompt = document.getElementById('prompt-input').value.trim();
     if (!prompt) {
-      showToast('Escribe un prompt para analizar', 'warning');
+      showToast(t('toast.writePrompt'), 'warning');
       return;
     }
 
     // Show loading state
     const btn = document.getElementById('btn-analyze');
     btn.disabled = true;
-    btn.innerHTML = `<svg class="spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Analizando...`;
+    btn.innerHTML = `<svg class="spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> ${escapeHtml(t('editor.analyzing'))}`;
 
     // Small delay for UX feel
     setTimeout(() => {
@@ -121,14 +176,14 @@ const App = (() => {
         // 6. Render results
         renderResults();
 
-        showToast('Análisis completado', 'success');
+        showToast(t('toast.analysisComplete'), 'success');
       } catch (err) {
         console.error('Analysis error:', err);
-        showToast('Error durante el análisis', 'error');
+        showToast(t('toast.analysisError'), 'error');
       }
 
       btn.disabled = false;
-      btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Analizar Prompt`;
+      btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> ${escapeHtml(t('editor.analyze'))}`;
     }, 400);
   }
 
@@ -146,17 +201,19 @@ const App = (() => {
     animateScore(analysis.overallScore, analysis.grade);
 
     // Badges
-    document.getElementById('badge-complexity').textContent = analysis.complexity;
-    document.getElementById('badge-complexity').className = `badge badge-${analysis.complexity === 'avanzado' ? 'success' : analysis.complexity === 'intermedio' ? 'warning' : 'info'}`;
-    document.getElementById('badge-language').textContent = analysis.language === 'es' ? 'Español' : analysis.language === 'en' ? 'English' : 'Mixto';
-    document.getElementById('badge-language').className = 'badge badge-info';
+    const complexityKey = analysis.complexity; // 'basic' | 'intermediate' | 'advanced'
+    const complexityBadge = document.getElementById('badge-complexity');
+    complexityBadge.textContent = t(`complexity.${complexityKey}`);
+    complexityBadge.className = `badge badge-${complexityKey === 'advanced' ? 'success' : complexityKey === 'intermediate' ? 'warning' : 'info'}`;
+
+    const langBadge = document.getElementById('badge-language');
+    langBadge.textContent = analysis.language === 'es' ? t('language.es')
+                          : analysis.language === 'en' ? t('language.en')
+                          : t('language.mixed');
+    langBadge.className = 'badge badge-info';
 
     // Dimensions
     renderDimensions(analysis.dimensions);
-
-    // Radar chart is initialised lazily when the user visits the Radar tab
-    // (see switchTab) — calling renderRadar here would warn because the
-    // chart does not exist yet on first analysis.
 
     // Anti-patterns
     renderAntiPatterns(analysis.antiPatterns, analysis.strengths);
@@ -167,8 +224,13 @@ const App = (() => {
     // Improved prompt
     renderImproved(improved);
 
-    // Switch to dimensions tab
-    switchTab('dimensions');
+    // Radar chart is initialised lazily when the user visits the Radar tab.
+    if (document.getElementById('tab-radar').classList.contains('active')) {
+      if (!Charts.radarChart) Charts.initRadar('radar-canvas');
+      renderRadar(analysis.dimensions);
+    }
+
+    // Keep the currently active results tab active.
   }
 
   function animateScore(targetScore, grade) {
@@ -176,7 +238,7 @@ const App = (() => {
     const gradeEl = document.getElementById('score-grade');
     const ringFill = document.getElementById('score-ring-fill');
     const circumference = 2 * Math.PI * 54;
-    
+
     ringFill.style.strokeDasharray = circumference;
 
     let current = 0;
@@ -210,14 +272,14 @@ const App = (() => {
   function renderDimensions(dimensions) {
     const container = document.getElementById('dimensions-list');
     const dimConfig = {
-      clarity:        { icon: '🎯', name: 'Claridad',           color: '#00d4ff' },
-      specificity:    { icon: '📐', name: 'Especificidad',      color: '#7c3aed' },
-      structure:      { icon: '🏗️', name: 'Estructura',         color: '#f59e0b' },
-      robustness:     { icon: '🛡️', name: 'Robustez',           color: '#10b981' },
-      context:        { icon: '🧩', name: 'Contexto',           color: '#ec4899' },
-      outputFormat:   { icon: '📝', name: 'Formato de Salida',  color: '#6366f1' },
-      chainOfThought: { icon: '🔗', name: 'Chain of Thought',   color: '#f97316' },
-      safety:         { icon: '⚠️', name: 'Seguridad',          color: '#ef4444' },
+      clarity:        { icon: '🎯', name: t('dimensions.clarity'),        color: '#00d4ff' },
+      specificity:    { icon: '📐', name: t('dimensions.specificity'),    color: '#7c3aed' },
+      structure:      { icon: '🏗️', name: t('dimensions.structure'),      color: '#f59e0b' },
+      robustness:     { icon: '🛡️', name: t('dimensions.robustness'),     color: '#10b981' },
+      context:        { icon: '🧩', name: t('dimensions.context'),        color: '#ec4899' },
+      outputFormat:   { icon: '📝', name: t('dimensions.outputFormat'),   color: '#6366f1' },
+      chainOfThought: { icon: '🔗', name: t('dimensions.chainOfThought'), color: '#f97316' },
+      safety:         { icon: '⚠️', name: t('dimensions.safety'),         color: '#ef4444' },
     };
 
     container.innerHTML = '';
@@ -234,7 +296,7 @@ const App = (() => {
         <div class="dimension-header" onclick="this.parentElement.classList.toggle('expanded')">
           <div class="dimension-left">
             <span class="dimension-icon">${config.icon}</span>
-            <span class="dimension-name">${config.name}</span>
+            <span class="dimension-name">${escapeHtml(config.name)}</span>
           </div>
           <div class="dimension-right">
             <div class="dimension-bar">
@@ -247,7 +309,7 @@ const App = (() => {
         <div class="dimension-body">
           ${dim.findings.length > 0 ? `
             <div class="dimension-section">
-              <h4 class="dimension-section-title">Hallazgos</h4>
+              <h4 class="dimension-section-title">${escapeHtml(t('sections.findings'))}</h4>
               <ul class="finding-list">
                 ${dim.findings.map(f => `<li class="finding-item finding-info">${escapeHtml(typeof f === 'string' ? f : (f.text || ''))}</li>`).join('')}
               </ul>
@@ -255,13 +317,13 @@ const App = (() => {
           ` : ''}
           ${dim.suggestions.length > 0 ? `
             <div class="dimension-section">
-              <h4 class="dimension-section-title">Sugerencias</h4>
+              <h4 class="dimension-section-title">${escapeHtml(t('sections.suggestions'))}</h4>
               <ul class="suggestion-list">
                 ${dim.suggestions.map(s => `<li class="suggestion-item">${escapeHtml(typeof s === 'string' ? s : (s.text || ''))}</li>`).join('')}
               </ul>
             </div>
           ` : ''}
-          ${dim.findings.length === 0 && dim.suggestions.length === 0 ? '<p class="dim-empty">Sin observaciones específicas.</p>' : ''}
+          ${dim.findings.length === 0 && dim.suggestions.length === 0 ? `<p class="dim-empty">${escapeHtml(t('dimensions.noObservations'))}</p>` : ''}
         </div>
       `;
       container.appendChild(card);
@@ -290,30 +352,30 @@ const App = (() => {
     document.getElementById('strengths-count').textContent = strengths.length;
 
     if (antiPatterns.length === 0) {
-      apList.innerHTML = '<div class="empty-findings"><p>🎉 No se detectaron anti-patrones. ¡Buen trabajo!</p></div>';
+      apList.innerHTML = `<div class="empty-findings"><p>${escapeHtml(t('antipatterns.empty'))}</p></div>`;
     } else {
       apList.innerHTML = antiPatterns.map(ap => `
         <div class="finding-card finding-card-${ap.severity}">
           <div class="finding-card-header">
             <span class="badge badge-${ap.severity}">${ap.severity.toUpperCase()}</span>
-            <strong>${ap.name}</strong>
+            <strong>${escapeHtml(ap.name)}</strong>
           </div>
-          <p class="finding-card-desc">${ap.description}</p>
-          <p class="finding-card-suggestion">💡 ${ap.suggestion}</p>
+          <p class="finding-card-desc">${escapeHtml(ap.description)}</p>
+          <p class="finding-card-suggestion">💡 ${escapeHtml(ap.suggestion)}</p>
         </div>
       `).join('');
     }
 
     if (strengths.length === 0) {
-      stList.innerHTML = '<div class="empty-findings"><p>No se detectaron patrones positivos destacables.</p></div>';
+      stList.innerHTML = `<div class="empty-findings"><p>${escapeHtml(t('strengths.empty'))}</p></div>`;
     } else {
       stList.innerHTML = strengths.map(s => `
         <div class="finding-card finding-card-strength">
           <div class="finding-card-header">
             <span class="badge badge-success">✓</span>
-            <strong>${s.name}</strong>
+            <strong>${escapeHtml(s.name)}</strong>
           </div>
-          <p class="finding-card-desc">${s.description}</p>
+          <p class="finding-card-desc">${escapeHtml(s.description)}</p>
         </div>
       `).join('');
     }
@@ -323,31 +385,35 @@ const App = (() => {
     document.getElementById('resistance-score').textContent = `${adversarial.overallResistance}/100`;
     const list = document.getElementById('adversarial-list');
 
-    list.innerHTML = adversarial.tests.map(t => `
-      <div class="finding-card adversarial-card adversarial-${t.status}">
-        <div class="finding-card-header">
-          <span class="adversarial-status adversarial-status-${t.status}">
-            ${t.status === 'pass' ? '✅' : t.status === 'warning' ? '⚠️' : '❌'} 
-            ${t.status === 'pass' ? 'PASA' : t.status === 'warning' ? 'ADVERTENCIA' : 'FALLA'}
-          </span>
-          <strong>${t.name}</strong>
+    list.innerHTML = adversarial.tests.map(test => {
+      const statusLabel = t(`status.${test.status}`);
+      const icon = test.status === 'pass' ? '✅' : test.status === 'warning' ? '⚠️' : '❌';
+      return `
+        <div class="finding-card adversarial-card adversarial-${test.status}">
+          <div class="finding-card-header">
+            <span class="adversarial-status adversarial-status-${test.status}">
+              ${icon} ${escapeHtml(statusLabel)}
+            </span>
+            <strong>${escapeHtml(test.name)}</strong>
+          </div>
+          <p class="finding-card-desc">${escapeHtml(test.detail)}</p>
+          ${test.suggestion ? `<p class="finding-card-suggestion">💡 ${escapeHtml(test.suggestion)}</p>` : ''}
         </div>
-        <p class="finding-card-desc">${t.detail}</p>
-        ${t.suggestion ? `<p class="finding-card-suggestion">💡 ${t.suggestion}</p>` : ''}
-      </div>
-    `).join('');
+      `;
+    }).join('');
   }
 
   function renderImproved(improved) {
     document.getElementById('improved-prompt-text').textContent = improved.improvedPrompt;
 
     const badge = document.getElementById('improvement-badge');
-    badge.innerHTML = `Mejora estimada: <strong>+${improved.scoreImprovement} pts</strong>`;
+    badge.innerHTML = t('improvement.estimated', { n: improved.scoreImprovement });
 
     const changesList = document.getElementById('changes-list');
+    const typeLabel = (type) => t(`changes.${type === 'added' ? 'added' : type === 'modified' ? 'modified' : 'restructured'}`);
     changesList.innerHTML = improved.changes.map(c => `
       <div class="change-item change-${c.type}">
-        <span class="change-type">${c.type === 'added' ? '➕ Agregado' : c.type === 'modified' ? '✏️ Modificado' : '🔄 Reestructurado'}</span>
+        <span class="change-type">${escapeHtml(typeLabel(c.type))}</span>
         <span class="change-desc">${escapeHtml(c.description)}</span>
       </div>
     `).join('');
@@ -357,7 +423,7 @@ const App = (() => {
       document.getElementById('prompt-input').value = improved.improvedPrompt;
       updateEditorStats();
       switchView('analyzer');
-      showToast('Prompt mejorado aplicado al editor', 'success');
+      showToast(t('toast.improvementApplied'), 'success');
     };
 
     document.getElementById('btn-copy-improvement').onclick = () => {
@@ -381,16 +447,13 @@ const App = (() => {
   }
 
   function switchTab(tabName) {
-    document.querySelectorAll('#results-tabs .tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('#results-tabs .tab').forEach(tEl => tEl.classList.remove('active'));
     document.querySelector(`#results-tabs .tab[data-tab="${tabName}"]`).classList.add('active');
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
     document.getElementById(`tab-${tabName}`).classList.add('active');
 
     if (tabName === 'radar' && currentAnalysis) {
-      // Initialise the chart only once; avoid the destroy/recreate flicker.
-      if (!Charts.radarChart) {
-        Charts.initRadar('radar-canvas');
-      }
+      if (!Charts.radarChart) Charts.initRadar('radar-canvas');
       renderRadar(currentAnalysis.analysis.dimensions);
     }
   }
@@ -411,27 +474,25 @@ const App = (() => {
     document.addEventListener('click', () => menu.classList.add('hidden'));
 
     document.getElementById('export-json').addEventListener('click', () => {
-      if (!currentAnalysis) return showToast('Primero analiza un prompt', 'warning');
-      // ExportUtil.downloadFile already shows a toast — avoid duplicate notifications.
+      if (!currentAnalysis) return showToast(t('toast.noAnalysis'), 'warning');
       const json = ExportUtil.toJSON(currentAnalysis.analysis, currentAnalysis.prompt);
       ExportUtil.downloadFile(json, 'promptforge-analysis.json', 'application/json');
     });
 
     document.getElementById('export-markdown').addEventListener('click', () => {
-      if (!currentAnalysis) return showToast('Primero analiza un prompt', 'warning');
+      if (!currentAnalysis) return showToast(t('toast.noAnalysis'), 'warning');
       const md = ExportUtil.toMarkdown(currentAnalysis.analysis, currentAnalysis.prompt);
       ExportUtil.downloadFile(md, 'promptforge-analysis.md', 'text/markdown');
     });
 
     document.getElementById('export-clipboard').addEventListener('click', () => {
-      if (!currentAnalysis) return showToast('Primero analiza un prompt', 'warning');
+      if (!currentAnalysis) return showToast(t('toast.noAnalysis'), 'warning');
       const md = ExportUtil.toMarkdown(currentAnalysis.analysis, currentAnalysis.prompt);
       ExportUtil.toClipboard(md);
     });
 
     document.getElementById('export-share').addEventListener('click', () => {
-      if (!currentAnalysis) return showToast('Primero analiza un prompt', 'warning');
-      // toClipboard already notifies on success.
+      if (!currentAnalysis) return showToast(t('toast.noAnalysis'), 'warning');
       const url = ExportUtil.generateShareURL(currentAnalysis.prompt);
       ExportUtil.toClipboard(url);
     });
@@ -439,7 +500,6 @@ const App = (() => {
 
   // ── Templates View ─────────────────────────────────────
   function setupTemplatesView() {
-    // Category filter clicks
     document.querySelector('.templates-filter').addEventListener('click', (e) => {
       const btn = e.target.closest('.filter-btn');
       if (!btn) return;
@@ -450,32 +510,35 @@ const App = (() => {
   }
 
   function renderTemplatesView(category = 'all') {
-    // Render category buttons
+    // Render category buttons (translated)
     const filtersContainer = document.getElementById('category-filters');
-    if (filtersContainer.children.length === 0) {
-      Templates.categories.forEach(cat => {
-        const btn = document.createElement('button');
-        btn.className = 'filter-btn';
-        btn.dataset.category = cat;
-        btn.textContent = cat;
-        filtersContainer.appendChild(btn);
-      });
-    }
+    filtersContainer.innerHTML = '';
+    Templates.categories.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-btn';
+      btn.dataset.category = cat;
+      btn.textContent = Templates.getCategoryLabel(cat);
+      filtersContainer.appendChild(btn);
+    });
+    // Restore active state for the requested category
+    document.querySelectorAll('.filter-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.category === category);
+    });
 
     const grid = document.getElementById('templates-grid');
     const templates = category === 'all' ? Templates.templates : Templates.getByCategory(category);
 
-    grid.innerHTML = templates.map(t => `
-      <div class="template-card" data-id="${t.id}">
+    grid.innerHTML = templates.map(tpl => `
+      <div class="template-card" data-id="${tpl.id}">
         <div class="template-card-header">
-          <span class="template-category badge badge-info">${t.category}</span>
+          <span class="template-category badge badge-info">${escapeHtml(Templates.getCategoryLabel(tpl.category))}</span>
         </div>
-        <h3 class="template-name">${t.name}</h3>
-        <p class="template-desc">${t.description}</p>
+        <h3 class="template-name">${escapeHtml(Templates.getName(tpl))}</h3>
+        <p class="template-desc">${escapeHtml(Templates.getDescription(tpl))}</p>
         <div class="template-tags">
-          ${t.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+          ${Templates.getTags(tpl).map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}
         </div>
-        <button class="btn btn-secondary btn-sm template-use-btn">Usar template</button>
+        <button class="btn btn-secondary btn-sm template-use-btn">${escapeHtml(I18n.t('templates.use'))}</button>
       </div>
     `).join('');
 
@@ -484,12 +547,12 @@ const App = (() => {
       card.querySelector('.template-use-btn').addEventListener('click', (e) => {
         e.stopPropagation();
         const id = card.dataset.id;
-        const template = Templates.getById(id);
-        if (template) {
-          document.getElementById('prompt-input').value = template.prompt;
+        const tpl = Templates.getById(id);
+        if (tpl) {
+          document.getElementById('prompt-input').value = tpl.prompt;
           updateEditorStats();
           switchView('analyzer');
-          showToast(`Template "${template.name}" cargado`, 'success');
+          showToast(I18n.t('toast.templateLoaded', { name: Templates.getName(tpl) }), 'success');
         }
       });
     });
@@ -498,16 +561,15 @@ const App = (() => {
   // ── History View ───────────────────────────────────────
   function setupHistoryView() {
     document.getElementById('btn-export-history').addEventListener('click', () => {
-      // downloadFile shows its own toast.
       const data = History.export();
       ExportUtil.downloadFile(data, 'promptforge-history.json', 'application/json');
     });
 
     document.getElementById('btn-clear-history').addEventListener('click', () => {
-      if (confirm('¿Estás seguro de que deseas borrar todo el historial?')) {
+      if (confirm(I18n.t('history.confirmClear'))) {
         History.clear();
         renderHistoryView();
-        showToast('Historial borrado', 'success');
+        showToast(I18n.t('toast.historyCleared'), 'success');
       }
     });
   }
@@ -533,11 +595,11 @@ const App = (() => {
     Charts.initHistoryChart('history-canvas');
     Charts.updateHistoryChart(evolution);
 
+    const locale = I18n.getLang() === 'es' ? 'es-ES' : 'en-US';
     list.innerHTML = entries.map(entry => {
       const date = new Date(entry.timestamp);
-      const dateStr = date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      const dateStr = date.toLocaleDateString(locale, { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
       const preview = entry.prompt.substring(0, 100) + (entry.prompt.length > 100 ? '...' : '');
-      // score/grade are convenience fields on the entry; fall back to analysis
       const score = entry.score ?? entry.overallScore ?? entry.analysis?.overallScore ?? null;
       const grade = entry.grade ?? entry.analysis?.grade ?? '—';
       const scoreClass = score === null ? 'bad' : (score >= 70 ? 'good' : score >= 40 ? 'warning' : 'bad');
@@ -546,17 +608,17 @@ const App = (() => {
         <div class="history-item" data-id="${entry.id}">
           <div class="history-score">
             <span class="history-score-value ${scoreClass}">${score === null ? '—' : score}</span>
-            <span class="history-score-grade">${grade}</span>
+            <span class="history-score-grade">${escapeHtml(grade)}</span>
           </div>
           <div class="history-info">
             <p class="history-preview">${escapeHtml(preview)}</p>
-            <span class="history-date">${dateStr}</span>
+            <span class="history-date">${escapeHtml(dateStr)}</span>
           </div>
           <div class="history-actions-group">
-            <button class="btn-icon btn-sm history-load" title="Cargar en editor">
+            <button class="btn-icon btn-sm history-load" title="${escapeHtml(I18n.t('history.load'))}">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
             </button>
-            <button class="btn-icon btn-sm history-delete" title="Eliminar">
+            <button class="btn-icon btn-sm history-delete" title="${escapeHtml(I18n.t('history.delete'))}">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg>
             </button>
           </div>
@@ -573,7 +635,7 @@ const App = (() => {
           document.getElementById('prompt-input').value = entry.prompt;
           updateEditorStats();
           switchView('analyzer');
-          showToast('Prompt cargado desde historial', 'success');
+          showToast(I18n.t('toast.historyLoaded'), 'success');
         }
       });
     });
@@ -593,7 +655,7 @@ const App = (() => {
     if (prompt) {
       document.getElementById('prompt-input').value = prompt;
       updateEditorStats();
-      showToast('Prompt cargado desde enlace compartido', 'info');
+      showToast(I18n.t('toast.shareLoaded'), 'info');
     }
   }
 
@@ -610,8 +672,6 @@ const App = (() => {
       info: 'ℹ️'
     };
 
-    // Build the DOM with textContent to avoid XSS if message ever includes
-    // user-controlled content.
     const iconSpan = document.createElement('span');
     iconSpan.className = 'toast-icon';
     iconSpan.textContent = icons[type] || icons.info;
@@ -634,8 +694,9 @@ const App = (() => {
 
   // ── Utility ────────────────────────────────────────────
   function escapeHtml(text) {
+    if (text === null || text === undefined) return '';
     const div = document.createElement('div');
-    div.textContent = text;
+    div.textContent = String(text);
     return div.innerHTML;
   }
 

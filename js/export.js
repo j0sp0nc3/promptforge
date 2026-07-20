@@ -55,12 +55,12 @@ const ExportUtil = {
     const metrics = analysis?.metrics || {};
     const tokens = analysis?.tokens || {};
     const promptText = prompt ?? analysis?.prompt ?? '';
-    const date = new Date().toLocaleDateString('es-ES', {
+    const locale = I18n.getLang() === 'es' ? 'es-ES' : 'en-US';
+    const date = new Date().toLocaleDateString(locale, {
       year: 'numeric', month: 'long', day: 'numeric',
       hour: '2-digit', minute: '2-digit'
     });
 
-    // Score bar helper — NaN-safe (handles null/undefined/string scores)
     const scoreBar = (value, max = 100) => {
       const n = Number(value);
       if (!Number.isFinite(n)) return '░'.repeat(20) + ` —/${max}`;
@@ -70,40 +70,32 @@ const ExportUtil = {
 
     const scoreDisplay = (score === null || score === undefined) ? '—' : score;
 
-    // Build the document
     let md = '';
 
     // ── Header ──
-    md += `# 📊 Reporte de Análisis — PromptForge\n\n`;
-    md += `> Generado el ${date}\n\n`;
+    md += `# ${I18n.t('report.title')}\n\n`;
+    md += `${I18n.t('report.generated', { date })}\n\n`;
     md += `---\n\n`;
 
     // ── Overall Score ──
-    md += `## Puntuación General\n\n`;
+    md += `${I18n.t('report.overall')}\n\n`;
     md += `**${scoreDisplay}/100** ${this._scoreEmoji(score)}\n\n`;
     md += `\`${scoreBar(score)}\`\n\n`;
 
     // ── Score Breakdown ──
     if (Object.keys(scores).length > 0) {
-      md += `## Desglose de Puntuación\n\n`;
-      md += `| Criterio | Puntuación | Barra |\n`;
+      md += `${I18n.t('report.breakdown')}\n\n`;
+      md += `| ${I18n.t('report.breakdownCriterion')} | ${I18n.t('report.breakdownScore')} | ${I18n.t('report.breakdownBar')} |\n`;
       md += `|----------|:----------:|-------|\n`;
 
-      const criteriaLabels = {
-        clarity: '🎯 Claridad',
-        specificity: '📐 Especificidad',
-        structure: '🏗️ Estructura',
-        robustness: '🛡️ Robustez',
-        context: '🧩 Contexto',
-        outputFormat: '📝 Formato de salida',
-        chainOfThought: '🔗 Cadena de pensamiento',
-        safety: '⚠️ Seguridad',
-        overall: '⭐ General'
+      const dimIcons = {
+        clarity: '🎯', specificity: '📐', structure: '🏗️', robustness: '🛡️',
+        context: '🧩', outputFormat: '📝', chainOfThought: '🔗', safety: '⚠️',
       };
 
       for (const [key, value] of Object.entries(scores)) {
         if (key === 'overall') continue;
-        const label = criteriaLabels[key] || key;
+        const label = `${dimIcons[key] || ''} ${I18n.t(`dimensions.${key}`) || key}`.trim();
         md += `| ${label} | ${value}/100 | \`${scoreBar(value)}\` |\n`;
       }
       md += `\n`;
@@ -111,21 +103,9 @@ const ExportUtil = {
 
     // ── Detected Features ──
     if (Object.keys(detected).length > 0) {
-      md += `## Características Detectadas\n\n`;
-      const featureLabels = {
-        hasRole: 'Definición de rol',
-        hasContext: 'Contexto proporcionado',
-        hasExamples: 'Ejemplos incluidos',
-        hasOutputFormat: 'Formato de salida',
-        hasGuardrails: 'Restricciones/Guardrails',
-        hasXMLTags: 'Estructura XML',
-        hasChainOfThought: 'Chain-of-Thought',
-        hasErrorHandling: 'Manejo de errores',
-        hasVariables: 'Variables/Placeholders'
-      };
-
+      md += `${I18n.t('report.detected')}\n\n`;
       for (const [key, value] of Object.entries(detected)) {
-        const label = featureLabels[key] || key;
+        const label = I18n.t(`featureLabels.${key}`) || key;
         const icon = value ? '✅' : '❌';
         md += `- ${icon} ${label}\n`;
       }
@@ -134,23 +114,12 @@ const ExportUtil = {
 
     // ── Metrics ──
     if (Object.keys(metrics).length > 0) {
-      md += `## Métricas del Prompt\n\n`;
-      md += `| Métrica | Valor |\n`;
+      md += `${I18n.t('report.metrics')}\n\n`;
+      md += `| ${I18n.t('report.metricName')} | ${I18n.t('report.metricValue')} |\n`;
       md += `|---------|-------|\n`;
 
-      const metricLabels = {
-        wordCount: 'Palabras',
-        charCount: 'Caracteres',
-        lineCount: 'Líneas',
-        sentenceCount: 'Oraciones',
-        avgWordsPerSentence: 'Palabras/Oración (promedio)',
-        readabilityLevel: 'Nivel de legibilidad',
-        xmlSections: 'Secciones XML',
-        variableCount: 'Variables detectadas'
-      };
-
       for (const [key, value] of Object.entries(metrics)) {
-        const label = metricLabels[key] || key;
+        const label = I18n.t(`metricLabels.${key}`) || key;
         md += `| ${label} | ${value} |\n`;
       }
       md += `\n`;
@@ -158,34 +127,34 @@ const ExportUtil = {
 
     // ── Token Estimates ──
     if (Object.keys(tokens).length > 0) {
-      md += `## Estimación de Tokens\n\n`;
-      if (tokens.estimated) md += `- **Tokens estimados:** ~${tokens.estimated}\n`;
-      if (tokens.model) md += `- **Modelo referencia:** ${tokens.model}\n`;
-      if (tokens.cost) md += `- **Costo estimado por llamada:** $${tokens.cost}\n`;
+      md += `${I18n.t('report.tokens')}\n\n`;
+      if (tokens.estimated) md += `${I18n.t('report.tokensEstimated', { n: tokens.estimated })}\n`;
+      if (tokens.model) md += `${I18n.t('report.tokensModel', { model: tokens.model })}\n`;
+      if (tokens.cost) md += `${I18n.t('report.tokensCost', { cost: tokens.cost })}\n`;
       md += `\n`;
     }
 
     // ── Suggestions ──
     if (suggestions.length > 0) {
-      md += `## Sugerencias de Mejora\n\n`;
+      md += `${I18n.t('report.suggestions')}\n\n`;
       suggestions.forEach((s, i) => {
-        const priority = s.priority || 'media';
-        const icon = priority === 'alta' ? '🔴' : priority === 'media' ? '🟡' : '🟢';
-        md += `### ${i + 1}. ${icon} ${s.title || 'Sugerencia'}\n\n`;
+        const priority = s.priority || 'medium';
+        const icon = priority === 'high' ? '🔴' : priority === 'medium' ? '🟡' : '🟢';
+        md += `### ${i + 1}. ${icon} ${s.title || I18n.t('report.suggestion')}\n\n`;
         md += `${s.description || s.text || s}\n\n`;
         if (s.example) {
-          md += `**Ejemplo:**\n\`\`\`\n${s.example}\n\`\`\`\n\n`;
+          md += `${I18n.t('report.example')}\n\`\`\`\n${s.example}\n\`\`\`\n\n`;
         }
       });
     }
 
     // ── Prompt Text ──
-    md += `## Prompt Analizado\n\n`;
-    md += `\`\`\`\n${promptText || '(sin prompt)'}\n\`\`\`\n\n`;
+    md += `${I18n.t('report.promptAnalyzed')}\n\n`;
+    md += `\`\`\`\n${promptText || I18n.t('report.noPrompt')}\n\`\`\`\n\n`;
 
     // ── Footer ──
     md += `---\n\n`;
-    md += `*Reporte generado automáticamente por [PromptForge](https://promptforge.app) — Analizador de Prompts*\n`;
+    md += `${I18n.t('report.footer')}\n`;
 
     return md;
   },
@@ -207,17 +176,17 @@ const ExportUtil = {
         // Fallback for older browsers
         this._fallbackCopy(text);
       }
-      this._showToast('✅ Copiado al portapapeles', 'success');
+      this._showToast(I18n.t('exportToast.copied'), 'success');
       return true;
     } catch (err) {
       console.error('[ExportUtil] Clipboard copy failed:', err);
       // Try fallback
       try {
         this._fallbackCopy(text);
-        this._showToast('✅ Copiado al portapapeles', 'success');
+        this._showToast(I18n.t('exportToast.copied'), 'success');
         return true;
       } catch (e) {
-        this._showToast('❌ Error al copiar. Intenta de nuevo.', 'error');
+        this._showToast(I18n.t('exportToast.copyError'), 'error');
         return false;
       }
     }
@@ -248,10 +217,10 @@ const ExportUtil = {
         URL.revokeObjectURL(url);
       }, 150);
 
-      this._showToast(`📥 Descargando ${filename}`, 'success');
+      this._showToast(I18n.t('exportToast.downloading', { name: filename }), 'success');
     } catch (err) {
       console.error('[ExportUtil] Download failed:', err);
-      this._showToast('❌ Error al descargar el archivo.', 'error');
+      this._showToast(I18n.t('exportToast.downloadError'), 'error');
     }
   },
 
@@ -413,12 +382,12 @@ const ExportUtil = {
    */
   _scoreEmoji(score) {
     const n = Number(score);
-    if (!Number.isFinite(n)) return '— Sin datos';
-    if (n >= 90) return '🏆 Excelente';
-    if (n >= 75) return '✨ Muy bueno';
-    if (n >= 60) return '👍 Bueno';
-    if (n >= 40) return '⚠️ Mejorable';
-    if (n >= 20) return '🔧 Necesita trabajo';
-    return '🚨 Crítico';
+    if (!Number.isFinite(n)) return I18n.t('scoreEmoji.noData');
+    if (n >= 90) return I18n.t('scoreEmoji.excellent');
+    if (n >= 75) return I18n.t('scoreEmoji.veryGood');
+    if (n >= 60) return I18n.t('scoreEmoji.good');
+    if (n >= 40) return I18n.t('scoreEmoji.improvable');
+    if (n >= 20) return I18n.t('scoreEmoji.needsWork');
+    return I18n.t('scoreEmoji.critical');
   }
 };

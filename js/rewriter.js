@@ -31,7 +31,7 @@ const Rewriter = {
       working = this._addMissingStructure(working, analysis);
       changes.push({
         type: 'restructured',
-        description: 'Añadida estructura XML con secciones <rol>, <contexto>, <tarea>, <formato_salida>, <restricciones>'
+        description: I18n.t('rewriterChanges.structure')
       });
     }
 
@@ -40,7 +40,7 @@ const Rewriter = {
       working = this._addRole(working, analysis);
       changes.push({
         type: 'added',
-        description: 'Añadida definición de rol experto contextualizado al dominio detectado'
+        description: I18n.t('rewriterChanges.role')
       });
     }
 
@@ -49,7 +49,7 @@ const Rewriter = {
       working = this._addOutputFormat(working, analysis);
       changes.push({
         type: 'added',
-        description: 'Añadida especificación de formato de salida con estructura clara'
+        description: I18n.t('rewriterChanges.outputFormat')
       });
     }
 
@@ -58,7 +58,7 @@ const Rewriter = {
       working = this._addMissingGuardrails(working, analysis);
       changes.push({
         type: 'added',
-        description: 'Añadidas restricciones y guardrails de seguridad para evitar desviaciones'
+        description: I18n.t('rewriterChanges.guardrails')
       });
     }
 
@@ -67,7 +67,7 @@ const Rewriter = {
       working = this._addExamples(working, analysis);
       changes.push({
         type: 'added',
-        description: 'Añadida sección de ejemplos con caso de uso representativo'
+        description: I18n.t('rewriterChanges.examples')
       });
     }
 
@@ -76,7 +76,7 @@ const Rewriter = {
       working = this._addChainOfThought(working, analysis);
       changes.push({
         type: 'added',
-        description: 'Añadidas instrucciones de razonamiento paso a paso (Chain-of-Thought)'
+        description: I18n.t('rewriterChanges.cot')
       });
     }
 
@@ -85,7 +85,7 @@ const Rewriter = {
       working = this._addErrorHandling(working, analysis);
       changes.push({
         type: 'added',
-        description: 'Añadida sección de manejo de errores y casos extremos'
+        description: I18n.t('rewriterChanges.errors')
       });
     }
 
@@ -95,7 +95,7 @@ const Rewriter = {
       working = reordered;
       changes.push({
         type: 'restructured',
-        description: 'Reordenadas secciones en orden lógico: rol → contexto → tarea → formato → restricciones → ejemplos → errores'
+        description: I18n.t('rewriterChanges.restructure')
       });
     }
 
@@ -203,17 +203,8 @@ const Rewriter = {
    */
   _addRole(prompt, analysis) {
     const domain = analysis?.detectedDomain || this._inferDomain(prompt);
-    const roleMap = {
-      'código': 'Eres un ingeniero de software senior con amplia experiencia en desarrollo y mejores prácticas de código.',
-      'datos': 'Eres un científico de datos experto con habilidades avanzadas en análisis y visualización de datos.',
-      'redacción': 'Eres un redactor profesional con experiencia en comunicación efectiva y creación de contenido.',
-      'análisis': 'Eres un analista experto con habilidades avanzadas en evaluación crítica y síntesis de información.',
-      'educación': 'Eres un educador experimentado con habilidades para explicar conceptos complejos de forma clara y accesible.',
-      'negocio': 'Eres un consultor de negocios experimentado con conocimiento en estrategia, operaciones y gestión.',
-      'general': 'Eres un asistente experto altamente competente. Respondes con precisión, claridad y profundidad.'
-    };
-
-    const role = roleMap[domain] || roleMap['general'];
+    // Domain keys are stable ('code','data','writing','analysis','education','business','general').
+    const role = I18n.t(`rewriter.roles.${domain}`) || I18n.t('rewriter.roles.general');
 
     // Insert role at the beginning. Whether or not XML structure is already
     // present, prepending <rol> keeps it as the first section (canonical order).
@@ -226,52 +217,15 @@ const Rewriter = {
    */
   _addOutputFormat(prompt, analysis) {
     const intent = this._inferIntent(prompt);
-    let formatSpec = '';
-
-    switch (intent) {
-      case 'clasificación':
-        formatSpec = `Responde en formato JSON con la siguiente estructura:
-{
-  "resultado": "<tu clasificación>",
-  "confianza": <0.0 a 1.0>,
-  "justificacion": "<breve explicación>"
-}`;
-        break;
-      case 'extracción':
-        formatSpec = `Devuelve los datos extraídos en formato JSON estructurado:
-{
-  "datos": [ ... ],
-  "total_extraidos": <número>,
-  "confianza": <0.0 a 1.0>
-}`;
-        break;
-      case 'generación':
-        formatSpec = `Estructura tu respuesta con:
-- Título claro y descriptivo
-- Contenido organizado en secciones con encabezados
-- Conclusión o resumen final
-- Formato: Markdown`;
-        break;
-      case 'análisis':
-        formatSpec = `Presenta tu análisis con:
-1. **Resumen ejecutivo** (2-3 oraciones)
-2. **Hallazgos principales** (lista con viñetas)
-3. **Detalle** (explicación expandida)
-4. **Recomendaciones** (si aplica)`;
-        break;
-      case 'código':
-        formatSpec = `Responde con:
-1. Código completo y funcional en un bloque de código con el lenguaje especificado
-2. Comentarios explicativos inline
-3. Ejemplo de uso
-4. Notas sobre complejidad o limitaciones`;
-        break;
-      default:
-        formatSpec = `Estructura tu respuesta de forma clara:
-1. Respuesta directa a la solicitud
-2. Explicación o justificación cuando sea necesario
-3. Información adicional relevante`;
-    }
+    // Map inferred intent (Spanish legacy keys) to i18n formatSpec keys.
+    const intentKey = {
+      'clasificación': 'classification',
+      'extracción': 'extraction',
+      'generación': 'generation',
+      'análisis': 'analysis',
+      'código': 'code',
+    }[intent] || 'default';
+    const formatSpec = I18n.t(`rewriter.formatSpec.${intentKey}`);
 
     return this._insertSection(prompt, 'formato_salida', formatSpec);
   },
@@ -284,32 +238,32 @@ const Rewriter = {
     const guardrails = [];
 
     // Universal guardrails
-    guardrails.push('Si no tienes suficiente información para responder con certeza, indícalo explícitamente en lugar de inventar datos.');
-    guardrails.push('Mantén la respuesta enfocada en la tarea solicitada; no añadas información no solicitada.');
+    guardrails.push(I18n.t('rewriter.guardrails.universal1'));
+    guardrails.push(I18n.t('rewriter.guardrails.universal2'));
 
     // Domain-specific guardrails
     const intent = this._inferIntent(prompt);
     switch (intent) {
       case 'extracción':
-        guardrails.push('Extrae SOLO datos presentes en el texto fuente. Usa null para campos no encontrados.');
-        guardrails.push('No modifiques los datos originales a menos que se indique normalización específica.');
+        guardrails.push(I18n.t('rewriter.guardrails.extraction1'));
+        guardrails.push(I18n.t('rewriter.guardrails.extraction2'));
         break;
       case 'generación':
-        guardrails.push('El contenido generado debe ser original y no plagiar fuentes existentes.');
-        guardrails.push('No inventes citas, estadísticas o datos específicos sin indicar que son aproximados.');
+        guardrails.push(I18n.t('rewriter.guardrails.generation1'));
+        guardrails.push(I18n.t('rewriter.guardrails.generation2'));
         break;
       case 'clasificación':
-        guardrails.push('Selecciona ÚNICAMENTE entre las categorías proporcionadas.');
-        guardrails.push('Si la entrada es ambigua, indica la confianza reducida en tu clasificación.');
+        guardrails.push(I18n.t('rewriter.guardrails.classification1'));
+        guardrails.push(I18n.t('rewriter.guardrails.classification2'));
         break;
       case 'código':
-        guardrails.push('El código generado debe ser funcional y ejecutable sin modificaciones.');
-        guardrails.push('Incluye manejo de errores para entradas inesperadas.');
-        guardrails.push('No incluyas dependencias externas a menos que se especifique.');
+        guardrails.push(I18n.t('rewriter.guardrails.code1'));
+        guardrails.push(I18n.t('rewriter.guardrails.code2'));
+        guardrails.push(I18n.t('rewriter.guardrails.code3'));
         break;
       case 'análisis':
-        guardrails.push('Distingue entre hechos del texto y tus propias inferencias.');
-        guardrails.push('No emitas juicios de valor a menos que se solicite explícitamente.');
+        guardrails.push(I18n.t('rewriter.guardrails.analysis1'));
+        guardrails.push(I18n.t('rewriter.guardrails.analysis2'));
         break;
     }
 
@@ -322,12 +276,14 @@ const Rewriter = {
    * @private
    */
   _addChainOfThought(prompt, analysis) {
-    const cotInstruction = `\nAntes de dar tu respuesta final, piensa paso a paso:
-1. Analiza la solicitud e identifica los elementos clave.
-2. Considera diferentes enfoques o interpretaciones posibles.
-3. Selecciona el enfoque más apropiado y justifica brevemente.
-4. Elabora tu respuesta siguiendo ese enfoque.
-5. Revisa que tu respuesta cumple con todos los requisitos solicitados.`;
+    const cotInstruction = [
+      I18n.t('rewriter.cot.intro'),
+      I18n.t('rewriter.cot.step1'),
+      I18n.t('rewriter.cot.step2'),
+      I18n.t('rewriter.cot.step3'),
+      I18n.t('rewriter.cot.step4'),
+      I18n.t('rewriter.cot.step5'),
+    ].join('\n');
 
     // Insert CoT within the <tarea> section or append before output format
     if (this._hasSection(prompt, 'tarea')) {
@@ -348,38 +304,12 @@ const Rewriter = {
    */
   _addExamples(prompt, analysis) {
     const intent = this._inferIntent(prompt);
-    let example = '';
-
-    switch (intent) {
-      case 'clasificación':
-        example = `Entrada: "El precio de las acciones de Tesla subió un 5% tras el anuncio de resultados trimestrales"
-Salida esperada:
-{
-  "resultado": "Finanzas/Mercados",
-  "confianza": 0.95,
-  "justificacion": "Mención directa de acciones, precio y resultados financieros"
-}`;
-        break;
-      case 'extracción':
-        example = `Entrada: "Contactar a Laura Méndez (laura@empresa.com) para la reunión del 20 de marzo en la oficina de Madrid."
-Salida esperada:
-{
-  "nombre": "Laura Méndez",
-  "email": "laura@empresa.com",
-  "fecha": "2025-03-20",
-  "ubicacion": "Madrid"
-}`;
-        break;
-      case 'código':
-        example = `Solicitud: "Función que valide un email"
-Resultado esperado: código funcional con validación regex, manejo de edge cases (null, vacío, formato inválido), documentación y al menos 3 tests unitarios.`;
-        break;
-      default:
-        example = `Entrada de ejemplo: [Proporcionar una entrada representativa del caso de uso]
-Salida esperada: [Mostrar exactamente cómo debería verse la respuesta ideal]
-
-Nota: Este ejemplo ilustra el nivel de detalle y formato esperado en la respuesta.`;
-    }
+    const intentKey = {
+      'clasificación': 'classification',
+      'extracción': 'extraction',
+      'código': 'code',
+    }[intent] || 'default';
+    const example = I18n.t(`rewriter.examples.${intentKey}`);
 
     return this._insertSection(prompt, 'ejemplos', example);
   },
@@ -389,10 +319,12 @@ Nota: Este ejemplo ilustra el nivel de detalle y formato esperado en la respuest
    * @private
    */
   _addErrorHandling(prompt, analysis) {
-    const errorHandling = `- Si la entrada está vacía o es ininteligible, indica que no se puede procesar y solicita una entrada válida.
-- Si la entrada contiene información contradictoria, señala la contradicción y procesa la interpretación más probable.
-- Si falta información necesaria para completar la tarea, indica qué información adicional se necesita.
-- En caso de ambigüedad, selecciona la interpretación más razonable y menciona las alternativas.`;
+    const errorHandling = [
+      I18n.t('rewriter.errorHandling.e1'),
+      I18n.t('rewriter.errorHandling.e2'),
+      I18n.t('rewriter.errorHandling.e3'),
+      I18n.t('rewriter.errorHandling.e4'),
+    ].join('\n');
 
     return this._insertSection(prompt, 'manejo_errores', errorHandling);
   },

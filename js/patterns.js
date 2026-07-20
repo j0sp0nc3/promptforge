@@ -724,11 +724,11 @@ const Patterns = {
       })
       .map(ap => ({
         id: ap.id,
-        name: ap.name,
-        description: ap.description,
+        name: I18n.t(`patterns.${ap.id}.name`),
+        description: I18n.t(`patterns.${ap.id}.desc`),
         severity: ap.severity,
         dimension: ap.dimension,
-        suggestion: ap.suggestion,
+        suggestion: I18n.t(`patterns.${ap.id}.sugg`),
       }));
 
     const matchedStrengths = this.bestPractices
@@ -737,8 +737,8 @@ const Patterns = {
       })
       .map(bp => ({
         id: bp.id,
-        name: bp.name,
-        description: bp.description,
+        name: I18n.t(`patterns.${bp.id}.name`),
+        description: I18n.t(`patterns.${bp.id}.desc`),
         dimension: bp.dimension,
       }));
 
