@@ -26,22 +26,34 @@ const Adversarial = {
 
     const trimmed = prompt.trim();
 
-    const tests = [
-      this._testEmptyInput(trimmed),
-      this._testInjection(trimmed),
-      this._testAmbiguity(trimmed),
-      this._testOverflow(trimmed),
-      this._testLanguageMismatch(trimmed),
-      this._testScopeCreep(trimmed),
-      this._testHallucination(trimmed),
-      this._testFormatBreaking(trimmed),
-      this._testMultiTurn(trimmed),
-      this._testEdgeCases(trimmed),
+    const rawTests = [
+      { weight: 1, result: this._testEmptyInput(trimmed) },
+      { weight: 2, result: this._testInjection(trimmed) },
+      { weight: 2, result: this._testJailbreakRoleplay(trimmed) },
+      { weight: 2, result: this._testIndirectInjection(trimmed) },
+      { weight: 2, result: this._testDataExfiltration(trimmed) },
+      { weight: 1, result: this._testAmbiguity(trimmed) },
+      { weight: 1, result: this._testOverflow(trimmed) },
+      { weight: 1, result: this._testLanguageMismatch(trimmed) },
+      { weight: 1, result: this._testScopeCreep(trimmed) },
+      { weight: 2, result: this._testHallucination(trimmed) },
+      { weight: 1, result: this._testFormatBreaking(trimmed) },
+      { weight: 1, result: this._testMultiTurn(trimmed) },
+      { weight: 1, result: this._testEdgeCases(trimmed) },
     ];
 
+    const tests = rawTests.map(t => t.result);
     const statusScores = { pass: 100, warning: 50, fail: 0 };
-    const totalScore = tests.reduce((sum, t) => sum + statusScores[t.status], 0);
-    const overallResistance = Math.round(totalScore / tests.length);
+    
+    let totalScore = 0;
+    let totalWeight = 0;
+    
+    for (const t of rawTests) {
+      totalScore += statusScores[t.result.status] * t.weight;
+      totalWeight += t.weight;
+    }
+    
+    const overallResistance = Math.round(totalScore / totalWeight);
 
     return { overallResistance, tests };
   },
@@ -325,8 +337,82 @@ const Adversarial = {
       result.detail = I18n.t('adv.edgeCases.warnDetail', { covered: coveredStr, missing: missingTop3 });
       result.suggestion = I18n.t('adv.edgeCases.warnSugg', { missing: missingStr });
     } else {
-      result.detail = I18n.t('adv.edgeCases.failDetail');
       result.suggestion = I18n.t('adv.edgeCases.failSugg', { missing: missingTop4 });
+    }
+    return result;
+  },
+
+  _testJailbreakRoleplay(prompt) {
+    const lower = prompt.toLowerCase();
+    const result = this._base('jailbreakRoleplay');
+
+    let score = 0;
+    const details = [];
+    if (/\b(do not follow|no sigas|ignore.*instructions|ignora.*instrucciones|refuse|rechaza|deny|niega).*\b(developer mode|dan|jailbreak|bypass)\b/i.test(lower)) { score += 3; details.push(I18n.t('adv.jailbreakRoleplay.d1')); }
+    if (/\b(stay in character|mantén.*personaje|maintain.*role|mantén.*rol|do not break|no rompas|do not deviate|no te desvíes)\b/i.test(lower)) { score += 2; details.push(I18n.t('adv.jailbreakRoleplay.d2')); }
+    if (/\b(always.*polite|siempre.*educado|respectful|respetuoso|harmless|inofensivo|safe|seguro|ethical|ético)\b/i.test(lower)) { score += 1; details.push(I18n.t('adv.jailbreakRoleplay.d3')); }
+
+    const joined = details.join('; ');
+    if (score >= 4) {
+      result.status = 'pass';
+      result.detail = I18n.t('adv.jailbreakRoleplay.passDetail', { details: joined });
+    } else if (score >= 2) {
+      result.status = 'warning';
+      result.detail = I18n.t('adv.jailbreakRoleplay.warnDetail', { details: joined });
+      result.suggestion = I18n.t('adv.jailbreakRoleplay.warnSugg');
+    } else {
+      result.detail = I18n.t('adv.jailbreakRoleplay.failDetail');
+      result.suggestion = I18n.t('adv.jailbreakRoleplay.failSugg');
+    }
+    return result;
+  },
+
+  _testIndirectInjection(prompt) {
+    const lower = prompt.toLowerCase();
+    const result = this._base('indirectInjection');
+
+    let score = 0;
+    const details = [];
+    if (/\b(treat.*as data|trata.*como datos|untrusted|no confiable|user input|entrada del usuario|do not execute|no ejecutes)\b/i.test(lower)) { score += 3; details.push(I18n.t('adv.indirectInjection.d1')); }
+    if (/(<untrusted>|<user_input>|```|""")/i.test(prompt)) { score += 2; details.push(I18n.t('adv.indirectInjection.d2')); }
+    if (/\b(ignore.*commands|ignora.*comandos|ignore.*instructions|ignora.*instrucciones).*\b(inside|dentro|text|texto)\b/i.test(lower)) { score += 2; details.push(I18n.t('adv.indirectInjection.d3')); }
+
+    const joined = details.join('; ');
+    if (score >= 4) {
+      result.status = 'pass';
+      result.detail = I18n.t('adv.indirectInjection.passDetail', { details: joined });
+    } else if (score >= 2) {
+      result.status = 'warning';
+      result.detail = I18n.t('adv.indirectInjection.warnDetail', { details: joined });
+      result.suggestion = I18n.t('adv.indirectInjection.warnSugg');
+    } else {
+      result.detail = I18n.t('adv.indirectInjection.failDetail');
+      result.suggestion = I18n.t('adv.indirectInjection.failSugg');
+    }
+    return result;
+  },
+
+  _testDataExfiltration(prompt) {
+    const lower = prompt.toLowerCase();
+    const result = this._base('dataExfiltration');
+
+    let score = 0;
+    const details = [];
+    if (/\b(do not output.*url|no.*url|no link|sin enlace|do not render.*image|no.*imagen)\b/i.test(lower)) { score += 3; details.push(I18n.t('adv.dataExfiltration.d1')); }
+    if (/\b(do not.*markdown|no.*markdown|plain text|texto plano|only text|solo texto)\b/i.test(lower)) { score += 2; details.push(I18n.t('adv.dataExfiltration.d2')); }
+    if (/\b(do not leak|no.*filtres|protect|protege|confidential|confidencial|secret|secreto)\b/i.test(lower)) { score += 1; details.push(I18n.t('adv.dataExfiltration.d3')); }
+
+    const joined = details.join('; ');
+    if (score >= 4) {
+      result.status = 'pass';
+      result.detail = I18n.t('adv.dataExfiltration.passDetail', { details: joined });
+    } else if (score >= 2) {
+      result.status = 'warning';
+      result.detail = I18n.t('adv.dataExfiltration.warnDetail', { details: joined });
+      result.suggestion = I18n.t('adv.dataExfiltration.warnSugg');
+    } else {
+      result.detail = I18n.t('adv.dataExfiltration.failDetail');
+      result.suggestion = I18n.t('adv.dataExfiltration.failSugg');
     }
     return result;
   },

@@ -26,9 +26,19 @@ const Rewriter = {
     const detected = analysis?.detected || {};
     const overallScore = analysis?.overallScore ?? this._estimateBaseScore(working);
 
+    const tTags = {
+      role: I18n.t('rewriterTags.role') || 'rol',
+      context: I18n.t('rewriterTags.context') || 'contexto',
+      task: I18n.t('rewriterTags.task') || 'tarea',
+      format: I18n.t('rewriterTags.outputFormat') || 'formato_salida',
+      restrictions: I18n.t('rewriterTags.restrictions') || 'restricciones',
+      examples: I18n.t('rewriterTags.examples') || 'ejemplos',
+      errors: I18n.t('rewriterTags.errors') || 'manejo_errores'
+    };
+
     // ── Step 1: Add XML structure if missing ────────────────────────────
     if (!detected.hasXMLTags && !this._hasXMLStructure(working)) {
-      working = this._addMissingStructure(working, analysis);
+      working = this._addMissingStructure(working, analysis, tTags);
       changes.push({
         type: 'restructured',
         description: I18n.t('rewriterChanges.structure')
@@ -36,8 +46,8 @@ const Rewriter = {
     }
 
     // ── Step 2: Add role if missing ─────────────────────────────────────
-    if (!this._hasSection(working, 'rol') && !detected.hasRole) {
-      working = this._addRole(working, analysis);
+    if (!this._hasSection(working, tTags.role) && !detected.hasRole) {
+      working = this._addRole(working, analysis, tTags);
       changes.push({
         type: 'added',
         description: I18n.t('rewriterChanges.role')
@@ -45,8 +55,8 @@ const Rewriter = {
     }
 
     // ── Step 3: Add output format if missing ────────────────────────────
-    if (!this._hasSection(working, 'formato_salida') && !detected.hasOutputFormat) {
-      working = this._addOutputFormat(working, analysis);
+    if (!this._hasSection(working, tTags.format) && !detected.hasOutputFormat) {
+      working = this._addOutputFormat(working, analysis, tTags);
       changes.push({
         type: 'added',
         description: I18n.t('rewriterChanges.outputFormat')
@@ -54,8 +64,8 @@ const Rewriter = {
     }
 
     // ── Step 4: Add guardrails if missing ───────────────────────────────
-    if (!this._hasSection(working, 'restricciones') && !detected.hasGuardrails) {
-      working = this._addMissingGuardrails(working, analysis);
+    if (!this._hasSection(working, tTags.restrictions) && !detected.hasGuardrails) {
+      working = this._addMissingGuardrails(working, analysis, tTags);
       changes.push({
         type: 'added',
         description: I18n.t('rewriterChanges.guardrails')
@@ -63,8 +73,8 @@ const Rewriter = {
     }
 
     // ── Step 5: Add examples if missing ─────────────────────────────────
-    if (!this._hasSection(working, 'ejemplos') && !detected.hasExamples) {
-      working = this._addExamples(working, analysis);
+    if (!this._hasSection(working, tTags.examples) && !detected.hasExamples) {
+      working = this._addExamples(working, analysis, tTags);
       changes.push({
         type: 'added',
         description: I18n.t('rewriterChanges.examples')
@@ -73,7 +83,7 @@ const Rewriter = {
 
     // ── Step 6: Add chain-of-thought if appropriate ─────────────────────
     if (this._needsChainOfThought(working, analysis)) {
-      working = this._addChainOfThought(working, analysis);
+      working = this._addChainOfThought(working, analysis, tTags);
       changes.push({
         type: 'added',
         description: I18n.t('rewriterChanges.cot')
@@ -81,8 +91,8 @@ const Rewriter = {
     }
 
     // ── Step 7: Add error handling if missing ───────────────────────────
-    if (!this._hasSection(working, 'manejo_errores') && !detected.hasErrorHandling) {
-      working = this._addErrorHandling(working, analysis);
+    if (!this._hasSection(working, tTags.errors) && !detected.hasErrorHandling) {
+      working = this._addErrorHandling(working, analysis, tTags);
       changes.push({
         type: 'added',
         description: I18n.t('rewriterChanges.errors')
@@ -90,7 +100,7 @@ const Rewriter = {
     }
 
     // ── Step 8: Final restructure for logical ordering ──────────────────
-    const reordered = this._restructure(working);
+    const reordered = this._restructure(working, tTags);
     if (reordered !== working) {
       working = reordered;
       changes.push({
@@ -120,102 +130,39 @@ const Rewriter = {
    * Wraps an unstructured prompt in XML tag sections by analysing content.
    * @private
    */
-  _addMissingStructure(prompt, analysis) {
-    const parts = this._decomposePrompt(prompt);
-
-    let structured = '';
-
-    if (parts.role) {
-      structured += `<rol>\n${parts.role.trim()}\n</rol>\n\n`;
-    }
-
-    if (parts.context) {
-      structured += `<contexto>\n${parts.context.trim()}\n</contexto>\n\n`;
-    }
-
-    structured += `<tarea>\n${parts.task.trim()}\n</tarea>`;
-
-    if (parts.format) {
-      structured += `\n\n<formato_salida>\n${parts.format.trim()}\n</formato_salida>`;
-    }
-
-    if (parts.constraints) {
-      structured += `\n\n<restricciones>\n${parts.constraints.trim()}\n</restricciones>`;
-    }
-
-    if (parts.examples) {
-      structured += `\n\n<ejemplos>\n${parts.examples.trim()}\n</ejemplos>`;
-    }
-
-    return structured;
-  },
-
   /**
-   * Decomposes unstructured text into probable sections by heuristic analysis.
+   * Wraps an unstructured prompt in XML tag sections non-destructively.
    * @private
    */
-  _decomposePrompt(prompt) {
-    const lines = prompt.split('\n');
-    const parts = { role: '', context: '', task: '', format: '', constraints: '', examples: '' };
-
-    // Heuristic patterns for section detection
-    const rolePatterns = /^(eres|actúa como|tu rol|eres un|you are|act as|tu eres|serás)/i;
-    const contextPatterns = /^(contexto|context|background|dado que|teniendo en cuenta|se te proporciona)/i;
-    const formatPatterns = /^(responde en|formato|output|devuelve|responde con|genera un|el resultado|la salida)/i;
-    const constraintPatterns = /^(no |nunca|evita|restricci|importante|regla|asegúrate|siempre|solo |sólo |limitación|prohibido|debe[s]? )/i;
-    const examplePatterns = /^(ejemplo|por ejemplo|e\.g\.|input:|output:|entrada:|salida:)/i;
-
-    let currentSection = 'task'; // default bucket
-
-    for (const line of lines) {
-      const trimmed = line.trim();
-      if (!trimmed) continue;
-
-      // Detect role sentences
-      if (rolePatterns.test(trimmed)) {
-        currentSection = 'role';
-      } else if (contextPatterns.test(trimmed)) {
-        currentSection = 'context';
-      } else if (formatPatterns.test(trimmed)) {
-        currentSection = 'format';
-      } else if (constraintPatterns.test(trimmed) && parts.task.trim()) {
-        // Only route to constraints once we have captured a task line,
-        // otherwise leading restrictions would be misclassified.
-        currentSection = 'constraints';
-      } else if (examplePatterns.test(trimmed)) {
-        currentSection = 'examples';
-      }
-
-      parts[currentSection] += trimmed + '\n';
-    }
-
-    // If nothing ended up in role or context, at least task should have content
-    if (!parts.task.trim()) {
-      parts.task = prompt;
-    }
-
-    return parts;
+  _addMissingStructure(prompt, analysis, tTags) {
+    // Conservative approach: don't attempt heuristic regex splitting, which
+    // is error-prone. Just wrap the whole prompt as the core task.
+    return `<${tTags.task}>\n${prompt.trim()}\n</${tTags.task}>`;
   },
 
   /**
    * Add a contextual role definition based on detected domain.
    * @private
    */
-  _addRole(prompt, analysis) {
+  /**
+   * Add a contextual role definition based on detected domain.
+   * @private
+   */
+  _addRole(prompt, analysis, tTags) {
     const domain = analysis?.detectedDomain || this._inferDomain(prompt);
     // Domain keys are stable ('code','data','writing','analysis','education','business','general').
     const role = I18n.t(`rewriter.roles.${domain}`) || I18n.t('rewriter.roles.general');
 
     // Insert role at the beginning. Whether or not XML structure is already
-    // present, prepending <rol> keeps it as the first section (canonical order).
-    return `<rol>\n${role}\n</rol>\n\n${prompt}`;
+    // present, prepending keeps it as the first section (canonical order).
+    return `<${tTags.role}>\n${role}\n</${tTags.role}>\n\n${prompt}`;
   },
 
   /**
    * Add output format specification tailored to the prompt's intent.
    * @private
    */
-  _addOutputFormat(prompt, analysis) {
+  _addOutputFormat(prompt, analysis, tTags) {
     const intent = this._inferIntent(prompt);
     // Map inferred intent (Spanish legacy keys) to i18n formatSpec keys.
     const intentKey = {
@@ -227,14 +174,18 @@ const Rewriter = {
     }[intent] || 'default';
     const formatSpec = I18n.t(`rewriter.formatSpec.${intentKey}`);
 
-    return this._insertSection(prompt, 'formato_salida', formatSpec);
+    return this._insertSection(prompt, tTags.format, formatSpec);
   },
 
   /**
    * Add guardrails and safety constraints specific to the prompt.
    * @private
    */
-  _addMissingGuardrails(prompt, analysis) {
+  /**
+   * Add guardrails and safety constraints specific to the prompt.
+   * @private
+   */
+  _addMissingGuardrails(prompt, analysis, tTags) {
     const guardrails = [];
 
     // Universal guardrails
@@ -268,14 +219,18 @@ const Rewriter = {
     }
 
     const guardrailText = guardrails.map(g => `- ${g}`).join('\n');
-    return this._insertSection(prompt, 'restricciones', guardrailText);
+    return this._insertSection(prompt, tTags.restrictions, guardrailText);
   },
 
   /**
    * Add chain-of-thought instructions when the task requires reasoning.
    * @private
    */
-  _addChainOfThought(prompt, analysis) {
+  /**
+   * Add chain-of-thought instructions when the task requires reasoning.
+   * @private
+   */
+  _addChainOfThought(prompt, analysis, tTags) {
     const cotInstruction = [
       I18n.t('rewriter.cot.intro'),
       I18n.t('rewriter.cot.step1'),
@@ -285,14 +240,14 @@ const Rewriter = {
       I18n.t('rewriter.cot.step5'),
     ].join('\n');
 
-    // Insert CoT within the <tarea> section or append before output format
-    if (this._hasSection(prompt, 'tarea')) {
-      return prompt.replace('</tarea>', `${cotInstruction}\n</tarea>`);
+    // Insert CoT within the task section or append before output format
+    if (this._hasSection(prompt, tTags.task)) {
+      return prompt.replace(`</${tTags.task}>`, `${cotInstruction}\n</${tTags.task}>`);
     }
 
-    // If no tarea section, insert before formato_salida or at the end
-    if (this._hasSection(prompt, 'formato_salida')) {
-      return prompt.replace('<formato_salida>', `${cotInstruction}\n\n<formato_salida>`);
+    // If no task section, insert before format or at the end
+    if (this._hasSection(prompt, tTags.format)) {
+      return prompt.replace(`<${tTags.format}>`, `${cotInstruction}\n\n<${tTags.format}>`);
     }
 
     return prompt + '\n' + cotInstruction;
@@ -302,7 +257,7 @@ const Rewriter = {
    * Add examples section with a representative case.
    * @private
    */
-  _addExamples(prompt, analysis) {
+  _addExamples(prompt, analysis, tTags) {
     const intent = this._inferIntent(prompt);
     const intentKey = {
       'clasificación': 'classification',
@@ -311,14 +266,14 @@ const Rewriter = {
     }[intent] || 'default';
     const example = I18n.t(`rewriter.examples.${intentKey}`);
 
-    return this._insertSection(prompt, 'ejemplos', example);
+    return this._insertSection(prompt, tTags.examples, example);
   },
 
   /**
    * Add error handling section.
    * @private
    */
-  _addErrorHandling(prompt, analysis) {
+  _addErrorHandling(prompt, analysis, tTags) {
     const errorHandling = [
       I18n.t('rewriter.errorHandling.e1'),
       I18n.t('rewriter.errorHandling.e2'),
@@ -326,15 +281,27 @@ const Rewriter = {
       I18n.t('rewriter.errorHandling.e4'),
     ].join('\n');
 
-    return this._insertSection(prompt, 'manejo_errores', errorHandling);
+    return this._insertSection(prompt, tTags.errors, errorHandling);
   },
 
   /**
    * Reorder XML sections into canonical order.
    * @private
    */
-  _restructure(prompt) {
-    const sectionOrder = ['rol', 'contexto', 'tarea', 'formato_salida', 'restricciones', 'ejemplos', 'manejo_errores'];
+  /**
+   * Reorder XML sections into canonical order.
+   * @private
+   */
+  _restructure(prompt, tTags) {
+    const sectionOrder = [
+      tTags.role,
+      tTags.context,
+      tTags.task,
+      tTags.format,
+      tTags.restrictions,
+      tTags.examples,
+      tTags.errors
+    ];
     const sections = {};
     const sectionRegex = /<(\w+)>([\s\S]*?)<\/\1>/g;
     let match;

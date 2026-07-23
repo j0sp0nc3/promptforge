@@ -6,6 +6,11 @@ node_modules/
 venv/
 env/
 
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
 # Archivos de build/salida
 dist/
 build/

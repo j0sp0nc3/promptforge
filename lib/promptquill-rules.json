@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "name": "PromptQuill Engine Declarative Rules",
+  "weights": {
+    "system": { "clarity": 0.15, "specificity": 0.15, "structure": 0.15, "robustness": 0.15, "context": 0.15, "outputFormat": 0.10, "chainOfThought": 0.05, "safety": 0.10 },
+    "few-shot": { "clarity": 0.15, "specificity": 0.20, "structure": 0.15, "robustness": 0.10, "context": 0.10, "outputFormat": 0.20, "chainOfThought": 0.05, "safety": 0.05 },
+    "chainOfThought": { "clarity": 0.15, "specificity": 0.15, "structure": 0.15, "robustness": 0.10, "context": 0.10, "outputFormat": 0.10, "chainOfThought": 0.20, "safety": 0.05 },
+    "general": { "clarity": 0.18, "specificity": 0.15, "structure": 0.13, "robustness": 0.12, "context": 0.12, "outputFormat": 0.12, "chainOfThought": 0.10, "safety": 0.08 }
+  },
+  "antiPatterns": [
+    {
+      "id": "AP001",
+      "name": "Prompt demasiado corto",
+      "severity": "critical",
+      "dimension": "clarity",
+      "minLength": 10,
+      "suggestion": "Extiende el prompt describiendo contexto y objetivo."
+    },
+    {
+      "id": "AP003",
+      "name": "Sin formato de salida",
+      "severity": "high",
+      "dimension": "outputFormat",
+      "regex": "\\b(json|xml|csv|yaml|html|markdown|table|tabla|lista)\\b",
+      "matchMode": "invert",
+      "suggestion": "Especifica el formato deseado (ej. JSON, Tabla)."
+    },
+    {
+      "id": "AP005",
+      "name": "Sin rol definido",
+      "severity": "medium",
+      "dimension": "context",
+      "regex": "\\b(eres|actúa como|you are|act as|rol)\\b",
+      "matchMode": "invert",
+      "suggestion": "Asigna un rol claro (ej. Eres un experto...)"
+    }
+  ]
+}

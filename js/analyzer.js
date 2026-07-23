@@ -5,16 +5,17 @@
 
 const Analyzer = {
 
-  // Dimension weights for overall score
+  // Dimension weights for overall score (DEFAULT — overridden per prompt
+  // type by Signals.weightsFor(type) in analyze()).
   _weights: {
-    clarity:        0.18,
-    specificity:    0.15,
+    clarity:        0.14,
+    specificity:    0.16,
     structure:      0.13,
-    robustness:     0.12,
+    robustness:     0.13,
     context:        0.12,
-    outputFormat:   0.12,
-    chainOfThought: 0.10,
-    safety:         0.08,
+    outputFormat:   0.13,
+    chainOfThought: 0.09,
+    safety:         0.10,
   },
 
   // =========================================================================
@@ -37,21 +38,27 @@ const Analyzer = {
     const charCount = trimmed.length;
     const tokenEstimate = this._estimateTokens(trimmed);
 
-    // Score each dimension
+    // Extract every signal ONCE so dimension scorers don't re-detect
+    // (and don't double-count) the same cue.
+    const signals = Signals.extract(trimmed, lang);
+    const promptType = Signals.inferType(trimmed, signals, wordCount);
+    const weights = Signals.weightsFor(promptType);
+
+    // Score each dimension using the shared signal map.
     const dimensions = {
-      clarity:        this._scoreClarity(trimmed, lang),
-      specificity:    this._scoreSpecificity(trimmed, lang),
-      structure:      this._scoreStructure(trimmed, lang),
-      robustness:     this._scoreRobustness(trimmed, lang),
-      context:        this._scoreContext(trimmed, lang),
-      outputFormat:   this._scoreOutputFormat(trimmed, lang),
-      chainOfThought: this._scoreChainOfThought(trimmed, lang),
-      safety:         this._scoreSafety(trimmed, lang),
+      clarity:        this._scoreClarity(trimmed, lang, signals),
+      specificity:    this._scoreSpecificity(trimmed, lang, signals),
+      structure:      this._scoreStructure(trimmed, lang, signals),
+      robustness:     this._scoreRobustness(trimmed, lang, signals),
+      context:        this._scoreContext(trimmed, lang, signals),
+      outputFormat:   this._scoreOutputFormat(trimmed, lang, signals),
+      chainOfThought: this._scoreChainOfThought(trimmed, lang, signals),
+      safety:         this._scoreSafety(trimmed, lang, signals),
     };
 
-    // Weighted average
+    // Weighted average using the type-specific weights.
     let overallScore = 0;
-    for (const [dim, weight] of Object.entries(this._weights)) {
+    for (const [dim, weight] of Object.entries(weights)) {
       overallScore += dimensions[dim].score * weight;
     }
     overallScore = Math.round(Math.max(0, Math.min(100, overallScore)));
@@ -73,12 +80,16 @@ const Analyzer = {
       antiPatterns: patternResults.antiPatterns,
       strengths: patternResults.strengths,
       language: lang,
+      // ── New: prompt type & weights used (transparency) ────────────────
+      promptType,
+      promptTypeLabel: I18n.t(`promptType.${promptType}`) || promptType,
+      weightsUsed: { ...weights },
       // ── Legacy-compatible shim (derived from the data above) ───────────
       // Consumers like Rewriter and ExportUtil expect a "flat" shape. These
       // fields are derived so a single source of truth stays in dimensions.
       prompt: trimmed,
       scores: this._buildScores(dimensions, overallScore),
-      detected: this._buildDetected(trimmed, patternResults),
+      detected: this._buildDetected(trimmed, patternResults, signals),
       detectedDomain: this._inferDomain(trimmed),
       metrics: this._buildMetrics(trimmed),
       tokens: {
@@ -94,7 +105,7 @@ const Analyzer = {
   // DIMENSION SCORERS
   // =========================================================================
 
-  _scoreClarity(prompt, lang) {
+  _scoreClarity(prompt, lang, signals) {
     let score = 50;
     const findings = [];
     const suggestions = [];
@@ -108,17 +119,17 @@ const Analyzer = {
     const actionVerbs = /\b(write|escribe|create|crea|explain|explica|list|enumera|describe|describir|analyze|analiza|compare|compara|summarize|resume|generate|genera|translate|traduce|design|diseña|implement|implementa|define|definir|evaluate|evalúa|calculate|calcula)\b/gi;
     const verbMatches = lower.match(actionVerbs) || [];
     if (verbMatches.length >= 1) {
-      score += 10;
+      score += 8; // reduced from +10: verbs alone are not strong signal
       findings.push(k('useActionVerbs'));
     }
     if (verbMatches.length >= 3) {
-      score += 5;
+      score += 4;
     }
 
     // Clear sentence structure (not just fragments)
     const sentences = prompt.split(/[.!?]+/).filter(s => s.trim().length > 5);
     if (sentences.length >= 2) {
-      score += 8;
+      score += 6;
       findings.push(k('multipleSentences'));
     }
 
@@ -126,18 +137,16 @@ const Analyzer = {
     const ambiguousPronouns = /\b(it|this|that|they|them|these|those|eso|esto|ello|ellos|aquello)\b/gi;
     const pronounMatches = lower.match(ambiguousPronouns) || [];
     if (pronounMatches.length === 0 && words.length > 10) {
-      score += 5;
+      score += 4;
       findings.push(k('avoidsPronouns'));
     }
 
     // --- Negative signals ---
 
-    // Vague qualifiers
-    const vagueQualifiers = /\b(somehow|de alguna manera|kind of|tipo de|sort of|más o menos|maybe|quizás|tal vez|probably|probablemente|possibly|posiblemente|somewhat|algo así|a bit|un poco|rather|bastante|pretty much|pretty)\b/gi;
-    const vagueCount = (lower.match(vagueQualifiers) || []).length;
-    if (vagueCount >= 2) {
+    // Vague qualifiers (from shared signal map)
+    if (signals.vagueQualifiers >= 2) {
       score -= 12;
-      findings.push(I18n.t('analyzer.clarity.vagueCount', { n: vagueCount }));
+      findings.push(I18n.t('analyzer.clarity.vagueCount', { n: signals.vagueQualifiers }));
       suggestions.push(k('vagueSugg'));
     }
 
@@ -162,13 +171,8 @@ const Analyzer = {
       suggestions.push(k('splitSugg'));
     }
 
-    // Contradictory instructions (from AP004 logic)
-    const contradictions = [
-      [/\b(brief|breve|concis[eo]|short)\b/i, /\b(detailed|detallad|elaborate|exhaustiv)\b/i],
-      [/\b(creativ|imaginat)\b/i, /\b(strict|exactamente|precisely|preciso)\b/i],
-      [/\b(formal|profesional)\b/i, /\b(casual|informal|coloquial)\b/i],
-    ];
-    if (contradictions.some(([a, b]) => a.test(lower) && b.test(lower))) {
+    // Contradictory instructions (now uses shared signal)
+    if (signals.contradictions) {
       score -= 15;
       findings.push(k('contradictions'));
       suggestions.push(k('contradictionsSugg'));
@@ -184,7 +188,7 @@ const Analyzer = {
     return { score: this._clamp(score), findings, suggestions };
   },
 
-  _scoreSpecificity(prompt, lang) {
+  _scoreSpecificity(prompt, lang, signals) {
     let score = 50;
     const findings = [];
     const suggestions = [];
@@ -192,21 +196,18 @@ const Analyzer = {
     const words = lower.split(/\s+/).filter(Boolean);
     const k = (id) => I18n.t(`analyzer.specificity.${id}`);
 
-    // --- Positive signals ---
+    // --- Positive signals (all use shared signals to avoid keyword gaming) ---
 
-    // Numbers and quantitative constraints
-    const numbers = prompt.match(/\b\d+\b/g) || [];
-    if (numbers.length >= 2) {
+    // Numeric constraint: digits tied to a unit (NOT stray numbers).
+    if (signals.hasNumericConstraint) {
       score += 12;
       findings.push(k('numeric'));
-    } else if (numbers.length === 1) {
-      score += 5;
     }
 
     // Specific entities (proper nouns, technical terms)
     const properNouns = prompt.match(/\b[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\s[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)*\b/g) || [];
     if (properNouns.length >= 3) {
-      score += 8;
+      score += 6;
       findings.push(k('entities'));
     }
 
@@ -216,8 +217,8 @@ const Analyzer = {
       findings.push(k('criteria'));
     }
 
-    // Examples provided
-    if (/\b(example|ejemplo|e\.g\.|for instance|por ejemplo|sample|muestra)\b/i.test(lower) || /```/.test(prompt) || /→|->|=>/.test(prompt)) {
+    // Few-shot examples (co-occurrence required, not stray `=>` or code blocks)
+    if (signals.hasFewShot) {
       score += 12;
       findings.push(k('examples'));
     }
@@ -230,11 +231,10 @@ const Analyzer = {
 
     // --- Negative signals ---
 
-    // Vague adjectives
-    const vagueAdj = lower.match(/\b(good|bueno|nice|bonito|better|mejor|appropriate|adecuado|interesting|interesante|great|genial|amazing|increíble|cool|relevant|relevante)\b/gi) || [];
-    if (vagueAdj.length >= 2) {
+    // Vague adjectives (from shared signal)
+    if (signals.vagueAdjectives >= 2) {
       score -= 10;
-      findings.push(I18n.t('analyzer.specificity.vagueAdj', { n: vagueAdj.length }));
+      findings.push(I18n.t('analyzer.specificity.vagueAdj', { n: signals.vagueAdjectives }));
       suggestions.push(k('vagueAdjSugg'));
     }
 
@@ -246,7 +246,7 @@ const Analyzer = {
     }
 
     // No constraints at all in a long prompt
-    if (words.length > 30 && numbers.length === 0 && !/\b(must|should|need|require|debe|necesita|requiere)\b/i.test(lower)) {
+    if (words.length > 30 && !signals.hasNumericConstraint && !/\b(must|should|need|require|debe|necesita|requiere)\b/i.test(lower)) {
       score -= 12;
       findings.push(k('noConstraints'));
       suggestions.push(k('noConstraintsSugg'));
@@ -262,86 +262,81 @@ const Analyzer = {
     return { score: this._clamp(score), findings, suggestions };
   },
 
-  _scoreStructure(prompt, lang) {
+  _scoreStructure(prompt, lang, signals) {
     let score = 50;
     const findings = [];
     const suggestions = [];
     const words = prompt.split(/\s+/).filter(Boolean);
-    const lines = prompt.split('\n');
     const k = (id) => I18n.t(`analyzer.structure.${id}`);
 
-    // --- Positive signals ---
+    // --- Positive signals (all from shared signal map; each counted ONCE) ---
 
-    // XML tags
-    const xmlOpen = (prompt.match(/<[a-z_]+>/gi) || []).length;
-    const xmlClose = (prompt.match(/<\/[a-z_]+>/gi) || []).length;
-    if (xmlOpen >= 2 && xmlClose >= 1) {
-      score += 15;
+    // XML tags (capped at +8 unless they're named semantic sections)
+    if (signals.hasXMLTags) {
+      const hasNamedSections = /<(contexto|context|instrucciones|instructions|tarea|task|formato|format|restricciones|constraints|ejemplos|examples)>/i.test(prompt);
+      score += hasNamedSections ? 12 : 8;
       findings.push(k('xmlTags'));
     }
 
     // Markdown headers
-    const headers = (prompt.match(/^#{1,6}\s/gm) || []).length;
-    if (headers >= 2) {
-      score += 12;
+    if (signals.hasMarkdownHeaders) {
+      score += 10;
       findings.push(k('headers'));
     }
 
     // Numbered lists
-    const numbered = (prompt.match(/^\s*\d+[\.\)]\s/gm) || []).length;
-    if (numbered >= 3) {
-      score += 12;
+    if (signals.hasNumberedList) {
+      score += 10;
       findings.push(k('numbered'));
-    } else if (numbered >= 1) {
-      score += 5;
+    } else if (signals.numberedItemsCount >= 1) {
+      score += 4;
     }
 
     // Bullet points
-    const bullets = (prompt.match(/^\s*[-*•]\s/gm) || []).length;
-    if (bullets >= 3) {
-      score += 10;
+    if (signals.hasBullets) {
+      score += 8;
       findings.push(k('bullets'));
     }
 
     // Separators
-    const separators = (prompt.match(/^(---+|\*{3,}|={3,})$/gm) || []).length;
-    if (separators >= 1) {
-      score += 5;
+    if (signals.hasSeparators) {
+      score += 4;
       findings.push(k('separators'));
     }
 
     // Code blocks
-    const codeBlocks = (prompt.match(/```/g) || []).length;
-    if (codeBlocks >= 2) {
-      score += 8;
+    if (signals.hasCodeBlocks) {
+      score += 6;
       findings.push(k('codeBlocks'));
     }
 
     // Line breaks for readability
-    if (lines.length >= 5 && words.length > 30) {
-      score += 5;
+    if (signals.lineCount >= 5 && words.length > 30) {
+      score += 4;
       findings.push(k('lineBreaks'));
     }
 
     // --- Negative signals ---
 
-    // Long prompt without any structure
-    if (words.length > 60 && xmlOpen === 0 && headers === 0 && numbered === 0 && bullets === 0 && separators === 0) {
-      score -= 20;
+    // Long prompt without any structure (threshold raised to 100 to avoid
+    // penalising valid prose instructions in the 60–100 word range).
+    const anyStructure = signals.hasXMLTags || signals.hasMarkdownHeaders || signals.hasNumberedList || signals.hasBullets || signals.hasSeparators;
+    if (words.length > 100 && !anyStructure) {
+      score -= 15; // was -20
       findings.push(k('noStructure'));
       suggestions.push(k('noStructureSugg'));
     }
 
     // Single block of text
-    if (words.length > 40 && lines.length <= 2) {
-      score -= 15;
+    if (words.length > 40 && signals.lineCount <= 2) {
+      score -= 12;
       findings.push(k('singleBlock'));
       suggestions.push(k('singleBlockSugg'));
     }
 
     // Multiple tasks without structure
     const taskSwitchers = (prompt.toLowerCase().match(/\b(also|además|then|luego|after|después|and also|y también|next|plus|additionally|adicionalmente)\b/gi) || []).length;
-    if (taskSwitchers >= 3 && numbered === 0 && bullets === 0) {
+    if (taskSwitchers >= 3 && !signals.hasNumberedList && !signals.hasBullets) {
       score -= 12;
       findings.push(k('multiTaskNoStructure'));
       suggestions.push(k('multiTaskSugg'));
@@ -358,7 +353,7 @@ const Analyzer = {
     return { score: this._clamp(score), findings, suggestions };
   },
 
-  _scoreRobustness(prompt, lang) {
+  _scoreRobustness(prompt, lang, signals) {
     let score = 50;
     const findings = [];
     const suggestions = [];
@@ -366,50 +361,48 @@ const Analyzer = {
     const words = lower.split(/\s+/).filter(Boolean);
     const k = (id) => I18n.t(`analyzer.robustness.${id}`);
 
-    // --- Positive signals ---
+    // --- Positive signals (from shared signal map — no double counting) ---
 
-    // Error handling
-    if (/\b(if.*invalid|si.*inválid|if.*error|si.*error|when.*fail|cuando.*fall|fallback|por defecto|default|handle|manejar|otherwise|de lo contrario|if.*not|si.*no )\b/i.test(lower)) {
+    if (signals.errorHandling) {
       score += 12;
       findings.push(k('errorHandling'));
     }
 
-    // Edge cases
-    if (/\b(edge case|caso borde|caso límite|special case|caso especial|what if|qué pasa si|corner case|unusual|inusual|unexpected|inesperado|empty|vacío|null|missing|faltante)\b/i.test(lower)) {
+    if (signals.edgeCases) {
       score += 12;
       findings.push(k('edgeCases'));
     }
 
-    // Negative examples
+    // Negative examples (counter-examples)
     if (/\b(bad example|mal ejemplo|incorrect|incorrecto|wrong|erróneo|what not to|lo que no|avoid.*like|evita.*como|negative example|ejemplo negativo|counterexample|contraejemplo)\b/i.test(lower)) {
-      score += 10;
+      score += 8;
       findings.push(k('negativeExamples'));
     }
 
     // Conditional branching
     const conditionals = (lower.match(/\b(if|si|when|cuando|in case|en caso|unless|a menos que|depending|dependiendo|provided|siempre que)\b/gi) || []).length;
     if (conditionals >= 2) {
-      score += 8;
+      score += 6;
       findings.push(k('conditionals'));
     }
 
-    // Validation instructions
-    if (/\b(validate|valida|verify|verifica|check|comprueba|ensure|asegúrate|confirm|confirma|double.check|revisa)\b/i.test(lower)) {
-      score += 8;
+    // Validation instructions (shared signal; no longer stacks with safety's verify)
+    if (signals.validation) {
+      score += 6;
       findings.push(k('validation'));
     }
 
     // --- Negative signals ---
 
-    // No error handling in a complex prompt
-    if (words.length > 30 && !/\b(if|si|when|cuando|error|invalid|inválid|otherwise|contrario|handle|manejar|fallback|default)\b/i.test(lower)) {
-      score -= 15;
+    // No error handling in a long, complex prompt (threshold raised to 60)
+    if (words.length > 60 && !signals.errorHandling) {
+      score -= 12;
       findings.push(k('noErrorHandling'));
       suggestions.push(k('noErrorHandlingSugg'));
     }
 
     // No edge cases in a task-oriented prompt
-    if (words.length > 25 && !/\b(edge|borde|límite|special|especial|unusual|inusual|empty|vacío|null|missing|falt)\b/i.test(lower)) {
+    if (words.length > 25 && !signals.edgeCases) {
       score -= 10;
       findings.push(k('noEdgeCases'));
       suggestions.push(k('noEdgeCasesSugg'));
@@ -426,7 +419,7 @@ const Analyzer = {
     return { score: this._clamp(score), findings, suggestions };
   },
 
-  _scoreContext(prompt, lang) {
+  _scoreContext(prompt, lang, signals) {
     let score = 50;
     const findings = [];
     const suggestions = [];
@@ -434,23 +427,23 @@ const Analyzer = {
     const words = lower.split(/\s+/).filter(Boolean);
     const k = (id) => I18n.t(`analyzer.context.${id}`);
 
-    // --- Positive signals ---
+    // --- Positive signals (strict role detection — no more "user persona" / "if you are") ---
 
     // Role defined
-    if (/\b(you are|act as|eres|actúa como|role|rol|persona|behave as|compórtate como)\b/i.test(lower)) {
+    if (signals.roleAssignment) {
       score += 12;
       findings.push(k('role'));
     }
 
     // Role + domain
-    if (/\b(you are|eres|act as|actúa como)\b/i.test(lower) && /\b(in |en |of |de |specialized|especializado|expert.*in|experto.*en|with.*experience|con.*experiencia)\b/i.test(lower)) {
+    if (signals.roleWithDomain) {
       score += 8;
       findings.push(k('roleDomain'));
     }
 
-    // Audience defined
-    if (/\b(audience|audiencia|público|reader|lector|user|usuario|student|estudiante|developer|desarrollador|manager|gerente|client|cliente|beginner|principiante|for a|para un[oa]?|aimed at|dirigido a|intended for|destinado a|written for|escrito para)\b/i.test(lower)) {
-      score += 12;
+    // Audience defined (strict: real audience markers, not "for a" / "user")
+    if (signals.audienceDefined) {
+      score += 10;
       findings.push(k('audience'));
     }
 
@@ -475,15 +468,15 @@ const Analyzer = {
     // --- Negative signals ---
 
     // No role in a long prompt
-    if (words.length > 25 && !/\b(you are|act as|eres|actúa como|role|rol|persona)\b/i.test(lower)) {
+    if (words.length > 25 && !signals.roleAssignment) {
       score -= 10;
       findings.push(k('noRole'));
       suggestions.push(k('noRoleSugg'));
     }
 
     // No audience
-    if (words.length > 20 && !/\b(audience|audiencia|público|reader|lector|for a|para un|user|usuario|client|cliente|student|estudiante|aimed|dirigido|intended|destinado)\b/i.test(lower)) {
-      score -= 8;
+    if (words.length > 20 && !signals.audienceDefined) {
+      score -= 6;
       findings.push(k('noAudience'));
       suggestions.push(k('noAudienceSugg'));
     }
@@ -498,7 +491,7 @@ const Analyzer = {
     // No tone for a writing task
     const writingTask = /\b(write|escribe|draft|redacta|compose|compón|create.*text|crea.*texto|article|artículo|blog|email|correo|letter|carta|report|informe|essay|ensayo)\b/i.test(lower);
     if (writingTask && !/\b(tone|tono|style|estilo|formal|informal|voice|voz)\b/i.test(lower)) {
-      score -= 10;
+      score -= 8;
       findings.push(k('noTone'));
       suggestions.push(k('noToneSugg'));
     }
@@ -506,7 +499,7 @@ const Analyzer = {
     return { score: this._clamp(score), findings, suggestions };
   },
 
-  _scoreOutputFormat(prompt, lang) {
+  _scoreOutputFormat(prompt, lang, signals) {
     let score = 50;
     const findings = [];
     const suggestions = [];
@@ -514,30 +507,29 @@ const Analyzer = {
     const words = lower.split(/\s+/).filter(Boolean);
     const k = (id) => I18n.t(`analyzer.outputFormat.${id}`);
 
-    // --- Positive signals ---
+    // --- Positive signals (co-occurrence required to kill keyword gaming) ---
 
-    // Explicit format
-    if (/\b(json|xml|csv|yaml|html|markdown|table|tabla)\b/i.test(lower)) {
+    // Explicit format request: only counts if a request verb + a format name co-occur.
+    if (signals.requestsOutputFormat) {
       score += 15;
       findings.push(k('explicitFormat'));
     }
 
     // General format specification
     if (/\b(format|formato|structure|estructura|template|plantilla|schema|esquema|layout|disposición)\b/i.test(lower)) {
-      score += 10;
+      score += 8;
       findings.push(k('generalFormat'));
     }
 
-    // Output length specified
-    if (/\b(\d+\s*(words|palabras|sentences|oraciones|paragraphs|párrafos|lines|líneas|characters|caracteres))\b/i.test(lower) ||
-        /\b(brief|breve|concis[eo]|short|cort[oa]|detailed|detallad[oa]|comprehensive|exhaustiv[oa])\b/i.test(lower)) {
-      score += 10;
+    // Output length specified (number + unit, shared signal)
+    if (signals.hasNumericConstraint || /\b(brief|breve|concis[eo]|short|cort[oa]|detailed|detallad[oa]|comprehensive|exhaustiv[oa])\b/i.test(lower)) {
+      score += 8;
       findings.push(k('length'));
     }
 
     // List/bullet format
     if (/\b(list|lista|bullet|viñeta|numbered|numerad|enumerate|enumera|itemize)\b/i.test(lower)) {
-      score += 8;
+      score += 6;
       findings.push(k('listFormat'));
     }
 
@@ -547,13 +539,13 @@ const Analyzer = {
       findings.push(k('language'));
     }
 
-    // Example output provided
-    if (/\b(example output|ejemplo de salida|expected output|salida esperada|sample response|respuesta ejemplo|like this|como esto|here'?s.*format|aquí.*formato)\b/i.test(lower) || /```/.test(prompt)) {
-      score += 10;
+    // Example output provided (few-shot co-occurrence, not stray code blocks)
+    if (signals.hasFewShot) {
+      score += 8;
       findings.push(k('exampleOutput'));
     }
 
-    // Schema or structure definition
+    // Schema or structure definition (real JSON object or XML pair, not just mentioning "json")
     if (/\{[\s\S]*"[^"]+"\s*:[\s\S]*\}/.test(prompt) || /<[a-z_]+>[\s\S]*<\/[a-z_]+>/i.test(prompt)) {
       score += 8;
       findings.push(k('schema'));
@@ -562,15 +554,15 @@ const Analyzer = {
     // --- Negative signals ---
 
     // No format in a complex prompt
-    if (words.length > 25 && !/\b(format|formato|json|xml|csv|list|lista|table|tabla|markdown|bullet|template|plantilla|schema|structure|estructura)\b/i.test(lower)) {
-      score -= 15;
+    if (words.length > 25 && !signals.requestsOutputFormat && !/\b(format|formato|list|lista|table|tabla|markdown|template|plantilla|schema|structure|estructura)\b/i.test(lower)) {
+      score -= 12;
       findings.push(k('noFormat'));
       suggestions.push(k('noFormatSugg'));
     }
 
     // No length indication
-    if (words.length > 15 && !/\b(\d+\s*(words|palabras)|brief|breve|concis|short|cort|detailed|detallad|comprehensive|exhaustiv|one.liner|at most|como máximo|no more|no más|máximo|minimum|mínimo)\b/i.test(lower)) {
-      score -= 8;
+    if (words.length > 15 && !signals.hasNumericConstraint && !/\b(brief|breve|concis|short|cort|detailed|detallad|comprehensive|exhaustiv|one.liner|at most|como máximo|no more|no más|máximo|minimum|mínimo)\b/i.test(lower)) {
+      score -= 6;
       findings.push(k('noLength'));
       suggestions.push(k('noLengthSugg'));
     }
@@ -585,7 +577,7 @@ const Analyzer = {
     return { score: this._clamp(score), findings, suggestions };
   },
 
-  _scoreChainOfThought(prompt, lang) {
+  _scoreChainOfThought(prompt, lang, signals) {
     let score = 50;
     const findings = [];
     const suggestions = [];
@@ -593,66 +585,71 @@ const Analyzer = {
     const words = lower.split(/\s+/).filter(Boolean);
     const k = (id) => I18n.t(`analyzer.chainOfThought.${id}`);
 
-    // --- Positive signals ---
+    // --- Positive signals (capped to kill keyword-stuffing) ---
 
-    // Explicit CoT request
-    if (/\b(step.by.step|paso a paso|think.*through|piensa.*detenidamente|chain of thought|cadena de pensamiento|let'?s think|pensemos|think carefully|piensa cuidadosamente)\b/i.test(lower)) {
-      score += 20;
+    // Explicit CoT request (shared signal; bonus reduced from +20 to +12).
+    if (signals.hasStepByStep) {
+      score += 12;
       findings.push(k('explicitCoT'));
     }
 
+    // Modern techniques: ToT, ReAct, self-consistency, reflexion.
+    if (signals.hasTreeOfThought) { score += 8; findings.push(I18n.t('analyzer.chainOfThought.treeOfThought')); }
+    if (signals.hasReAct) { score += 8; findings.push(I18n.t('analyzer.chainOfThought.reactTechnique')); }
+    if (signals.hasSelfConsistency) { score += 8; findings.push(I18n.t('analyzer.chainOfThought.selfConsistency')); }
+    if (signals.hasReflexion) { score += 8; findings.push(I18n.t('analyzer.chainOfThought.reflexion')); }
+
     // Reasoning request
-    if (/\b(explain.*reasoning|explica.*razonamiento|show.*work|muestra.*proceso|explain.*why|explica.*por qué|justify|justifica|walk.*through|guíame|reason through|razona)\b/i.test(lower)) {
-      score += 12;
+    if (/\b(explain.{0,15}reasoning|explica.{0,15}razonamiento|show.{0,10}work|muestra.{0,10}proceso|explain.{0,10}why|explica.{0,10}por qué|justify|justifica|walk.{0,10}through|guíame|reason through|razona)\b/i.test(lower)) {
+      score += 10;
       findings.push(k('reasoning'));
     }
 
-    // Sequential instructions
-    if (/\b(first|primero|second|segundo|third|tercero|then|luego|next|siguiente|finally|finalmente|lastly|por último|after|después|before|antes)\b/i.test(lower)) {
-      score += 8;
+    // Sequential instructions (only count if there are 2+ markers, not lone "then")
+    const seqMatches = (lower.match(/\b(first|primero|second|segundo|third|tercero|then|luego|next|siguiente|finally|finalmente|lastly|por último)\b/gi) || []).length;
+    if (seqMatches >= 2) {
+      score += 6;
       findings.push(k('sequence'));
     }
 
-    // Decomposition instruction
-    if (/\b(break.*down|descompón|decompose|descomponer|divide.*into|divide.*en|sub.?tasks|sub.?tareas|components|componentes|parts|partes)\b/i.test(lower)) {
-      score += 10;
+    // Decomposition instruction (stricter: must be a task instruction, not "list of components")
+    if (/\b(break.{0,8}down|descompón|decompose|descomponer|divide.{0,8}(into|en|the (problem|task|issue)))\b/i.test(lower)) {
+      score += 8;
       findings.push(k('decomposition'));
     }
 
     // Analysis framework
-    if (/\b(pros.*cons|ventajas.*desventajas|compare.*contrast|compara.*contrasta|trade-?off|criteria|criterio|framework|marco|methodology|metodología|approach|enfoque)\b/i.test(lower)) {
-      score += 8;
+    if (/\b(pros.{0,8}cons|ventajas.{0,8}desventajas|compare.{0,8}contrast|compara.{0,8}contrasta|trade-?off|framework|marco|methodology|metodología)\b/i.test(lower)) {
+      score += 6;
       findings.push(k('framework'));
     }
 
     // --- Negative signals ---
 
-    // Complex reasoning without CoT
-    const complexReasoning = /\b(analyz|analiza|evaluat|evalúa|compar|decide|decid|reason|razon|why|por qué|cause|causa|impact|impacto|consequence|consecuencia|implication|implicación|debate|argue|argumenta)\b/i.test(lower);
-    if (complexReasoning && !/\b(step|paso|think|piensa|reason|razón|explain|explica|break|descompón)\b/i.test(lower)) {
-      score -= 15;
+    // Complex reasoning without CoT (strict trigger terms, not "because"/"why")
+    const complexReasoning = /\b(analyz|analiza|evaluat|evalúa|compar|decide|decid|reason|razon|por qué|impact|impacto|consequence|consecuencia|implication|implicación|debate|argue|argumenta)\b/i.test(lower);
+    const anyCoTSignal = signals.hasStepByStep || signals.hasTreeOfThought || signals.hasReAct || signals.hasSelfConsistency || signals.hasReflexion;
+    if (complexReasoning && !anyCoTSignal && !/\b(step|paso|think|piensa|explain|explica|break|descompón)\b/i.test(lower)) {
+      score -= 12;
       findings.push(k('noCoT'));
       suggestions.push(k('noCoTSugg'));
     }
 
     // Multi-step task without sequence
-    const multiStepIndicators = (lower.match(/\b(and then|y luego|after that|después de eso|followed by|seguido de|finally|finalmente|then|entonces)\b/gi) || []).length;
-    if (multiStepIndicators >= 2 && !/\b(step|paso|1\.|2\.|first|primero|second|segundo)\b/i.test(lower)) {
-      score -= 10;
+    const multiStepIndicators = (lower.match(/\b(and then|y luego|after that|después de eso|followed by|seguido de|finally|finalmente)\b/gi) || []).length;
+    if (multiStepIndicators >= 2 && !/\b(step|paso|1\.|2\.|first|primero|second|segundo)\b/i.test(lower) && !anyCoTSignal) {
+      score -= 8;
       findings.push(k('noSequence'));
       suggestions.push(k('noSequenceSugg'));
     }
 
-    // Simple prompt (bonus: doesn't need CoT)
-    if (words.length < 20 && !complexReasoning) {
-      score += 10;
-      findings.push(k('simpleBonus'));
-    }
+    // NOTE: the old "+10 simpleBonus" for short prompts was REMOVED — it
+    // inflated scores of short prompts in a dimension that doesn't apply.
 
     return { score: this._clamp(score), findings, suggestions };
   },
 
-  _scoreSafety(prompt, lang) {
+  _scoreSafety(prompt, lang, signals) {
     let score = 50;
     const findings = [];
     const suggestions = [];
@@ -660,59 +657,80 @@ const Analyzer = {
     const words = lower.split(/\s+/).filter(Boolean);
     const k = (id) => I18n.t(`analyzer.safety.${id}`);
 
-    // --- Positive signals ---
+    // --- Positive signals (strict anti-hallucination: requires explicit
+    // anti-fabrication language, NOT just "verify" which is generic) ---
 
     // Anti-hallucination guardrails
-    if (/\b(don'?t make up|no inventes|don'?t fabricate|no fabriques|cite.*source|cita.*fuente|if.*unsure|si.*segur|verify|verifica|factual|evidence|evidencia|stick to facts|apégate a los hechos|do not hallucinate|no speculate|no especules|only.*verified|solo.*verificad)\b/i.test(lower)) {
+    if (signals.antiHallucination) {
       score += 15;
       findings.push(k('antiHallucination'));
     }
 
-    // Scope limitations
-    if (/\b(scope|alcance|only.*about|solo.*sobre|limited to|limitado a|restricted|restringido|focus.*on|enfócate.*en|stay.*within|mantente.*dentro|do not go beyond|no vayas más allá|boundaries|límites)\b/i.test(lower)) {
-      score += 12;
+    // Scope limitations (shared signal)
+    if (signals.scopeLimit) {
+      score += 10;
       findings.push(k('scope'));
     }
 
-    // Injection guardrails
-    if (/\b(ignore.*previous|ignora.*anterior|do not follow|no sigas|guardrail|protección|system prompt|prompt del sistema|do not reveal|no reveles|maintain.*role|mantén.*rol|stay in character|mantén.*personaje)\b/i.test(lower)) {
+    // Injection guardrails (shared signal — real defensive negations, not "system prompt")
+    if (signals.injectionGuard || signals.untrustedDelim) {
       score += 15;
       findings.push(k('injection'));
     }
 
     // Uncertainty acknowledgment
-    if (/\b(if.*uncertain|si.*inciert|if.*don'?t know|si.*no sabes|acknowledge|reconoce|clarify|clarifica|ask.*clarification|pide.*aclaración|confidence|confianza|certainty|certeza)\b/i.test(lower)) {
-      score += 10;
+    if (/\b(if.{0,15}uncertain|si.{0,15}inciert|if.{0,15}don'?t know|si.{0,15}no sabes|acknowledge|reconoce|ask.{0,10}clarification|pide.{0,10}aclaración|low confidence|baja confianza)\b/i.test(lower)) {
+      score += 8;
       findings.push(k('uncertainty'));
     }
 
     // Content restrictions
-    if (/\b(do not include|no incluyas|avoid.*mention|evita.*mencionar|never.*share|nunca.*compartas|sensitive|sensible|confidential|confidencial|privacy|privacidad|appropriate|apropiado)\b/i.test(lower)) {
+    if (/\b(do not include|no incluyas|avoid.{0,10}mention|evita.{0,10}mencionar|never.{0,10}share|nunca.{0,10}compartas|sensitive data|datos sensibles|confidential|confidencial|privacy|privacidad|PII|GDPR|HIPAA)\b/i.test(lower)) {
       score += 8;
       findings.push(k('contentRestrictions'));
     }
 
     // --- Negative signals ---
 
-    // System-prompt-like without guardrails
-    if (words.length > 30 && /\b(you are|eres|act as|actúa como|role|rol|system|sistema)\b/i.test(lower) &&
-        !/\b(guardrail|protección|scope|alcance|boundary|límite|restrict|restrin|ignore.*previous|do not reveal|no reveles)\b/i.test(lower)) {
+    // PII / secrets present in the prompt (critical privacy risk)
+    if (signals.hasPII) {
+      score -= 20;
+      findings.push(I18n.t('analyzer.safety.piiLeak'));
+      suggestions.push(I18n.t('analyzer.safety.piiLeakSugg'));
+    }
+
+    // Assumes capabilities the model doesn't have (live URLs, exact math, code exec)
+    if (signals.assumesCapability) {
+      score -= 12;
+      findings.push(I18n.t('analyzer.safety.assumesCapability'));
+      suggestions.push(I18n.t('analyzer.safety.assumesCapabilitySugg'));
+    }
+
+    // Post-cutoff knowledge required without grounding
+    if (signals.postCutoffYear && !signals.hasRagContext) {
+      score -= 10;
+      findings.push(I18n.t('analyzer.safety.postCutoff'));
+      suggestions.push(I18n.t('analyzer.safety.postCutoffSugg'));
+    }
+
+    // System-prompt-like without guardrails (uses shared signals)
+    const isSystemLike = signals.systemPromptCue && words.length > 30;
+    if (isSystemLike && !signals.injectionGuard && !signals.scopeLimit && !signals.untrustedDelim) {
       score -= 15;
       findings.push(k('noGuardrails'));
       suggestions.push(k('noGuardrailsSugg'));
     }
 
-    // Factual request without grounding
-    if (/\b(fact|hecho|statistic|estadística|data|dato|research|investigación|number|número|date|fecha|year|año|who|quién|when|cuándo|history|historia|scientific|científic)\b/i.test(lower) &&
-        !/\b(cite|cita|source|fuente|reference|referencia|verify|verifica|based on|basado en|evidence|evidencia|if.*unsure|si.*segur)\b/i.test(lower)) {
-      score -= 12;
+    // Factual request without grounding (strict: real factual terms only)
+    if (signals.factualRequest && !signals.antiHallucination) {
+      score -= 10;
       findings.push(k('noGrounding'));
       suggestions.push(k('noGroundingSugg'));
     }
 
     // No scope limits in a long prompt
-    if (words.length > 40 && !/\b(scope|alcance|only|solo|limited|limitado|focus|enfoca|restrict|restrin|within|dentro|boundary|límite)\b/i.test(lower)) {
-      score -= 8;
+    if (words.length > 40 && !signals.scopeLimit) {
+      score -= 6;
       findings.push(k('noScope'));
       suggestions.push(k('noScopeSugg'));
     }
@@ -744,20 +762,29 @@ const Analyzer = {
    * the source of truth plus a couple of direct regex checks.
    * @private
    */
-  _buildDetected(prompt, patternResults) {
+  _buildDetected(prompt, patternResults, signals) {
     const strengthIds = new Set((patternResults?.strengths || []).map(s => s.id));
-    const lower = prompt.toLowerCase();
+    const sig = signals || Signals.extract(prompt, 'en');
 
     return {
-      hasRole:           strengthIds.has('BP004') || /\b(you are|act as|eres|actúa como)\b/i.test(lower),
+      hasRole:           strengthIds.has('BP004') || sig.roleAssignment,
       hasContext:        strengthIds.has('BP010'),
-      hasExamples:       strengthIds.has('BP002'),
-      hasOutputFormat:   strengthIds.has('BP003'),
-      hasGuardrails:     strengthIds.has('BP009'),
-      hasXMLTags:        strengthIds.has('BP001'),
-      hasChainOfThought: strengthIds.has('BP005'),
-      hasErrorHandling:  strengthIds.has('BP006'),
+      hasExamples:       strengthIds.has('BP002') || sig.hasFewShot,
+      hasOutputFormat:   strengthIds.has('BP003') || sig.requestsOutputFormat,
+      hasGuardrails:     strengthIds.has('BP009') || sig.antiHallucination,
+      hasXMLTags:        strengthIds.has('BP001') || sig.hasXMLTags,
+      hasChainOfThought: strengthIds.has('BP005') || sig.hasStepByStep,
+      hasErrorHandling:  strengthIds.has('BP006') || sig.errorHandling,
       hasVariables:      /\{\{[^}]+\}\}/.test(prompt),
+      // New: modern techniques surfaced to consumers (Rewriter, exports).
+      hasTreeOfThought:   sig.hasTreeOfThought,
+      hasReAct:           sig.hasReAct,
+      hasToolUse:         sig.hasToolUse,
+      hasSelfConsistency: sig.hasSelfConsistency,
+      hasReflexion:       sig.hasReflexion,
+      hasRagContext:      sig.hasRagContext,
+      hasInjectionGuard:  sig.injectionGuard,
+      hasUntrustedDelim:  sig.untrustedDelim,
     };
   },
 
@@ -973,6 +1000,10 @@ const Analyzer = {
       antiPatterns: [],
       strengths: [],
       language: 'en',
+      // New
+      promptType: 'general',
+      promptTypeLabel: I18n.t('promptType.general') || 'general',
+      weightsUsed: { ...Signals.weightsFor('general') },
       // Legacy shim
       prompt: '',
       scores: this._buildScores(dimensions, 0),

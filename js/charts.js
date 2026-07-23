@@ -13,15 +13,15 @@ const Charts = {
 
   /* ── Theme tokens (synced with index.css) ─────────────────── */
   _theme: {
-    cyan:        '#00d4ff',
-    purple:      '#7c3aed',
-    cyanAlpha:   'rgba(0, 212, 255, 0.18)',
-    purpleAlpha: 'rgba(124, 58, 237, 0.10)',
+    amber:       '#ffb703',
+    emerald:     '#10b981',
+    amberAlpha:  'rgba(255, 183, 3, 0.22)',
+    emeraldAlpha:'rgba(16, 185, 129, 0.12)',
     gridColor:   'rgba(255, 255, 255, 0.05)',
     tickColor:   'rgba(255, 255, 255, 0.35)',
-    labelColor:  'rgba(240, 240, 255, 0.75)',
-    tooltipBg:   'rgba(18, 18, 42, 0.92)',
-    surface:     'rgba(26, 26, 62, 0.5)',
+    labelColor:  'rgba(248, 250, 252, 0.75)',
+    tooltipBg:   'rgba(15, 17, 26, 0.94)',
+    surface:     'rgba(25, 29, 45, 0.5)',
     fontFamily:  "'Inter', sans-serif",
   },
 
@@ -64,16 +64,11 @@ const Charts = {
       this.radarChart = null;
     }
 
-    // Build a gradient for the fill
-    const chartCtx = ctx.getContext('2d');
-    const fillGradient = chartCtx.createLinearGradient(0, 0, ctx.width, ctx.height);
-    fillGradient.addColorStop(0, this._theme.cyanAlpha);
-    fillGradient.addColorStop(1, this._theme.purpleAlpha);
-
-    const borderGradient = chartCtx.createLinearGradient(0, 0, ctx.width, ctx.height);
-    borderGradient.addColorStop(0, this._theme.cyan);
-    borderGradient.addColorStop(1, this._theme.purple);
-
+    // NOTE: do NOT build canvas gradients here. ctx.width / ctx.height are
+    // the DOM attributes (or undefined after Chart.js goes responsive) and
+    // produced a corrupt gradient that rendered an empty chart. Solid RGBA
+    // colours are used instead; they look identical at this scale and are
+    // immune to canvas resizing.
     this.radarChart = new Chart(ctx, {
       type: 'radar',
       data: {
@@ -82,13 +77,13 @@ const Charts = {
           {
             label: I18n.t('report.datasetLabel'),
             data: new Array(8).fill(0),
-            backgroundColor: fillGradient,
-            borderColor: borderGradient,
+            backgroundColor: this._theme.amberAlpha,
+            borderColor: this._theme.amber,
             borderWidth: 2,
-            pointBackgroundColor: this._theme.cyan,
-            pointBorderColor: this._theme.cyan,
+            pointBackgroundColor: this._theme.amber,
+            pointBorderColor: this._theme.amber,
             pointHoverBackgroundColor: '#ffffff',
-            pointHoverBorderColor: this._theme.cyan,
+            pointHoverBorderColor: this._theme.amber,
             pointRadius: 4,
             pointHoverRadius: 6,
             fill: true,
@@ -198,11 +193,8 @@ const Charts = {
       this.historyChart = null;
     }
 
-    const chartCtx = ctx.getContext('2d');
-    const areaGradient = chartCtx.createLinearGradient(0, 0, 0, ctx.height || 300);
-    areaGradient.addColorStop(0, 'rgba(0, 212, 255, 0.20)');
-    areaGradient.addColorStop(1, 'rgba(0, 212, 255, 0.00)');
-
+    // NOTE: gradient removed for the same reason as initRadar — ctx.height
+    // is unreliable after Chart.js goes responsive. Solid RGBA fill instead.
     this.historyChart = new Chart(ctx, {
       type: 'line',
       data: {
@@ -212,7 +204,7 @@ const Charts = {
             label: I18n.t('report.datasetLabelHistory'),
             data: [],
             borderColor: this._theme.cyan,
-            backgroundColor: areaGradient,
+            backgroundColor: 'rgba(0, 212, 255, 0.12)',
             borderWidth: 2.5,
             pointBackgroundColor: this._theme.cyan,
             pointBorderColor: '#0a0a1a',

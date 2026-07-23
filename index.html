@@ -25,15 +25,28 @@
   <header class="app-header" id="app-header">
     <div class="header-left">
       <div class="logo">
-        <svg class="logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="32" height="32" rx="8" fill="url(#logo-gradient)"/>
-          <path d="M16 6L20 12H24L20 18L24 24H20L16 18L12 24H8L12 18L8 12H12L16 6Z" fill="white" opacity="0.9"/>
+        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <linearGradient id="logo-gradient" x1="0" y1="0" x2="32" y2="32">
-              <stop stop-color="#00d4ff"/>
-              <stop offset="1" stop-color="#7c3aed"/>
+            <linearGradient id="logo-bg" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#ffb703"/>
+              <stop offset="50%" stop-color="#fb8500"/>
+              <stop offset="100%" stop-color="#d97706"/>
+            </linearGradient>
+            <linearGradient id="spark-grad" x1="0" y1="0" x2="0" y2="24" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="100%" stop-color="#fff3c4"/>
             </linearGradient>
           </defs>
+          <!-- Squircle Base -->
+          <rect x="1" y="1" width="38" height="38" rx="10" fill="url(#logo-bg)" stroke="rgba(255,255,255,0.35)" stroke-width="1.2"/>
+          <!-- Anvil Forge Base -->
+          <path d="M10 26h20c1 0 1.5.8 1.2 1.5l-.8 1.5c-.3.6-1 1-1.7 1H11.3c-.7 0-1.4-.4-1.7-1l-.8-1.5c-.3-.7.2-1.5 1.2-1.5z" fill="#08090e" opacity="0.88"/>
+          <path d="M12 22.5h16l-2 3.5H14l-2-3.5z" fill="#141724" opacity="0.9"/>
+          <!-- Prompt Chevrons -->
+          <path d="M9 15.5l-3 3 3 3" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+          <path d="M31 15.5l3 3-3 3" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+          <!-- AI Spark -->
+          <path d="M20 7c1.2 3.5 3.5 5.8 7 7-3.5 1.2-5.8 3.5-7 7-1.2-3.5-3.5-5.8-7-7 3.5-1.2 5.8-3.5 7-7z" fill="url(#spark-grad)"/>
         </svg>
         <h1 class="logo-text">Prompt<span class="logo-accent">Forge</span></h1>
       </div>
@@ -177,7 +190,7 @@
             </div>
 
             <!-- Tab: Anti-patterns -->
-            <div class="tab-content active" id="tab-antipatterns">
+            <div class="tab-content" id="tab-antipatterns">
               <div class="section-header">
                 <h3 data-i18n="sections.antipatternsDetected">Anti-patrones Detectados</h3>
                 <span class="count-badge" id="antipattern-count">0</span>
@@ -214,6 +227,9 @@
                 <div class="improvement-badge" id="improvement-badge">
                   <!-- Score improvement shown here -->
                 </div>
+              </div>
+              <div class="top-impact-container" id="top-impact-container">
+                <!-- Generado dinámicamente por JS -->
               </div>
               <div class="changes-list" id="changes-list">
                 <!-- Changes description -->
@@ -312,6 +328,7 @@
 
   <!-- Scripts -->
   <script src="js/i18n.js"></script>
+  <script src="js/signals.js"></script>
   <script src="js/patterns.js"></script>
   <script src="js/analyzer.js"></script>
   <script src="js/adversarial.js"></script>

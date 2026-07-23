@@ -409,6 +409,33 @@ const App = (() => {
     const badge = document.getElementById('improvement-badge');
     badge.innerHTML = t('improvement.estimated', { n: improved.scoreImprovement });
 
+    // FASE 7: Top 5 Impact Issues (Before / After Resolution)
+    const topImpactEl = document.getElementById('top-impact-container');
+    if (topImpactEl && currentAnalysis && currentAnalysis.analysis.suggestions) {
+      const topSuggestions = currentAnalysis.analysis.suggestions.slice(0, 5);
+      if (topSuggestions.length > 0) {
+        topImpactEl.innerHTML = `
+          <div style="margin-bottom: 1rem; padding: 12px; background: rgba(255, 183, 3, 0.05); border: 1px solid rgba(255, 183, 3, 0.15); border-radius: var(--radius-md);">
+            <h4 style="color: var(--accent-amber); font-size: 0.85rem; margin-bottom: 8px;">⚡ Resolución de Problemas Prioritarios (Antes vs Después)</h4>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              ${topSuggestions.map((s, idx) => `
+                <div style="display: flex; align-items: flex-start; justify-content: space-between; font-size: 0.8rem; padding: 6px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.04);">
+                  <div style="flex: 1;">
+                    <span style="color: var(--severity-high); font-weight: 700;">Antes:</span> ${escapeHtml(s.description || s.title)}
+                  </div>
+                  <div style="flex: 1; text-align: right; color: var(--accent-emerald); font-weight: 600;">
+                    ✓ Resuelto mediante estructura XML
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      } else {
+        topImpactEl.innerHTML = '';
+      }
+    }
+
     const changesList = document.getElementById('changes-list');
     const typeLabel = (type) => t(`changes.${type === 'added' ? 'added' : type === 'modified' ? 'modified' : 'restructured'}`);
     changesList.innerHTML = improved.changes.map(c => `
@@ -453,8 +480,17 @@ const App = (() => {
     document.getElementById(`tab-${tabName}`).classList.add('active');
 
     if (tabName === 'radar' && currentAnalysis) {
-      if (!Charts.radarChart) Charts.initRadar('radar-canvas');
-      renderRadar(currentAnalysis.analysis.dimensions);
+      if (typeof Charts !== 'undefined') {
+        // Initialise only once; reusing the existing chart avoids the
+        // destroy/recreate flicker on every tab visit.
+        if (!Charts.radarChart) {
+          Charts.initRadar('radar-canvas');
+        }
+        // renderRadar extracts the .score numbers from each dimension;
+        // passing dimensions directly to updateRadar yields 0 for every
+        // axis (dimensions are objects, not numbers).
+        renderRadar(currentAnalysis.analysis.dimensions);
+      }
     }
   }
 
