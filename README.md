@@ -1,11 +1,11 @@
-# PromptForge
+# PromptForge & PromptQuill
 
-**Advanced Prompt Analyzer** — Multidimensional evaluation, anti-pattern detection, adversarial testing and automatic prompt improvement for LLMs. 100% client-side, no backend, no build step.
+**Advanced Prompt Engineering & Evaluation Suite** — Multidimensional scoring, anti-pattern detection, adversarial security testing, automatic prompt improvement, and multi-language engine bindings.
 
-![Language](https://img.shields.io/badge/JavaScript-Vanilla-f7df1e)
-![Style](https://img.shields.io/badge/CSS-Vanilla-264de4)
-![Build](https://img.shields.io/badge/build-none-success)
-![Backend](https://img.shields.io/badge/backend-none-success)
+![Language](https://img.shields.io/badge/JavaScript-Vanilla%20%2F%20Node.js-f7df1e)
+![Python](https://img.shields.io/badge/Python-Native%20Zero--Dep-3776ab)
+![API](https://img.shields.io/badge/REST%20API-HTTP%2FJSON-green)
+![Design](https://img.shields.io/badge/UI-Obsidian%20%26%20Amber%20Studio-ffb703)
 ![i18n](https://img.shields.io/badge/i18n-ES%20%2F%20EN-blue)
 
 ---
@@ -14,241 +14,134 @@
 
 1. [Overview](#-overview)
 2. [Quick Start](#-quick-start)
-3. [Usage Guide](#-usage-guide)
-4. [How PromptForge Scores](#-how-promptforge-scores)
-5. [Internationalization](#-internationalization)
-6. [Technical Architecture](#-technical-architecture)
+3. [Studio Obsidian Design System](#-studio-obsidian-design-system)
+4. [Multi-Language Core Libraries](#-multi-language-core-libraries)
+   - [JavaScript / Node.js (`promptforge-core.js`)](#1-javascript--nodejs-libpromptforge-corejs)
+   - [Python Native (`promptforge_core.py`)](#2-python-native-libpromptforge_corepy)
+   - [REST API Microservice (`server.js`)](#3-universal-rest-api-microservice-serverjs)
+   - [Declarative JSON Rules (`promptforge-rules.json`)](#4-declarative-rules-libpromptforge-rulesjson)
+   - [Command Line Interface (`cli.js`)](#5-command-line-interface-clijs)
+5. [Stress & Edge Case Testing Suite](#-stress--edge-case-testing-suite)
+6. [How PromptForge Scores](#-how-promptforge-scores)
 7. [Project Structure](#-project-structure)
-8. [Module Public API](#-module-public-api)
-9. [Export Formats](#-export-formats)
-10. [Troubleshooting](#-troubleshooting)
-11. [Roadmap](#-roadmap)
-12. [License](#-license)
+8. [License](#-license)
 
 ---
 
 ## 🎯 Overview
 
-PromptForge is a web tool to **write better prompts**. It takes a prompt as text and returns:
+PromptForge is a complete professional workspace and engine to **evaluate, benchmark, and optimize prompts for LLMs**. It provides:
 
-- A **global score 0–100** with a letter grade (A+ to F), broken down across **8 dimensions**.
-- **Detected anti-patterns** (catalog of 30) and **strengths** (catalog of 15).
-- **10 adversarial tests** (injection, hallucination, ambiguity, edge cases…).
-- An **improved version** of the prompt, rewritten with canonical XML structure.
-- A persistent **history** of analyses with an evolution chart.
-
-Everything runs in the browser with vanilla JavaScript plus Chart.js (via CDN). **No data ever leaves your machine.**
+- **Multidimensional Score (0–100)** with letter grades (A to F) across **8 dimensions**.
+- **Anti-Pattern Catalog** (30 anti-patterns) & **Best Practices** (15 strengths).
+- **Adversarial Security Suite** (jailbreak resistance, prompt exfiltration, hallucination mitigation).
+- **Non-Destructive XML Rewriter** preserving user context with a Before vs After impact analysis.
+- **Standalone Core Libraries** for Web, Node.js, Python, REST APIs, and CLI.
 
 ---
 
 ## 🚀 Quick Start
 
-### Requirements
-- A modern browser (Chrome, Firefox, Edge, Safari). No Node.js or installation needed.
-
-### Running
-1. Download or clone this directory.
-2. Open `index.html` directly with a double-click, or serve it with any static server:
-
+### Web App (Zero Setup)
+1. Double-click `index.html` or serve with any static server:
    ```bash
-   # Option A: Python
    python -m http.server 8000
-
-   # Option B: Node
-   npx serve .
-
-   # Option C: VS Code
-   # Install the "Live Server" extension, then right-click > Open with Live Server
    ```
+2. Open `http://localhost:8000` in your browser.
 
-3. Visit `http://localhost:8000` (if you used a server) or use the opened file.
-
-> ℹ️ Opening with `file://` works, but the clipboard and some modern APIs require `http(s)`. Serving it is recommended.
+### Stress Test Console
+Open `test_runner.html` in your browser and click **🚀 Run Test Suite** to execute 14 real-time edge case & stress vector tests.
 
 ---
 
-## 📖 Usage Guide
+## 🎨 Studio Obsidian Design System
 
-### **Analyze** view (main)
+The application features a custom high-end UI inspired by engineering workbenches (Linear, Raycast, Vercel Studio):
+- **Base Palette:** Deep Obsidian (`#08090e`), Charcoal Surface (`#0f111a`), Electric Amber (`#ffb703`), and Quality Emerald (`#10b981`).
+- **Typography:** Dual setup with `JetBrains Mono` for telemetry/code and `Inter` for micro-caps UI labels.
+- **Bento Grid:** Modular dashboard grouping the score ring, telemetry radar, dimension list, and security badges.
 
-1. Type or paste your prompt in the left text area.
-   - Shortcut: **Ctrl/Cmd + Enter** to analyze.
-   - Buttons **Paste** (clipboard) and **Clear**.
-2. Click **Analyze Prompt**.
-3. In the right panel you'll see:
-   - A circular **global score** (0–100) with a grade and complexity/language badges.
-   - **5 result tabs**:
+---
 
-| Tab | Content |
-|------|---------|
-| **Dimensions** | 8 expandable cards (click to expand) with findings and suggestions per dimension. |
-| **Radar** | Radial chart of the 8 scores. |
-| **Anti-patterns** | List of detected problems with severity and suggestion, plus detected strengths. |
-| **Adversarial** | Result of the 10 resilience tests (PASS / WARNING / FAIL) and overall resistance. |
-| **Improve** | Rewritten prompt with XML structure, list of changes, and **Apply to Editor** / **Copy** buttons. |
+## 📦 Multi-Language Core Libraries
 
-### **Templates** view
+The evaluation engine is decoupled from the UI and exported into standalone modules for any tech stack:
 
-Library of optimized templates, organized by category (Classification, Extraction, Generation, Analysis, Code, Agent, Evaluation). Click **Use template** to load it into the editor.
+### 1. JavaScript / Node.js (`lib/promptforge-core.js`)
+Zero-dependency UMD / ESM / CommonJS build:
+```javascript
+const PromptForgeCore = require('./lib/promptforge-core.js');
 
-Templates use `{{variable}}` placeholders that you must replace before analyzing.
+const analysis = PromptForgeCore.analyze("Your prompt text here...");
+console.log(analysis.overallScore, analysis.grade);
+```
 
-### **History** view
+### 2. Python Native (`lib/promptforge_core.py`)
+Pure Python (zero dependencies) for FastAPI, Django, Flask, LangChain, or LlamaIndex:
+```python
+import sys
+sys.path.append('./lib')
+import promptforge_core
 
-- List of previous analyses (persisted in `localStorage`, max 50 entries).
-- Line chart of score evolution.
-- For each entry: **Load into editor** and **Delete** buttons.
-- Global buttons: **Export** (JSON) and **Clear** the whole history.
+analysis = promptforge_core.analyze("Your prompt text here...")
+print("Score:", analysis["overall_score"], "Grade:", analysis["grade"])
+```
 
-### Export (top-right button)
+### 3. Universal REST API Microservice (`server.js`)
+Native Node.js HTTP server. Consumable from C#, Java, Go, Rust, PHP, or Ruby via HTTP POST:
+```bash
+node server.js
+```
+```bash
+curl -X POST http://localhost:3000/api/analyze \
+  -H "Content-Type: application/json" \
+  -d '{"prompt": "Act as an expert developer. Output JSON."}'
+```
 
-| Format | What it includes |
-|--------|------------------|
-| **JSON** | Full structured report (scores, dimensions, metrics, tokens, suggestions, anti-patterns). |
-| **Markdown** | Readable report with ASCII score bars, tables and sections. |
-| **Clipboard** | The Markdown report copied to the clipboard. |
-| **Shareable link** | URL with the prompt encoded as base64 (`?p=...`). Opening it auto-loads the prompt. |
+### 4. Declarative Rules (`lib/promptforge-rules.json`)
+Agnostic JSON specification defining regexes, anti-patterns, and dimension weights for cross-platform engines.
+
+### 5. Command Line Interface (`cli.js`)
+Evaluate prompts directly from the system terminal:
+```bash
+node cli.js "Your prompt here"
+```
+
+---
+
+## 🧪 Stress & Edge Case Testing Suite
+
+PromptForge includes automated test runners to verify engine stability against malformed and extreme inputs:
+- **`test_runner.html`**: Interactive web test runner console.
+- **`test_edge_cases.js`**: Automated Node.js runner.
+- **`test_edge_cases.py`**: Automated Python runner.
+
+### Edge Case Vectors Covered (14/14):
+1. Empty string & whitespace
+2. Non-string inputs (`null` / `undefined`)
+3. Massive prompts (50,000+ characters)
+4. Regex poisoning & special characters (`([.*+?^${}()|[\]\\])*`)
+5. Unclosed and malformed XML tags (`<rol><contexto>...`)
+6. HTML/XSS code injection
+7. Emojis and multi-byte UTF-8
+8. Non-Latin scripts (Chinese, Cyrillic, Arabic)
+9. Keyword stuffing / anti-gaming validation
 
 ---
 
 ## 🧠 How PromptForge Scores
 
-### The 8 dimensions (with weights)
-
-| Dimension | Weight | What it evaluates |
-|-----------|:------:|-------------------|
-| **Clarity** | 18% | Action verbs, sentence structure, absence of vagueness and contradictions. |
-| **Specificity** | 15% | Numeric constraints, named entities, measurable success criteria, examples. |
-| **Structure** | 13% | XML, markdown headers, numbered/bulleted lists, separators, code blocks. |
-| **Robustness** | 12% | Error handling, edge cases, negative examples, conditional branches. |
-| **Context** | 12% | Defined role, expertise domain, audience, tone, background. |
-| **Output Format** | 12% | JSON/CSV/Markdown/table, length, language, output examples, schema. |
-| **Chain of Thought** | 10% | Explicit step-by-step reasoning requests, decomposition, sequence. |
-| **Safety** | 8% | Anti-hallucination guardrails, scope, injection protection. |
-
-Each dimension starts at 50 and adds/subtracts points based on positive/negative signals detected via regex. The global score is the **weighted average**.
-
-### Grades
-`A+` (≥95) · `A` (≥90) · `A-` (≥85) · `B+` (≥80) · `B` (≥75) · `B-` (≥70) · `C+` (≥65) · `C` (≥60) · `C-` (≥55) · `D+` (≥50) · `D` (≥45) · `D-` (≥40) · `F` (<40).
-
-### Pattern catalogs
-
-- **30 anti-patterns** (`AP001`–`AP030`) in `js/patterns.js`: from "empty prompt" to "injection vulnerability".
-- **15 best practices** (`BP001`–`BP015`): XML tags, few-shot, role+domain, guardrails, etc.
-
-### Adversarial tests (10)
-`js/adversarial.js` evaluates: empty input · prompt injection · ambiguity · long inputs · unexpected language · scope creep · hallucination · format compliance · multi-turn conversation · edge cases. The **overall resistance** is the average (pass=100, warning=50, fail=0).
-
----
-
-## 🌐 Internationalization
-
-PromptForge ships with **Spanish (default)** and **English**, with a language switcher (ES/EN) in the top-right header. The selection persists in `localStorage` under the `promptforge_lang` key.
-
-### How it works
-
-- **Single source of truth**: every user-facing string lives in `js/i18n.js` inside the `I18n._dict` object, organized as `{ es: {…}, en: {…} }` with dotted keys (e.g. `nav.analyze`, `dimensions.clarity`, `adv.injection.passDetail`).
-- **Markup binding**: HTML elements carry `data-i18n="key"` (textContent), `data-i18n-placeholder="key"` (placeholder), `data-i18n-title="key"` (tooltip) or `data-i18n-html="key"` (innerHTML). On boot and on every language change, `I18n.applyToDOM()` walks these attributes and updates the DOM.
-- **Dynamic content**: JS code calls `I18n.t('key', params)` to translate strings, with `{name}` placeholder interpolation (e.g. `I18n.t('stats.words', { n: 47 })` → `"47 words"`).
-- **Live switching**: `I18n.setLang(lang)` persists the choice, updates `<html lang>`, re-applies the DOM and dispatches a `langchange` event. `App` listens to it and re-renders the active view (and destroys Chart.js instances so they rebuild in the new language).
-- **Initial detection**: `localStorage > navigator.language > 'es'`.
-
-### Public i18n API
-
-```js
-I18n.init();                    // boot: pick language from storage or browser
-I18n.getLang();                 // 'es' | 'en'
-I18n.setLang('en');             // switch language, persist, dispatch 'langchange'
-I18n.t('nav.analyze');          // → "Analyze" / "Analizar"
-I18n.t('stats.words', { n: 5 }); // → "5 words" / "5 palabras"
-I18n.applyToDOM(root?);         // apply translations to [data-i18n*] elements
-```
-
-### Adding a new language
-
-1. Add the locale code to `SUPPORTED` in `js/i18n.js` (e.g. `'fr'`).
-2. Add a new top-level entry `fr: { … }` in `_dict` mirroring the structure of `es`/`en`.
-3. Add a button to the switcher in `index.html`:
-   ```html
-   <button class="lang-btn" data-lang="fr" type="button">FR</button>
-   ```
-4. (Optional) Extend `I18n._detectBrowser()` to map `navigator.language` to the new locale.
-
----
-
-## 🏗️ Technical Architecture
-
-### Design principles
-
-1. **No build, no bundler, no framework.** Vanilla JavaScript loaded via `<script>` tags in order.
-2. **IIFE / object-literal module pattern.** Each file exposes a global singleton (`Analyzer`, `Rewriter`, etc.) with public methods and `_private` ones.
-3. **Single source of truth in the Analyzer.** Every other module consumes its output.
-4. **Zero runtime dependencies** except Chart.js (CDN) for charts.
-5. **Fully client-side.** History uses `localStorage`; sharing uses base64 in the URL.
-
-### Analysis pipeline
-
-```
- User types a prompt
-         │
-         ▼
- ┌─────────────────┐
- │  Analyzer       │  →  { dimensions, scores, detected, metrics, … }
- │  .analyze()     │
- └────────┬────────┘
-          │
-   ┌──────┴──────┬─────────────┬──────────────┐
-   ▼             ▼             ▼              ▼
- Patterns     Adversarial   Rewriter      History
- .detect()    .runTests()   .improve()    .save()
-   │             │             │              │
-   └─────────────┴─────────────┘              │
-                 │                            │
-                 ▼                            │
-           renderResults()  ◄─────────────────┘
-           (app.js)
-```
-
-Defined in `app.js:runAnalysis()`.
-
-### Analyzer data contract
-
-`Analyzer.analyze(prompt)` returns an object with two "views" of the same data:
-
-```js
-{
-  // ── Rich view (for internal UI) ──
-  overallScore: 61,              // 0–100
-  grade: 'C',                    // 'A+'..'F'
-  complexity: 'intermediate',    // 'basic' | 'intermediate' | 'advanced'
-  tokenEstimate: 61,
-  wordCount: 47,
-  charCount: 292,
-  language: 'es',                // 'es' | 'en' | 'mixed'
-  dimensions: {                  // 8 dimensions, each:
-    clarity: {
-      score: 73,                 // 0–100
-      findings: ['Uses clear action verbs...', ...],   // strings
-      suggestions: ['Replace vague expressions...', ...]
-    },
-    specificity: { … }, structure: { … }, robustness: { … },
-    context: { … }, outputFormat: { … }, chainOfThought: { … }, safety: { … }
-  },
-  antiPatterns: [ { id:'AP003', name, description, severity, dimension, suggestion }, … ],
-  strengths:    [ { id:'BP004', name, description, dimension }, … ],
-
-  // ── Flat view (legacy-compatible shim, derived from the above) ──
-  prompt: 'You are an expert...',  // analyzed text
-  scores: { clarity:73, …, overall:61 },          // for ExportUtil
-  detected: { hasRole:true, hasXMLTags:false, … }, // for Rewriter
-  detectedDomain: 'business',                       // for Rewriter
-  metrics: { wordCount, charCount, lineCount, sentenceCount, avgWordsPerSentence, readabilityLevel, xmlSections, variableCount },
-  tokens: { estimated:61, model:'~GPT tokenizer', cost:null },
-  suggestions: [ { priority:'high', title, description }, … ]   // flattened
-}
-```
-
-> ℹ️ The "flat view" is a **shim** added so `Rewriter` and `ExportUtil` (originally written for a different shape) keep working without a rewrite. The **source of truth** remains `dimensions`.
+### 8 Dimension Weights
+| Dimension | Weight | Focus Area |
+| :--- | :---: | :--- |
+| **Clarity** | 18% | Action verbs, absence of vagueness and contradictions |
+| **Specificity** | 15% | Measurable constraints, quantitative criteria |
+| **Structure** | 13% | XML tags, markdown headers, bullet/numbered lists |
+| **Robustness** | 12% | Error handling, edge cases, fallback instructions |
+| **Context** | 12% | Expert role, domain definition, target audience |
+| **Output Format** | 12% | Explicit format (JSON, Table), length constraints |
+| **Chain of Thought** | 10% | Step-by-step reasoning instructions |
+| **Safety** | 8% | Anti-hallucination guardrails and scope limits |
 
 ---
 
@@ -256,137 +149,35 @@ Defined in `app.js:runAnalysis()`.
 
 ```
 promptforge/
-├── index.html              # DOM structure, script & CSS loading
+├── index.html                # Main Workbench Web App
+├── test_runner.html          # Interactive Web Stress Test Console
 ├── css/
-│   └── index.css           # Full design system + language switcher styles
+│   └── index.css             # Studio Obsidian Design System
 ├── js/
-│   ├── i18n.js             # Internationalization (ES/EN dictionary + API)
-│   ├── patterns.js         # DB of 30 anti-patterns + 15 best practices
-│   ├── analyzer.js         # 8-dimension scoring engine + legacy shim
-│   ├── adversarial.js      # 10 resilience tests
-│   ├── rewriter.js         # Rewrite into canonical XML
-│   ├── templates.js        # Categorized template library
-│   ├── history.js          # localStorage persistence + LCS diff
-│   ├── charts.js           # Chart.js wrapper (radar + line)
-│   ├── export.js           # JSON, Markdown, clipboard, URL sharing
-│   └── app.js              # Orchestrator: UI, events, pipeline
-└── README.md               # This document
+│   ├── i18n.js               # Internationalization Engine (ES/EN)
+│   ├── signals.js            # Single Source of Truth Signal Extractor
+│   ├── patterns.js           # Catalog of 30 Anti-Patterns & 15 Strengths
+│   ├── analyzer.js           # 8-Dimension Scoring Engine
+│   ├── adversarial.js        # Security & Resilience Simulator
+│   ├── rewriter.js           # Non-Destructive XML Rewriter
+│   ├── templates.js          # Optimized Template Library
+│   ├── history.js            # Persistence & Evolution Charts
+│   ├── charts.js             # Chart.js Radar & Line Wrapper
+│   ├── export.js             # JSON, Markdown, & URL Exporters
+│   └── app.js                # Main UI Orchestrator
+├── lib/
+│   ├── promptforge-core.js   # Universal JS UMD/ESM/CJS Engine
+│   ├── promptforge_core.py   # Native Python Engine (Zero-Dep)
+│   └── promptforge-rules.json # Declarative Engine Specification
+├── server.js                 # REST API Microservice (Port 3000)
+├── cli.js                    # Node Terminal Executable
+├── test_edge_cases.js        # JS Test Suite Runner
+├── test_edge_cases.py        # Python Test Suite Runner
+└── README.md                 # Complete Project Documentation
 ```
-
-### Load order (important)
-`<script>` tags load in this order (see `index.html`) because of implicit dependencies:
-
-```
-i18n.js → patterns.js → analyzer.js → adversarial.js → rewriter.js → templates.js
-       → history.js → charts.js → export.js → app.js
-```
-
-`i18n.js` loads first so every later module can call `I18n.t(...)` at definition time; `app.js` goes last because it's the orchestrator that references all the others.
-
----
-
-## 🔌 Module Public API
-
-### `Analyzer.analyze(prompt) → Object`
-See the [data contract](#analyzer-data-contract). Doesn't throw; returns `_emptyResult()` for invalid input.
-
-### `Patterns.detect(prompt) → { antiPatterns, strengths }`
-Iterates over the catalogs and applies each `detect(prompt)` function. Internal `try/catch` prevents a single broken pattern from breaking everything.
-
-### `Adversarial.runTests(prompt) → { overallResistance, tests }`
-`overallResistance` is 0–100 (average). `tests` is an array of 10 results `{ name, category, status, detail, suggestion }`.
-
-### `Rewriter.improve(prompt, analysis) → { improvedPrompt, changes, scoreImprovement }`
-- `improvedPrompt`: prompt rewritten with XML sections (`<rol>`, `<contexto>`, `<tarea>`, `<formato_salida>`, `<restricciones>`, `<ejemplos>`, `<manejo_errores>`).
-- `changes`: array of `{ type: 'added'|'modified'|'restructured', description }`.
-- `scoreImprovement`: estimated **delta** (not the final score). Display as "+N pts".
-
-### `History`
-- `save(prompt, analysis) → entry`
-- `getAll() → entry[]` (sorted desc by date)
-- `getById(id)`, `delete(id)`, `clear()`
-- `compare(id1, id2) → diff` (uses LCS algorithm)
-- `getScoreEvolution() → [{date, score, label, id}]`
-- `export() → string` (JSON), `import(jsonString) → {imported, duplicates, errors}`
-
-Persistence: `localStorage` under the key `promptforge_history`, max 50 entries.
-
-### `I18n`
-See the [Internationalization](#internationalization) section.
-
-### `Charts`
-- `initRadar(canvasId) → Chart`, `updateRadar(scores)`
-- `initHistoryChart(canvasId) → Chart`, `updateHistoryChart(dataPoints)`
-- `destroy()` — releases instances
-
-### `ExportUtil`
-- `toJSON(analysis, prompt?) → string`
-- `toMarkdown(analysis, prompt?) → string`
-- `toClipboard(text) → Promise<boolean>`
-- `downloadFile(content, filename, mimeType)`
-- `generateShareURL(prompt) → string`, `parseShareURL() → string|null`
-
-### `Templates`
-- `categories` — stable category keys (`classification`, `extraction`, …)
-- `getCategoryLabel(catKey)` → translated label
-- `getName(tpl)`, `getDescription(tpl)`, `getTags(tpl)` → translated strings
-- `getById(id)`, `getByCategory(catKey)`, `fillTemplate(templateId, variables)`
-
----
-
-## 📤 Export Formats
-
-### JSON
-Includes `_meta` (generator, version, timestamp) plus every analysis field. Structure documented in the [data contract](#analyzer-data-contract).
-
-### Markdown
-Readable report with sections: *Overall Score* (with ASCII bar `█████░░░░░`), *Score Breakdown* (table), *Detected Features* (✅/❌), *Prompt Metrics* (table), *Token Estimation*, *Improvement Suggestions* (prioritized 🔴🟡🟢) and *Analyzed Prompt* (in a code block).
-
-### Shareable URL
-`?p=<base64-utf8>`. On open, `App.checkShareURL()` decodes and loads the prompt into the editor. A console warning is emitted if the URL exceeds 8000 characters.
-
----
-
-## 🛠️ Troubleshooting
-
-| Symptom | Cause | Fix |
-|---------|-------|-----|
-| Clipboard doesn't work under `file://` | Browsers require secure contexts (`https`/`localhost`). | Serve the app with `python -m http.server` or similar. |
-| Chart.js doesn't load | CDN blocked or offline. | Check the console; you can download Chart.js locally and change the `<script>` in `index.html`. |
-| History disappears on refresh | `localStorage` quota exceeded (very long prompts). | Auto-trimmed to 75%; use Export to back up. |
-| Language doesn't persist | `localStorage` disabled (private mode). | Re-select on each session; nothing breaks. |
-| Templates load in Spanish even in EN mode | Template prompts are LLM-bound content, not UI strings. | Translate the prompt manually after loading, or extend `templatesList.<id>` in `i18n.js`. |
-| Grade circle covers the screen | (Fixed) `.score-ring` was absolutely positioned without a relative parent. | Now fixed: `.score-circle` is `position: relative`. |
-| Top tabs don't switch views | (Fixed) `.view` had no `display:none` default. | Now fixed: `.view { display:none }` and `.view.active { display:block }`. |
-| Findings show as "undefined" | (Fixed) JS treated `findings` as `{text}` objects when they're strings. | Now fixed in `app.js:renderDimensions`. |
-| History showed "undefined / undefined" | (Fixed) `History.save` didn't store `score`/`grade`. | Now fixed: it stores them explicitly. |
-| JSON export was nearly empty | (Fixed) `ExportUtil` read fields the Analyzer didn't produce. | Now fixed via the Analyzer shim + `(analysis, prompt)` signature. |
-| "Estimated improvement: +95 pts" looked exaggerated | (Fixed) `scoreImprovement` returned the total score, not the delta. | Now fixed: it returns the real delta. |
-| Two notifications appeared on export | (Fixed) Double toast between `app.js` and `ExportUtil`. | Now fixed: a single toast. |
-
----
-
-## 🗺️ Roadmap
-
-Candidate improvements (not implemented):
-
-- [ ] Formal unit tests (Jest/Vitest) for Analyzer, Rewriter and Adversarial.
-- [ ] Additional languages (FR, DE, PT-BR, ZH).
-- [ ] Optional LLM API integration to validate the real prompt (not just heuristics).
-- [ ] Side-by-side comparison of two prompts in the UI (`History.compare` already exists, unused).
-- [ ] Translate template prompts per language (currently UI-only i18n).
-- [ ] PWA / offline installation.
 
 ---
 
 ## 📄 License
 
-Distributed under the **MIT License**. See the [`LICENSE`](./LICENSE) file for details.
-
-```
-MIT License
-
-Copyright (c) 2026 j0sp0nc3
-```
-
-In short: you may use, copy, modify, merge, publish, distribute, sublicense and/or sell copies of the software, provided you include the copyright notice and this permission notice in all copies. The software is provided "as is", without any warranty.
+Distributed under the **MIT License**. Copyright (c) 2026.

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PromptForge Core — Test Runner & Stress Suite</title>
+  <link rel="stylesheet" href="css/index.css">
+  <style>
+    body { padding: 32px; max-width: 1200px; margin: 0 auto; }
+    .test-table { width: 100%; border-collapse: collapse; margin-top: 24px; font-family: var(--font-mono); font-size: 0.85rem; }
+    .test-table th, .test-table td { padding: 12px 16px; border: 1px solid var(--border-default); text-align: left; }
+    .test-table th { background: var(--bg-surface); color: var(--accent-amber); font-weight: 700; }
+    .test-table tr:hover { background: var(--bg-surface-hover); }
+    .status-pass { color: var(--accent-emerald); font-weight: 700; }
+    .status-fail { color: var(--severity-critical); font-weight: 700; }
+    .status-crash { color: #f43f5e; font-weight: 900; background: rgba(244, 63, 94, 0.15); }
+    .summary-card { display: flex; gap: 24px; padding: 20px; background: var(--bg-panel); border: 1px solid var(--border-default); border-radius: var(--radius-md); margin-top: 20px; }
+    .metric { display: flex; flex-direction: column; gap: 4px; }
+    .metric-val { font-size: 1.8rem; font-weight: 900; font-family: var(--font-mono); }
+  </style>
+</head>
+<body>
+
+  <h1>🧪 PromptForge Core — Suite de Pruebas de Estrés</h1>
+  <p style="margin-top: 8px; color: var(--text-secondary);">
+    Ejecuta 14 pruebas de resistencia y casos límite extremos para comprobar la estabilidad del motor, tiempo de respuesta y detección de bugs.
+  </p>
+
+  <div style="margin-top: 20px;">
+    <button class="btn btn-primary" id="btn-run-tests">🚀 Ejecutar Suite de Pruebas</button>
+  </div>
+
+  <div class="summary-card" id="summary-card" style="display: none;">
+    <div class="metric">
+      <span style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700;">TOTAL PRUEBAS</span>
+      <span class="metric-val" id="val-total" style="color: var(--text-primary);">0</span>
+    </div>
+    <div class="metric">
+      <span style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700;">PASADAS</span>
+      <span class="metric-val" id="val-passed" style="color: var(--accent-emerald);">0</span>
+    </div>
+    <div class="metric">
+      <span style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700;">FALLOS / CRASHES</span>
+      <span class="metric-val" id="val-failed" style="color: var(--severity-critical);">0</span>
+    </div>
+    <div class="metric">
+      <span style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700;">TIEMPO TOTAL</span>
+      <span class="metric-val" id="val-time" style="color: var(--accent-amber);">0ms</span>
+    </div>
+  </div>
+
+  <table class="test-table" id="results-table" style="display: none;">
+    <thead>
+      <tr>
+        <th>Caso de Prueba (Edge Case)</th>
+        <th>Estado</th>
+        <th>Score</th>
+        <th>Grado</th>
+        <th>Anti-patrones</th>
+        <th>Tiempo</th>
+      </tr>
+    </thead>
+    <tbody id="table-body">
+    </tbody>
+  </table>
+
+  <script src="lib/promptforge-core.js"></script>
+  <script>
+    const edgeCases = [
+      { name: "1. Prompt Vacío", input: "" },
+      { name: "2. Espacios en Blanco & Saltos de Línea", input: "   \n\t  \r\n   " },
+      { name: "3. Tipos No-String (null / undefined)", input: null },
+      { name: "4. Carácter Único ('a')", input: "a" },
+      { name: "5. Prompt Masivo Gigante (50,000+ caracteres)", input: "Eres un experto. ".repeat(3000) },
+      { name: "6. Caracteres Especiales & Regex Poisoning", input: "([.*+?^${}()|[\\]\\\\])*+?^$//\\\\:::;;;:::" },
+      { name: "7. Etiquetas XML Malformadas y Sin Cerrar", input: "<rol><contexto>Sin cierre <tarea>hacer algo" },
+      { name: "8. XML Profundamente Anidado", input: "<a><b><c><d><e><f>nested</f></e></d></c></b></a>" },
+      { name: "9. Inyección de Código HTML/XSS", input: "<script>alert('xss')</script><iframe src='javascript:void(0)'></iframe>" },
+      { name: "10. Emojis y Caracteres Unicode Especiales", input: "🤖🔥🚀 Eres un 🧠 superinteligente. Genera 💡 en 📦 JSON. ⚠️ No alucines 🛑" },
+      { name: "11. Idiomas No-Latinos (Chino / Ruso / Árabe)", input: "你是一个AI专家。请用JSON格式回答。Привет мир. مرحبا بالعالم" },
+      { name: "12. Solo Números y Símbolos", input: "1234567890 !@#$%^&*()_+-=[]{}|;:',.<>/?" },
+      { name: "13. Cadena Repetitiva Sin Separador", input: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },
+      { name: "14. Gaming Masivo de Palabras Clave", input: "You are an expert. Step by step. Chain of thought. JSON table format. Do not hallucinate. Verify. Scope limit. Example: input output." }
+    ];
+
+    document.getElementById('btn-run-tests').addEventListener('click', () => {
+      const tbody = document.getElementById('table-body');
+      tbody.innerHTML = '';
+      
+      let passed = 0;
+      let failed = 0;
+      const t0 = performance.now();
+
+      edgeCases.forEach(test => {
+        const start = performance.now();
+        let status = 'PASS';
+        let score = '—';
+        let grade = '—';
+        let apCount = 0;
+        let note = '';
+
+        try {
+          const analysis = PromptForgeCore.analyze(test.input);
+          const adversarial = PromptForgeCore.runAdversarial(test.input);
+          const improvement = PromptForgeCore.improve(test.input, analysis);
+          
+          score = analysis.overallScore;
+          grade = analysis.grade;
+          apCount = (analysis.antiPatterns || []).length;
+
+          // Integrity validations
+          const jsonStr = JSON.stringify(analysis) + JSON.stringify(adversarial) + JSON.stringify(improvement);
+          if (jsonStr.includes('NaN') || jsonStr.includes('"undefined"')) {
+            status = 'FAIL';
+            note = 'Contiene NaN o string undefined';
+          }
+        } catch (err) {
+          status = 'CRASH';
+          note = err.message || String(err);
+        }
+
+        const elapsed = (performance.now() - start).toFixed(1);
+
+        if (status === 'PASS') passed++;
+        else failed++;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${test.name}</strong></td>
+          <td class="status-${status.toLowerCase()}">${status === 'PASS' ? '✅ PASS' : status === 'FAIL' ? '⚠️ FAIL' : '💥 CRASH'}</td>
+          <td>${score}</td>
+          <td><strong>${grade}</strong></td>
+          <td>${apCount} detectados</td>
+          <td>${elapsed} ms</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      const totalTime = (performance.now() - t0).toFixed(1);
+
+      document.getElementById('val-total').textContent = edgeCases.length;
+      document.getElementById('val-passed').textContent = passed;
+      document.getElementById('val-failed').textContent = failed;
+      document.getElementById('val-time').textContent = `${totalTime}ms`;
+
+      document.getElementById('summary-card').style.display = 'flex';
+      document.getElementById('results-table').style.display = 'table';
+    });
+  </script>
+</body>
+</html>

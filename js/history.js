@@ -1,10 +1,10 @@
 // ============================================================================
-// PromptForge - Version History Manager
+// PromptQuill - Version History Manager
 // localStorage-backed history with diff, export/import, and score tracking
 // ============================================================================
 
 const History = {
-  STORAGE_KEY: 'promptforge_history',
+  STORAGE_KEY: 'promptquill_history',
   MAX_ENTRIES: 50,
 
   // ════════════════════════════════════════════════════════════════════════

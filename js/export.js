@@ -18,7 +18,7 @@ const ExportUtil = {
   toJSON(analysis, prompt) {
     const exportData = {
       _meta: {
-        generator: 'PromptForge',
+        generator: 'PromptQuill',
         version: '1.0',
         exportedAt: new Date().toISOString(),
         format: 'analysis-report'
