@@ -6,7 +6,7 @@ import sys
 import time
 import json
 sys.path.append('./lib')
-import promptforge_core
+import promptquill_core as promptforge_core
 
 edge_cases = [
     {"name": "1. Prompt Vacío", "input": ""},
