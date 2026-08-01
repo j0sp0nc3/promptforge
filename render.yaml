@@ -1,0 +1,16 @@
+# Render.com Deployment Configuration for PromptForge
+# https://render.com/docs/yaml
+
+services:
+  - type: web
+    name: promptforge
+    env: node
+    plan: free
+    region: oregon
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: NODE_ENV
+        value: production

@@ -3,7 +3,14 @@
  * Evaluates core engine stability under extreme, malformed, and boundary inputs.
  */
 
-const PromptForgeCore = require('./lib/promptquill-core.js');
+let PromptForgeCore;
+try {
+  PromptForgeCore = require('promptometer-core');
+} catch (e) {
+  PromptForgeCore = require('../promptquill/packages/core/promptometer-core.js');
+}
+
+
 
 const edgeCases = [
   { name: "1. Empty String", input: "" },

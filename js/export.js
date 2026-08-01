@@ -18,8 +18,9 @@ const ExportUtil = {
   toJSON(analysis, prompt) {
     const exportData = {
       _meta: {
-        generator: 'PromptQuill',
+        generator: 'Promptometer',
         version: '1.0',
+
         exportedAt: new Date().toISOString(),
         format: 'analysis-report'
       },

@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "name": "promptforge",
+  "builds": [
+    { "src": "index.html", "use": "@vercel/static" },
+    { "src": "server.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/server.js" },
+    { "src": "/(.*)", "dest": "/$1" }
+  ]
+}

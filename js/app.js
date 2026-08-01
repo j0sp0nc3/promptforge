@@ -512,13 +512,13 @@ const App = (() => {
     document.getElementById('export-json').addEventListener('click', () => {
       if (!currentAnalysis) return showToast(t('toast.noAnalysis'), 'warning');
       const json = ExportUtil.toJSON(currentAnalysis.analysis, currentAnalysis.prompt);
-      ExportUtil.downloadFile(json, 'promptquill-analysis.json', 'application/json');
+      ExportUtil.downloadFile(json, 'promptometer-analysis.json', 'application/json');
     });
 
     document.getElementById('export-markdown').addEventListener('click', () => {
       if (!currentAnalysis) return showToast(t('toast.noAnalysis'), 'warning');
       const md = ExportUtil.toMarkdown(currentAnalysis.analysis, currentAnalysis.prompt);
-      ExportUtil.downloadFile(md, 'promptquill-analysis.md', 'text/markdown');
+      ExportUtil.downloadFile(md, 'promptometer-analysis.md', 'text/markdown');
     });
 
     document.getElementById('export-clipboard').addEventListener('click', () => {
@@ -598,7 +598,7 @@ const App = (() => {
   function setupHistoryView() {
     document.getElementById('btn-export-history').addEventListener('click', () => {
       const data = History.export();
-      ExportUtil.downloadFile(data, 'promptquill-history.json', 'application/json');
+      ExportUtil.downloadFile(data, 'promptometer-history.json', 'application/json');
     });
 
     document.getElementById('btn-clear-history').addEventListener('click', () => {

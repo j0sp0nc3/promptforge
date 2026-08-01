@@ -1,18 +1,24 @@
 #!/usr/bin/env node
 
 /**
- * PromptQuill Core — CLI Console Executable
+ * Promptometer Core — CLI Console Executable
  * Usage: node cli.js "Your prompt to evaluate here"
  */
 
-const PromptQuillCore = require('./lib/promptquill-core.js');
+let PromptometerCore;
+try {
+  PromptometerCore = require('promptometer-core');
+} catch (e) {
+  PromptometerCore = require('../promptquill/packages/core/promptometer-core.js');
+}
+
 
 const inputPrompt = process.argv.slice(2).join(' ');
 
 if (!inputPrompt || !inputPrompt.trim()) {
   console.log(`
 ============================================================
-  PromptQuill Core — CLI Evaluator v${PromptQuillCore.version}
+  Promptometer Core — CLI Evaluator v${PromptometerCore.version}
 ============================================================
 Uso:
   node cli.js "<tu prompt aquí>"
@@ -23,11 +29,11 @@ Ejemplo:
   process.exit(0);
 }
 
-console.log('\n🔍 Analizando prompt con PromptQuill Core...\n');
+console.log('\n🔍 Analizando prompt con Promptometer Core...\n');
 
-const analysis = PromptQuillCore.analyze(inputPrompt);
-const adversarial = PromptQuillCore.runAdversarial(inputPrompt);
-const improvement = PromptQuillCore.improve(inputPrompt, analysis);
+const analysis = PromptometerCore.analyze(inputPrompt);
+const adversarial = PromptometerCore.runAdversarial(inputPrompt);
+const improvement = PromptometerCore.improve(inputPrompt, analysis);
 
 console.log('------------------------------------------------------------');
 console.log(`📊 PUNTUACIÓN GENERAL : ${analysis.overallScore}/100 (Grado: ${analysis.grade})`);

@@ -1,6 +1,7 @@
-# PromptForge & PromptQuill
+# PromptForge & Promptometer
 
 **Advanced Prompt Engineering & Evaluation Suite** — Multidimensional scoring, anti-pattern detection, adversarial security testing, automatic prompt improvement, and multi-language engine bindings.
+
 
 ![Language](https://img.shields.io/badge/JavaScript-Vanilla%20%2F%20Node.js-f7df1e)
 ![Python](https://img.shields.io/badge/Python-Native%20Zero--Dep-3776ab)

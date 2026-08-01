@@ -1,10 +1,11 @@
 // ============================================================================
-// PromptQuill - Version History Manager
+// Promptometer - Version History Manager
 // localStorage-backed history with diff, export/import, and score tracking
 // ============================================================================
 
 const History = {
-  STORAGE_KEY: 'promptquill_history',
+  STORAGE_KEY: 'promptometer_history',
+
   MAX_ENTRIES: 50,
 
   // ════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,16 @@
+{
+  "name": "promptforge-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PromptForge Web App & REST microservice powered by Promptometer Core",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "cli": "node cli.js",
+    "test": "node test_edge_cases.js"
+  },
+  "dependencies": {
+    "promptometer-core": "file:../promptquill/packages/core"
+  },
+  "license": "MIT"
+}

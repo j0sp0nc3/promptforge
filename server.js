@@ -1,11 +1,17 @@
 /**
- * PromptQuill — Universal REST API Microservice (Zero External Dependencies)
+ * Promptometer — Universal REST API Microservice (Zero External Dependencies)
  * Run: node server.js
  * Works with ANY programming language (Python, C#, Java, Go, Rust, PHP, Ruby, etc.)
  */
 
 const http = require('http');
-const PromptQuillCore = require('./lib/promptquill-core.js');
+let PromptometerCore;
+try {
+  PromptometerCore = require('promptometer-core');
+} catch (e) {
+  PromptometerCore = require('../promptquill/packages/core/promptometer-core.js');
+}
+
 
 const PORT = process.env.PORT || 3000;
 
@@ -24,9 +30,10 @@ const server = http.createServer((req, res) => {
   if (req.method === 'GET' && req.url === '/') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     return res.end(JSON.stringify({
-      service: 'PromptQuill Core API',
-      version: PromptQuillCore.version,
+      service: 'Promptometer Core API',
+      version: PromptometerCore.version,
       status: 'online',
+
       endpoints: {
         analyze: 'POST /api/analyze',
         improve: 'POST /api/improve',
@@ -52,18 +59,18 @@ const server = http.createServer((req, res) => {
         res.writeHead(200, { 'Content-Type': 'application/json' });
 
         if (req.url === '/api/analyze') {
-          const analysis = PromptQuillCore.analyze(prompt);
+          const analysis = PromptometerCore.analyze(prompt);
           return res.end(JSON.stringify(analysis));
         }
 
         if (req.url === '/api/improve') {
-          const analysis = PromptQuillCore.analyze(prompt);
-          const improved = PromptQuillCore.improve(prompt, analysis);
+          const analysis = PromptometerCore.analyze(prompt);
+          const improved = PromptometerCore.improve(prompt, analysis);
           return res.end(JSON.stringify(improved));
         }
 
         if (req.url === '/api/adversarial') {
-          const adversarial = PromptQuillCore.runAdversarial(prompt);
+          const adversarial = PromptometerCore.runAdversarial(prompt);
           return res.end(JSON.stringify(adversarial));
         }
 
@@ -82,7 +89,8 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`\n🚀 PromptQuill REST API Microservice listo en: http://localhost:${PORT}`);
+  console.log(`\n🚀 Promptometer REST API Microservice listo en: http://localhost:${PORT}`);
   console.log(`   POST http://localhost:${PORT}/api/analyze`);
   console.log(`   POST http://localhost:${PORT}/api/improve\n`);
 });
+
