@@ -1,33 +1,11 @@
-/**
- * Promptometer — Universal REST API Microservice & Static Web Server
- * Run: node server.js
- */
-
-const http = require('http');
-const fs = require('fs');
-const path = require('path');
-
 let PromptometerCore;
 try {
   PromptometerCore = require('promptometer-core');
 } catch (e) {
-  PromptometerCore = require('../promptquill/packages/core/promptometer-core.js');
+  PromptometerCore = require('../../promptquill/packages/core/promptometer-core.js');
 }
 
-const PORT = process.env.PORT || 3000;
-
-const MIME_TYPES = {
-  '.html': 'text/html; charset=UTF-8',
-  '.css': 'text/css; charset=UTF-8',
-  '.js': 'text/javascript; charset=UTF-8',
-  '.json': 'application/json; charset=UTF-8',
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.svg': 'image/svg+xml',
-  '.ico': 'image/x-icon'
-};
-
-const server = http.createServer((req, res) => {
+module.exports = (req, res) => {
   // CORS Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -38,8 +16,8 @@ const server = http.createServer((req, res) => {
     return res.end();
   }
 
-  // Route GET /api (API Status)
-  if (req.method === 'GET' && (req.url === '/api' || req.url === '/api/')) {
+  // Route GET /api
+  if (req.method === 'GET') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     return res.end(JSON.stringify({
       service: 'Promptometer Core API',
@@ -53,13 +31,19 @@ const server = http.createServer((req, res) => {
     }));
   }
 
-  // Handle POST API requests
-  if (req.method === 'POST' && req.url.startsWith('/api')) {
+  // Handle POST requests
+  if (req.method === 'POST') {
     let body = '';
     req.on('data', chunk => { body += chunk.toString(); });
     req.on('end', () => {
       try {
-        const payload = JSON.parse(body || '{}');
+        let payload = {};
+        if (req.body && typeof req.body === 'object') {
+          payload = req.body;
+        } else if (body) {
+          payload = JSON.parse(body);
+        }
+
         const prompt = payload.prompt || '';
 
         if (!prompt.trim()) {
@@ -69,18 +53,19 @@ const server = http.createServer((req, res) => {
 
         res.writeHead(200, { 'Content-Type': 'application/json' });
 
-        if (req.url === '/api/improve') {
+        const url = req.url || '';
+        if (url.includes('improve')) {
           const analysis = PromptometerCore.analyze(prompt);
           const improved = PromptometerCore.improve(prompt, analysis);
           return res.end(JSON.stringify(improved));
         }
 
-        if (req.url === '/api/adversarial') {
+        if (url.includes('adversarial')) {
           const adversarial = PromptometerCore.runAdversarial(prompt);
           return res.end(JSON.stringify(adversarial));
         }
 
-        // /api/analyze or fallback
+        // Default or /api/analyze
         const analysis = PromptometerCore.analyze(prompt);
         return res.end(JSON.stringify(analysis));
 
@@ -92,27 +77,6 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // Serve static files for GET requests
-  if (req.method === 'GET') {
-    let safeUrl = req.url.split('?')[0];
-    if (safeUrl === '/') safeUrl = '/index.html';
-
-    const filePath = path.join(__dirname, safeUrl);
-
-    if (filePath.startsWith(__dirname) && fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
-      const ext = path.extname(filePath).toLowerCase();
-      const mimeType = MIME_TYPES[ext] || 'application/octet-stream';
-      res.writeHead(200, { 'Content-Type': mimeType });
-      return fs.createReadStream(filePath).pipe(res);
-    }
-  }
-
   res.writeHead(404, { 'Content-Type': 'application/json' });
   res.end(JSON.stringify({ error: 'Ruta no encontrada' }));
-});
-
-server.listen(PORT, () => {
-  console.log(`\n🚀 Promptometer Server listo en: http://localhost:${PORT}`);
-  console.log(`   Web App UI: http://localhost:${PORT}/`);
-  console.log(`   POST API  : http://localhost:${PORT}/api/analyze\n`);
-});
+};
