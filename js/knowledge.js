@@ -218,9 +218,270 @@ const Knowledge = {
     },
   ],
 
-  /* ── 2. Técnicas: modern patterns (new + cross-linked) ──────── */
+  /* ── 2. Técnicas: modern patterns (new + cross-linked) ────────
+     { id, name:{es,en}, category, what:{es,en}, when:{es,en}?, example:{es,en}?, crossRefs:[]?, crossLinkOnly:bool }
+     crossLinkOnly=true marks techniques already integrated in the engine/rewriter
+     (we document them here only to cross-link, not to duplicate). */
   techniques: [
-    // Fase 2 — populated below
+    // ── 6 NUEVAS (detectadas por signals.js pero sin explicación) ──
+    {
+      id: 't-react',
+      name: { es: 'ReAct (Reason + Act)', en: 'ReAct (Reason + Act)' },
+      category: 'agentic',
+      crossLinkOnly: false,
+      what: {
+        es: 'Patrón para agentes donde el modelo alterna bloques de Pensamiento (Thought), Acción (Action) y Observación (Observation) hasta resolver la tarea. El modelo razona qué hacer, ejecuta una herramienta, observa el resultado, y repite. Permite usar APIs externas (búsqueda, cálculo) dentro del razonamiento.',
+        en: 'An agent pattern where the model alternates Thought, Action, and Observation blocks until the task is solved. The model reasons about what to do, executes a tool, observes the result, and repeats. Enables external APIs (search, calculation) within the reasoning.',
+      },
+      when: {
+        es: 'Tareas que requieren información externa o múltiples pasos con dependencias (responder con datos actuales, calcular antes de concluir).',
+        en: 'Tasks requiring external information or multi-step dependencies (answer with current data, calculate before concluding).',
+      },
+      example: {
+        es: `<tarea>
+Responde la pregunta siguiente usando el ciclo ReAct.
+</tarea>
+
+<formato_react>
+Thought: <tu razonamiento sobre qué necesitas>
+Action: <herramienta a usar: buscar|calcular|finalizar>
+Action Input: <input para la herramienta>
+Observation: <resultado de la herramienta>
+... (repetir Thought/Action/Observation hasta tener la respuesta)
+Thought: Ya tengo la respuesta
+Final Answer: <respuesta final>
+</formato_react>
+
+Pregunta: ¿Cuál es la raíz cuadrada de la población de Tokio (aprox 37M)?`,
+        en: `<task>
+Answer the following question using the ReAct cycle.
+</task>
+
+<react_format>
+Thought: <your reasoning about what you need>
+Action: <tool to use: search|calculate|finish>
+Action Input: <input for the tool>
+Observation: <result from the tool>
+... (repeat Thought/Action/Observation until you have the answer)
+Thought: I have the answer
+Final Answer: <final answer>
+</react_format>
+
+Question: What is the square root of Tokyo\'s population (approx 37M)?`,
+      },
+      crossRefs: ['hasReAct'],
+    },
+    {
+      id: 't-tot',
+      name: { es: 'Tree-of-Thought (ToT)', en: 'Tree-of-Thought (ToT)' },
+      category: 'reasoning',
+      crossLinkOnly: false,
+      what: {
+        es: 'Generalización de CoT donde el modelo explora múltiples ramas de razonamiento en paralelo, evalúa cada una, y sigue la más prometedora. Útil cuando hay varios caminos y no todos llevan a la solución. Más potente que CoT lineal, pero más costoso en tokens.',
+        en: 'A generalization of CoT where the model explores multiple reasoning branches in parallel, evaluates each, and follows the most promising. Useful when there are several paths and not all lead to the solution. More powerful than linear CoT, but more token-expensive.',
+      },
+      when: {
+        es: 'Problemas de búsqueda, planificación, o donde el primer camino de razonamiento puede ser un callejón sin salida.',
+        en: 'Search problems, planning, or where the first reasoning path may be a dead end.',
+      },
+      example: {
+        es: `<tarea>
+Explora 3 enfoques distintos para resolver el problema. Para cada uno:
+1. Genera el enfoque inicial
+2. Evalúa su viabilidad (0-10)
+3. Si la viabilidad > 6, desarrolla el siguiente paso
+Finalmente, selecciona el enfoque con mejor evaluación y da la solución completa.
+</tarea>
+
+Problema: ¿Cómo reducir el tiempo de carga de un sitio web a < 1s sin cambiar de hosting?`,
+        en: `<task>
+Explore 3 distinct approaches to solve the problem. For each:
+1. Generate the initial approach
+2. Evaluate its viability (0-10)
+3. If viability > 6, develop the next step
+Finally, select the approach with the best evaluation and give the complete solution.
+</task>
+
+Problem: How to reduce a website\'s load time to < 1s without changing hosting?`,
+      },
+      crossRefs: ['hasTreeOfThought', 'g-cot'],
+    },
+    {
+      id: 't-self-consistency',
+      name: { es: 'Self-Consistency', en: 'Self-Consistency' },
+      category: 'reasoning',
+      crossLinkOnly: false,
+      what: {
+        es: 'Generar múltiples cadenas de razonamiento (con temperature alta) para la misma pregunta y elegir la respuesta más frecuente (mayoría). Reduce errores porque la respuesta correcta tiende a aparecer en más cadenas que las incorrectas. Requiere varias llamadas al modelo.',
+        en: 'Generate multiple reasoning chains (with high temperature) for the same question and pick the most frequent answer (majority vote). Reduces errors because the correct answer tends to appear in more chains than incorrect ones. Requires several model calls.',
+      },
+      when: {
+        es: 'Problemas con una única respuesta correcta (matemáticas, lógica) donde el costo de varias llamadas es aceptable.',
+        en: 'Problems with a single correct answer (math, logic) where the cost of several calls is acceptable.',
+      },
+      example: {
+        es: `<instruccion>
+Resuelve el problema paso a paso. Sé consciente de que se generarán múltiples
+soluciones y se elegirá la respuesta más común.
+</instruccion>
+
+Pregunta: Un tren va a 60 km/h. ¿Cuánto tarda en recorrer 150 km?`,
+        en: `<instruction>
+Solve the problem step by step. Be aware that multiple solutions will be
+generated and the most common answer will be chosen.
+</instruction>
+
+Question: A train travels at 60 km/h. How long does it take to cover 150 km?`,
+      },
+      crossRefs: ['hasSelfConsistency', 'g-cot'],
+    },
+    {
+      id: 't-reflexion',
+      name: { es: 'Reflexion', en: 'Reflexion' },
+      category: 'reasoning',
+      crossLinkOnly: false,
+      what: {
+        es: 'Después de generar una respuesta, el modelo la critica (reflexiona sobre qué falló o podría mejorarse) y la regenera usando esa crítica. Ciclo generar→criticar→mejorar. Mejor calidad a costa de más tokens.',
+        en: 'After generating an answer, the model critiques it (reflects on what failed or could improve) and regenerates it using that critique. Generate→critique→improve cycle. Better quality at the cost of more tokens.',
+      },
+      when: {
+        es: 'Tareas de escritura, código, o razonamiento donde una segunda pasada mejora el resultado.',
+        en: 'Writing, code, or reasoning tasks where a second pass improves the result.',
+      },
+      example: {
+        es: `<tarea>
+Escribe una función Python para validar emails.
+</tarea>
+<reflexion>
+Tras escribirla, critica tu propia solución:
+1. ¿Maneja todos los casos edge?
+2. ¿Es eficiente?
+3. ¿Sigue best practices?
+Luego reescribe la función incorporando las mejoras.
+</reflexion>`,
+        en: `<task>
+Write a Python function to validate emails.
+</task>
+<reflection>
+After writing it, critique your own solution:
+1. Does it handle all edge cases?
+2. Is it efficient?
+3. Does it follow best practices?
+Then rewrite the function incorporating the improvements.
+</reflection>`,
+      },
+      crossRefs: ['hasReflexion'],
+    },
+    {
+      id: 't-zero-shot',
+      name: { es: 'Zero-shot prompting', en: 'Zero-shot prompting' },
+      category: 'basics',
+      crossLinkOnly: false,
+      what: {
+        es: 'Pedir la tarea directamente, sin ejemplos. El modelo se apoya solo en sus instrucciones y conocimiento paramétrico. Hoy es el punto de partida por defecto gracias a modelos más capaces; few-shot se reserva para cuando zero-shot no logra la consistencia deseada.',
+        en: 'Ask for the task directly, with no examples. The model relies only on your instructions and parametric knowledge. Today it is the default starting point thanks to more capable models; few-shot is reserved for when zero-shot does not achieve the desired consistency.',
+      },
+      when: {
+        es: 'Tareas bien definidas y comunes (resumir, traducir, clasificar en categorías obvias).',
+        en: 'Well-defined, common tasks (summarize, translate, classify into obvious categories).',
+      },
+      example: {
+        es: `Resume el siguiente artículo en 3 viñetas, destacando los hallazgos clave.
+
+Artículo: """{{texto}}"""`,
+        en: `Summarize the following article in 3 bullet points, highlighting key findings.
+
+Article: """{{text}}"""`,
+      },
+      crossRefs: ['g-few-shot'],
+    },
+    {
+      id: 't-metaprompting',
+      name: { es: 'Metaprompting', en: 'Metaprompting' },
+      category: 'basics',
+      crossLinkOnly: false,
+      what: {
+        es: 'Usar un prompt para generar o mejorar otro prompt. Útil para iterar: pides al modelo que mejore tu prompt, o que genere un prompt para una tarea compleja dado un objetivo. Promptometer aplica una forma de esto en su rewriter automático.',
+        en: 'Using a prompt to generate or improve another prompt. Useful for iterating: ask the model to improve your prompt, or to generate a prompt for a complex task given a goal. Promptometer applies a form of this in its automatic rewriter.',
+      },
+      when: {
+        es: 'Cuando no sabes cómo estructurar un prompt o quieres optimizar uno existente.',
+        en: 'When you do not know how to structure a prompt or want to optimize an existing one.',
+      },
+      example: {
+        es: `<tarea>
+Actúa como ingeniero de prompts experto. Toma mi objetivo y genera un prompt
+estructurado en formato XML con: rol, contexto, tarea, formato de salida y
+restricciones. El prompt generado debe ser específico y accionable.
+</tarea>
+
+Mi objetivo: """Quiero que el modelo extraiga eventos de un texto de noticias
+con fecha, lugar y personas involucradas, en formato JSON."""`,
+        en: `<task>
+Act as an expert prompt engineer. Take my goal and generate a structured
+prompt in XML format with: role, context, task, output format, and constraints.
+The generated prompt must be specific and actionable.
+</task>
+
+My goal: """I want the model to extract events from a news text with date,
+location, and people involved, in JSON format."""`,
+      },
+      crossRefs: ['rewriter.improve'],
+    },
+
+    // ── 4 CLÁSICAS (ya integradas en el motor/rewriter — solo cross-link) ──
+    {
+      id: 't-few-shot',
+      name: { es: 'Few-shot prompting', en: 'Few-shot prompting' },
+      category: 'basics',
+      crossLinkOnly: true,
+      what: {
+        es: 'Incluir 2-5 ejemplos de entrada/salida dentro del prompt para calibrar el formato, tono y patrón de respuesta. El motor lo detecta (signals.hasFewShot) y el rewriter lo inyecta automáticamente (rewriter._addExamples). Es la best-practice BP002.',
+        en: 'Include 2-5 input/output examples in the prompt to calibrate response format, tone, and pattern. The engine detects it (signals.hasFewShot) and the rewriter injects it automatically (rewriter._addExamples). It is best-practice BP002.',
+      },
+      when: {
+        es: 'Clasificación, extracción, o cualquier tarea donde el formato consistente es crítico.',
+        en: 'Classification, extraction, or any task where consistent format is critical.',
+      },
+      crossRefs: ['BP002', 'AP008', 'AP022', 'rewriter._addExamples', 'g-few-shot'],
+    },
+    {
+      id: 't-cot',
+      name: { es: 'Chain-of-Thought (CoT)', en: 'Chain-of-Thought (CoT)' },
+      category: 'reasoning',
+      crossLinkOnly: true,
+      what: {
+        es: 'Pedir razonamiento paso a paso antes de la respuesta final. El motor lo detecta (hasStepByStep), lo exige para tareas complejas (AP014), lo premia (BP005) y el rewriter lo inyecta (rewriter._addChainOfThought).',
+        en: 'Request step-by-step reasoning before the final answer. The engine detects it (hasStepByStep), requires it for complex tasks (AP014), rewards it (BP005), and the rewriter injects it (rewriter._addChainOfThought).',
+      },
+      crossRefs: ['AP014', 'BP005', 'rewriter._addChainOfThought', 'g-cot'],
+    },
+    {
+      id: 't-rag',
+      name: { es: 'RAG (Retrieval-Augmented Generation)', en: 'RAG (Retrieval-Augmented Generation)' },
+      category: 'rag',
+      crossLinkOnly: true,
+      what: {
+        es: 'Recuperar documentos relevantes y entregarlos como contexto para que el modelo responda con base en ellos. El motor detecta el patrón (hasRagContext), hay un template dedicado (tpl-rag-prompt) y penaliza dependencia de datos post-cutoff (AP038).',
+        en: 'Retrieve relevant documents and provide them as context so the model responds based on them. The engine detects the pattern (hasRagContext), there is a dedicated template (tpl-rag-prompt), and it penalizes post-cutoff data dependence (AP038).',
+      },
+      when: {
+        es: 'Preguntas sobre conocimiento actual, datos privados, o donde la veracidad es crítica.',
+        en: 'Questions about current knowledge, private data, or where truthfulness is critical.',
+      },
+      crossRefs: ['tpl-rag-prompt', 'AP038', 'hasRagContext', 'g-grounding'],
+    },
+    {
+      id: 't-role',
+      name: { es: 'Role prompting', en: 'Role prompting' },
+      category: 'basics',
+      crossLinkOnly: true,
+      what: {
+        es: 'Asignar un rol/persona al modelo ("eres un experto en..."). Mejora la calidad al activar conocimiento relevante. El motor lo detecta (BP004), penaliza roles sin dominio (AP005, AP028) y el rewriter lo inyecta (rewriter._addRole).',
+        en: 'Assign a role/persona to the model ("you are an expert in..."). Improves quality by activating relevant knowledge. The engine detects it (BP004), penalizes roles without a domain (AP005, AP028), and the rewriter injects it (rewriter._addRole).',
+      },
+      crossRefs: ['BP004', 'AP005', 'AP028', 'rewriter._addRole'],
+    },
   ],
 
   /* ── 3. Frameworks: canonical structural schemas ────────────── */
