@@ -92,15 +92,15 @@ interactiva desplegada en Vercel.
 > bilingües ES/EN, + biblioteca unificada de los 12 templates + 35 anti-patrones + 15 best-practices
 > + 13 tests adversariales existentes (con detalle expandible). + 18 bugs de i18n arreglados.
 
+- [x] **Hub de Conocimiento Búsqueda interactiva**: Barra de búsqueda en tiempo real `#learn-search-input` para filtrar conceptos del glosario, técnicas, frameworks, templates, anti-patrones y tests adversariales con botón de borrado rápido e i18n ES/EN.
+
 ---
 
 ## 📝 Tareas Pendientes
 
 - [ ] Esperar aprobación del PR `promptometer.is-a.dev` por mantenedores de is-a-dev
 - [ ] Configurar dominio en Vercel una vez aprobado el PR
-- [ ] (Opcional) Verificar visualmente el hub desplegado en Vercel y ajustar detalles de UX
 - [ ] (Opcional) Lab interactivo transformador (roadmap — requiere técnicas que el rewriter NO cubre)
-- [ ] (Opcional) Búsqueda full-text dentro del hub (roadmap)
 
 ---
 
