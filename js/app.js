@@ -759,6 +759,73 @@ const App = (() => {
     });
   }
 
+  let currentLearnSub = 'glossary';
+
+  function setupLearnView() {
+    const subnav = document.getElementById('learn-subnav');
+    if (subnav) {
+      subnav.addEventListener('click', (e) => {
+        const btn = e.target.closest('.learn-subnav-btn');
+        if (!btn) return;
+        renderLearnView(btn.dataset.sub);
+      });
+    }
+
+    const searchInput = document.getElementById('learn-search-input');
+    const searchClear = document.getElementById('learn-search-clear');
+
+    if (searchInput) {
+      searchInput.addEventListener('input', () => {
+        const query = searchInput.value.trim().toLowerCase();
+        if (searchClear) searchClear.classList.toggle('hidden', !query);
+        applyLearnSearchFilter(query);
+      });
+    }
+
+    if (searchClear && searchInput) {
+      searchClear.addEventListener('click', () => {
+        searchInput.value = '';
+        searchClear.classList.add('hidden');
+        applyLearnSearchFilter('');
+        searchInput.focus();
+      });
+    }
+  }
+
+  function applyLearnSearchFilter(query) {
+    const activeSub = getActiveLearnSub();
+    const activePanel = document.getElementById(`learn-${activeSub}`);
+    if (!activePanel) return;
+
+    const items = activePanel.querySelectorAll('.learn-card, .learn-list-item');
+    let visibleCount = 0;
+
+    items.forEach(item => {
+      if (!query) {
+        item.style.display = '';
+        visibleCount++;
+        return;
+      }
+      const text = item.textContent.toLowerCase();
+      const matches = text.includes(query);
+      item.style.display = matches ? '' : 'none';
+      if (matches) visibleCount++;
+    });
+
+    const existingNotice = activePanel.querySelector('.learn-empty-search');
+    if (existingNotice) existingNotice.remove();
+
+    if (query && visibleCount === 0) {
+      const notice = document.createElement('div');
+      notice.className = 'learn-empty-search';
+      notice.innerHTML = `
+        <p>${t('learn.noSearchResults', { query: escapeHtml(query) })}</p>
+        <button class="btn btn-secondary btn-sm" style="margin-top:8px" onclick="document.getElementById('learn-search-clear').click()">${t('learn.clearSearch')}</button>
+      `;
+      activePanel.appendChild(notice);
+    }
+  }
+
   function renderLearnView(sub) {
     if (sub) currentLearnSub = sub;
     const activeSub = currentLearnSub;
@@ -779,6 +846,10 @@ const App = (() => {
     if (activeSub === 'techniques') renderTechniques();
     if (activeSub === 'frameworks') renderFrameworks();
     if (activeSub === 'library') renderLibrary();
+
+    const searchInput = document.getElementById('learn-search-input');
+    const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
+    applyLearnSearchFilter(query);
   }
 
   function renderGlossary() {

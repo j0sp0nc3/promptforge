@@ -814,6 +814,9 @@ const I18n = (() => {
         sev_high: 'Alto',
         sev_medium: 'Medio',
         sev_low: 'Bajo',
+        searchPlaceholder: 'Buscar conceptos, técnicas, frameworks, anti-patrones...',
+        noSearchResults: 'No se encontraron resultados para "{query}"',
+        clearSearch: 'Limpiar búsqueda',
       },
 
       footer: {
@@ -1583,6 +1586,9 @@ const I18n = (() => {
         sev_high: 'High',
         sev_medium: 'Medium',
         sev_low: 'Low',
+        searchPlaceholder: 'Search concepts, techniques, frameworks, anti-patterns...',
+        noSearchResults: 'No results found for "{query}"',
+        clearSearch: 'Clear search',
       },
 
       footer: {

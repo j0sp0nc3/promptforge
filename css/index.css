@@ -1026,6 +1026,65 @@ small { color: var(--ink-faint); }
   .templates-grid { grid-template-columns: 1fr; }
   .dimension-bar { width: 60px; }
 }
+/* ── Learn Hub (Knowledge) ───────────────────────────────── */
+.learn-layout {
+  display: flex;
+  gap: var(--space-xl);
+  align-items: flex-start;
+}
+
+/* — Knowledge Search Bar — */
+.learn-header-bar {
+  margin-bottom: var(--space-xl);
+}
+.learn-search-wrapper {
+  position: relative;
+  max-width: 600px;
+  display: flex;
+  align-items: center;
+}
+.learn-search-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--ink-faint);
+  pointer-events: none;
+}
+.learn-search-input {
+  width: 100%;
+  padding: 10px 38px 10px 40px;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  background: var(--bg-paper);
+  color: var(--ink);
+  border: var(--rule);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+.learn-search-input:focus {
+  border-color: var(--accent);
+}
+.learn-search-clear {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: var(--ink-faint);
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+.learn-search-clear:hover {
+  color: var(--accent);
+}
+.learn-empty-search {
+  padding: var(--space-2xl) var(--space-lg);
+  text-align: center;
+  color: var(--ink-faint);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+}
 /* ── Site Footer ─────────────────────────────────────────── */
 .site-footer {
   margin-top: var(--space-xxl);
