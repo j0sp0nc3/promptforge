@@ -25,7 +25,14 @@ and design decisions that MUST be respected.
   - `packages/core/promptometer-core.js` (npm package)
   - `packages/core/promptometer_core.py` (Python parity)
 
-## Before Finishing a Session
+## Before EVERY Commit (not just at session end)
 - Run `node test_edge_cases.js` to verify 14/14 PASS.
-- Update `HANDOFF.md` with completed tasks and any new pending items.
-- Commit and push all changes.
+- Update `HANDOFF.md`: move completed items to ✅, add new pending items.
+- Include HANDOFF.md in the commit.
+- The session may end abruptly (quota limits), so NEVER defer updates.
+
+## When Starting a Session After Another Assistant
+- Read `HANDOFF.md` first.
+- Run `git log --oneline -10` to see recent commits you didn't make.
+- Run `git diff HEAD~3` if needed to understand recent changes.
+- Reconcile any work not reflected in HANDOFF.md before proceeding.
