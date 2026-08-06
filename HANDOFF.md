@@ -26,6 +26,12 @@ interactiva desplegada en Vercel.
 - **npm:** https://www.npmjs.com/package/promptometer-core
 - **Dominio pendiente:** `promptometer.is-a.dev` (PR abierto en is-a-dev/register)
 
+### Autor
+
+- **Nombre:** Jose Ponce
+- **GitHub:** [j0sp0nc3](https://github.com/j0sp0nc3)
+- **LinkedIn:** [joseponce](https://www.linkedin.com/in/joseponce)
+
 ---
 
 ## 🎨 Sistema de Diseño: Editorial Technical
