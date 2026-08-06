@@ -211,6 +211,7 @@ const server = http.createServer((req, res) => {
   if (req.method === 'GET') {
     let safeUrl = req.url.split('?')[0];
     if (safeUrl === '/') safeUrl = '/index.html';
+    if (safeUrl === '/favicon.ico') safeUrl = '/favicon.svg';
 
     const filePath = path.join(__dirname, safeUrl);
 

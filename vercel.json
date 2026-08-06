@@ -16,12 +16,24 @@
     {
       "src": "index.html",
       "use": "@vercel/static"
+    },
+    {
+      "src": "favicon.svg",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
       "dest": "/api/index.js"
+    },
+    {
+      "src": "/favicon.svg",
+      "dest": "/favicon.svg"
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "/favicon.svg"
     },
     {
       "src": "/css/(.*)",
