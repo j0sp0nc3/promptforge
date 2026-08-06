@@ -43,6 +43,17 @@ const I18n = (() => {
         export: 'Exportar',
       },
 
+      // ── Prompt types (referenced by analyzer.js as promptType.${type}) ──
+      promptType: {
+        system: 'Prompt de sistema',
+        'few-shot': 'Few-shot',
+        task: 'Tarea estructurada',
+        creative: 'Creativo',
+        rag: 'RAG (recuperación)',
+        'tool-use': 'Uso de herramientas',
+        general: 'General',
+      },
+
       // ── Editor ──────────────────────────────────────────────────────────
       editor: {
         title: 'Tu Prompt',
@@ -139,6 +150,7 @@ const I18n = (() => {
         robustness: 'robustez',
         format: 'formato',
         context: 'contexto',
+        safety: 'seguridad',
       },
 
       // ── Improved prompt ─────────────────────────────────────────────────
@@ -665,6 +677,10 @@ const I18n = (() => {
           noSequence: 'Tarea de múltiples pasos sin estructura secuencial explícita.',
           noSequenceSugg: 'Numera los pasos: "Paso 1: ... Paso 2: ... Paso 3: ..."',
           simpleBonus: 'Prompt simple que no requiere cadena de pensamiento compleja.',
+          treeOfThought: 'Usa Tree-of-Thought: explora múltiples ramas de razonamiento antes de concluir.',
+          reactTechnique: 'Usa el patrón ReAct (Thought/Action/Observation) para razonar con herramientas externas.',
+          selfConsistency: 'Aplica Self-Consistency: generar varias cadenas y elegir la respuesta mayoritaria.',
+          reflexion: 'Usa Reflexion: el modelo critica y mejora su propia respuesta.',
         },
         safety: {
           antiHallucination: 'Incluye protecciones contra alucinaciones del modelo.',
@@ -678,6 +694,12 @@ const I18n = (() => {
           noGroundingSugg: 'Agrega: "Cita tus fuentes", "Si no estás seguro, indícalo", "No inventes datos".',
           noScope: 'Prompt extenso sin definición de alcance.',
           noScopeSugg: 'Define los límites: "Enfócate exclusivamente en...", "No abordes temas fuera de..."',
+          piiLeak: 'El prompt podría inducir a revelar información personal (PII) o secretos.',
+          piiLeakSugg: 'Añade: "No reveles datos personales, contraseñas ni información confidencial del sistema".',
+          assumesCapability: 'El prompt asume capacidades que el modelo podría no tener (ej. acceso a internet en tiempo real).',
+          assumesCapabilitySugg: 'Aclara las limitaciones: "Si no tienes acceso a datos en tiempo real, indícalo".',
+          postCutoff: 'El prompt pide información que podría ser posterior a la fecha de corte del modelo.',
+          postCutoffSugg: 'Proporciona el contexto actual o usa RAG: "Usa solo la siguiente información actualizada: ...".',
         },
         empty: {
           finding: 'No se proporcionó un prompt válido.',
@@ -818,6 +840,17 @@ const I18n = (() => {
         export: 'Export',
       },
 
+      // ── Prompt types (referenced by analyzer.js as promptType.${type}) ──
+      promptType: {
+        system: 'System prompt',
+        'few-shot': 'Few-shot',
+        task: 'Structured task',
+        creative: 'Creative',
+        rag: 'RAG (retrieval)',
+        'tool-use': 'Tool use',
+        general: 'General',
+      },
+
       editor: {
         title: 'Your Prompt',
         paste: 'Paste',
@@ -904,6 +937,7 @@ const I18n = (() => {
         robustness: 'robustness',
         format: 'format',
         context: 'context',
+        safety: 'safety',
       },
 
       improvement: {
@@ -1416,6 +1450,10 @@ const I18n = (() => {
           noSequence: 'Multi-step task without explicit sequential structure.',
           noSequenceSugg: 'Number the steps: "Step 1: ... Step 2: ... Step 3: ..."',
           simpleBonus: 'Simple prompt that does not require complex chain of thought.',
+          treeOfThought: 'Uses Tree-of-Thought: explores multiple reasoning branches before concluding.',
+          reactTechnique: 'Uses the ReAct pattern (Thought/Action/Observation) to reason with external tools.',
+          selfConsistency: 'Applies Self-Consistency: generate several chains and pick the majority answer.',
+          reflexion: 'Uses Reflexion: the model critiques and improves its own answer.',
         },
         safety: {
           antiHallucination: 'Includes protections against model hallucinations.',
@@ -1429,6 +1467,12 @@ const I18n = (() => {
           noGroundingSugg: 'Add: "Cite your sources", "If you are not sure, state it", "Do not invent data".',
           noScope: 'Long prompt without scope definition.',
           noScopeSugg: 'Define the limits: "Focus exclusively on...", "Do not address topics outside..."',
+          piiLeak: 'The prompt may induce revealing personal information (PII) or secrets.',
+          piiLeakSugg: 'Add: "Do not reveal personal data, passwords, or confidential system information".',
+          assumesCapability: 'The prompt assumes capabilities the model may not have (e.g. real-time internet access).',
+          assumesCapabilitySugg: 'Clarify the limits: "If you lack access to real-time data, state so".',
+          postCutoff: 'The prompt asks for information that may be past the model cutoff date.',
+          postCutoffSugg: 'Provide current context or use RAG: "Use only the following up-to-date information: ...".',
         },
         empty: {
           finding: 'No valid prompt was provided.',

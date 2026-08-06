@@ -74,6 +74,7 @@ interactiva desplegada en Vercel.
 - [x] **Hub de Conocimiento Fase 1 (Glosario)**: 20 términos bilingües ES/EN en `Knowledge.glossary` (token, temperature, top-p, context window, system/user/assistant, embedding, vector store, fine-tuning, hallucination, grounding, stop sequence, max tokens, function calling, prompt chaining, few-shot/zero-shot, CoT, prompt injection, LLM-as-judge, in-context learning, delimiters). 14 con cross-refs a items existentes (AP###, BP###, tpl-*, adv.*). 8 categorías.
 - [x] **Hub de Conocimiento Fase 2 (Técnicas)**: 10 técnicas en `Knowledge.techniques` — 6 nuevas (ReAct, Tree-of-Thought, Self-Consistency, Reflexion, Zero-shot, Metaprompting) con ejemplos Analizables, + 4 clásicas cross-linkadas (Few-shot, CoT, RAG, Role prompting) que ya están en el motor/rewriter. Todas bilingües ES/EN con crossRefs.
 - [x] **Hub de Conocimiento Fase 3 (Frameworks)**: 4 frameworks en `Knowledge.frameworks` — RTF (Role-Task-Format), CRISPE (6 componentes), RACE (Role-Action-Context-Expectation), y la **anatomía XML de 7 secciones nativa de Promptometer** (documentada con cross-refs a BP001/002/003/004/006/010/015 y rewriter._restructure). Los 2 principales (RTF + XML nativo) tienen ejemplos Analizables.
+- [x] **Hub de Conocimiento Fase 5 (Fix i18n rotas)**: 18 claves i18n que mostraban la key cruda ahora tienen texto real ES/EN: `promptType.{system,few-shot,task,creative,rag,tool-use,general}` (7), `analyzer.chainOfThought.{treeOfThought,reactTechnique,selfConsistency,reflexion}` (4), `analyzer.safety.{piiLeak,piiLeakSugg,assumesCapability,assumesCapabilitySugg,postCutoff,postCutoffSugg}` (6), `adversarialCategory.safety` (1). Paridad ES/EN global verificada (0 diferencias).
 
 ---
 
@@ -83,8 +84,12 @@ interactiva desplegada en Vercel.
 - [x] **Fase 1**: Glosario (20 términos bilingüe en `knowledge.js`) ✅
 - [x] **Fase 2**: Técnicas (6 nuevas + 4 cross-link con ejemplos Analizables) ✅
 - [x] **Fase 3**: Frameworks (RTF, CRISPE, RACE, anatomía XML nativa) ✅
-- [x] **Fase 4**: Biblioteca unificada (ya implementada en Fase 0)
-- [ ] **Fase 5**: Fix ~15 claves i18n rotas (promptType.*, técnicas modernas, safety) — **ÚLTIMA FASE**
+- [x] **Fase 4**: Biblioteca unificada (ya implementada en Fase 0) ✅
+- [x] **Fase 5**: Fix 18 claves i18n rotas (promptType.*, técnicas modernas, safety) ✅
+
+> ✅ **HUB DE CONOCIMIENTO COMPLETO.** 30 entradas nuevas (20 glosario + 6 técnicas + 4 frameworks),
+> bilingües ES/EN, + biblioteca unificada de los 12 templates + 35 anti-patrones + 15 best-practices
+> + 13 tests adversariales existentes. + 18 bugs de i18n arreglados.
 
 ---
 
@@ -92,8 +97,9 @@ interactiva desplegada en Vercel.
 
 - [ ] Esperar aprobación del PR `promptometer.is-a.dev` por mantenedores de is-a-dev
 - [ ] Configurar dominio en Vercel una vez aprobado el PR
-- [ ] (Opcional) Mejorar el README.md del repo promptforge con tema Editorial Technical
-- [ ] (Opcional) Añadir más templates de prompts en el catálogo
+- [ ] (Opcional) Verificar visualmente el hub desplegado en Vercel y ajustar detalles de UX
+- [ ] (Opcional) Lab interactivo transformador (roadmap — requiere técnicas que el rewriter NO cubre)
+- [ ] (Opcional) Búsqueda full-text dentro del hub (roadmap)
 
 ---
 
@@ -140,25 +146,17 @@ promptquill/                    ← Monorepo del Motor Core (npm)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-06
-- **Último commit promptforge:** `7a4db77` (Hub de Conocimiento Fase 0 — esqueleto)
+- **Último commit promptforge:** pendiente (Hub de Conocimiento Fase 5 — fix i18n rotas)
 - **Último commit promptometer:** `67436ff` (fix scoring ultra-short)
-- **Sesión en curso con:** ZCode (GLM-5.2) — implementando Hub de Conocimiento
-- **Próxima fase:** Fase 1 (Glosario ~20 términos bilingüe en `knowledge.js`)
+- **Sesión con:** ZCode (GLM-5.2) — **Hub de Conocimiento COMPLETO** (fases 0-5)
+- **Estado:** Las 6 fases del Hub están completas. Ver "Progreso por fases" arriba.
 
-> 📌 **Contexto para Antigravity u otro asistente que continúe:**
-> Se está construyendo un **Hub de Conocimiento de Prompt Engineering** en el tab
-> "Aprender". La arquitectura está completa (Fase 0, commit `7a4db77`): nuevo
-> módulo `js/knowledge.js`, vista `#view-learn` con 4 sub-secciones, `App.loadPrompt()`
-> expuesto, y la sub-sección "Biblioteca" ya renderiza los 12 templates + 35
-> anti-patrones + 15 best-practices + 13 tests adversariales existentes.
+> 📌 **Hub de Conocimiento COMPLETO.** Resumen de lo implementado en esta sesión:
+> - **Fase 0** (`7a4db77`): Esqueleto — tab "Aprender", 4 sub-secciones, `App.loadPrompt()`, biblioteca unificada
+> - **Fase 1** (`f3f4fd3`): Glosario — 20 términos bilingües (token, temperature, RAG, CoT, etc.)
+> - **Fase 2** (`0f34034`): Técnicas — 6 nuevas (ReAct, ToT, Self-Consistency, Reflexion, Zero-shot, Metaprompting) + 4 cross-linkadas
+> - **Fase 3** (`27510cf`): Frameworks — RTF, CRISPE, RACE, anatomía XML nativa de Promptometer
+> - **Fase 5** (este commit): Fix 18 claves i18n rotas (promptType.*, técnicas modernas, safety)
 >
-> **Lo que falta (fases 1-3):** rellenar los arrays `Knowledge.glossary`,
-> `Knowledge.techniques` y `Knowledge.frameworks` en `js/knowledge.js` con
-> contenido bilingüe (campos `{es, en}`). El principio rector es **NO duplicar**
-> lo que ya existe — solo añadir conocimiento nuevo y cross-linkar.
->
-> **Fase 5 final:** fix de ~15 claves i18n rotas (`promptType.*`, técnicas modernas
-> en `analyzer.chainOfThought.*`, `analyzer.safety.piiLeak/postCutoff/assumesCapability`,
-> `adversarialCategory.safety`).
->
-> Ver el plan completo aprobado en `.zcode/plans/plan-sess_b0d39578-*.md`.
+> **Principio rector cumplido:** cero duplicación. El hub añade solo conocimiento nuevo (30 entradas)
+> y cross-linka lo existente (12 templates, 35 anti-patrones, 13 tests adversariales).
