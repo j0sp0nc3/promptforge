@@ -124,6 +124,6 @@ promptquill/                    ← Monorepo del Motor Core (npm)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-06
-- **Último commit promptforge:** pendiente (footer rediseñado con avatar + marca + links iconográficos)
+- **Último commit promptforge:** `d344d01` (footer rediseñado con avatar + marca + links iconográficos)
 - **Último commit promptometer:** `67436ff` (fix scoring ultra-short)
 - **Sesión anterior con:** Antigravity (Claude Opus) / ZCode (GLM-5.2)
