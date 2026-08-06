@@ -147,7 +147,7 @@ promptquill/                    ← Monorepo del Motor Core (npm)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-06
-- **Último commit promptforge:** `3488ab7` (Hub de Conocimiento Fase 5 — fix 18 claves i18n rotas)
+- **Último commit promptforge:** `ffc2d5b` (biblioteca con detalle expandible para anti-patrones/best-practices/adversarial)
 - **Último commit promptometer:** `67436ff` (fix scoring ultra-short)
 - **Sesión con:** ZCode (GLM-5.2) — **Hub de Conocimiento COMPLETO** (fases 0-5)
 - **Estado:** Las 6 fases del Hub están completas. Ver "Progreso por fases" arriba.
