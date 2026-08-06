@@ -15,7 +15,7 @@ try {
 }
 
 const PORT = process.env.PORT || 3000;
-const API_KEY = process.env.PROMPTOMETER_API_KEY || process.env.API_KEY || 'pm_live_key_promptometer_2026';
+const API_KEY = process.env.PROMPTOMETER_API_KEY || process.env.API_KEY || '';
 
 const ALLOWED_ORIGINS = [
   'https://promptforge-beta-ten.vercel.app',
@@ -55,6 +55,7 @@ function checkRateLimit(ip) {
 }
 
 function validateApiKey(req) {
+  if (!API_KEY) return false; // Requires explicit environment variable configuration
   const apiKeyHeader = req.headers['x-api-key'];
   const authHeader = req.headers['authorization'];
   
@@ -64,7 +65,7 @@ function validateApiKey(req) {
   }
 
   const providedKey = apiKeyHeader || bearerToken;
-  return providedKey === API_KEY;
+  return Boolean(providedKey && providedKey === API_KEY);
 }
 
 const MIME_TYPES = {

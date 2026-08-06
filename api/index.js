@@ -5,8 +5,8 @@ try {
   PromptometerCore = require('../../promptometer/packages/core/promptometer-core.js');
 }
 
-// Security & API Key Configuration
-const API_KEY = process.env.PROMPTOMETER_API_KEY || process.env.API_KEY || 'pm_live_key_promptometer_2026';
+// Security & API Key Configuration (Read ONLY from environment variables, no hardcoded secrets in repository)
+const API_KEY = process.env.PROMPTOMETER_API_KEY || process.env.API_KEY || '';
 
 const ALLOWED_ORIGINS = [
   'https://promptforge-beta-ten.vercel.app',
@@ -24,7 +24,7 @@ const MAX_REQUESTS_PER_WINDOW = 30; // 30 req/min per IP
 const ipRequestMap = new Map();
 
 function isOriginAllowed(origin) {
-  if (!origin) return false; // Strict: require origin or valid API key
+  if (!origin) return false;
   if (ALLOWED_ORIGINS.includes(origin)) return true;
   if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return true;
   return false;
@@ -54,6 +54,7 @@ function checkRateLimit(ip) {
 }
 
 function validateApiKey(req) {
+  if (!API_KEY) return false; // Require explicit environment variable configuration
   const apiKeyHeader = req.headers['x-api-key'];
   const authHeader = req.headers['authorization'];
   
@@ -63,7 +64,7 @@ function validateApiKey(req) {
   }
 
   const providedKey = apiKeyHeader || bearerToken;
-  return providedKey === API_KEY;
+  return Boolean(providedKey && providedKey === API_KEY);
 }
 
 module.exports = (req, res) => {
