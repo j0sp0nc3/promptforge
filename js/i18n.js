@@ -758,9 +758,10 @@ const I18n = (() => {
       },
       footer: {
         tagline: 'Analizador de Prompts Avanzado',
-        copy: '© 2026 j0sp0nc3 · Licencia MIT',
+        copy: '© 2026 · Licencia MIT',
         source: 'Código fuente',
         engine: 'Motor',
+        linkedin: 'Perfil de LinkedIn',
       },
     },
 
@@ -1469,9 +1470,10 @@ const I18n = (() => {
       },
       footer: {
         tagline: 'Advanced Prompt Analyzer',
-        copy: '© 2026 j0sp0nc3 · MIT License',
+        copy: '© 2026 · MIT License',
         source: 'Source code',
         engine: 'Engine',
+        linkedin: 'LinkedIn profile',
       },
     },
   };

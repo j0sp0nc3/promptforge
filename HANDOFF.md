@@ -60,6 +60,7 @@ interactiva desplegada en Vercel.
 - [x] Internacionalización (i18n) completo ES/EN
 - [x] Footer Open Source con atribución `j0sp0nc3`, licencia MIT, links a repos y perfil de LinkedIn (`josponce`)
 - [x] Claves i18n del footer en ES y EN
+- [x] Footer rediseñado (Editorial Technical): avatar circular de GitHub + bloque de marca (wordmark + tagline) + links con íconos SVG (GitHub, Motor, LinkedIn)
 - [x] Favicon SVG vectorial de alta resolución alineado al logo de medidor de calibración
 - [x] Logo SVG: medidor de calibración vermilion/crema (Editorial Technical)
 - [x] Texto del logo: `Prompt<span>ometer</span>`
@@ -123,6 +124,6 @@ promptquill/                    ← Monorepo del Motor Core (npm)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-06
-- **Último commit promptforge:** `bfbae68` (fix SVG logo icon)
+- **Último commit promptforge:** pendiente (footer rediseñado con avatar + marca + links iconográficos)
 - **Último commit promptometer:** `67436ff` (fix scoring ultra-short)
-- **Sesión anterior con:** Antigravity (Claude Opus)
+- **Sesión anterior con:** Antigravity (Claude Opus) / ZCode (GLM-5.2)
