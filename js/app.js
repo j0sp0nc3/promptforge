@@ -1,5 +1,5 @@
 /**
- * PromptForge — App Orchestrator
+ * Promptometer — App Orchestrator
  * Main application controller that wires all modules together.
  */
 

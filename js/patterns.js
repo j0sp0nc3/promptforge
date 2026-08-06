@@ -1,5 +1,5 @@
 // ============================================================================
-// PromptForge — Pattern Detection Database
+// Promptometer — Pattern Detection Database
 // Anti-patterns & Best Practices with bilingual (EN/ES) detection
 // ============================================================================
 

@@ -1,5 +1,5 @@
 // ============================================================================
-// PromptForge — Adversarial Testing Simulator
+// Promptometer — Adversarial Testing Simulator
 // Evaluates prompt resilience against 10 attack / failure vectors.
 // All user-facing strings are resolved via I18n.t('adv.<test>.<field>').
 // ============================================================================

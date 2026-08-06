@@ -43,7 +43,7 @@ const History = {
 
     const ok = this._persist(entries);
     if (!ok) {
-      console.warn('[PromptForge History] No se pudo persistir el historial (posible cuota excedida).');
+      console.warn('[Promptometer History] No se pudo persistir el historial (posible cuota excedida).');
     }
     return entry;
   },
@@ -166,7 +166,7 @@ const History = {
     const data = {
       version: '1.0',
       exportedAt: new Date().toISOString(),
-      application: 'PromptForge',
+      application: 'Promptometer',
       entries: this.getAll()
     };
     return JSON.stringify(data, null, 2);
@@ -251,7 +251,7 @@ const History = {
       const parsed = JSON.parse(raw);
       return Array.isArray(parsed) ? parsed : [];
     } catch (e) {
-      console.warn('[PromptForge History] Error reading from localStorage:', e);
+      console.warn('[Promptometer History] Error reading from localStorage:', e);
       return [];
     }
   },
@@ -265,16 +265,16 @@ const History = {
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(entries));
       return true;
     } catch (e) {
-      console.error('[PromptForge History] Error writing to localStorage:', e);
+      console.error('[Promptometer History] Error writing to localStorage:', e);
       // If quota exceeded, try removing oldest entries
       if (e.name === 'QuotaExceededError' || e.code === 22) {
         const trimmed = entries.slice(0, Math.floor(entries.length * 0.75));
         try {
           localStorage.setItem(this.STORAGE_KEY, JSON.stringify(trimmed));
-          console.warn(`[PromptForge History] Trimmed to ${trimmed.length} entries due to storage quota.`);
+          console.warn(`[Promptometer History] Trimmed to ${trimmed.length} entries due to storage quota.`);
           return true;
         } catch (e2) {
-          console.error('[PromptForge History] Cannot save even after trimming:', e2);
+          console.error('[Promptometer History] Cannot save even after trimming:', e2);
         }
       }
       return false;

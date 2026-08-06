@@ -1,4 +1,4 @@
-# PromptForge & Promptometer
+# Promptometer & Promptometer
 
 **Advanced Prompt Engineering & Evaluation Suite** — Multidimensional scoring, anti-pattern detection, adversarial security testing, automatic prompt improvement, and multi-language engine bindings.
 
@@ -17,13 +17,13 @@
 2. [Quick Start](#-quick-start)
 3. [Studio Obsidian Design System](#-studio-obsidian-design-system)
 4. [Multi-Language Core Libraries](#-multi-language-core-libraries)
-   - [JavaScript / Node.js (`promptforge-core.js`)](#1-javascript--nodejs-libpromptforge-corejs)
-   - [Python Native (`promptforge_core.py`)](#2-python-native-libpromptforge_corepy)
+   - [JavaScript / Node.js (`promptometer-core.js`)](#1-javascript--nodejs-libpromptometer-corejs)
+   - [Python Native (`promptometer_core.py`)](#2-python-native-libpromptometer_corepy)
    - [REST API Microservice (`server.js`)](#3-universal-rest-api-microservice-serverjs)
-   - [Declarative JSON Rules (`promptforge-rules.json`)](#4-declarative-rules-libpromptforge-rulesjson)
+   - [Declarative JSON Rules (`promptometer-rules.json`)](#4-declarative-rules-libpromptometer-rulesjson)
    - [Command Line Interface (`cli.js`)](#5-command-line-interface-clijs)
 5. [Stress & Edge Case Testing Suite](#-stress--edge-case-testing-suite)
-6. [How PromptForge Scores](#-how-promptforge-scores)
+6. [How Promptometer Scores](#-how-promptometer-scores)
 7. [Project Structure](#-project-structure)
 8. [License](#-license)
 
@@ -31,7 +31,7 @@
 
 ## 🎯 Overview
 
-PromptForge is a complete professional workspace and engine to **evaluate, benchmark, and optimize prompts for LLMs**. It provides:
+Promptometer is a complete professional workspace and engine to **evaluate, benchmark, and optimize prompts for LLMs**. It provides:
 
 - **Multidimensional Score (0–100)** with letter grades (A to F) across **8 dimensions**.
 - **Anti-Pattern Catalog** (30 anti-patterns) & **Best Practices** (15 strengths).
@@ -68,23 +68,23 @@ The application features a custom high-end UI inspired by engineering workbenche
 
 The evaluation engine is decoupled from the UI and exported into standalone modules for any tech stack:
 
-### 1. JavaScript / Node.js (`lib/promptforge-core.js`)
+### 1. JavaScript / Node.js (`lib/promptometer-core.js`)
 Zero-dependency UMD / ESM / CommonJS build:
 ```javascript
-const PromptForgeCore = require('./lib/promptforge-core.js');
+const PromptometerCore = require('./lib/promptometer-core.js');
 
-const analysis = PromptForgeCore.analyze("Your prompt text here...");
+const analysis = PromptometerCore.analyze("Your prompt text here...");
 console.log(analysis.overallScore, analysis.grade);
 ```
 
-### 2. Python Native (`lib/promptforge_core.py`)
+### 2. Python Native (`lib/promptometer_core.py`)
 Pure Python (zero dependencies) for FastAPI, Django, Flask, LangChain, or LlamaIndex:
 ```python
 import sys
 sys.path.append('./lib')
-import promptforge_core
+import promptometer_core
 
-analysis = promptforge_core.analyze("Your prompt text here...")
+analysis = promptometer_core.analyze("Your prompt text here...")
 print("Score:", analysis["overall_score"], "Grade:", analysis["grade"])
 ```
 
@@ -99,7 +99,7 @@ curl -X POST http://localhost:3000/api/analyze \
   -d '{"prompt": "Act as an expert developer. Output JSON."}'
 ```
 
-### 4. Declarative Rules (`lib/promptforge-rules.json`)
+### 4. Declarative Rules (`lib/promptometer-rules.json`)
 Agnostic JSON specification defining regexes, anti-patterns, and dimension weights for cross-platform engines.
 
 ### 5. Command Line Interface (`cli.js`)
@@ -112,7 +112,7 @@ node cli.js "Your prompt here"
 
 ## 🧪 Stress & Edge Case Testing Suite
 
-PromptForge includes automated test runners to verify engine stability against malformed and extreme inputs:
+Promptometer includes automated test runners to verify engine stability against malformed and extreme inputs:
 - **`test_runner.html`**: Interactive web test runner console.
 - **`test_edge_cases.js`**: Automated Node.js runner.
 - **`test_edge_cases.py`**: Automated Python runner.
@@ -130,7 +130,7 @@ PromptForge includes automated test runners to verify engine stability against m
 
 ---
 
-## 🧠 How PromptForge Scores
+## 🧠 How Promptometer Scores
 
 ### 8 Dimension Weights
 | Dimension | Weight | Focus Area |
@@ -149,7 +149,7 @@ PromptForge includes automated test runners to verify engine stability against m
 ## 📁 Project Structure
 
 ```
-promptforge/
+promptometer/
 ├── index.html                # Main Workbench Web App
 ├── test_runner.html          # Interactive Web Stress Test Console
 ├── css/
@@ -167,9 +167,9 @@ promptforge/
 │   ├── export.js             # JSON, Markdown, & URL Exporters
 │   └── app.js                # Main UI Orchestrator
 ├── lib/
-│   ├── promptforge-core.js   # Universal JS UMD/ESM/CJS Engine
-│   ├── promptforge_core.py   # Native Python Engine (Zero-Dep)
-│   └── promptforge-rules.json # Declarative Engine Specification
+│   ├── promptometer-core.js   # Universal JS UMD/ESM/CJS Engine
+│   ├── promptometer_core.py   # Native Python Engine (Zero-Dep)
+│   └── promptometer-rules.json # Declarative Engine Specification
 ├── server.js                 # REST API Microservice (Port 3000)
 ├── cli.js                    # Node Terminal Executable
 ├── test_edge_cases.js        # JS Test Suite Runner

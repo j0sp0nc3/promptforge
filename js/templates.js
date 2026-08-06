@@ -1,5 +1,5 @@
 // ============================================================================
-// PromptForge - Template Library
+// Promptometer - Template Library
 // Production-quality prompt templates in Spanish with XML structure
 // ============================================================================
 

@@ -1,5 +1,5 @@
 // ============================================================================
-// PromptForge - Export Utilities
+// Promptometer - Export Utilities
 // JSON, Markdown, clipboard, file download, and URL sharing
 // ============================================================================
 
@@ -299,11 +299,11 @@ const ExportUtil = {
    */
   _showToast(message, type = 'info') {
     // Remove existing toasts
-    const existing = document.querySelectorAll('.promptforge-toast');
+    const existing = document.querySelectorAll('.promptometer-toast');
     existing.forEach(el => el.remove());
 
     const toast = document.createElement('div');
-    toast.className = 'promptforge-toast';
+    toast.className = 'promptometer-toast';
     toast.textContent = message;
 
     // Color scheme

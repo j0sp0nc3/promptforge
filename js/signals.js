@@ -1,5 +1,5 @@
 // ============================================================================
-// PromptForge — Signals Registry
+// Promptometer — Signals Registry
 // Single source of truth for every derived signal used by the scoring
 // engine. Avoids double counting (the same signal feeding multiple
 // dimensions independently) and makes co-occurrence-based detection

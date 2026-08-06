@@ -1,13 +1,13 @@
 /**
- * PromptForge — Stress & Edge Case Test Suite
+ * Promptometer — Stress & Edge Case Test Suite
  * Evaluates core engine stability under extreme, malformed, and boundary inputs.
  */
 
-let PromptForgeCore;
+let PromptometerCore;
 try {
-  PromptForgeCore = require('promptometer-core');
+  PromptometerCore = require('promptometer-core');
 } catch (e) {
-  PromptForgeCore = require('../promptquill/packages/core/promptometer-core.js');
+  PromptometerCore = require('../promptquill/packages/core/promptometer-core.js');
 }
 
 
@@ -30,7 +30,7 @@ const edgeCases = [
 ];
 
 console.log("\n============================================================");
-console.log("🧪 PROMPTFORGE CORE — SUITE DE PRUEBAS DE ESTRÉS Y LÍMITE");
+console.log("🧪 PROMPTOMETER CORE — SUITE DE PRUEBAS DE ESTRÉS Y LÍMITE");
 console.log("============================================================\n");
 
 let passedCount = 0;
@@ -45,9 +45,9 @@ edgeCases.forEach((test, idx) => {
     const startTime = Date.now();
     
     // Execute Core Pipeline
-    const analysis = PromptForgeCore.analyze(input);
-    const adversarial = PromptForgeCore.runAdversarial(input);
-    const improvement = PromptForgeCore.improve(input, analysis);
+    const analysis = PromptometerCore.analyze(input);
+    const adversarial = PromptometerCore.runAdversarial(input);
+    const improvement = PromptometerCore.improve(input, analysis);
     
     const elapsed = Date.now() - startTime;
 

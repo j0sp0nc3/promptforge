@@ -1,15 +1,15 @@
 # ============================================================================
-# PromptForge Core — Python Stress & Edge Case Test Suite
+# Promptometer Core — Python Stress & Edge Case Test Suite
 # ============================================================================
 
 import sys
 import time
 import json
 try:
-    import promptometer_core as promptforge_core
+    import promptometer_core as promptometer_core
 except ImportError:
     sys.path.append('../promptquill/packages/core')
-    import promptometer_core as promptforge_core
+    import promptometer_core as promptometer_core
 
 
 
@@ -31,7 +31,7 @@ edge_cases = [
 ]
 
 print("\n============================================================")
-print("🧪 PROMPTFORGE CORE (PYTHON) — SUITE DE PRUEBAS DE ESTRÉS")
+print("🧪 PROMPTOMETER CORE (PYTHON) — SUITE DE PRUEBAS DE ESTRÉS")
 print("============================================================\n")
 
 passed = 0
@@ -43,9 +43,9 @@ for test in edge_cases:
     t0 = time.time()
     
     try:
-        analysis = promptforge_core.analyze(inp)
-        adversarial = promptforge_core.run_adversarial(inp)
-        improved = promptforge_core.improve(inp, analysis)
+        analysis = promptometer_core.analyze(inp)
+        adversarial = promptometer_core.run_adversarial(inp)
+        improved = promptometer_core.improve(inp, analysis)
         elapsed = round((time.time() - t0) * 1000, 2)
 
         raw_dump = json.dumps(analysis) + json.dumps(adversarial) + json.dumps(improved)

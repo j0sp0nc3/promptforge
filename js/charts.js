@@ -1,5 +1,5 @@
 /* ============================================================
-   PromptForge — Charts Module (Chart.js Wrapper)
+   Promptometer — Charts Module (Chart.js Wrapper)
    Requires Chart.js loaded globally via CDN.
    ============================================================ */
 

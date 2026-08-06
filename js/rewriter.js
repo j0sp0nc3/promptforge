@@ -1,5 +1,5 @@
 // ============================================================================
-// PromptForge - Prompt Rewriter / Improver
+// Promptometer - Prompt Rewriter / Improver
 // Intelligent prompt restructuring with targeted improvements
 // ============================================================================
 

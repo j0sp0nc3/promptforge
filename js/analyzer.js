@@ -1,5 +1,5 @@
 // ============================================================================
-// PromptForge — Core Analysis Engine
+// Promptometer — Core Analysis Engine
 // Scores prompts across 8 dimensions with bilingual (EN/ES) support
 // ============================================================================
 
