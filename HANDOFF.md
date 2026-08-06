@@ -71,16 +71,17 @@ interactiva desplegada en Vercel.
 - [x] Tests de estrés: 14/14 PASS
 - [x] Footer rediseñado (Editorial Technical): avatar circular de GitHub + bloque de marca (wordmark + tagline) + links con íconos SVG (GitHub, Motor, LinkedIn)
 - [x] **Hub de Conocimiento Fase 0 (esqueleto)**: nuevo tab "Aprender" con 4 sub-secciones (Glosario, Técnicas, Frameworks, Biblioteca). `App.loadPrompt()` expuesto. CSS `.learn-*` completo. `knowledge.js` creado (vacío, se rellena en fases 1-3). Biblioteca unificada renderiza los 12 templates + 35 anti-patrones + 15 best-practices + 13 tests adversariales existentes. i18n `learn.*` y `nav.learn` en ES/EN.
+- [x] **Hub de Conocimiento Fase 1 (Glosario)**: 20 términos bilingües ES/EN en `Knowledge.glossary` (token, temperature, top-p, context window, system/user/assistant, embedding, vector store, fine-tuning, hallucination, grounding, stop sequence, max tokens, function calling, prompt chaining, few-shot/zero-shot, CoT, prompt injection, LLM-as-judge, in-context learning, delimiters). 14 con cross-refs a items existentes (AP###, BP###, tpl-*, adv.*). 8 categorías.
 
 ---
 
 ## 🔄 Hub de Conocimiento — Progreso por fases
 
 - [x] **Fase 0**: Esqueleto (App.loadPrompt + nav + HTML/CSS + knowledge.js + library unificada)
-- [ ] **Fase 1**: Glosario (~20 términos bilingüe en `knowledge.js`)
+- [x] **Fase 1**: Glosario (20 términos bilingüe en `knowledge.js`) ✅
 - [ ] **Fase 2**: Técnicas (6 nuevas + 4 cross-link con ejemplos Analizables)
 - [ ] **Fase 3**: Frameworks (RTF, CRISPE, RACE, anatomía XML nativa)
-- [ ] **Fase 4**: Biblioteca unificada (ya implementada en Fase 0)
+- [x] **Fase 4**: Biblioteca unificada (ya implementada en Fase 0)
 - [ ] **Fase 5**: Fix ~15 claves i18n rotas (promptType.*, técnicas modernas, safety)
 
 ---
@@ -137,6 +138,25 @@ promptquill/                    ← Monorepo del Motor Core (npm)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-06
-- **Último commit promptforge:** `d344d01` (footer rediseñado con avatar + marca + links iconográficos)
+- **Último commit promptforge:** `7a4db77` (Hub de Conocimiento Fase 0 — esqueleto)
 - **Último commit promptometer:** `67436ff` (fix scoring ultra-short)
-- **Sesión anterior con:** Antigravity (Claude Opus) / ZCode (GLM-5.2)
+- **Sesión en curso con:** ZCode (GLM-5.2) — implementando Hub de Conocimiento
+- **Próxima fase:** Fase 1 (Glosario ~20 términos bilingüe en `knowledge.js`)
+
+> 📌 **Contexto para Antigravity u otro asistente que continúe:**
+> Se está construyendo un **Hub de Conocimiento de Prompt Engineering** en el tab
+> "Aprender". La arquitectura está completa (Fase 0, commit `7a4db77`): nuevo
+> módulo `js/knowledge.js`, vista `#view-learn` con 4 sub-secciones, `App.loadPrompt()`
+> expuesto, y la sub-sección "Biblioteca" ya renderiza los 12 templates + 35
+> anti-patrones + 15 best-practices + 13 tests adversariales existentes.
+>
+> **Lo que falta (fases 1-3):** rellenar los arrays `Knowledge.glossary`,
+> `Knowledge.techniques` y `Knowledge.frameworks` en `js/knowledge.js` con
+> contenido bilingüe (campos `{es, en}`). El principio rector es **NO duplicar**
+> lo que ya existe — solo añadir conocimiento nuevo y cross-linkar.
+>
+> **Fase 5 final:** fix de ~15 claves i18n rotas (`promptType.*`, técnicas modernas
+> en `analyzer.chainOfThought.*`, `analyzer.safety.piiLeak/postCutoff/assumesCapability`,
+> `adversarialCategory.safety`).
+>
+> Ver el plan completo aprobado en `.zcode/plans/plan-sess_b0d39578-*.md`.

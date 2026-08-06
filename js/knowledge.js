@@ -16,9 +16,206 @@
 
 const Knowledge = {
 
-  /* ── 1. Glosario: pure definitions not found elsewhere ──────── */
+  /* ── 1. Glosario: pure definitions not found elsewhere ────────
+     Each term: { id, term:{es,en}, category, def:{es,en}, example:{es,en}?, crossRefs:[]? }
+     crossRefs reference existing item IDs (AP###, BP###, tpl-*, adv.* test IDs). */
   glossary: [
-    // Fase 1 — populated below
+    {
+      id: 'g-token',
+      term: { es: 'Token', en: 'Token' },
+      category: 'fundamentos',
+      def: {
+        es: 'Unidad mínima de texto que un modelo procesa. No equivale a una palabra: una palabra común puede ser 1-2 tokens, una rara hasta 3-4. Los modelos facturan y miden su contexto en tokens, no en palabras.',
+        en: 'The smallest unit of text a model processes. It is not a word: a common word may be 1-2 tokens, a rare one up to 3-4. Models bill and measure context in tokens, not words.',
+      },
+      example: { es: '"ChatGPT" ≈ 1 token · "desafortunadamente" ≈ 3-4 tokens', en: '"ChatGPT" ≈ 1 token · "unfortunately" ≈ 3-4 tokens' },
+      crossRefs: ['stats.tokens'],
+    },
+    {
+      id: 'g-temperature',
+      term: { es: 'Temperature', en: 'Temperature' },
+      category: 'parámetros',
+      def: {
+        es: 'Parámetro (0.0–2.0) que controla la aleatoriedad de la respuesta. Valores bajos (0.0–0.3) dan salidas deterministas y enfocadas; valores altos (0.8–1.2) dan salidas creativas pero menos predecibles. No se controla desde el prompt, pero conviene conocerlo al diseñar para una temperatura fija.',
+        en: 'A parameter (0.0–2.0) controlling response randomness. Low values (0.0–0.3) give deterministic, focused outputs; high values (0.8–1.2) give creative but less predictable outputs. Not controlled from the prompt, but important to know when designing for a fixed temperature.',
+      },
+      example: { es: 'temperature=0.2 → respuestas consistentes · temperature=1.0 → respuestas variadas', en: 'temperature=0.2 → consistent answers · temperature=1.0 → varied answers' },
+    },
+    {
+      id: 'g-top-p',
+      term: { es: 'Top-p (nucleus sampling)', en: 'Top-p (nucleus sampling)' },
+      category: 'parámetros',
+      def: {
+        es: 'Alternativa a temperature: el modelo considera solo los tokens cuya probabilidad acumulada alcanza p (ej. 0.9 = el 90% más probable). Top-p bajo = salidas conservadoras. Suele fijarse en 1.0 y usarse temperature como control principal.',
+        en: 'An alternative to temperature: the model considers only tokens whose cumulative probability reaches p (e.g. 0.9 = the most likely 90%). Low top-p = conservative outputs. Usually set to 1.0 with temperature as the main control.',
+      },
+    },
+    {
+      id: 'g-context-window',
+      term: { es: 'Context window', en: 'Context window' },
+      category: 'fundamentos',
+      def: {
+        es: 'Cantidad máxima de tokens (entrada + salida) que el modelo puede procesar en una sola llamada. Superar el límite trunca el prompt o el historial. Prompts largos con muchos ejemplos few-shot consumen contexto rápido.',
+        en: 'The maximum tokens (input + output) a model can process in a single call. Exceeding it truncates the prompt or history. Long prompts with many few-shot examples consume context quickly.',
+      },
+      crossRefs: ['g-few-shot'],
+    },
+    {
+      id: 'g-system-prompt',
+      term: { es: 'System / User / Assistant message', en: 'System / User / Assistant message' },
+      category: 'fundamentos',
+      def: {
+        es: 'Los tres roles de un mensaje. System: instrucciones globales que definen comportamiento, tono y reglas (se aplican a toda la conversación). User: la entrada del humano en cada turno. Assistant: la respuesta del modelo. Un buen prompt de sistema es breve, declarativo y establece límites.',
+        en: 'The three message roles. System: global instructions defining behavior, tone, and rules (apply to the whole conversation). User: the human input on each turn. Assistant: the model response. A good system prompt is concise, declarative, and sets boundaries.',
+      },
+      crossRefs: ['tpl-agente-conversacional'],
+    },
+    {
+      id: 'g-embedding',
+      term: { es: 'Embedding', en: 'Embedding' },
+      category: 'rag',
+      def: {
+        es: 'Representación numérica (vector) del significado de un texto. Textos semánticamente similares tienen vectores cercanos. Base de la búsqueda semántica usada en RAG.',
+        en: 'A numeric representation (vector) of a text meaning. Semantically similar texts have nearby vectors. The foundation of semantic search used in RAG.',
+      },
+      crossRefs: ['g-vector-store', 'tpl-rag-prompt'],
+    },
+    {
+      id: 'g-vector-store',
+      term: { es: 'Vector store / Retrieval', en: 'Vector store / Retrieval' },
+      category: 'rag',
+      def: {
+        es: 'Base de datos que almacena embeddings y permite buscar los más similares a una consulta. El retrieval (recuperación) es el acto de buscar contexto relevante antes de generarlo.',
+        en: 'A database that stores embeddings and lets you search for the most similar to a query. Retrieval is the act of fetching relevant context before generating.',
+      },
+      crossRefs: ['tpl-rag-prompt', 'g-grounding'],
+    },
+    {
+      id: 'g-fine-tuning',
+      term: { es: 'Fine-tuning', en: 'Fine-tuning' },
+      category: 'fundamentos',
+      def: {
+        es: 'Entrenar un modelo con datos propios para que especialice su comportamiento. Útil cuando tienes miles de ejemplos y el prompting no basta. NO sustituye al buen prompting: un mal prompt sigue rindiendo mal aunque el modelo esté fine-tuned.',
+        en: 'Training a model with your own data so it specializes its behavior. Useful when you have thousands of examples and prompting is not enough. It does NOT replace good prompting: a bad prompt still performs poorly even on a fine-tuned model.',
+      },
+    },
+    {
+      id: 'g-hallucination',
+      term: { es: 'Hallucination', en: 'Hallucination' },
+      category: 'seguridad',
+      def: {
+        es: 'Cuando el modelo genera información plausible pero falsa con confianza total. Causas comunes: falta de contexto, preguntas sobre datos post-cutoff, o ausencia de guardrails. Se mitiga con grounding, citas, e instrucciones tipo "si no lo sabes, di que no lo sabes".',
+        en: 'When the model generates plausible but false information with total confidence. Common causes: lack of context, questions about post-cutoff data, or missing guardrails. Mitigated with grounding, citations, and "if you don\'t know, say so" instructions.',
+      },
+      crossRefs: ['AP030', 'BP009', 'hallucination'],
+    },
+    {
+      id: 'g-grounding',
+      term: { es: 'Grounding', en: 'Grounding' },
+      category: 'rag',
+      def: {
+        es: 'Anclar la respuesta del modelo a una fuente verificable (documentos recuperados, datos, citas). Reduce alucinaciones al obligar al modelo a basarse en evidencia proporcionada en lugar de conocimiento paramétrico.',
+        en: 'Anchoring the model response to a verifiable source (retrieved documents, data, citations). Reduces hallucinations by forcing the model to rely on provided evidence rather than parametric knowledge.',
+      },
+      crossRefs: ['tpl-rag-prompt', 'g-hallucination'],
+    },
+    {
+      id: 'g-stop-sequence',
+      term: { es: 'Stop sequence', en: 'Stop sequence' },
+      category: 'parámetros',
+      def: {
+        es: 'Cadena de texto que detiene la generación del modelo cuando aparece. Útil en pipelines para delimitar dónde termina una respuesta estructurada (ej. detener tras el cierre de un JSON `}`).',
+        en: 'A string that stops model generation when it appears. Useful in pipelines to delimit where a structured response ends (e.g. stop after a JSON closes with `}`).',
+      },
+    },
+    {
+      id: 'g-max-tokens',
+      term: { es: 'Max tokens', en: 'Max tokens' },
+      category: 'parámetros',
+      def: {
+        es: 'Límite máximo de tokens que el modelo generará en la respuesta. Si no se especifica, el modelo puede cortar a la mitad de una respuesta larga. Especificarlo evita respuestas parciales en salidas estructuradas.',
+        en: 'The maximum tokens the model will generate in the response. If unspecified, the model may cut off mid long response. Specifying it prevents partial outputs in structured responses.',
+      },
+    },
+    {
+      id: 'g-function-calling',
+      term: { es: 'Function calling / Tool use', en: 'Function calling / Tool use' },
+      category: 'agentes',
+      def: {
+        es: 'Capacidad del modelo de decidir llamar a una herramienta/función externa (API, cálculo, búsqueda) y estructurar los argumentos en JSON. Base de los agentes y sistemas que actúan en el mundo. Se define declarando el esquema de la herramienta en el prompt o la API.',
+        en: 'The model ability to decide to call an external tool/function (API, calculation, search) and structure the arguments as JSON. The foundation of agents and systems that act in the world. Defined by declaring the tool schema in the prompt or API.',
+      },
+      crossRefs: ['hasToolUse'],
+    },
+    {
+      id: 'g-prompt-chaining',
+      term: { es: 'Prompt chaining', en: 'Prompt chaining' },
+      category: 'agentes',
+      def: {
+        es: 'Dividir una tarea compleja en una secuencia de prompts donde la salida de uno alimenta al siguiente. Cada paso hace una sola cosa bien. Reduce errores vs. un mega-prompt que intenta hacer todo.',
+        en: 'Splitting a complex task into a sequence of prompts where one output feeds the next. Each step does one thing well. Reduces errors vs. a mega-prompt that tries to do everything.',
+      },
+    },
+    {
+      id: 'g-few-shot',
+      term: { es: 'Few-shot vs Zero-shot', en: 'Few-shot vs Zero-shot' },
+      category: 'técnicas',
+      def: {
+        es: 'Zero-shot: pedir la tarea sin ejemplos (el modelo usa solo sus instrucciones). Few-shot: incluir 2-5 ejemplos de entrada/salida dentro del prompt para calibrar el formato, tono y patrón. Few-shot mejora drásticamente la consistencia en clasificación y extracción.',
+        en: 'Zero-shot: ask for the task with no examples (the model uses only your instructions). Few-shot: include 2-5 input/output examples in the prompt to calibrate format, tone, and pattern. Few-shot dramatically improves consistency in classification and extraction.',
+      },
+      crossRefs: ['BP002', 'AP008', 'AP022'],
+    },
+    {
+      id: 'g-cot',
+      term: { es: 'Chain-of-Thought (CoT)', en: 'Chain-of-Thought (CoT)' },
+      category: 'técnicas',
+      def: {
+        es: 'Pedirle al modelo que razone paso a paso antes de dar la respuesta final ("piensa paso a paso", "primero analiza, luego concluye"). Mejora el rendimiento en tareas de razonamiento, matemáticas y lógica. El coste: más tokens de salida.',
+        en: 'Asking the model to reason step by step before giving the final answer ("think step by step", "first analyze, then conclude"). Improves performance on reasoning, math, and logic tasks. The cost: more output tokens.',
+      },
+      crossRefs: ['AP014', 'BP005', 'rewriter._addChainOfThought'],
+    },
+    {
+      id: 'g-prompt-injection',
+      term: { es: 'Prompt injection', en: 'Prompt injection' },
+      category: 'seguridad',
+      def: {
+        es: 'Ataque donde texto malicioso dentro de los datos (no las instrucciones) intenta sobreescribir el comportamiento del modelo. Ejemplo: un documento recuperado que dice "ignora las instrucciones anteriores". Se defiende con delimitadores de contenido no confiable y guardrails explícitos.',
+        en: 'An attack where malicious text inside the data (not the instructions) tries to override the model behavior. Example: a retrieved document saying "ignore previous instructions". Defended with untrusted-content delimiters and explicit guardrails.',
+      },
+      crossRefs: ['AP010', 'injection', 'jailbreakRoleplay', 'indirectInjection', 'dataExfiltration'],
+    },
+    {
+      id: 'g-llm-as-judge',
+      term: { es: 'LLM-as-Judge', en: 'LLM-as-Judge' },
+      category: 'evaluación',
+      def: {
+        es: 'Usar un LLM para evaluar la calidad de respuestas generadas por otro LLM (o por sí mismo) según una rúbrica. Escalable vs. evaluación humana, pero hereda sesgos del modelo juez. Requiere rúbricas claras y ejemplos calibrados.',
+        en: 'Using an LLM to evaluate the quality of responses generated by another LLM (or itself) against a rubric. Scalable vs. human eval, but inherits the judge model biases. Requires clear rubrics and calibrated examples.',
+      },
+      crossRefs: ['tpl-evaluador-llm-judge'],
+    },
+    {
+      id: 'g-in-context-learning',
+      term: { es: 'In-context learning', en: 'In-context learning' },
+      category: 'fundamentos',
+      def: {
+        es: 'La capacidad del modelo de aprender de ejemplos provistos en el propio prompt, sin cambiar sus pesos. Es lo que hace funcionar a few-shot. No es entrenamiento: dura solo esa llamada.',
+        en: 'The model ability to learn from examples provided in the prompt itself, without changing its weights. It is what makes few-shot work. It is not training: it lasts only that one call.',
+      },
+      crossRefs: ['g-few-shot'],
+    },
+    {
+      id: 'g-delimiters',
+      term: { es: 'Delimitadores', en: 'Delimiters' },
+      category: 'estructura',
+      def: {
+        es: 'Marcadores que separan secciones del prompt o aíslan contenido no confiable. Comunes: triples comillas ``` , triples guiones ---, etiquetas XML <contexto>...</contexto>, o tokens especiales. Ayudan al modelo a distinguir instrucciones de datos.',
+        en: 'Markers that separate prompt sections or isolate untrusted content. Common: triple backticks ``` , triple dashes ---, XML tags <context>...</context>, or special tokens. Help the model distinguish instructions from data.',
+      },
+      crossRefs: ['BP012', 'AP026', 'BP001'],
+    },
   ],
 
   /* ── 2. Técnicas: modern patterns (new + cross-linked) ──────── */
