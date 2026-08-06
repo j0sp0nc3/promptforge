@@ -751,18 +751,6 @@ const App = (() => {
 
   function setupLearnView() {
     const subnav = document.getElementById('learn-subnav');
-    if (!subnav) return;
-    subnav.addEventListener('click', (e) => {
-      const btn = e.target.closest('.learn-subnav-btn');
-      if (!btn) return;
-      renderLearnView(btn.dataset.sub);
-    });
-  }
-
-  let currentLearnSub = 'glossary';
-
-  function setupLearnView() {
-    const subnav = document.getElementById('learn-subnav');
     if (subnav) {
       subnav.addEventListener('click', (e) => {
         const btn = e.target.closest('.learn-subnav-btn');
