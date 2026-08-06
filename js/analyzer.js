@@ -157,12 +157,17 @@ const Analyzer = {
       suggestions.push(k('pronounsSugg'));
     }
 
-    // Very short prompt (but >10 chars)
-    if (words.length >= 3 && words.length < 10) {
+    // Very short prompt (< 3 words or < 10 words)
+    if (words.length < 3) {
+      score -= 30;
+      findings.push(k('tooShort'));
+      suggestions.push(k('expandSugg'));
+    } else if (words.length >= 3 && words.length < 10) {
       score -= 15;
       findings.push(k('tooShort'));
       suggestions.push(k('expandSugg'));
     }
+
 
     // Run-on single sentence (long prompt, no periods)
     if (words.length > 40 && sentences.length <= 1) {
@@ -229,7 +234,11 @@ const Analyzer = {
       findings.push(k('measurable'));
     }
 
-    // --- Negative signals ---
+    // Extremely short prompt (< 3 words)
+    if (words.length < 3) {
+      score -= 30;
+      findings.push(k('tooShort'));
+    }
 
     // Vague adjectives (from shared signal)
     if (signals.vagueAdjectives >= 2) {
@@ -342,6 +351,11 @@ const Analyzer = {
       suggestions.push(k('multiTaskSugg'));
     }
 
+    // Extremely short prompt (< 3 words)
+    if (words.length < 3) {
+      score -= 20;
+    }
+
     // ALL CAPS emphasis
     const capsWords = (prompt.match(/\b[A-ZÁÉÍÓÚÑ]{4,}\b/g) || []).filter(w => !/^(JSON|XML|HTML|CSS|API|URL|HTTP|HTTPS|SQL|REST|YAML|CSV|PDF|SDK|IDE|CLI|GPT|LLM|TODO|NOTE)$/.test(w));
     if (capsWords.length >= 3) {
@@ -392,7 +406,10 @@ const Analyzer = {
       findings.push(k('validation'));
     }
 
-    // --- Negative signals ---
+    // Extremely short prompt (< 3 words)
+    if (words.length < 3) {
+      score -= 20;
+    }
 
     // No error handling in a long, complex prompt (threshold raised to 60)
     if (words.length > 60 && !signals.errorHandling) {
@@ -465,7 +482,11 @@ const Analyzer = {
       findings.push(k('domainExpertise'));
     }
 
-    // --- Negative signals ---
+    // Extremely short prompt (< 3 words)
+    if (words.length < 3) {
+      score -= 25;
+      findings.push(k('noRole'));
+    }
 
     // No role in a long prompt
     if (words.length > 25 && !signals.roleAssignment) {
@@ -508,6 +529,11 @@ const Analyzer = {
     const k = (id) => I18n.t(`analyzer.outputFormat.${id}`);
 
     // --- Positive signals (co-occurrence required to kill keyword gaming) ---
+
+    // Extremely short prompt (< 3 words)
+    if (words.length < 3) {
+      score -= 25;
+    }
 
     // Explicit format request: only counts if a request verb + a format name co-occur.
     if (signals.requestsOutputFormat) {
