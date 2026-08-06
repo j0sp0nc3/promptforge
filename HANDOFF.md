@@ -30,7 +30,7 @@ interactiva desplegada en Vercel.
 
 - **Nombre:** Jose Ponce
 - **GitHub:** [j0sp0nc3](https://github.com/j0sp0nc3)
-- **LinkedIn:** [joseponce](https://www.linkedin.com/in/joseponce)
+- **LinkedIn:** [josponce](https://www.linkedin.com/in/josponce)
 
 ---
 
@@ -58,12 +58,13 @@ interactiva desplegada en Vercel.
 - [x] Desplegar app web en Vercel con API serverless (`/api/analyze`, `/api/improve`, `/api/adversarial`)
 - [x] Sistema de scoring multidimensional (8 dimensiones + pesos por tipo de prompt)
 - [x] Internacionalización (i18n) completo ES/EN
-- [x] Footer Open Source con atribución `j0sp0nc3`, licencia MIT, links a repos
+- [x] Footer Open Source con atribución `j0sp0nc3`, licencia MIT, links a repos y perfil de LinkedIn (`josponce`)
 - [x] Claves i18n del footer en ES y EN
+- [x] Favicon SVG vectorial de alta resolución alineado al logo de medidor de calibración
 - [x] Logo SVG: medidor de calibración vermilion/crema (Editorial Technical)
 - [x] Texto del logo: `Prompt<span>ometer</span>`
 - [x] Fix scoring: prompts ultra-cortos (< 3 palabras como "Hola") → Grado F (~25/100)
-- [x] Fix Vercel: `vercel.json` con builds estáticos explícitos para css/js
+- [x] Fix Vercel: `vercel.json` con builds estáticos explícitos para css/js y favicons
 - [x] PR para dominio `promptometer.is-a.dev` (is-a-dev/register) con verificación TXT de Vercel
 - [x] Seguritización de API: Autenticación por API Key privada (`x-api-key` / `Authorization: Bearer` configurada vía `PROMPTOMETER_API_KEY` en Vercel, 0 secretos en el código fuente), CORS restrictivo, Rate Limiting (30 req/min/IP), Límite de Payload (100 KB) y Headers OWASP.
 - [x] Tests de estrés: 14/14 PASS
