@@ -1,26 +1,29 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#F7F3EC">
-  <title>Promptometer — Analizador de Prompts Avanzado</title>
+  <title>PromptForge — Analizador de Prompts Avanzado</title>
 
-  <meta name="description" id="meta-description" content="Analiza, evalúa y mejora tus prompts con scoring multidimensional, detección de anti-patrones y sugerencias inteligentes.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔍</text></svg>">
-
+  <meta name="description" id="meta-description"
+    content="Analiza, evalúa y mejora tus prompts con scoring multidimensional, detección de anti-patrones y sugerencias inteligentes.">
 
   <!-- Fonts: Fraunces (serif editorial), Inter (sans body), IBM Plex Mono (datos) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
-  
+
   <!-- Styles -->
   <link rel="stylesheet" href="css/index.css">
 </head>
+
 <body>
   <!-- Toast container -->
   <div id="toast-container"></div>
@@ -30,30 +33,62 @@
     <div class="header-left">
       <div class="logo">
         <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Editorial Technical: calibration gauge in vermilion on cream -->
-          <rect x="1.5" y="1.5" width="37" height="37" rx="9" fill="#F7F3EC" stroke="#1A1612" stroke-width="1.4"/>
-          <!-- Gauge arc (calibration meter) -->
-          <path d="M10 26 A12 12 0 0 1 30 26" stroke="#C73E2D" stroke-width="2.4" stroke-linecap="round" fill="none"/>
-          <!-- Tick marks -->
-          <path d="M11 22l2 1.4M14.5 16l1.6 1.8M20 14v2.4M25.5 16l-1.6 1.8M29 22l-2 1.4" stroke="#1A1612" stroke-width="1.3" stroke-linecap="round"/>
-          <!-- Needle pointing high (good score) -->
-          <path d="M20 26L26 16.5" stroke="#C73E2D" stroke-width="2.2" stroke-linecap="round"/>
-          <circle cx="20" cy="26" r="2" fill="#1A1612"/>
+          <defs>
+            <linearGradient id="logo-bg" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#ffb703" />
+              <stop offset="50%" stop-color="#fb8500" />
+              <stop offset="100%" stop-color="#d97706" />
+            </linearGradient>
+            <linearGradient id="spark-grad" x1="0" y1="0" x2="0" y2="24" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#ffffff" />
+              <stop offset="100%" stop-color="#fff3c4" />
+            </linearGradient>
+          </defs>
+          <!-- Squircle Base -->
+          <rect x="1" y="1" width="38" height="38" rx="10" fill="url(#logo-bg)" stroke="rgba(255,255,255,0.35)"
+            stroke-width="1.2" />
+          <!-- Anvil Forge Base -->
+          <path
+            d="M10 26h20c1 0 1.5.8 1.2 1.5l-.8 1.5c-.3.6-1 1-1.7 1H11.3c-.7 0-1.4-.4-1.7-1l-.8-1.5c-.3-.7.2-1.5 1.2-1.5z"
+            fill="#08090e" opacity="0.88" />
+          <path d="M12 22.5h16l-2 3.5H14l-2-3.5z" fill="#141724" opacity="0.9" />
+          <!-- Prompt Chevrons -->
+          <path d="M9 15.5l-3 3 3 3" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
+            opacity="0.95" />
+          <path d="M31 15.5l3 3-3 3" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
+            opacity="0.95" />
+          <!-- AI Spark -->
+          <path d="M20 7c1.2 3.5 3.5 5.8 7 7-3.5 1.2-5.8 3.5-7 7-1.2-3.5-3.5-5.8-7-7 3.5-1.2 5.8-3.5 7-7z"
+            fill="url(#spark-grad)" />
         </svg>
-        <h1 class="logo-text">Prompt<span class="logo-accent">ometer</span></h1>
+        <h1 class="logo-text">Prompt<span class="logo-accent">Quill</span></h1>
       </div>
     </div>
     <nav class="header-nav">
       <button class="nav-btn active" data-view="analyzer" id="nav-analyzer">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.3-4.3" />
+        </svg>
         <span data-i18n="nav.analyze">Analizar</span>
       </button>
       <button class="nav-btn" data-view="templates" id="nav-templates">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7" />
+          <rect x="14" y="3" width="7" height="7" />
+          <rect x="14" y="14" width="7" height="7" />
+          <rect x="3" y="14" width="7" height="7" />
+        </svg>
         <span data-i18n="nav.templates">Templates</span>
       </button>
       <button class="nav-btn" data-view="history" id="nav-history">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="12 6 12 12 16 14" />
+        </svg>
         <span data-i18n="nav.history">Historial</span>
       </button>
     </nav>
@@ -63,44 +98,55 @@
         <button class="lang-btn" data-lang="en" type="button">EN</button>
       </div>
       <button class="btn-icon" id="btn-export-menu" data-i18n-title="nav.export" title="Exportar">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+          <polyline points="7 10 12 15 17 10" />
+          <line x1="12" y1="15" x2="12" y2="3" />
+        </svg>
       </button>
     </div>
   </header>
 
   <!-- Main Content -->
   <main class="app-main" id="app-main">
-    
+
     <!-- ==================== ANALYZER VIEW ==================== -->
     <div class="view active" id="view-analyzer">
       <div class="analyzer-layout">
-        
+
         <!-- Left Panel: Editor -->
         <section class="panel editor-panel" id="editor-panel">
           <div class="panel-header">
             <h2 class="panel-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 20h9" />
+                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+              </svg>
               <span data-i18n="editor.title">Tu Prompt</span>
             </h2>
             <div class="panel-actions">
               <button class="btn-sm btn-ghost" id="btn-paste" data-i18n-title="editor.paste" title="Pegar">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" />
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                </svg>
                 <span data-i18n="editor.paste">Pegar</span>
               </button>
               <button class="btn-sm btn-ghost" id="btn-clear" data-i18n-title="editor.clear" title="Limpiar">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18" />
+                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                </svg>
                 <span data-i18n="editor.clear">Limpiar</span>
               </button>
             </div>
           </div>
           <div class="editor-container">
-            <textarea
-              id="prompt-input"
-              class="prompt-textarea"
-              placeholder="Escribe o pega tu prompt aquí para analizarlo..."
-              data-i18n-placeholder="editor.placeholder"
-              spellcheck="false"
-            ></textarea>
+            <textarea id="prompt-input" class="prompt-textarea"
+              placeholder="Escribe o pega tu prompt aquí para analizarlo..." data-i18n-placeholder="editor.placeholder"
+              spellcheck="false"></textarea>
             <div class="editor-footer">
               <div class="editor-stats">
                 <span class="stat" id="stat-chars">0 caracteres</span>
@@ -111,7 +157,9 @@
               </div>
               <div class="editor-actions">
                 <button class="btn btn-primary btn-analyze" id="btn-analyze">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                  </svg>
                   <span data-i18n="editor.analyze">Analizar Prompt</span>
                 </button>
               </div>
@@ -121,27 +169,29 @@
 
         <!-- Right Panel: Results -->
         <section class="panel results-panel" id="results-panel">
-          
+
           <!-- Empty State -->
           <div class="empty-state" id="empty-state">
             <div class="empty-icon">
-              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3">
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                opacity="0.3">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
               </svg>
             </div>
             <h3 class="empty-title" data-i18n="empty.title">Escribe un prompt para comenzar</h3>
-            <p class="empty-text" data-i18n="empty.text">Obtén un análisis completo con scoring en 8 dimensiones, detección de anti-patrones y sugerencias de mejora.</p>
+            <p class="empty-text" data-i18n="empty.text">Obtén un análisis completo con scoring en 8 dimensiones,
+              detección de anti-patrones y sugerencias de mejora.</p>
           </div>
 
           <!-- Results Content (hidden initially) -->
           <div class="results-content hidden" id="results-content">
-            
+
             <!-- Score Hero -->
             <div class="score-hero" id="score-hero">
               <div class="score-circle" id="score-circle">
                 <svg viewBox="0 0 120 120" class="score-ring">
-                  <circle cx="60" cy="60" r="54" class="score-ring-bg"/>
-                  <circle cx="60" cy="60" r="54" class="score-ring-fill" id="score-ring-fill"/>
+                  <circle cx="60" cy="60" r="54" class="score-ring-bg" />
+                  <circle cx="60" cy="60" r="54" class="score-ring-fill" id="score-ring-fill" />
                 </svg>
                 <div class="score-value">
                   <span class="score-number" id="score-number">0</span>
@@ -230,11 +280,16 @@
                 <pre class="improved-prompt" id="improved-prompt-text"></pre>
                 <div class="improved-actions">
                   <button class="btn btn-primary btn-sm" id="btn-apply-improvement">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
                     <span data-i18n="sections.applyToEditor">Aplicar al Editor</span>
                   </button>
                   <button class="btn btn-secondary btn-sm" id="btn-copy-improvement">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="9" y="9" width="13" height="13" rx="2" />
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                    </svg>
                     <span data-i18n="sections.copy">Copiar</span>
                   </button>
                 </div>
@@ -250,7 +305,8 @@
     <div class="view" id="view-templates">
       <div class="templates-header">
         <h2 class="view-title" data-i18n="templates.title">Biblioteca de Templates</h2>
-        <p class="view-subtitle" data-i18n="templates.subtitle">Templates optimizados para casos de uso comunes. Haz clic en uno para cargarlo en el editor.</p>
+        <p class="view-subtitle" data-i18n="templates.subtitle">Templates optimizados para casos de uso comunes. Haz
+          clic en uno para cargarlo en el editor.</p>
         <div class="templates-filter">
           <button class="filter-btn active" data-category="all" data-i18n="templates.all">Todos</button>
           <div id="category-filters">
@@ -269,11 +325,18 @@
         <h2 class="view-title" data-i18n="history.title">Historial de Análisis</h2>
         <div class="history-actions">
           <button class="btn btn-secondary btn-sm" id="btn-export-history">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
             <span data-i18n="history.export">Exportar</span>
           </button>
           <button class="btn btn-ghost btn-sm" id="btn-clear-history">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 6h18" />
+              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+            </svg>
             <span data-i18n="history.clear">Limpiar</span>
           </button>
         </div>
@@ -286,12 +349,15 @@
       </div>
       <div class="empty-state" id="history-empty" style="display: none;">
         <div class="empty-icon">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3">
-            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+            opacity="0.3">
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
           </svg>
         </div>
         <h3 class="empty-title" data-i18n="history.emptyTitle">Sin historial aún</h3>
-        <p class="empty-text" data-i18n="history.emptyText">Tus análisis aparecerán aquí después de evaluar tu primer prompt.</p>
+        <p class="empty-text" data-i18n="history.emptyText">Tus análisis aparecerán aquí después de evaluar tu primer
+          prompt.</p>
       </div>
     </div>
 
@@ -300,20 +366,35 @@
   <!-- Export Menu Dropdown -->
   <div class="dropdown-menu hidden" id="export-menu">
     <button class="dropdown-item" id="export-json">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <polyline points="14 2 14 8 20 8" />
+      </svg>
       <span data-i18n="export.json">Exportar JSON</span>
     </button>
     <button class="dropdown-item" id="export-markdown">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <polyline points="14 2 14 8 20 8" />
+      </svg>
       <span data-i18n="export.markdown">Exportar Markdown</span>
     </button>
     <button class="dropdown-item" id="export-clipboard">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="9" y="9" width="13" height="13" rx="2" />
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+      </svg>
       <span data-i18n="export.clipboard">Copiar al portapapeles</span>
     </button>
     <hr class="dropdown-divider">
     <button class="dropdown-item" id="export-share">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="18" cy="5" r="3" />
+        <circle cx="6" cy="12" r="3" />
+        <circle cx="18" cy="19" r="3" />
+        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+      </svg>
       <span data-i18n="export.share">Generar enlace compartible</span>
     </button>
   </div>
@@ -331,4 +412,16 @@
   <script src="js/export.js"></script>
   <script src="js/app.js"></script>
 </body>
+
+</html>
+<script src="js/analyzer.js"></script>
+<script src="js/adversarial.js"></script>
+<script src="js/rewriter.js"></script>
+<script src="js/templates.js"></script>
+<script src="js/history.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/export.js"></script>
+<script src="js/app.js"></script>
+</body>
+
 </html>

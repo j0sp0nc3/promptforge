@@ -756,6 +756,12 @@ const I18n = (() => {
         'tpl-traductor-tecnico': { name: 'Traductor Técnico', desc: 'Traduce textos técnicos preservando terminología especializada, formato y matices.', tags: ['traducción', 'técnico', 'idiomas', 'terminología', 'localización'] },
         'tpl-extractor-datos-json': { name: 'Extractor de Datos Estructurados (JSON)', desc: 'Extrae datos estructurados de texto libre y los organiza en un esquema JSON definido.', tags: ['extracción', 'JSON', 'datos estructurados', 'parsing', 'esquema'] },
       },
+      footer: {
+        tagline: 'Analizador de Prompts Avanzado',
+        copy: '© 2026 j0sp0nc3 · Licencia MIT',
+        source: 'Código fuente',
+        engine: 'Motor',
+      },
     },
 
     // ========================================================================
@@ -1460,6 +1466,12 @@ const I18n = (() => {
         'tpl-evaluador-llm-judge': { name: 'LLM-as-Judge Evaluator', desc: 'Evaluates the quality of LLM-generated responses using standardized criteria and rubrics.', tags: ['evaluation', 'quality', 'judge', 'rubric', 'metrics', 'benchmark'] },
         'tpl-traductor-tecnico': { name: 'Technical Translator', desc: 'Translates technical texts preserving specialized terminology, format and nuances.', tags: ['translation', 'technical', 'languages', 'terminology', 'localization'] },
         'tpl-extractor-datos-json': { name: 'Structured Data Extractor (JSON)', desc: 'Extracts structured data from free text and organizes it into a defined JSON schema.', tags: ['extraction', 'JSON', 'structured data', 'parsing', 'schema'] },
+      },
+      footer: {
+        tagline: 'Advanced Prompt Analyzer',
+        copy: '© 2026 j0sp0nc3 · MIT License',
+        source: 'Source code',
+        engine: 'Engine',
       },
     },
   };
