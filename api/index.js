@@ -5,7 +5,9 @@ try {
   PromptometerCore = require('../../promptometer/packages/core/promptometer-core.js');
 }
 
-// Security Configuration
+// Security & API Key Configuration
+const API_KEY = process.env.PROMPTOMETER_API_KEY || process.env.API_KEY || 'pm_live_key_promptometer_2026';
+
 const ALLOWED_ORIGINS = [
   'https://promptforge-beta-ten.vercel.app',
   'https://promptometer.is-a.dev',
@@ -22,7 +24,7 @@ const MAX_REQUESTS_PER_WINDOW = 30; // 30 req/min per IP
 const ipRequestMap = new Map();
 
 function isOriginAllowed(origin) {
-  if (!origin) return true; // Allow same-origin / server-to-server / curl if desired, or restrict
+  if (!origin) return false; // Strict: require origin or valid API key
   if (ALLOWED_ORIGINS.includes(origin)) return true;
   if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return true;
   return false;
@@ -41,7 +43,7 @@ function checkRateLimit(ip) {
 
   ipRequestMap.set(ip, clientRecord);
 
-  // Periodic cleanup of stale IPs
+  // Periodic cleanup
   if (ipRequestMap.size > 1000) {
     for (const [key, record] of ipRequestMap.entries()) {
       if (now > record.resetTime) ipRequestMap.delete(key);
@@ -49,6 +51,19 @@ function checkRateLimit(ip) {
   }
 
   return clientRecord.count <= MAX_REQUESTS_PER_WINDOW;
+}
+
+function validateApiKey(req) {
+  const apiKeyHeader = req.headers['x-api-key'];
+  const authHeader = req.headers['authorization'];
+  
+  let bearerToken = '';
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    bearerToken = authHeader.substring(7).trim();
+  }
+
+  const providedKey = apiKeyHeader || bearerToken;
+  return providedKey === API_KEY;
 }
 
 module.exports = (req, res) => {
@@ -60,12 +75,7 @@ module.exports = (req, res) => {
   res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('X-XSS-Protection', '1; mode=block');
 
-  // 2. Strict CORS Check
-  if (origin && !isOriginAllowed(origin)) {
-    res.writeHead(403, { 'Content-Type': 'application/json' });
-    return res.end(JSON.stringify({ error: 'Acceso denegado: Origen no permitido por la política CORS del dominio.' }));
-  }
-
+  // CORS Headers
   if (origin && isOriginAllowed(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
   } else {
@@ -73,11 +83,23 @@ module.exports = (req, res) => {
   }
 
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-api-key, Authorization');
 
   if (req.method === 'OPTIONS') {
     res.writeHead(204);
     return res.end();
+  }
+
+  // 2. Authentication Check (API Key OR Authorized Front-End Origin)
+  const isWebUI = origin && isOriginAllowed(origin);
+  const hasValidApiKey = validateApiKey(req);
+
+  if (!isWebUI && !hasValidApiKey) {
+    res.writeHead(401, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({
+      error: 'Autenticación requerida. Proporciona el header x-api-key o Authorization: Bearer <key>.',
+      documentation: 'https://github.com/j0sp0nc3/promptforge'
+    }));
   }
 
   // 3. Rate Limiting Check
@@ -90,11 +112,12 @@ module.exports = (req, res) => {
   if (req.method === 'GET') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     return res.end(JSON.stringify({
-      service: 'Promptometer Core API (Secured)',
+      service: 'Promptometer Core API (Secured & Authenticated)',
       version: PromptometerCore.version,
       status: 'online',
       security: {
-        cors: 'Restricted',
+        authentication: 'API Key Required (x-api-key or Authorization: Bearer)',
+        cors: 'Restricted to Official Web UI',
         rateLimit: '30 req/min',
         maxPayload: '100 KB'
       },

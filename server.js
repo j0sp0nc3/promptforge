@@ -15,6 +15,7 @@ try {
 }
 
 const PORT = process.env.PORT || 3000;
+const API_KEY = process.env.PROMPTOMETER_API_KEY || process.env.API_KEY || 'pm_live_key_promptometer_2026';
 
 const ALLOWED_ORIGINS = [
   'https://promptforge-beta-ten.vercel.app',
@@ -32,7 +33,7 @@ const MAX_REQUESTS_PER_WINDOW = 30;
 const ipRequestMap = new Map();
 
 function isOriginAllowed(origin) {
-  if (!origin) return true;
+  if (!origin) return false;
   if (ALLOWED_ORIGINS.includes(origin)) return true;
   if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return true;
   return false;
@@ -51,6 +52,19 @@ function checkRateLimit(ip) {
 
   ipRequestMap.set(ip, clientRecord);
   return clientRecord.count <= MAX_REQUESTS_PER_WINDOW;
+}
+
+function validateApiKey(req) {
+  const apiKeyHeader = req.headers['x-api-key'];
+  const authHeader = req.headers['authorization'];
+  
+  let bearerToken = '';
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    bearerToken = authHeader.substring(7).trim();
+  }
+
+  const providedKey = apiKeyHeader || bearerToken;
+  return providedKey === API_KEY;
 }
 
 const MIME_TYPES = {
@@ -74,11 +88,6 @@ const server = http.createServer((req, res) => {
   res.setHeader('X-XSS-Protection', '1; mode=block');
 
   // CORS Headers
-  if (origin && !isOriginAllowed(origin)) {
-    res.writeHead(403, { 'Content-Type': 'application/json' });
-    return res.end(JSON.stringify({ error: 'Acceso denegado: Origen no permitido por la política CORS del dominio.' }));
-  }
-
   if (origin && isOriginAllowed(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
   } else {
@@ -86,28 +95,42 @@ const server = http.createServer((req, res) => {
   }
 
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-api-key, Authorization');
 
   if (req.method === 'OPTIONS') {
     res.writeHead(204);
     return res.end();
   }
 
-  // Rate Limit check for API calls
-  if (req.url.startsWith('/api') && !checkRateLimit(clientIp)) {
-    res.writeHead(429, { 'Content-Type': 'application/json' });
-    return res.end(JSON.stringify({ error: 'Límite de peticiones excedido (máximo 30 por minuto). Por favor intenta más tarde.' }));
+  // Handle API Requests Authentication & Protection
+  if (req.url.startsWith('/api')) {
+    const isWebUI = origin && isOriginAllowed(origin);
+    const hasValidApiKey = validateApiKey(req);
+
+    if (!isWebUI && !hasValidApiKey) {
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({
+        error: 'Autenticación requerida. Proporciona el header x-api-key o Authorization: Bearer <key>.',
+        documentation: 'https://github.com/j0sp0nc3/promptforge'
+      }));
+    }
+
+    if (!checkRateLimit(clientIp)) {
+      res.writeHead(429, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ error: 'Límite de peticiones excedido (máximo 30 por minuto). Por favor intenta más tarde.' }));
+    }
   }
 
   // Route GET /api (API Status)
   if (req.method === 'GET' && (req.url === '/api' || req.url === '/api/')) {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     return res.end(JSON.stringify({
-      service: 'Promptometer Core API (Secured)',
+      service: 'Promptometer Core API (Secured & Authenticated)',
       version: PromptometerCore.version,
       status: 'online',
       security: {
-        cors: 'Restricted',
+        authentication: 'API Key Required (x-api-key or Authorization: Bearer)',
+        cors: 'Restricted to Official Web UI',
         rateLimit: '30 req/min',
         maxPayload: '100 KB'
       },
@@ -223,7 +246,7 @@ const server = http.createServer((req, res) => {
 if (require.main === module) {
   server.listen(PORT, () => {
     console.log(`🚀 Promptometer Server running on http://localhost:${PORT}`);
-    console.log(`🔒 Security active: CORS restricted, Max 100KB Payload, Rate limit 30 req/min`);
+    console.log(`🔒 Security active: API Key Authentication + CORS + Rate Limit 30 req/min`);
   });
 }
 
