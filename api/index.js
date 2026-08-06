@@ -2,7 +2,7 @@ let PromptometerCore;
 try {
   PromptometerCore = require('promptometer-core');
 } catch (e) {
-  PromptometerCore = require('../../promptquill/packages/core/promptometer-core.js');
+  PromptometerCore = require('../../promptometer/packages/core/promptometer-core.js');
 }
 
 module.exports = (req, res) => {

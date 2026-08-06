@@ -1,8 +1,8 @@
 {
-  "name": "promptforge-web",
+  "name": "promptometer-web",
   "version": "1.0.0",
   "private": true,
-  "description": "PromptForge Web App & REST microservice powered by Promptometer Core",
+  "description": "Promptometer Web App & REST microservice powered by Promptometer Core",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

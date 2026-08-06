@@ -1,4 +1,4 @@
-# Promptometer & Promptometer
+# Promptometer
 
 **Advanced Prompt Engineering & Evaluation Suite** — Multidimensional scoring, anti-pattern detection, adversarial security testing, automatic prompt improvement, and multi-language engine bindings.
 
@@ -6,7 +6,7 @@
 ![Language](https://img.shields.io/badge/JavaScript-Vanilla%20%2F%20Node.js-f7df1e)
 ![Python](https://img.shields.io/badge/Python-Native%20Zero--Dep-3776ab)
 ![API](https://img.shields.io/badge/REST%20API-HTTP%2FJSON-green)
-![Design](https://img.shields.io/badge/UI-Obsidian%20%26%20Amber%20Studio-ffb703)
+![Design](https://img.shields.io/badge/UI-Editorial%20Technical-C73E2D)
 ![i18n](https://img.shields.io/badge/i18n-ES%20%2F%20EN-blue)
 
 ---
@@ -15,13 +15,12 @@
 
 1. [Overview](#-overview)
 2. [Quick Start](#-quick-start)
-3. [Studio Obsidian Design System](#-studio-obsidian-design-system)
+3. [Editorial Technical Design System](#-editorial-technical-design-system)
 4. [Multi-Language Core Libraries](#-multi-language-core-libraries)
-   - [JavaScript / Node.js (`promptometer-core.js`)](#1-javascript--nodejs-libpromptometer-corejs)
-   - [Python Native (`promptometer_core.py`)](#2-python-native-libpromptometer_corepy)
+   - [JavaScript / Node.js (`promptometer-core`)](#1-javascript--nodejs-promptometer-core)
+   - [Python Native (`promptometer-core`)](#2-python-native-promptometer-core)
    - [REST API Microservice (`server.js`)](#3-universal-rest-api-microservice-serverjs)
-   - [Declarative JSON Rules (`promptometer-rules.json`)](#4-declarative-rules-libpromptometer-rulesjson)
-   - [Command Line Interface (`cli.js`)](#5-command-line-interface-clijs)
+   - [Command Line Interface (`cli.js`)](#4-command-line-interface-clijs)
 5. [Stress & Edge Case Testing Suite](#-stress--edge-case-testing-suite)
 6. [How Promptometer Scores](#-how-promptometer-scores)
 7. [Project Structure](#-project-structure)
@@ -51,41 +50,49 @@ Promptometer is a complete professional workspace and engine to **evaluate, benc
 2. Open `http://localhost:8000` in your browser.
 
 ### Stress Test Console
-Open `test_runner.html` in your browser and click **🚀 Run Test Suite** to execute 14 real-time edge case & stress vector tests.
+Run the automated edge-case suites from the terminal:
+```bash
+npm test          # Node.js runner (test_edge_cases.js)
+python test_edge_cases.py   # Python runner
+```
 
 ---
 
-## 🎨 Studio Obsidian Design System
+## 🎨 Editorial Technical Design System
 
-The application features a custom high-end UI inspired by engineering workbenches (Linear, Raycast, Vercel Studio):
-- **Base Palette:** Deep Obsidian (`#08090e`), Charcoal Surface (`#0f111a`), Electric Amber (`#ffb703`), and Quality Emerald (`#10b981`).
-- **Typography:** Dual setup with `JetBrains Mono` for telemetry/code and `Inter` for micro-caps UI labels.
-- **Bento Grid:** Modular dashboard grouping the score ring, telemetry radar, dimension list, and security badges.
+The application uses a custom high-end UI designed for clarity and precision reading (inspired by editorial publications and technical journals):
+- **Base Palette:** Warm Cream (`#F7F3EC`), Ink (`#1A1612`), Vermilion accent (`#C73E2D`).
+- **Typography:** `Fraunces` serif for headings and identity, `Inter` for UI body, `IBM Plex Mono` for data/code only.
+- **Layout:** Thin 1px rules for separation (no glassmorphism, no glow), generous whitespace, structured columns.
 
 ---
 
 ## 📦 Multi-Language Core Libraries
 
-The evaluation engine is decoupled from the UI and exported into standalone modules for any tech stack:
+The evaluation engine is decoupled from the UI and published as a standalone package ([`promptometer-core`](https://github.com/j0sp0nc3/promptometer)) with JS/Python parity:
 
-### 1. JavaScript / Node.js (`lib/promptometer-core.js`)
+### 1. JavaScript / Node.js (`promptometer-core`)
 Zero-dependency UMD / ESM / CommonJS build:
+```bash
+npm install promptometer-core
+```
 ```javascript
-const PromptometerCore = require('./lib/promptometer-core.js');
+const { analyze } = require('promptometer-core');
 
-const analysis = PromptometerCore.analyze("Your prompt text here...");
+const analysis = analyze("Your prompt text here...");
 console.log(analysis.overallScore, analysis.grade);
 ```
 
-### 2. Python Native (`lib/promptometer_core.py`)
+### 2. Python Native (`promptometer-core`)
 Pure Python (zero dependencies) for FastAPI, Django, Flask, LangChain, or LlamaIndex:
+```bash
+pip install promptometer-core
+```
 ```python
-import sys
-sys.path.append('./lib')
-import promptometer_core
+from promptometer_core import PromptometerCore
 
-analysis = promptometer_core.analyze("Your prompt text here...")
-print("Score:", analysis["overall_score"], "Grade:", analysis["grade"])
+analysis = PromptometerCore().analyze("Your prompt text here...")
+print("Score:", analysis["overallScore"], "Grade:", analysis["grade"])
 ```
 
 ### 3. Universal REST API Microservice (`server.js`)
@@ -99,10 +106,7 @@ curl -X POST http://localhost:3000/api/analyze \
   -d '{"prompt": "Act as an expert developer. Output JSON."}'
 ```
 
-### 4. Declarative Rules (`lib/promptometer-rules.json`)
-Agnostic JSON specification defining regexes, anti-patterns, and dimension weights for cross-platform engines.
-
-### 5. Command Line Interface (`cli.js`)
+### 4. Command Line Interface (`cli.js`)
 Evaluate prompts directly from the system terminal:
 ```bash
 node cli.js "Your prompt here"
@@ -113,9 +117,10 @@ node cli.js "Your prompt here"
 ## 🧪 Stress & Edge Case Testing Suite
 
 Promptometer includes automated test runners to verify engine stability against malformed and extreme inputs:
-- **`test_runner.html`**: Interactive web test runner console.
 - **`test_edge_cases.js`**: Automated Node.js runner.
 - **`test_edge_cases.py`**: Automated Python runner.
+
+Both cover **14/14 edge-case vectors** with identical results across JS and Python.
 
 ### Edge Case Vectors Covered (14/14):
 1. Empty string & whitespace
@@ -133,7 +138,9 @@ Promptometer includes automated test runners to verify engine stability against 
 ## 🧠 How Promptometer Scores
 
 ### 8 Dimension Weights
-| Dimension | Weight | Focus Area |
+Weights are dynamic: the engine infers the prompt type (system, few-shot, chain-of-thought, or general) and adjusts each dimension's weight accordingly.
+
+| Dimension | Default Weight | Focus Area |
 | :--- | :---: | :--- |
 | **Clarity** | 18% | Action verbs, absence of vagueness and contradictions |
 | **Specificity** | 15% | Measurable constraints, quantitative criteria |
@@ -149,33 +156,33 @@ Promptometer includes automated test runners to verify engine stability against 
 ## 📁 Project Structure
 
 ```
-promptometer/
-├── index.html                # Main Workbench Web App
-├── test_runner.html          # Interactive Web Stress Test Console
+promptforge/                    # This repo — the web app
+├── index.html                  # Main Workbench Web App
 ├── css/
-│   └── index.css             # Studio Obsidian Design System
+│   └── index.css               # Editorial Technical Design System
 ├── js/
-│   ├── i18n.js               # Internationalization Engine (ES/EN)
-│   ├── signals.js            # Single Source of Truth Signal Extractor
-│   ├── patterns.js           # Catalog of 30 Anti-Patterns & 15 Strengths
-│   ├── analyzer.js           # 8-Dimension Scoring Engine
-│   ├── adversarial.js        # Security & Resilience Simulator
-│   ├── rewriter.js           # Non-Destructive XML Rewriter
-│   ├── templates.js          # Optimized Template Library
-│   ├── history.js            # Persistence & Evolution Charts
-│   ├── charts.js             # Chart.js Radar & Line Wrapper
-│   ├── export.js             # JSON, Markdown, & URL Exporters
-│   └── app.js                # Main UI Orchestrator
-├── lib/
-│   ├── promptometer-core.js   # Universal JS UMD/ESM/CJS Engine
-│   ├── promptometer_core.py   # Native Python Engine (Zero-Dep)
-│   └── promptometer-rules.json # Declarative Engine Specification
-├── server.js                 # REST API Microservice (Port 3000)
-├── cli.js                    # Node Terminal Executable
-├── test_edge_cases.js        # JS Test Suite Runner
-├── test_edge_cases.py        # Python Test Suite Runner
-└── README.md                 # Complete Project Documentation
+│   ├── i18n.js                 # Internationalization Engine (ES/EN)
+│   ├── signals.js              # Single Source of Truth Signal Extractor
+│   ├── patterns.js             # Catalog of 30 Anti-Patterns & 15 Strengths
+│   ├── analyzer.js             # 8-Dimension Scoring Engine
+│   ├── adversarial.js          # Security & Resilience Simulator
+│   ├── rewriter.js             # Non-Destructive XML Rewriter
+│   ├── templates.js            # Optimized Template Library
+│   ├── history.js              # Persistence & Evolution Charts
+│   ├── charts.js               # Chart.js Radar & Line Wrapper
+│   ├── export.js               # JSON, Markdown, & URL Exporters
+│   └── app.js                  # Main UI Orchestrator
+├── api/
+│   └── index.js                # Vercel Serverless API wrapper
+├── server.js                   # REST API Microservice (Port 3000)
+├── cli.js                      # Node Terminal Executable
+├── test_edge_cases.js          # JS Test Suite Runner
+├── test_edge_cases.py          # Python Test Suite Runner
+├── vercel.json                 # Deployment config (static + serverless)
+└── README.md                   # This file
 ```
+
+The evaluation engine lives in a separate repo: **[j0sp0nc3/promptometer](https://github.com/j0sp0nc3/promptometer)** (`packages/core/`), consumed here via `npm i promptometer-core` with a local fallback for development.
 
 ---
 
