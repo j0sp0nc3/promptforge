@@ -20,6 +20,7 @@ const App = (() => {
     setupExport();
     setupTemplatesView();
     setupHistoryView();
+    setupLearnView();
     checkShareURL();
     updateEditorStats();
 
@@ -44,6 +45,7 @@ const App = (() => {
     // Re-render the active view so dynamic strings pick up the new language.
     if (currentView === 'templates') renderTemplatesView(getActiveCategoryFilter());
     if (currentView === 'history') renderHistoryView();
+    if (currentView === 'learn') renderLearnView(getActiveLearnSub());
     if (currentAnalysis) renderResults();
   }
 
@@ -93,6 +95,12 @@ const App = (() => {
 
     if (viewName === 'history') renderHistoryView();
     if (viewName === 'templates') renderTemplatesView(getActiveCategoryFilter());
+    if (viewName === 'learn') renderLearnView(getActiveLearnSub());
+  }
+
+  function getActiveLearnSub() {
+    const active = document.querySelector('.learn-subnav-btn.active');
+    return active ? active.dataset.sub : 'glossary';
   }
 
   // ── Editor ──────────────────────────────────────────────
@@ -736,8 +744,287 @@ const App = (() => {
     return div.innerHTML;
   }
 
+  // ── Learn Hub (Knowledge) ─────────────────────────────
+  // A navigation + expansion layer over existing content. See js/knowledge.js
+  // for the data module. Sub-sections: glossary, techniques, frameworks, library.
+  let currentLearnSub = 'glossary';
+
+  function setupLearnView() {
+    const subnav = document.getElementById('learn-subnav');
+    if (!subnav) return;
+    subnav.addEventListener('click', (e) => {
+      const btn = e.target.closest('.learn-subnav-btn');
+      if (!btn) return;
+      renderLearnView(btn.dataset.sub);
+    });
+  }
+
+  function renderLearnView(sub) {
+    if (sub) currentLearnSub = sub;
+    const activeSub = currentLearnSub;
+
+    // Toggle active state on sub-nav buttons
+    document.querySelectorAll('.learn-subnav-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.sub === activeSub);
+    });
+
+    // Show only the matching panel
+    ['glossary', 'techniques', 'frameworks', 'library'].forEach(name => {
+      const panel = document.getElementById(`learn-${name}`);
+      if (panel) panel.classList.toggle('active', name === activeSub);
+    });
+
+    // Render the panel's content (lazy, re-rendered each visit for i18n)
+    if (activeSub === 'glossary') renderGlossary();
+    if (activeSub === 'techniques') renderTechniques();
+    if (activeSub === 'frameworks') renderFrameworks();
+    if (activeSub === 'library') renderLibrary();
+  }
+
+  function renderGlossary() {
+    const container = document.getElementById('learn-glossary');
+    if (!container || typeof Knowledge === 'undefined') return;
+    const lang = I18n.getLang();
+    const terms = Knowledge.glossary;
+
+    container.innerHTML = `
+      <div class="learn-panel-header">
+        <h2 class="view-title">${t('learn.glossaryTitle')}</h2>
+        <p class="view-subtitle">${t('learn.glossarySubtitle')}</p>
+      </div>
+      <div class="learn-grid">
+        ${terms.map(term => `
+          <article class="learn-card learn-card-glossary" data-id="${term.id}">
+            <div class="learn-card-header">
+              <span class="learn-term-name">${escapeHtml(term.term[lang] || term.term.es)}</span>
+              <span class="learn-term-tag tag">${escapeHtml(term.category || 'concept')}</span>
+            </div>
+            <p class="learn-term-def">${escapeHtml(term.def[lang] || term.def.es)}</p>
+            ${term.example ? `
+              <div class="learn-term-example">
+                <span class="learn-example-label">${t('learn.exampleLabel')}</span>
+                <code>${escapeHtml(term.example[lang] || term.example.es)}</code>
+              </div>` : ''}
+            ${term.crossRefs && term.crossRefs.length ? `
+              <div class="learn-cross-refs">
+                ${term.crossRefs.map(ref => `<span class="cross-ref tag">${escapeHtml(ref)}</span>`).join('')}
+              </div>` : ''}
+          </article>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  function renderTechniques() {
+    const container = document.getElementById('learn-techniques');
+    if (!container || typeof Knowledge === 'undefined') return;
+    const lang = I18n.getLang();
+    const techniques = Knowledge.techniques;
+
+    container.innerHTML = `
+      <div class="learn-panel-header">
+        <h2 class="view-title">${t('learn.techniquesTitle')}</h2>
+        <p class="view-subtitle">${t('learn.techniquesSubtitle')}</p>
+      </div>
+      <div class="learn-grid">
+        ${techniques.map(tech => `
+          <article class="learn-card learn-card-technique ${tech.crossLinkOnly ? 'learn-card-linked' : ''}" data-id="${tech.id}">
+            <div class="learn-card-header">
+              <span class="learn-term-name">${escapeHtml(tech.name[lang] || tech.name.es)}</span>
+              ${tech.crossLinkOnly ? `<span class="badge badge-info">${t('learn.linkedLabel')}</span>` : `<span class="badge badge-success">${t('learn.newLabel')}</span>`}
+            </div>
+            <p class="learn-term-def">${escapeHtml(tech.what[lang] || tech.what.es)}</p>
+            ${tech.when ? `<p class="learn-meta"><strong>${t('learn.whenLabel')}:</strong> ${escapeHtml(tech.when[lang] || tech.when.es)}</p>` : ''}
+            ${tech.example ? `
+              <div class="learn-example-block">
+                <div class="learn-example-code"><pre>${escapeHtml(tech.example[lang] || tech.example.es)}</pre></div>
+                <button class="btn btn-secondary btn-sm learn-analyze-btn" data-prompt-id="${tech.id}">${t('learn.analyzeExample')}</button>
+              </div>` : ''}
+            ${tech.crossRefs && tech.crossRefs.length ? `
+              <div class="learn-cross-refs">
+                ${tech.crossRefs.map(ref => `<span class="cross-ref tag">${escapeHtml(ref)}</span>`).join('')}
+              </div>` : ''}
+          </article>
+        `).join('')}
+      </div>
+    `;
+    bindAnalyzeButtons(container, Knowledge.techniques);
+  }
+
+  function renderFrameworks() {
+    const container = document.getElementById('learn-frameworks');
+    if (!container || typeof Knowledge === 'undefined') return;
+    const lang = I18n.getLang();
+    const frameworks = Knowledge.frameworks;
+
+    container.innerHTML = `
+      <div class="learn-panel-header">
+        <h2 class="view-title">${t('learn.frameworksTitle')}</h2>
+        <p class="view-subtitle">${t('learn.frameworksSubtitle')}</p>
+      </div>
+      <div class="learn-grid">
+        ${frameworks.map(fw => `
+          <article class="learn-card learn-card-framework" data-id="${fw.id}">
+            <div class="learn-card-header">
+              <span class="learn-term-name">${escapeHtml(fw.name[lang] || fw.name.es)}</span>
+              ${fw.acronym ? `<span class="learn-term-tag tag">${escapeHtml(fw.acronym)}</span>` : ''}
+            </div>
+            <p class="learn-term-def">${escapeHtml(fw.def[lang] || fw.def.es)}</p>
+            ${fw.structure ? `
+              <div class="learn-example-block">
+                <div class="learn-example-code"><pre>${escapeHtml(fw.structure[lang] || fw.structure.es)}</pre></div>
+                ${fw.example ? `<button class="btn btn-secondary btn-sm learn-analyze-btn" data-prompt-id="${fw.id}">${t('learn.analyzeExample')}</button>` : ''}
+              </div>` : ''}
+            ${fw.crossRefs && fw.crossRefs.length ? `
+              <div class="learn-cross-refs">
+                ${fw.crossRefs.map(ref => `<span class="cross-ref tag">${escapeHtml(ref)}</span>`).join('')}
+              </div>` : ''}
+          </article>
+        `).join('')}
+      </div>
+    `;
+    bindFrameworkAnalyzeButtons(container);
+  }
+
+  // Hardcoded list of adversarial test IDs + categories (Adversarial module builds
+  // tests dynamically in runTests(), so there is no static array to iterate).
+  // Source of truth: js/adversarial.js runTests() rawTests order + _test* helpers.
+  const ADVERSARIAL_TEST_IDS = [
+    'emptyInput', 'injection', 'jailbreakRoleplay', 'indirectInjection',
+    'dataExfiltration', 'ambiguity', 'overflow', 'languageMismatch',
+    'scopeCreep', 'hallucination', 'formatBreaking', 'multiTurn', 'edgeCases',
+  ];
+
+  function renderLibrary() {
+    const container = document.getElementById('learn-library');
+    if (!container) return;
+
+    // Unified navigation over EXISTING content: templates, anti-patterns, adversarial.
+    const templates = (typeof Templates !== 'undefined') ? Templates.templates : [];
+    const apData = (typeof Patterns !== 'undefined') ? (Patterns.antiPatterns || []) : [];
+    const bpData = (typeof Patterns !== 'undefined') ? (Patterns.bestPractices || []) : [];
+
+    container.innerHTML = `
+      <div class="learn-panel-header">
+        <h2 class="view-title">${t('learn.libraryTitle')}</h2>
+        <p class="view-subtitle">${t('learn.librarySubtitle')}</p>
+      </div>
+
+      <section class="learn-library-section">
+        <h3 class="section-title">${t('learn.libTemplates')} <span class="count-badge">${templates.length}</span></h3>
+        <div class="learn-grid">
+          ${templates.map(tpl => `
+            <article class="learn-card learn-card-template" data-id="${tpl.id}">
+              <div class="learn-card-header">
+                <span class="learn-term-name">${escapeHtml(Templates.getName(tpl))}</span>
+                <span class="badge badge-info">${escapeHtml(Templates.getCategoryLabel(tpl.category))}</span>
+              </div>
+              <p class="learn-term-def">${escapeHtml(Templates.getDescription(tpl))}</p>
+              <button class="btn btn-secondary btn-sm learn-template-btn" data-template-id="${tpl.id}">${t('learn.useTemplate')}</button>
+            </article>
+          `).join('')}
+        </div>
+      </section>
+
+      <section class="learn-library-section">
+        <h3 class="section-title">${t('learn.libAntipatterns')} <span class="count-badge">${apData.length}</span></h3>
+        <div class="learn-list">
+          ${apData.map(ap => `
+            <div class="learn-list-item">
+              <span class="learn-list-id">${escapeHtml(ap.id)}</span>
+              <span class="learn-list-name">${escapeHtml(I18n.t('patterns.' + ap.id + '.name'))}</span>
+              <span class="badge badge-${ap.severity || 'low'}">${t('learn.sev_' + (ap.severity || 'low'))}</span>
+            </div>
+          `).join('')}
+        </div>
+      </section>
+
+      <section class="learn-library-section">
+        <h3 class="section-title">${t('learn.libBestPractices')} <span class="count-badge">${bpData.length}</span></h3>
+        <div class="learn-list">
+          ${bpData.map(bp => `
+            <div class="learn-list-item">
+              <span class="learn-list-id">${escapeHtml(bp.id)}</span>
+              <span class="learn-list-name">${escapeHtml(I18n.t('patterns.' + bp.id + '.name'))}</span>
+            </div>
+          `).join('')}
+        </div>
+      </section>
+
+      <section class="learn-library-section">
+        <h3 class="section-title">${t('learn.libAdversarial')} <span class="count-badge">${ADVERSARIAL_TEST_IDS.length}</span></h3>
+        <div class="learn-list">
+          ${ADVERSARIAL_TEST_IDS.map(id => `
+            <div class="learn-list-item">
+              <span class="learn-list-id">${escapeHtml(id)}</span>
+              <span class="learn-list-name">${escapeHtml(I18n.t('adv.' + id + '.name'))}</span>
+            </div>
+          `).join('')}
+        </div>
+      </section>
+    `;
+
+    // Bind template "use" buttons (clone of templates view pattern)
+    container.querySelectorAll('.learn-template-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = btn.dataset.templateId;
+        const tpl = Templates.getById(id);
+        if (tpl) {
+          loadPrompt(tpl.prompt);
+          showToast(t('toast.templateLoaded', { name: Templates.getName(tpl) }), 'success');
+        }
+      });
+    });
+  }
+
+  // Bind "Analyze example" buttons for techniques (data-prompt-id references Knowledge.techniques)
+  function bindAnalyzeButtons(container, collection) {
+    container.querySelectorAll('.learn-analyze-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = btn.dataset.promptId;
+        const item = collection.find(x => x.id === id);
+        if (item && item.example) {
+          const lang = I18n.getLang();
+          const promptText = item.example[lang] || item.example.es;
+          loadPrompt(promptText);
+          showToast(t('learn.exampleLoaded'), 'success');
+        }
+      });
+    });
+  }
+
+  // Bind "Analyze example" buttons for frameworks (Knowledge.frameworks has .example)
+  function bindFrameworkAnalyzeButtons(container) {
+    container.querySelectorAll('.learn-analyze-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = btn.dataset.promptId;
+        const item = Knowledge.frameworks.find(x => x.id === id);
+        if (item && item.example) {
+          const lang = I18n.getLang();
+          const promptText = item.example[lang] || item.example.es;
+          loadPrompt(promptText);
+          showToast(t('learn.exampleLoaded'), 'success');
+        }
+      });
+    });
+  }
+
   // ── Public API ─────────────────────────────────────────
-  return { init, showToast, switchView };
+  // loadPrompt(text): fill the editor with a prompt and jump to the analyzer.
+  // Used by the Learn hub "Analyze this example" buttons (and reusable by any
+  // module that needs to seed the editor from outside the IIFE).
+  function loadPrompt(text) {
+    const input = document.getElementById('prompt-input');
+    if (!input) return;
+    input.value = text;
+    updateEditorStats();
+    switchView('analyzer');
+  }
+
+  return { init, showToast, switchView, loadPrompt };
 })();
 
 // Boot

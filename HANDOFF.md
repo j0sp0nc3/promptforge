@@ -69,6 +69,19 @@ interactiva desplegada en Vercel.
 - [x] PR para dominio `promptometer.is-a.dev` (is-a-dev/register) con verificación TXT de Vercel
 - [x] Seguritización de API: Autenticación por API Key privada (`x-api-key` / `Authorization: Bearer` configurada vía `PROMPTOMETER_API_KEY` en Vercel, 0 secretos en el código fuente), CORS restrictivo, Rate Limiting (30 req/min/IP), Límite de Payload (100 KB) y Headers OWASP.
 - [x] Tests de estrés: 14/14 PASS
+- [x] Footer rediseñado (Editorial Technical): avatar circular de GitHub + bloque de marca (wordmark + tagline) + links con íconos SVG (GitHub, Motor, LinkedIn)
+- [x] **Hub de Conocimiento Fase 0 (esqueleto)**: nuevo tab "Aprender" con 4 sub-secciones (Glosario, Técnicas, Frameworks, Biblioteca). `App.loadPrompt()` expuesto. CSS `.learn-*` completo. `knowledge.js` creado (vacío, se rellena en fases 1-3). Biblioteca unificada renderiza los 12 templates + 35 anti-patrones + 15 best-practices + 13 tests adversariales existentes. i18n `learn.*` y `nav.learn` en ES/EN.
+
+---
+
+## 🔄 Hub de Conocimiento — Progreso por fases
+
+- [x] **Fase 0**: Esqueleto (App.loadPrompt + nav + HTML/CSS + knowledge.js + library unificada)
+- [ ] **Fase 1**: Glosario (~20 términos bilingüe en `knowledge.js`)
+- [ ] **Fase 2**: Técnicas (6 nuevas + 4 cross-link con ejemplos Analizables)
+- [ ] **Fase 3**: Frameworks (RTF, CRISPE, RACE, anatomía XML nativa)
+- [ ] **Fase 4**: Biblioteca unificada (ya implementada en Fase 0)
+- [ ] **Fase 5**: Fix ~15 claves i18n rotas (promptType.*, técnicas modernas, safety)
 
 ---
 

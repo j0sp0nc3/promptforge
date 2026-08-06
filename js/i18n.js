@@ -39,6 +39,7 @@ const I18n = (() => {
         analyze: 'Analizar',
         templates: 'Templates',
         history: 'Historial',
+        learn: 'Aprender',
         export: 'Exportar',
       },
 
@@ -756,6 +757,41 @@ const I18n = (() => {
         'tpl-traductor-tecnico': { name: 'Traductor Técnico', desc: 'Traduce textos técnicos preservando terminología especializada, formato y matices.', tags: ['traducción', 'técnico', 'idiomas', 'terminología', 'localización'] },
         'tpl-extractor-datos-json': { name: 'Extractor de Datos Estructurados (JSON)', desc: 'Extrae datos estructurados de texto libre y los organiza en un esquema JSON definido.', tags: ['extracción', 'JSON', 'datos estructurados', 'parsing', 'esquema'] },
       },
+
+      // ── Learn Hub (Knowledge) labels ───────────────────────────────────
+      // Note: the body text of glossary/techniques/frameworks lives in
+      // js/knowledge.js (es/en fields per entry) to avoid inflating this
+      // dictionary. Only UI chrome (titles, labels, buttons) lives here.
+      learn: {
+        subGlossary: 'Glosario',
+        subTechniques: 'Técnicas',
+        subFrameworks: 'Frameworks',
+        subLibrary: 'Biblioteca',
+        glossaryTitle: 'Glosario de Prompt Engineering',
+        glossarySubtitle: 'Términos esenciales que todo ingeniero de prompts debe conocer. Definiciones claras con ejemplos y referencias cruzadas al motor de análisis.',
+        techniquesTitle: 'Técnicas de Prompting',
+        techniquesSubtitle: 'Patrones modernos para estructurar razonamiento y guiar al modelo. Las técnicas marcadas como "clásicas" ya están integradas en el motor y el rewriter.',
+        frameworksTitle: 'Frameworks de Estructura',
+        frameworksSubtitle: 'Esquemas canónicos para organizar un prompt. Incluye el framework XML nativo de Promptometer usado por todos los templates.',
+        libraryTitle: 'Biblioteca Unificada',
+        librarySubtitle: 'Toda la base de conocimiento de Promptometer en un solo lugar: templates listos, anti-patrones detectados y pruebas adversariales.',
+        exampleLabel: 'Ejemplo',
+        whenLabel: 'Cuándo usarlo',
+        analyzeExample: 'Analizar este prompt',
+        useTemplate: 'Usar template',
+        linkedLabel: 'Clásica',
+        newLabel: 'Nueva',
+        exampleLoaded: 'Ejemplo cargado en el editor',
+        libTemplates: 'Templates',
+        libAntipatterns: 'Anti-patrones',
+        libBestPractices: 'Buenas prácticas',
+        libAdversarial: 'Pruebas adversariales',
+        sev_critical: 'Crítico',
+        sev_high: 'Alto',
+        sev_medium: 'Medio',
+        sev_low: 'Bajo',
+      },
+
       footer: {
         tagline: 'Analizador de Prompts Avanzado',
         copy: '© 2026 · Licencia MIT',
@@ -778,6 +814,7 @@ const I18n = (() => {
         analyze: 'Analyze',
         templates: 'Templates',
         history: 'History',
+        learn: 'Learn',
         export: 'Export',
       },
 
@@ -1468,6 +1505,38 @@ const I18n = (() => {
         'tpl-traductor-tecnico': { name: 'Technical Translator', desc: 'Translates technical texts preserving specialized terminology, format and nuances.', tags: ['translation', 'technical', 'languages', 'terminology', 'localization'] },
         'tpl-extractor-datos-json': { name: 'Structured Data Extractor (JSON)', desc: 'Extracts structured data from free text and organizes it into a defined JSON schema.', tags: ['extraction', 'JSON', 'structured data', 'parsing', 'schema'] },
       },
+
+      // ── Learn Hub (Knowledge) labels ───────────────────────────────────
+      learn: {
+        subGlossary: 'Glossary',
+        subTechniques: 'Techniques',
+        subFrameworks: 'Frameworks',
+        subLibrary: 'Library',
+        glossaryTitle: 'Prompt Engineering Glossary',
+        glossarySubtitle: 'Essential terms every prompt engineer should know. Clear definitions with examples and cross-references to the analysis engine.',
+        techniquesTitle: 'Prompting Techniques',
+        techniquesSubtitle: 'Modern patterns for structuring reasoning and guiding the model. Techniques marked "classic" are already integrated into the engine and rewriter.',
+        frameworksTitle: 'Structural Frameworks',
+        frameworksSubtitle: 'Canonical schemas for organizing a prompt. Includes Promptometer\'s native XML framework used by all templates.',
+        libraryTitle: 'Unified Library',
+        librarySubtitle: 'All of Promptometer\'s knowledge base in one place: ready-made templates, detected anti-patterns, and adversarial tests.',
+        exampleLabel: 'Example',
+        whenLabel: 'When to use it',
+        analyzeExample: 'Analyze this prompt',
+        useTemplate: 'Use template',
+        linkedLabel: 'Classic',
+        newLabel: 'New',
+        exampleLoaded: 'Example loaded into the editor',
+        libTemplates: 'Templates',
+        libAntipatterns: 'Anti-patterns',
+        libBestPractices: 'Best practices',
+        libAdversarial: 'Adversarial tests',
+        sev_critical: 'Critical',
+        sev_high: 'High',
+        sev_medium: 'Medium',
+        sev_low: 'Low',
+      },
+
       footer: {
         tagline: 'Advanced Prompt Analyzer',
         copy: '© 2026 · MIT License',
