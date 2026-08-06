@@ -484,9 +484,254 @@ location, and people involved, in JSON format."""`,
     },
   ],
 
-  /* ── 3. Frameworks: canonical structural schemas ────────────── */
+  /* ── 3. Frameworks: canonical structural schemas ──────────────
+     { id, name:{es,en}, acronym?, category, def:{es,en}, structure:{es,en}?, example:{es,en}?, crossRefs:[]? } */
   frameworks: [
-    // Fase 3 — populated below
+    {
+      id: 'f-rtf',
+      name: { es: 'RTF (Role-Task-Format)', en: 'RTF (Role-Task-Format)' },
+      acronym: 'RTF',
+      category: 'framework',
+      def: {
+        es: 'El framework más simple y popular. Define un Rol (quién es el modelo), una Tarea (qué debe hacer) y un Formato (cómo entregar la respuesta). Es el mínimo viable para un prompt estructurado.',
+        en: 'The simplest and most popular framework. Define a Role (who the model is), a Task (what to do), and a Format (how to deliver the answer). It is the minimum viable structured prompt.',
+      },
+      structure: {
+        es: `<rol>
+Eres un [experto en DOMINIO].
+</rol>
+
+<tarea>
+[Verbo de acción + objeto + criterios de éxito].
+</tarea>
+
+<formato>
+[Formato de salida: JSON, tabla, lista numerada, etc.].
+</formato>`,
+        en: `<role>
+You are a [expert in DOMAIN].
+</role>
+
+<task>
+[Action verb + object + success criteria].
+</task>
+
+<format>
+[Output format: JSON, table, numbered list, etc.].
+</format>`,
+      },
+      example: {
+        es: `<rol>
+Eres un editor de textos experimentado.
+</rol>
+
+<tarea>
+Revisa el siguiente texto y corrige errores ortográficos, gramaticales y de estilo.
+Devuelve solo el texto corregido.
+</tarea>
+
+<formato>
+Texto plano, sin comentarios adicionales.
+</formato>`,
+        en: `<role>
+You are an experienced copy editor.
+</role>
+
+<task>
+Review the following text and correct spelling, grammar, and style errors.
+Return only the corrected text.
+</task>
+
+<format>
+Plain text, no additional comments.
+</format>`,
+      },
+    },
+    {
+      id: 'f-crispe',
+      name: { es: 'CRISPE', en: 'CRISPE' },
+      acronym: 'CRISPE',
+      category: 'framework',
+      def: {
+        es: 'Framework avanzado de 6 componentes: Capacity & Role (capacidades y rol), Insight (contexto de fondo), Statement (la instrucción específica), Personality (tono y estilo), Personality y Experiment (pedir variantes). Más rico que RTF para tareas creativas o donde el tono importa.',
+        en: 'An advanced 6-component framework: Capacity & Role (capabilities and role), Insight (background context), Statement (the specific instruction), Personality (tone and style), and Experiment (ask for variants). Richer than RTF for creative tasks or where tone matters.',
+      },
+      structure: {
+        es: `<capacidad_rol>
+[Capacidades y rol del modelo: "Eres un estratega de marketing con 15 años de experiencia..."]
+</capacidad_rol>
+
+<insight>
+[Contexto de fondo: mercado, audiencia, objetivos previos.]
+</insight>
+
+<instruccion>
+[Tarea específica y accionable.]
+</instruccion>
+
+<personalidad>
+[Tono y estilo de la respuesta: formal, persuasivo, técnico.]
+</personalidad>
+
+<experimento>
+[Pide 2-3 variantes o enfoques alternativos.]
+</experimento>`,
+        en: `<capacity_role>
+[Model capabilities and role: "You are a marketing strategist with 15 years of experience..."]
+</capacity_role>
+
+<insight>
+[Background context: market, audience, prior goals.]
+</insight>
+
+<statement>
+[Specific, actionable task.]
+</statement>
+
+<personality>
+[Tone and style of the response: formal, persuasive, technical.]
+</personality>
+
+<experiment>
+[Ask for 2-3 variants or alternative approaches.]
+</experiment>`,
+      },
+      crossRefs: ['f-rtf'],
+    },
+    {
+      id: 'f-race',
+      name: { es: 'RACE (Role-Action-Context-Expectation)', en: 'RACE (Role-Action-Context-Expectation)' },
+      acronym: 'RACE',
+      category: 'framework',
+      def: {
+        es: 'Framework de 4 partes: Role (quién), Action (qué hacer), Context (información necesaria), Expectation (criterios de éxito y formato). Parecido a RTF pero hace explícito el contexto y los criterios medibles — útil para tareas donde la calidad se evalúa.',
+        en: 'A 4-part framework: Role (who), Action (what to do), Context (necessary information), Expectation (success criteria and format). Similar to RTF but makes context and measurable criteria explicit — useful for tasks where quality is evaluated.',
+      },
+      structure: {
+        es: `<rol>
+[Quién es el modelo y su nivel de expertise.]
+</rol>
+
+<accion>
+[Qué debe hacer, en términos accionables.]
+</accion>
+
+<contexto>
+[Datos, antecedentes y restricciones necesarias para la tarea.]
+</contexto>
+
+<expectativa>
+[Criterios de éxito medibles + formato de salida.]
+</expectativa>`,
+        en: `<role>
+[Who the model is and their expertise level.]
+</role>
+
+<action>
+[What to do, in actionable terms.]
+</action>
+
+<context>
+[Data, background, and constraints needed for the task.]
+</context>
+
+<expectation>
+[Measurable success criteria + output format.]
+</expectation>`,
+      },
+      crossRefs: ['f-rtf'],
+    },
+    {
+      id: 'f-promptometer-xml',
+      name: { es: 'Anatomía XML de 7 secciones (Promptometer)', en: '7-section XML Anatomy (Promptometer)' },
+      acronym: 'XML-7',
+      category: 'native',
+      def: {
+        es: 'El framework nativo de Promptometer, usado por los 12 templates y reforzado por el rewriter automático. Siete secciones en orden canónico: rol → contexto → tarea → formato_salida → restricciones → ejemplos → manejo_errores. Cubre los 8 dimensiones de scoring (claridad, especificidad, estructura, robustez, contexto, formato, CoT, seguridad).',
+        en: 'Promptometer\'s native framework, used by all 12 templates and reinforced by the automatic rewriter. Seven sections in canonical order: role → context → task → output_format → constraints → examples → error_handling. Covers all 8 scoring dimensions (clarity, specificity, structure, robustness, context, format, CoT, safety).',
+      },
+      structure: {
+        es: `<rol>          ← BP004 (context)
+<contexto>     ← BP010 (context)
+<tarea>        ← claridad + especificidad
+<formato_salida> ← BP003 (outputFormat)
+<restricciones> ← robustez + BP007
+<ejemplos>     ← BP002 (specificity / few-shot)
+<manejo_errores> ← BP006, BP015 (robustness)`,
+        en: `<role>          ← BP004 (context)
+<context>       ← BP010 (context)
+<task>          ← clarity + specificity
+<output_format> ← BP003 (outputFormat)
+<constraints>   ← robustness + BP007
+<examples>      ← BP002 (specificity / few-shot)
+<error_handling>← BP006, BP015 (robustness)`,
+      },
+      example: {
+        es: `<rol>
+Eres un analista financiero senior especializado en mercados emergentes.
+</rol>
+
+<contexto>
+Un inversionista retail quiere entender si comprar bonos soberanos de Colombia.
+Tiene perfil de riesgo moderado y horizonte de 5 años.
+</contexto>
+
+<tarea>
+Analiza el riesgo-país de Colombia y recomienda una asignación (% del portafolio).
+Justifica con 3 factores clave.
+</tarea>
+
+<formato_salida>
+JSON: { "recomendacion": string, "asignacion_pct": number, "factores": string[], "riesgo": "bajo|medio|alto" }
+</formato_salida>
+
+<restricciones>
+- No des asesoría fiscal.
+- Cita fuentes verificables (Banco Mundial, FMI).
+- Si falta dato clave, marca "asignacion_pct": null.
+</restricciones>
+
+<ejemplos>
+Entrada: "¿Comprar bonos de Chile?" → { "recomendacion": "Favorable", "asignacion_pct": 15, ... }
+</ejemplos>
+
+<manejo_errores>
+Si la consulta es ambigua, pide aclaración antes de recomendar.
+</manejo_errores>`,
+        en: `<role>
+You are a senior financial analyst specialized in emerging markets.
+</role>
+
+<context>
+A retail investor wants to understand whether to buy Colombian sovereign bonds.
+They have a moderate risk profile and a 5-year horizon.
+</context>
+
+<task>
+Analyze Colombia\'s country risk and recommend an allocation (% of portfolio).
+Justify with 3 key factors.
+</task>
+
+<output_format>
+JSON: { "recommendation": string, "allocation_pct": number, "factors": string[], "risk": "low|medium|high" }
+</output_format>
+
+<constraints>
+- Do not give tax advice.
+- Cite verifiable sources (World Bank, IMF).
+- If a key data point is missing, set "allocation_pct": null.
+</constraints>
+
+<examples>
+Input: "Should I buy Chile bonds?" → { "recommendation": "Favorable", "allocation_pct": 15, ... }
+</examples>
+
+<error_handling>
+If the query is ambiguous, ask for clarification before recommending.
+</error_handling>`,
+      },
+      crossRefs: ['BP001', 'BP002', 'BP003', 'BP004', 'BP006', 'BP010', 'BP015', 'rewriter._restructure'],
+    },
   ],
 
   /* ── Helpers ────────────────────────────────────────────────── */
