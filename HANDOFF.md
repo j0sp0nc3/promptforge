@@ -86,10 +86,11 @@ interactiva desplegada en Vercel.
 - [x] **Fase 3**: Frameworks (RTF, CRISPE, RACE, anatomía XML nativa) ✅
 - [x] **Fase 4**: Biblioteca unificada (ya implementada en Fase 0) ✅
 - [x] **Fase 5**: Fix 18 claves i18n rotas (promptType.*, técnicas modernas, safety) ✅
+- [x] **Biblioteca con detalle expandible**: los anti-patrones (35), buenas prácticas (15) y tests adversariales (13) ahora son acordeones `<details>` expandibles que muestran descripción, dimensión y sugerencia (todo desde i18n existente, sin duplicar contenido).
 
 > ✅ **HUB DE CONOCIMIENTO COMPLETO.** 30 entradas nuevas (20 glosario + 6 técnicas + 4 frameworks),
 > bilingües ES/EN, + biblioteca unificada de los 12 templates + 35 anti-patrones + 15 best-practices
-> + 13 tests adversariales existentes. + 18 bugs de i18n arreglados.
+> + 13 tests adversariales existentes (con detalle expandible). + 18 bugs de i18n arreglados.
 
 ---
 

@@ -917,6 +917,79 @@ small { color: var(--ink-faint); }
 }
 .learn-list-item .badge { flex-shrink: 0; }
 
+/* — Expandable list items (anti-patterns, best-practices, adversarial) — */
+.learn-expandable {
+  display: block;
+  cursor: pointer;
+  list-style: none;
+}
+.learn-expandable > summary {
+  list-style: none;
+  cursor: pointer;
+}
+.learn-expandable > summary::-webkit-details-marker { display: none; }
+.learn-expandable-summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+}
+.learn-chevron {
+  margin-left: auto;
+  flex-shrink: 0;
+  color: var(--ink-faint);
+  transition: transform var(--transition-fast);
+}
+.learn-expandable[open] .learn-chevron { transform: rotate(180deg); }
+.learn-expandable[open] .learn-expandable-summary { border-bottom: var(--rule); }
+
+.learn-expandable-body {
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  background: var(--bg-paper);
+  animation: fadeIn 0.15s ease;
+}
+.learn-detail-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+  margin: 0;
+  font-size: 0.8rem;
+}
+.learn-detail-label {
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  flex-shrink: 0;
+}
+.learn-detail-value {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink);
+}
+.learn-detail-desc {
+  font-family: var(--font-sans);
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.learn-detail-sugg {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin: 0;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--accent-bg);
+  border-left: 2px solid var(--accent);
+  border-radius: var(--radius-sm);
+}
+
 @media (max-width: 768px) {
   .learn-layout { grid-template-columns: 1fr; gap: var(--space-md); padding: var(--space-md); }
   .learn-subnav {

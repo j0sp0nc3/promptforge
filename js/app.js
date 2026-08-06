@@ -929,37 +929,75 @@ const App = (() => {
       <section class="learn-library-section">
         <h3 class="section-title">${t('learn.libAntipatterns')} <span class="count-badge">${apData.length}</span></h3>
         <div class="learn-list">
-          ${apData.map(ap => `
-            <div class="learn-list-item">
-              <span class="learn-list-id">${escapeHtml(ap.id)}</span>
-              <span class="learn-list-name">${escapeHtml(I18n.t('patterns.' + ap.id + '.name'))}</span>
-              <span class="badge badge-${ap.severity || 'low'}">${t('learn.sev_' + (ap.severity || 'low'))}</span>
-            </div>
-          `).join('')}
+          ${apData.map(ap => {
+            const dimLabel = t('dimensions.' + ap.dimension) || ap.dimension;
+            const desc = I18n.t('patterns.' + ap.id + '.desc');
+            const sugg = I18n.t('patterns.' + ap.id + '.sugg');
+            return `
+            <details class="learn-list-item learn-expandable" data-id="${ap.id}">
+              <summary class="learn-expandable-summary">
+                <span class="learn-list-id">${escapeHtml(ap.id)}</span>
+                <span class="learn-list-name">${escapeHtml(I18n.t('patterns.' + ap.id + '.name'))}</span>
+                <span class="badge badge-${ap.severity || 'low'}">${t('learn.sev_' + (ap.severity || 'low'))}</span>
+                <svg class="learn-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+              </summary>
+              <div class="learn-expandable-body">
+                <p class="learn-detail-row"><span class="learn-detail-label">${t('learn.detailDimension')}</span><span class="learn-detail-value">${escapeHtml(dimLabel)}</span></p>
+                <p class="learn-detail-desc">${escapeHtml(desc)}</p>
+                ${sugg && sugg !== ('patterns.' + ap.id + '.sugg') ? `<p class="learn-detail-row"><span class="learn-detail-label">${t('learn.detailSuggestion')}</span></p><p class="learn-detail-sugg">${escapeHtml(sugg)}</p>` : ''}
+              </div>
+            </details>`;
+          }).join('')}
         </div>
       </section>
 
       <section class="learn-library-section">
         <h3 class="section-title">${t('learn.libBestPractices')} <span class="count-badge">${bpData.length}</span></h3>
         <div class="learn-list">
-          ${bpData.map(bp => `
-            <div class="learn-list-item">
-              <span class="learn-list-id">${escapeHtml(bp.id)}</span>
-              <span class="learn-list-name">${escapeHtml(I18n.t('patterns.' + bp.id + '.name'))}</span>
-            </div>
-          `).join('')}
+          ${bpData.map(bp => {
+            const dimLabel = t('dimensions.' + bp.dimension) || bp.dimension;
+            const desc = I18n.t('patterns.' + bp.id + '.desc');
+            return `
+            <details class="learn-list-item learn-expandable" data-id="${bp.id}">
+              <summary class="learn-expandable-summary">
+                <span class="learn-list-id">${escapeHtml(bp.id)}</span>
+                <span class="learn-list-name">${escapeHtml(I18n.t('patterns.' + bp.id + '.name'))}</span>
+                <svg class="learn-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+              </summary>
+              <div class="learn-expandable-body">
+                <p class="learn-detail-row"><span class="learn-detail-label">${t('learn.detailDimension')}</span><span class="learn-detail-value">${escapeHtml(dimLabel)}</span></p>
+                <p class="learn-detail-desc">${escapeHtml(desc)}</p>
+              </div>
+            </details>`;
+          }).join('')}
         </div>
       </section>
 
       <section class="learn-library-section">
         <h3 class="section-title">${t('learn.libAdversarial')} <span class="count-badge">${ADVERSARIAL_TEST_IDS.length}</span></h3>
         <div class="learn-list">
-          ${ADVERSARIAL_TEST_IDS.map(id => `
-            <div class="learn-list-item">
-              <span class="learn-list-id">${escapeHtml(id)}</span>
-              <span class="learn-list-name">${escapeHtml(I18n.t('adv.' + id + '.name'))}</span>
-            </div>
-          `).join('')}
+          ${ADVERSARIAL_TEST_IDS.map(id => {
+            const name = I18n.t('adv.' + id + '.name');
+            const detail = I18n.t('adv.' + id + '.detail');
+            const suggestion = I18n.t('adv.' + id + '.suggestion');
+            const category = I18n.t('adv.' + id + '.category');
+            const catLabel = category && category !== ('adv.' + id + '.category')
+              ? I18n.t('adversarialCategory.' + category)
+              : '';
+            return `
+            <details class="learn-list-item learn-expandable" data-id="${id}">
+              <summary class="learn-expandable-summary">
+                <span class="learn-list-id">${escapeHtml(id)}</span>
+                <span class="learn-list-name">${escapeHtml(name)}</span>
+                ${catLabel ? `<span class="badge badge-info">${escapeHtml(catLabel)}</span>` : ''}
+                <svg class="learn-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+              </summary>
+              <div class="learn-expandable-body">
+                ${detail && detail !== ('adv.' + id + '.detail') ? `<p class="learn-detail-desc">${escapeHtml(detail)}</p>` : ''}
+                ${suggestion && suggestion !== ('adv.' + id + '.suggestion') ? `<p class="learn-detail-row"><span class="learn-detail-label">${t('learn.detailSuggestion')}</span></p><p class="learn-detail-sugg">${escapeHtml(suggestion)}</p>` : ''}
+              </div>
+            </details>`;
+          }).join('')}
         </div>
       </section>
     `;
