@@ -11,7 +11,7 @@ let PromptometerCore;
 try {
   PromptometerCore = require('promptometer-core');
 } catch (e) {
-  PromptometerCore = require('../promptquill/packages/core/promptometer-core.js');
+  PromptometerCore = require('../promptometer/packages/core/  // local dev fallback (clone promptometer repo alongside)promptometer-core.js');
 }
 
 const PORT = process.env.PORT || 3000;

@@ -8,7 +8,7 @@ import json
 try:
     import promptometer_core as promptometer_core
 except ImportError:
-    sys.path.append('../promptquill/packages/core')
+    sys.path.append('../promptometer/packages/core'  # local dev fallback)
     import promptometer_core as promptometer_core
 
 
