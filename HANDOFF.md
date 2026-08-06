@@ -65,7 +65,7 @@ interactiva desplegada en Vercel.
 - [x] Fix scoring: prompts ultra-cortos (< 3 palabras como "Hola") → Grado F (~25/100)
 - [x] Fix Vercel: `vercel.json` con builds estáticos explícitos para css/js
 - [x] PR para dominio `promptometer.is-a.dev` (is-a-dev/register) con verificación TXT de Vercel
-- [x] Seguritización de API: Autenticación por API Key (`x-api-key` / `Authorization: Bearer`), CORS restrictivo (solo dominios autorizados), Rate Limiting (30 req/min/IP), Límite de Payload (máx 100 KB) y Headers de Seguridad OWASP (`X-Frame-Options`, `X-Content-Type-Options`)
+- [x] Seguritización de API: Autenticación por API Key privada (`x-api-key` / `Authorization: Bearer` configurada vía `PROMPTOMETER_API_KEY` en Vercel, 0 secretos en el código fuente), CORS restrictivo, Rate Limiting (30 req/min/IP), Límite de Payload (100 KB) y Headers OWASP.
 - [x] Tests de estrés: 14/14 PASS
 
 ---
