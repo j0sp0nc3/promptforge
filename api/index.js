@@ -5,6 +5,47 @@ try {
   PromptometerCore = require('../../promptometer/packages/core/promptometer-core.js');
 }
 
+// Content moderation for the public leaderboard (profanity, injection, spam).
+const Moderation = require('./moderation');
+
+// ── Upstash Redis client (optional, graceful fallback to in-memory) ──
+// If UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN are set in the
+// Vercel environment, the leaderboard persists globally across users and
+// cold starts. Without them, it falls back to the in-memory array below
+// (same behavior as before — local per-instance, NOT shared between users).
+const UPSTASH_URL = process.env.UPSTASH_REDIS_REST_URL || '';
+const UPSTASH_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || '';
+const HAS_UPSTASH = !!(UPSTASH_URL && UPSTASH_TOKEN);
+
+// Minimal Upstash REST client (zero dependencies). Each call is a single
+// HTTPS fetch. Format: https://<url>/<command>/<arg1>/<arg2>/...
+async function upstash(command, ...args) {
+  const url = UPSTASH_URL.replace(/\/$/, '') + '/' + command + '/' + args.map(a => encodeURIComponent(String(a))).join('/');
+  const res = await fetch(url, { headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` } });
+  if (!res.ok) throw new Error(`Upstash ${command} HTTP ${res.status}`);
+  const body = await res.json();
+  return body.result;
+}
+
+// redis shim: provides {get, set} to Moderation + leaderboard handlers.
+// When Upstash is configured, these hit Redis; otherwise they no-op so
+// the moderation anti-spam layer degrades gracefully (rate limit + dedup
+// are skipped, profanity/injection filters still run).
+const redis = HAS_UPSTASH ? {
+  async get(key) { try { return await upstash('GET', key); } catch (e) { return null; } },
+  async set(key, value, ttlSeconds) {
+    try {
+      if (ttlSeconds) await upstash('SETEX', key, ttlSeconds, value);
+      else await upstash('SET', key, value);
+    } catch (e) { /* non-fatal */ }
+  },
+  // Sorted set ops for leaderboard ranking
+  async zadd(key, score, member) { try { return await upstash('ZADD', key, score, member); } catch (e) { return null; } },
+  async zrevrange(key, start, stop) { try { return await upstash('ZRANGE', key, start, stop, 'REV'); } catch (e) { return []; } },
+  async hset(key, ...fields) { try { return await upstash('HSET', key, ...fields); } catch (e) { return null; } },
+  async hgetall(key) { try { return await upstash('HGETALL', key); } catch (e) { return null; } },
+} : null;
+
 // Security & API Key Configuration (Read ONLY from environment variables, no hardcoded secrets in repository)
 const API_KEY = process.env.PROMPTOMETER_API_KEY || process.env.API_KEY || '';
 
@@ -65,6 +106,39 @@ function validateApiKey(req) {
 
   const providedKey = apiKeyHeader || bearerToken;
   return Boolean(providedKey && providedKey === API_KEY);
+}
+
+// ── Leaderboard entry (de)serialization for Redis hashes ─────
+// Redis HSET stores flat string fields; we serialize complex fields as JSON.
+function _serializeEntry(entry) {
+  return [
+    'id', String(entry.id),
+    'title', JSON.stringify(entry.title || {}),
+    'author', String(entry.author || 'Anónimo'),
+    'overallScore', String(entry.overallScore || 0),
+    'grade', String(entry.grade || ''),
+    'complexity', String(entry.complexity || 'intermediate'),
+    'category', String(entry.category || 'general'),
+    'date', String(entry.date || ''),
+    'prompt', String(entry.prompt || ''),
+  ];
+}
+
+function _deserializeEntry(data) {
+  if (!data || typeof data !== 'object') return null;
+  let title = {};
+  try { title = JSON.parse(data.title || '{}'); } catch (e) {}
+  return {
+    id: data.id,
+    title,
+    author: data.author || 'Anónimo',
+    overallScore: Number(data.overallScore) || 0,
+    grade: data.grade || '',
+    complexity: data.complexity || 'intermediate',
+    category: data.category || 'general',
+    date: data.date || '',
+    prompt: data.prompt || '',
+  };
 }
 
 // Global Serverless Top 10 Leaderboard (No login required)
@@ -148,6 +222,26 @@ module.exports = (req, res) => {
   if (req.method === 'GET') {
     const url = req.url || '';
     if (url.includes('leaderboard')) {
+      // If Upstash is configured, fetch from Redis (global, persistent).
+      // Otherwise fall back to the in-memory array.
+      if (HAS_UPSTASH) {
+        (async () => {
+          try {
+            const ids = await redis.zrevrange('lb:global', 0, 9);
+            const entries = [];
+            for (const id of (ids || [])) {
+              const data = await redis.hgetall('lb:entry:' + id);
+              if (data) entries.push(_deserializeEntry(data));
+            }
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(entries.length ? entries : globalLeaderboard));
+          } catch (e) {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(globalLeaderboard));
+          }
+        })();
+        return;
+      }
       res.writeHead(200, { 'Content-Type': 'application/json' });
       return res.end(JSON.stringify(globalLeaderboard));
     }
@@ -210,37 +304,9 @@ module.exports = (req, res) => {
             res.writeHead(400, { 'Content-Type': 'application/json' });
             return res.end(JSON.stringify({ error: "El parámetro 'prompt' es requerido." }));
           }
-          const title = payload.title || 'Prompt de Comunidad';
-          const author = payload.author || 'Anónimo';
-          const analysis = PromptometerCore.analyze(prompt);
-
-          const newEntry = {
-            id: 'global-' + Date.now(),
-            title: { es: title, en: title },
-            author: author,
-            overallScore: analysis.overallScore,
-            grade: analysis.grade || 'A',
-            complexity: analysis.complexity || 'intermediate',
-            category: analysis.promptType || 'general',
-            date: new Date().toISOString().split('T')[0],
-            prompt: prompt,
-          };
-
-          globalLeaderboard = [...globalLeaderboard, newEntry]
-            .sort((a, b) => b.overallScore - a.overallScore)
-            .slice(0, 10);
-
-          const rank = globalLeaderboard.findIndex(x => x.id === newEntry.id) + 1;
-          const isRanked = rank > 0;
-
-          res.writeHead(200, { 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({
-            success: true,
-            isRanked,
-            rank,
-            entry: newEntry,
-            top10: globalLeaderboard
-          }));
+          // Defer to async handler (moderation + optional Upstash persistence)
+          _handleLeaderboardSubmit(req, res, payload, prompt);
+          return;
         }
 
         if (!prompt.trim()) {
@@ -284,3 +350,82 @@ module.exports = (req, res) => {
   res.writeHead(404, { 'Content-Type': 'application/json' });
   res.end(JSON.stringify({ error: 'Ruta no encontrada' }));
 };
+
+async function _handleLeaderboardSubmit(req, res, payload, prompt) {
+  const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '127.0.0.1';
+  const title = payload.title || 'Prompt de Comunidad';
+  const author = payload.author || 'Anónimo';
+  const analysis = PromptometerCore.analyze(prompt);
+
+  // 1. Run Content Moderation (Profanity, Injection, Malicious Code, Anti-spam)
+  const modResult = await Moderation.check({
+    text: prompt,
+    score: analysis.overallScore,
+    ip: clientIp,
+    redis
+  });
+
+  if (!modResult.allowed) {
+    res.writeHead(400, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({
+      error: modResult.detail || 'El prompt fue rechazado por la moderación de contenido.',
+      reason: modResult.reason
+    }));
+  }
+
+  const newEntry = {
+    id: 'global-' + Date.now(),
+    title: { es: title, en: title },
+    author: author,
+    overallScore: analysis.overallScore,
+    grade: analysis.grade || 'A',
+    complexity: analysis.complexity || 'intermediate',
+    category: analysis.promptType || 'general',
+    date: new Date().toISOString().split('T')[0],
+    prompt: prompt,
+  };
+
+  // 2. Persistent Storage (Upstash Redis if configured, fallback to in-memory)
+  if (HAS_UPSTASH) {
+    try {
+      await redis.hset('lb:entry:' + newEntry.id, ..._serializeEntry(newEntry));
+      await redis.zadd('lb:global', newEntry.overallScore, newEntry.id);
+      await Moderation.markSubmitted({ text: prompt, ip: clientIp, redis });
+
+      const ids = await redis.zrevrange('lb:global', 0, 9);
+      const entries = [];
+      for (const id of (ids || [])) {
+        const data = await redis.hgetall('lb:entry:' + id);
+        if (data) entries.push(_deserializeEntry(data));
+      }
+      const rank = entries.findIndex(x => x.id === newEntry.id) + 1;
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({
+        success: true,
+        isRanked: rank > 0,
+        rank,
+        entry: newEntry,
+        top10: entries
+      }));
+    } catch (e) {
+      // Fallback to in-memory if Redis error occurs
+    }
+  }
+
+  // Fallback in-memory
+  globalLeaderboard = [...globalLeaderboard, newEntry]
+    .sort((a, b) => b.overallScore - a.overallScore)
+    .slice(0, 10);
+
+  const rank = globalLeaderboard.findIndex(x => x.id === newEntry.id) + 1;
+  const isRanked = rank > 0;
+
+  res.writeHead(200, { 'Content-Type': 'application/json' });
+  return res.end(JSON.stringify({
+    success: true,
+    isRanked,
+    rank,
+    entry: newEntry,
+    top10: globalLeaderboard
+  }));
+}
