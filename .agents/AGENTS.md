@@ -27,8 +27,9 @@ and design decisions that MUST be respected.
 
 ## Before EVERY Commit (not just at session end)
 - Run `node test_edge_cases.js` to verify 14/14 PASS.
-- Update `HANDOFF.md`: move completed items to ✅, add new pending items.
-- Include HANDOFF.md in the commit.
+- Update `HANDOFF.md`: move completed items to ✅, add new pending items, and update the "Última Actualización" section (date, latest commit hash, and session summary).
+- Update `README.md`: if any new techniques, frameworks, features, or files were added/modified, update global counts (e.g., number of techniques/frameworks) and the project file tree.
+- Include both `HANDOFF.md` and `README.md` in the commit whenever documentation counts or files change.
 - The session may end abruptly (quota limits), so NEVER defer updates.
 
 ## When Starting a Session After Another Assistant
