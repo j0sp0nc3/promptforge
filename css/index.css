@@ -186,7 +186,7 @@ small { color: var(--ink-faint); }
 /* ============================================================
    MAIN + VIEWS
    ============================================================ */
-.app-main { padding-top: var(--header-height); min-height: 100vh; }
+.app-main { padding-top: calc(var(--header-height) + 38px); min-height: 100vh; }
 
 .view { display: none; }
 .view.active { display: block; animation: fadeIn 0.25s ease; }
@@ -209,7 +209,7 @@ small { color: var(--ink-faint); }
 }
 
 .editor-panel {
-  position: sticky; top: calc(var(--header-height) + var(--space-lg));
+  position: sticky; top: calc(var(--header-height) + 38px + var(--space-lg));
   display: flex; flex-direction: column; gap: var(--space-md);
 }
 
@@ -1481,6 +1481,10 @@ small { color: var(--ink-faint); }
 
 /* ── Live News Ticker Bar (Editorial Technical) ───────── */
 .news-ticker-bar {
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  right: 0;
   display: flex;
   align-items: center;
   background: var(--bg-paper);
@@ -1489,7 +1493,7 @@ small { color: var(--ink-faint); }
   overflow: hidden;
   font-family: var(--font-sans);
   font-size: 0.82rem;
-  z-index: 10;
+  z-index: 90;
 }
 .news-ticker-label {
   display: flex;

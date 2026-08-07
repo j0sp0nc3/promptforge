@@ -161,9 +161,9 @@ promptquill/                    ← Monorepo del Motor Core (npm)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-07
-- **Último commit promptforge:** `70b6304` (Banda Ticker de Noticias AI en Vivo + Radar de 12 Creadores + Modal + 22/22 PASS)
+- **Último commit promptforge:** `a5d8f92` (Fix posicionamiento fixed e invisibilidad de la barra #news-ticker-bar bajo el header + 22/22 PASS)
 - **Último commit promptometer:** `67436ff` (fix scoring ultra-short)
-- **Sesión con:** Antigravity AI — **Banda Live AI Radar Ticker + Creadores AI + Moderación + Upstash Redis COMPLETO**
+- **Sesión con:** Antigravity AI — **Fix Posicionamiento Ticker Noticias AI en Vivo COMPLETO**
 - **Estado:** 22/22 tests de estrés y suites de prueba en PASS. Paridad ES/EN verificada. Desplegado en Vercel.
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
