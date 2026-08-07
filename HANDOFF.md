@@ -80,6 +80,7 @@ interactiva desplegada en Vercel.
 - [x] **Optimización Responsiva para Teléfonos/Móviles**: Corrección completa del layout en pantallas pequeñas (< 850px y < 480px). Sistema de Grid de 2 filas para la cabecera (Fila 1: Logo + Controles de tema e idioma compactos; Fila 2: Menú navegable horizontal con desplazamiento suave sin scrollbar visible y máscara de desvanecimiento `mask-image`), reposicionamiento adaptativo de la barra **Radar IA en Vivo** (`#news-ticker-bar`) y ajuste dinámico de `padding-top` en `.app-main` para evitar superposiciones.
 - [x] **Footer Responsivo para Móviles**: Footer rediseñado para pantallas < 850px — apilado vertical con centrado, autor con avatar a la izquierda, bloque de marca centrado y 4 links en grid 2×2 con estilos de botón para mayor usabilidad táctil.
 - [x] **Radar de Creadores Expandido (20 Creadores)**: Añadidos 8 nuevos creadores al Radar: *Yann LeCun* (Meta/Turing), *François Chollet* (Keras/ARC-AGI), *Andrew Ng* (DeepLearning.AI/The Batch), *Alex Albert* (Anthropic DevRel), *Jerry Liu* (LlamaIndex), *Matt Shumer* (HyperWrite/Agentes), *Ben Hylak* (Raindrop/Observabilidad), *Matt Wolfe* (Future Tools/YouTube). Cada uno con múltiples plataformas: X/Twitter, LinkedIn, YouTube, Newsletter, GitHub y/o Blog. Total: 20 creadores con 5 categorías (prompting, architecture, agents, security, evals).
+- [x] **Fix Motor de Scoring (Tipo `extraction` + Signals)**:  Cuatro bugs de detección de señales corregidos en `js/signals.js` y `promptometer-core.js`: (1) `errorHandling` ahora detecta `<manejo_errores>`, "Si el texto no contiene" y "responde exactamente con"; (2) `antiHallucination` detecta "cita únicamente datos del texto", "no asumas" y "datos no especificados"; (3) `scopeLimit` detecta "ÚNICAMENTE", "no incluyas fuera del bloque"; (4) Nuevo tipo de prompt `extraction` con tabla de pesos optimizada (outputFormat 20%, robustness 18%, chainOfThought 2%). El prompt top-1 sube de 66 → 74/100.
 
 ---
 
@@ -165,10 +166,10 @@ promptquill/                    ← Monorepo del Motor Core (npm)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-07
-- **Último commit promptforge:** `d3d2d14` (feat(radar): expand creators to 20 — Yann LeCun, Chollet, Andrew Ng, Alex Albert, Jerry Liu, Matt Shumer, Ben Hylak, Matt Wolfe)
-- **Último commit promptometer:** `67436ff` (fix scoring ultra-short)
-- **Sesión con:** Antigravity AI / Claude Sonnet — **Radar de Creadores Expandido a 20 + Push a producción COMPLETO**
-- **Estado:** 22/22 tests en PASS (Suite 5 ahora muestra 20 Creadores). Paridad ES/EN verificada. Desplegado en Vercel.
+- **Último commit promptforge:** `50f6c6d` (fix(analyzer): add extraction prompt type; expand signals; top-1 66→74)
+- **Último commit promptometer:** `5662a93` (fix(core): sync signal parity — extraction type, errorHandling/antiHallucination/scopeLimit)
+- **Sesión con:** Antigravity AI / Claude Sonnet — **Fix Scoring Motor + 20 Creadores + Push a producción COMPLETO**
+- **Estado:** 22/22 tests en PASS. Paridad ES/EN y JS/Python verificadas. Desplegado en Vercel.
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
 > - **Nuevo Tema Novedoso Cosmic Event Horizon**: Estética visual galáctica de alta precisión de instrumentos astrofísicos y agujero negro como tema predeterminado.
