@@ -94,6 +94,7 @@ interactiva desplegada en Vercel.
 
 - [x] **Hub de Conocimiento Búsqueda interactiva**: Barra de búsqueda en tiempo real `#learn-search-input` para filtrar conceptos del glosario, técnicas, frameworks, templates, anti-patrones y tests adversariales con botón de borrado rápido e i18n ES/EN.
 - [x] **Técnicas & Frameworks 2026**: Adición de 3 técnicas de vanguardia (*Chain of Verification - CoVe, Skeleton-of-Thought - SoT, Hierarchical CoT - Hi-CoT*) y 2 frameworks de arquitectura (*CO-STAR, Bento-Box Modular Architecture*) en `js/knowledge.js`.
+- [x] **Pestaña de Referencias & Novedades**: Quinta sub-sección en el Hub de Conocimiento (*Glosario, Técnicas, Frameworks, Biblioteca, Referencias*) con 11 tarjetas interactivas categorizadas (Oficiales de Promptometer, Guías de OpenAI/Anthropic/Google, Papers de investigación de Stanford/Google/Meta y OWASP Security).
 
 ---
 
