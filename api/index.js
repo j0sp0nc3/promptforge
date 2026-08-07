@@ -13,8 +13,8 @@ const Moderation = require('./moderation');
 // Vercel environment, the leaderboard persists globally across users and
 // cold starts. Without them, it falls back to the in-memory array below
 // (same behavior as before — local per-instance, NOT shared between users).
-const UPSTASH_URL = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL || process.env.VERCEL_KV_REST_API_URL || process.env.STORAGE_REST_API_URL || process.env.STORAGE_URL || '';
-const UPSTASH_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN || process.env.VERCEL_KV_REST_API_TOKEN || process.env.STORAGE_REST_API_TOKEN || process.env.STORAGE_TOKEN || '';
+const UPSTASH_URL = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL || process.env.VERCEL_KV_REST_API_URL || process.env.STORAGE_KV_REST_API_URL || process.env.STORAGE_REST_API_URL || process.env.STORAGE_URL || '';
+const UPSTASH_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN || process.env.VERCEL_KV_REST_API_TOKEN || process.env.STORAGE_KV_REST_API_TOKEN || process.env.STORAGE_REST_API_TOKEN || process.env.STORAGE_TOKEN || '';
 const HAS_UPSTASH = !!(UPSTASH_URL && UPSTASH_TOKEN);
 
 // Minimal Upstash REST client (zero dependencies). Each call is a single
