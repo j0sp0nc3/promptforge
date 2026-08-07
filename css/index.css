@@ -1,58 +1,61 @@
 /* ============================================================
-   Promptometer — Editorial Technical Design System
+   Promptometer — Cosmic Event Horizon & Precision Instrument
 
-   Cream paper · Fraunces serif · IBM Plex Mono for data · vermilion accent
-   No glassmorphism, no glow, no gradients-on-everything. Rules, not shadows.
+   Deep Space Void · Orbitron/Space Grotesk · JetBrains Mono · Photon Ring Flare Accent
+   Dynamic Theme Switcher: Cosmic Void (Default) / Editorial Classic
    ============================================================ */
 
 :root {
-  /* ── Backgrounds: warm cream paper, not white ───────────────────── */
-  --bg-body:       #F7F3EC;
-  --bg-paper:      #FBF8F2;
-  --bg-sunken:     #EFE9DD;
-  --bg-inverse:    #1A1612;
-  --bg-modal-overlay: rgba(26, 22, 18, 0.55);
+  /* ── Backgrounds: Deep Void Space (#08090E), Dark Accretion Surface ─ */
+  --bg-body:          #08090E;
+  --bg-paper:         #111420;
+  --bg-sunken:        #0C0E17;
+  --bg-inverse:       #F0F4F8;
+  --bg-modal-overlay: rgba(4, 5, 10, 0.78);
 
-  /* ── Ink: warm black, never pure #000 ──────────────────────────── */
-  --ink:           #1A1612;
-  --ink-soft:      #4A4239;
-  --ink-faint:     #8B8275;
+  /* ── Ink: High contrast starlight white ──────────────────────────── */
+  --ink:              #F0F4F8;
+  --ink-soft:         #A0AEC0;
+  --ink-faint:        #64748B;
 
-  /* ── Accent: single vermilion (proofreader's mark) ─────────────── */
-  --accent:        #C73E2D;
-  --accent-soft:   #E8B5AD;
-  --accent-bg:     #FBEAE6;
+  /* ── Accents: Photon Ring Orange & Pulsar Cyan ───────────────────── */
+  --accent:           #FF9E00;
+  --accent-secondary: #00E5FF;
+  --accent-soft:      #FFB703;
+  --accent-bg:        rgba(255, 158, 0, 0.14);
 
-  /* ── Semantic state (reserved, not identity) ───────────────────── */
-  --ok:            #4F7942;
-  --ok-bg:         #E8EDE2;
-  --warn:          #B8860B;
-  --warn-bg:       #F4ECD2;
-  --err:           #8B2C1F;
-  --err-bg:        #F4DAD5;
-  --info:          #3A5F7F;
-  --info-bg:       #E0E8F0;
+  /* ── Semantic state ─────────────────────────────────────────────── */
+  --ok:               #10B981;
+  --ok-bg:            rgba(16, 185, 129, 0.16);
+  --warn:             #F59E0B;
+  --warn-bg:          rgba(245, 158, 11, 0.16);
+  --err:              #EF4444;
+  --err-bg:           rgba(239, 68, 68, 0.16);
+  --info:             #00E5FF;
+  --info-bg:          rgba(0, 229, 255, 0.16);
 
   /* ── Severity ──────────────────────────────────────────────────── */
-  --sev-critical:  #8B2C1F;
-  --sev-high:      #C73E2D;
-  --sev-medium:    #B8860B;
-  --sev-low:       #3A5F7F;
+  --sev-critical:     #EF4444;
+  --sev-high:         #FF5200;
+  --sev-medium:       #F59E0B;
+  --sev-low:          #00E5FF;
 
   /* ── Typography ────────────────────────────────────────────────── */
-  --font-serif: 'Fraunces', 'Spectral', Georgia, serif;
+  --font-serif: 'Space Grotesk', 'Fraunces', Georgia, serif;
   --font-sans:  'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono:  'IBM Plex Mono', 'JetBrains Mono', monospace;
+  --font-mono:  'JetBrains Mono', 'IBM Plex Mono', monospace;
 
-  /* ── Rules (thin lines, not shadows) ───────────────────────────── */
-  --rule:        1px solid #D9D2C4;
-  --rule-strong: 1px solid var(--ink);
+  /* ── Rules & Cosmic Glow ───────────────────────────────────────── */
+  --rule:        1px solid #1F263B;
+  --rule-strong: 1px solid #334155;
   --rule-accent: 2px solid var(--accent);
+  --glow-accent: 0 0 16px rgba(255, 158, 0, 0.35);
+  --glow-cyan:   0 0 16px rgba(0, 229, 255, 0.35);
 
-  /* ── Radii: moderate, editorial ────────────────────────────────── */
-  --radius-sm: 3px;
-  --radius-md: 5px;
-  --radius-lg: 8px;
+  /* ── Radii ─────────────────────────────────────────────────────── */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
 
   /* ── Spacing ───────────────────────────────────────────────────── */
   --space-xs: 4px;
@@ -70,6 +73,48 @@
   --header-height: 64px;
 }
 
+/* ── Editorial Classic Theme Overrides ────────────────────────────── */
+body.theme-editorial {
+  --bg-body:          #F7F3EC;
+  --bg-paper:         #FBF8F2;
+  --bg-sunken:        #EFE9DD;
+  --bg-inverse:       #1A1612;
+  --bg-modal-overlay: rgba(26, 22, 18, 0.55);
+
+  --ink:              #1A1612;
+  --ink-soft:         #4A4239;
+  --ink-faint:        #8B8275;
+
+  --accent:           #C73E2D;
+  --accent-secondary: #3A5F7F;
+  --accent-soft:      #E8B5AD;
+  --accent-bg:        #FBEAE6;
+
+  --ok:               #4F7942;
+  --ok-bg:            #E8EDE2;
+  --warn:             #B8860B;
+  --warn-bg:          #F4ECD2;
+  --err:              #8B2C1F;
+  --err-bg:           #F4DAD5;
+  --info:             #3A5F7F;
+  --info-bg:          #E0E8F0;
+
+  --sev-critical:     #8B2C1F;
+  --sev-high:         #C73E2D;
+  --sev-medium:       #B8860B;
+  --sev-low:          #3A5F7F;
+
+  --font-serif: 'Fraunces', 'Spectral', Georgia, serif;
+  --font-sans:  'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono:  'IBM Plex Mono', 'JetBrains Mono', monospace;
+
+  --rule:        1px solid #D9D2C4;
+  --rule-strong: 1px solid var(--ink);
+  --rule-accent: 2px solid var(--accent);
+  --glow-accent: none;
+  --glow-cyan:   none;
+}
+
 /* ── Reset ─────────────────────────────────────────────────────── */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -77,10 +122,20 @@ html { font-size: 16px; scroll-behavior: smooth; -webkit-font-smoothing: antiali
 
 body {
   font-family: var(--font-sans);
-  background: var(--bg-body);
+  background-color: var(--bg-body);
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(0, 229, 255, 0.07) 0%, transparent 55%),
+    radial-gradient(circle at 85% 25%, rgba(255, 158, 0, 0.05) 0%, transparent 45%),
+    radial-gradient(circle at 15% 75%, rgba(168, 85, 247, 0.05) 0%, transparent 45%);
+  background-attachment: fixed;
   color: var(--ink);
   line-height: 1.6;
   min-height: 100vh;
+  transition: background-color var(--transition-normal), color var(--transition-fast);
+}
+
+body.theme-editorial {
+  background-image: none;
 }
 
 /* ── Typography scale ──────────────────────────────────────────── */
@@ -89,7 +144,7 @@ h3, h4 { font-family: var(--font-sans); }
 .score-number, .big-numeral { font-family: var(--font-serif); }
 .stat, .ap-id, code, pre, .mono { font-family: var(--font-mono); }
 
-/* ── Links (Editorial Technical style — no default 90s blue/purple) ── */
+/* ── Links ─────────────────────────────────────────────────────── */
 a {
   color: var(--accent);
   text-decoration: none;
@@ -109,8 +164,9 @@ small { color: var(--ink-faint); }
 /* ── Scrollbar ─────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: var(--bg-sunken); }
-::-webkit-scrollbar-thumb { background: #C7BBA3; border-radius: 0; }
-::-webkit-scrollbar-thumb:hover { background: var(--ink-faint); }
+::-webkit-scrollbar-thumb { background: #1F263B; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+body.theme-editorial ::-webkit-scrollbar-thumb { background: #C7BBA3; border-radius: 0; }
 
 /* ============================================================
    HEADER
@@ -182,6 +238,23 @@ small { color: var(--ink-faint); }
   transition: all var(--transition-fast);
 }
 .btn-icon:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ── Theme toggle button ─────────────────────────────────────────── */
+.theme-toggle-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 11px;
+  font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600;
+  color: var(--ink); background: var(--bg-sunken);
+  border: var(--rule); border-radius: var(--radius-sm);
+  cursor: pointer; transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+.theme-toggle-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: var(--glow-accent);
+}
+.theme-icon { font-size: 0.85rem; line-height: 1; }
 
 /* ============================================================
    MAIN + VIEWS

@@ -43,6 +43,9 @@ const I18n = (() => {
         radar: 'Radar IA',
         leaderboard: 'Top 10',
         export: 'Exportar',
+        themeCosmic: 'Modo Cósmico 🌌',
+        themeEditorial: 'Modo Editorial 📜',
+        toggleTheme: 'Cambiar tema visual',
       },
 
       // ── Prompt types (referenced by analyzer.js as promptType.${type}) ──
@@ -924,6 +927,9 @@ const I18n = (() => {
         radar: 'AI Radar',
         leaderboard: 'Top 10',
         export: 'Export',
+        themeCosmic: 'Cosmic Mode 🌌',
+        themeEditorial: 'Editorial Mode 📜',
+        toggleTheme: 'Toggle visual theme',
       },
 
       // ── Prompt types (referenced by analyzer.js as promptType.${type}) ──

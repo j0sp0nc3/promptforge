@@ -14,11 +14,11 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="shortcut icon" href="favicon.svg">
 
-  <!-- Fonts: Fraunces (serif editorial), Inter (sans body), IBM Plex Mono (datos) -->
+  <!-- Fonts: Space Grotesk, JetBrains Mono, Fraunces, Inter, IBM Plex Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
     rel="stylesheet">
 
   <!-- Chart.js -->
@@ -135,6 +135,10 @@
       </button>
     </nav>
     <div class="header-right">
+      <button class="theme-toggle-btn" id="theme-toggle-btn" type="button" data-i18n-title="nav.toggleTheme" title="Cambiar tema visual">
+        <span class="theme-icon" id="theme-icon">🌌</span>
+        <span class="theme-label" id="theme-label" data-i18n="nav.themeCosmic">Modo Cósmico 🌌</span>
+      </button>
       <div class="lang-switcher" id="lang-switcher">
         <button class="lang-btn active" data-lang="es" type="button">ES</button>
         <button class="lang-btn" data-lang="en" type="button">EN</button>

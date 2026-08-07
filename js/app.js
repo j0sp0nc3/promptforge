@@ -14,6 +14,7 @@ const App = (() => {
     applyDocMetadata();
 
     setupLanguageSwitcher();
+    setupThemeSwitcher();
     setupNavigation();
     setupEditor();
     setupTabs();
@@ -98,6 +99,54 @@ const App = (() => {
         b.classList.toggle('active', b.dataset.lang === lang);
       });
     });
+  }
+
+  // ── Theme Switcher ──────────────────────────────────────
+  function setupThemeSwitcher() {
+    const btn = document.getElementById('theme-toggle-btn');
+    if (!btn) return;
+
+    const savedTheme = localStorage.getItem('promptometer_theme') || 'cosmic';
+    if (savedTheme === 'editorial') {
+      document.body.classList.add('theme-editorial');
+    } else {
+      document.body.classList.remove('theme-editorial');
+    }
+    updateThemeBtnUI();
+
+    btn.addEventListener('click', () => {
+      const isEditorial = document.body.classList.toggle('theme-editorial');
+      const newTheme = isEditorial ? 'editorial' : 'cosmic';
+      localStorage.setItem('promptometer_theme', newTheme);
+      updateThemeBtnUI();
+
+      if (typeof Charts !== 'undefined') {
+        Charts.destroy();
+        if (currentAnalysis) {
+          Charts.initRadar('chart-radar');
+          Charts.renderRadar('chart-radar', currentAnalysis.scores);
+        }
+      }
+    });
+  }
+
+  function updateThemeBtnUI() {
+    const icon = document.getElementById('theme-icon');
+    const label = document.getElementById('theme-label');
+    const isEditorial = document.body.classList.contains('theme-editorial');
+    if (isEditorial) {
+      if (icon) icon.textContent = '📜';
+      if (label) {
+        label.setAttribute('data-i18n', 'nav.themeEditorial');
+        label.textContent = t('nav.themeEditorial');
+      }
+    } else {
+      if (icon) icon.textContent = '🌌';
+      if (label) {
+        label.setAttribute('data-i18n', 'nav.themeCosmic');
+        label.textContent = t('nav.themeCosmic');
+      }
+    }
   }
 
   // ── Navigation ──────────────────────────────────────────

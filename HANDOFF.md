@@ -75,6 +75,7 @@ interactiva desplegada en Vercel.
 - [x] **Hub de Conocimiento Fase 2 (Técnicas)**: 10 técnicas en `Knowledge.techniques` — 6 nuevas (ReAct, Tree-of-Thought, Self-Consistency, Reflexion, Zero-shot, Metaprompting) con ejemplos Analizables, + 4 clásicas cross-linkadas (Few-shot, CoT, RAG, Role prompting) que ya están en el motor/rewriter. Todas bilingües ES/EN con crossRefs.
 - [x] **Hub de Conocimiento Fase 3 (Frameworks)**: 4 frameworks en `Knowledge.frameworks` — RTF (Role-Task-Format), CRISPE (6 componentes), RACE (Role-Action-Context-Expectation), y la **anatomía XML de 7 secciones nativa de Promptometer** (documentada con cross-refs a BP001/002/003/004/006/010/015 y rewriter._restructure). Los 2 principales (RTF + XML nativo) tienen ejemplos Analizables.
 - [x] **Hub de Conocimiento Fase 5 (Fix i18n rotas)**: 18 claves i18n que mostraban la key cruda ahora tienen texto real ES/EN: `promptType.{system,few-shot,task,creative,rag,tool-use,general}` (7), `analyzer.chainOfThought.{treeOfThought,reactTechnique,selfConsistency,reflexion}` (4), `analyzer.safety.{piiLeak,piiLeakSugg,assumesCapability,assumesCapabilitySugg,postCutoff,postCutoffSugg}` (6), `adversarialCategory.safety` (1). Paridad ES/EN global verificada (0 diferencias).
+- [x] **Tema Novedoso "Cosmic Event Horizon / Singularity Precision" (Modo Oscuro Galáctico)**: Rediseño temático avanzado con fondos Deep Void (`#08090E`), anillo fotónico de acreción (`#FF9E00`), azul púlsar cyan (`#00E5FF`) y tipografías Orbitron/Space Grotesk & JetBrains Mono. Incluye **Selector de Temas (Theme Switcher)** `#theme-toggle-btn` en la cabecera para cambiar en vivo entre Modo Cósmico (predeterminado) y Modo Editorial Clásico (crema/vermilion) con persistencia en localStorage y 22/22 tests PASS.
 
 ---
 
@@ -117,7 +118,7 @@ interactiva desplegada en Vercel.
 ## 🚫 Decisiones de Diseño (NO cambiar sin consultar)
 
 1. **Nombre de marca:** Promptometer (no PromptQuill, no PromptForge)
-2. **Tema visual:** Editorial Technical (crema + vermilion + reglas finas)
+2. **Tema visual:** Cosmic Event Horizon (Predeterminado: Oscuro Galáctico / Agujero negro) con Selector de Modo Dual a Editorial Classic.
 3. **Motor de scoring:** Base 50 por dimensión, penalización fuerte para < 3 palabras
 4. **i18n:** Español como idioma principal, inglés como secundario
 5. **Despliegue:** Vercel (free tier) con `@vercel/node` para API y `@vercel/static` para assets
@@ -160,13 +161,13 @@ promptquill/                    ← Monorepo del Motor Core (npm)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-07
-- **Último commit promptforge:** `c3004cf` (docs: sync HANDOFF.md commit hash)
+- **Último commit promptforge:** `PENDING` (feat(ui): implement Cosmic Event Horizon theme & dynamic theme switcher)
 - **Último commit promptometer:** `67436ff` (fix scoring ultra-short)
-- **Sesión con:** Antigravity AI — **Promoción de Radar IA a Pestaña Principal Superior COMPLETO**
+- **Sesión con:** Antigravity AI — **Diseño Novedoso Cosmic Event Horizon + Selector de Modo Dual COMPLETO**
 - **Estado:** 22/22 tests de estrés y suites de prueba en PASS. Paridad ES/EN verificada. Desplegado en Vercel.
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
-> - **Pestaña Principal Radar IA (`#nav-radar` & `#view-radar`)**: Promovido del sub-menú de Aprender a la barra principal de navegación superior.
-> - **Sub-navegación Interna del Radar**: Pestañas internas para alternar fácilmente entre **Creadores AI** (12 perfiles) y **Referencias & Guías** (11 recursos oficial/investigación).
-> - **Limpieza de Aprender (`#view-learn`)**: El menú de Aprender queda enfocado exclusivamente en material de estudio principal (Glosario, Técnicas, Frameworks, Biblioteca).
-> - **Banda Ticker de Noticias en Vivo (`#news-ticker-bar`)**: Marquesina continua en tiempo real bajo la cabecera principal con pausa al pasar el puntero.
+> - **Nuevo Tema Novedoso Cosmic Event Horizon**: Estética visual galáctica de alta precisión de instrumentos astrofísicos y agujero negro como tema predeterminado.
+> - **Selector de Temas Dual (Theme Switcher)**: Botón interactivo en el encabezado (`#theme-toggle-btn`) para alternar entre Modo Cósmico 🌌 y Modo Editorial 📜.
+> - **Tipografías Espaciales**: Integración de Space Grotesk y JetBrains Mono.
+> - **Favicon & Logo Galácticos**: Favicon SVG actualizado con el anillo fotónico de acreción.

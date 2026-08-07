@@ -11,18 +11,35 @@ const Charts = {
   /** @type {Chart|null} */
   historyChart: null,
 
-  /* ── Theme tokens (synced with the Editorial Technical design) ── */
-  _theme: {
-    accent:      '#C73E2D',
-    accentAlpha: 'rgba(199, 62, 45, 0.14)',
-    gridColor:   'rgba(26, 22, 18, 0.08)',
-    tickColor:   'rgba(139, 130, 117, 0.85)',
-    labelColor:  'rgba(74, 66, 57, 0.9)',
-    tooltipBg:   'rgba(26, 22, 18, 0.92)',
-    tooltipText: '#FBF8F2',
-    surface:     'rgba(239, 233, 221, 0.6)',
-    fontFamily:  "'Fraunces', serif",
-    labelFont:   "'Inter', sans-serif",
+  /* ── Theme tokens (dynamic per active theme) ── */
+  get _theme() {
+    const isEditorial = document.body && document.body.classList.contains('theme-editorial');
+    if (isEditorial) {
+      return {
+        accent:      '#C73E2D',
+        accentAlpha: 'rgba(199, 62, 45, 0.14)',
+        gridColor:   'rgba(26, 22, 18, 0.08)',
+        tickColor:   'rgba(139, 130, 117, 0.85)',
+        labelColor:  'rgba(74, 66, 57, 0.9)',
+        tooltipBg:   'rgba(26, 22, 18, 0.92)',
+        tooltipText: '#FBF8F2',
+        surface:     'rgba(239, 233, 221, 0.6)',
+        fontFamily:  "'Fraunces', serif",
+        labelFont:   "'Inter', sans-serif",
+      };
+    }
+    return {
+      accent:      '#FF9E00',
+      accentAlpha: 'rgba(255, 158, 0, 0.22)',
+      gridColor:   'rgba(255, 255, 255, 0.08)',
+      tickColor:   'rgba(160, 174, 192, 0.85)',
+      labelColor:  'rgba(240, 244, 248, 0.9)',
+      tooltipBg:   'rgba(17, 20, 32, 0.95)',
+      tooltipText: '#F0F4F8',
+      surface:     'rgba(12, 14, 23, 0.6)',
+      fontFamily:  "'Space Grotesk', sans-serif",
+      labelFont:   "'Inter', sans-serif",
+    };
   },
 
   /* ── Dimension labels (resolved via i18n at chart build time) ── */

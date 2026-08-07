@@ -66,13 +66,14 @@ python test_edge_cases.py     # Python runner
 
 ---
 
-## 🎨 Editorial Technical Design System
+## 🎨 Cosmic Event Horizon & Dual-Theme System
 
-The application uses a custom high-end UI designed for clarity and precision reading (inspired by editorial publications and technical journals):
-- **Base Palette:** Warm Cream (`#F7F3EC`), Warm Ink (`#1A1612`), Vermilion accent (`#C73E2D`).
-- **Typography:** `Fraunces` serif for headings and identity, `Inter` for UI body, `IBM Plex Mono` for data/code only.
-- **Iconography & Favicon:** Custom vector SVG calibration gauge icon in vermilion and cream.
-- **Layout:** Thin 1px rules for separation (no glassmorphism, no neon glow), generous whitespace, structured columns.
+The application features a cutting-edge **Cosmic Event Horizon** theme inspired by astrophysical instruments and singularity precision, along with a dynamic **Theme Switcher**:
+- **Default Theme (Cosmic Void):** Deep Space Void (`#08090E`), Dark Accretion Surface (`#111420`), Photon Ring Orange (`#FF9E00`), Pulsar Cyan (`#00E5FF`), and High-Contrast Starlight text (`#F0F4F8`).
+- **Classic Theme (Editorial Technical):** Warm Cream Paper (`#F7F3EC`), Warm Ink (`#1A1612`), Vermilion accent (`#C73E2D`), and Fraunces typography.
+- **Dynamic Switcher (`#theme-toggle-btn`):** Seamless one-click switching in the header between Cosmic Mode 🌌 and Editorial Mode 📜 with `localStorage` state persistence.
+- **Typography:** `Space Grotesk` & `Fraunces` for titles, `Inter` for UI body, `JetBrains Mono` & `IBM Plex Mono` for telemetry and code.
+- **Iconography & Favicon:** High-resolution SVG photon ring calibration gauge icon.
 
 ---
 
