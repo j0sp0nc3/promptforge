@@ -162,7 +162,7 @@ promptquill/                    ← Monorepo del Motor Core (npm)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-07
-- **Último commit promptforge:** `PENDING` (feat(radar): add Anthropic Interactive Tutorial GitHub & Google Sheets to references)
+- **Último commit promptforge:** `bbf0cc6` (feat(radar): add Anthropic Interactive Tutorial GitHub & Google Sheets to references)
 - **Último commit promptometer:** `67436ff` (fix scoring ultra-short)
 - **Sesión con:** Antigravity AI — **Integración de Tutorial Interactivo Oficial de Anthropic COMPLETO**
 - **Estado:** 22/22 tests de estrés y suites de prueba en PASS. Paridad ES/EN verificada. Desplegado en Vercel.
