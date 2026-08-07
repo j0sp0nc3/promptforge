@@ -824,7 +824,7 @@ const App = (() => {
     });
 
     // Show only the matching panel
-    ['glossary', 'techniques', 'frameworks', 'library'].forEach(name => {
+    ['glossary', 'techniques', 'frameworks', 'library', 'references'].forEach(name => {
       const panel = document.getElementById(`learn-${name}`);
       if (panel) panel.classList.toggle('active', name === activeSub);
     });
@@ -834,10 +834,53 @@ const App = (() => {
     if (activeSub === 'techniques') renderTechniques();
     if (activeSub === 'frameworks') renderFrameworks();
     if (activeSub === 'library') renderLibrary();
+    if (activeSub === 'references') renderReferences();
 
     const searchInput = document.getElementById('learn-search-input');
     const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
     applyLearnSearchFilter(query);
+  }
+
+  function renderReferences() {
+    const container = document.getElementById('learn-references');
+    if (!container || typeof Knowledge === 'undefined') return;
+    const lang = I18n.getLang();
+    const references = Knowledge.references || [];
+
+    const badgeMap = {
+      official: { class: 'badge-success', label: { es: 'Oficial', en: 'Official' } },
+      guide: { class: 'badge-info', label: { es: 'Guía', en: 'Guide' } },
+      paper: { class: 'badge-warning', label: { es: 'Investigación', en: 'Paper' } },
+      security: { class: 'badge-critical', label: { es: 'Seguridad', en: 'Security' } },
+    };
+
+    container.innerHTML = `
+      <div class="learn-panel-header">
+        <h2 class="view-title">${t('learn.referencesTitle')}</h2>
+        <p class="view-subtitle">${t('learn.referencesSubtitle')}</p>
+      </div>
+      <div class="learn-grid">
+        ${references.map(ref => {
+          const badgeInfo = badgeMap[ref.type] || { class: 'badge-info', label: { es: ref.type, en: ref.type } };
+          const badgeText = badgeInfo.label[lang] || badgeInfo.label.es;
+          return `
+          <article class="learn-card learn-card-reference" data-id="${ref.id}">
+            <div class="learn-card-header">
+              <span class="learn-term-name">${escapeHtml(ref.title[lang] || ref.title.es)}</span>
+              <span class="badge ${badgeInfo.class}">${escapeHtml(badgeText)}</span>
+            </div>
+            <p class="learn-meta"><strong>${escapeHtml(ref.source)}</strong></p>
+            <p class="learn-term-def">${escapeHtml(ref.desc[lang] || ref.desc.es)}</p>
+            <div class="learn-example-block" style="margin-top:auto">
+              <a href="${escapeHtml(ref.url)}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm learn-link-btn" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px">
+                ${t('learn.visitLink')}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+            </div>
+          </article>`;
+        }).join('')}
+      </div>
+    `;
   }
 
   function renderGlossary() {

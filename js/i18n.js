@@ -817,6 +817,10 @@ const I18n = (() => {
         searchPlaceholder: 'Buscar conceptos, técnicas, frameworks, anti-patrones...',
         noSearchResults: 'No se encontraron resultados para "{query}"',
         clearSearch: 'Limpiar búsqueda',
+        subReferences: 'Referencias',
+        referencesTitle: 'Referencias y Recursos de Prompt Engineering',
+        referencesSubtitle: 'Enlaces oficiales de Promptometer, guías de OpenAI/Anthropic/Google, publicaciones de investigación y estándares de seguridad.',
+        visitLink: 'Visitar recurso',
       },
 
       footer: {
@@ -1589,6 +1593,10 @@ const I18n = (() => {
         searchPlaceholder: 'Search concepts, techniques, frameworks, anti-patterns...',
         noSearchResults: 'No results found for "{query}"',
         clearSearch: 'Clear search',
+        subReferences: 'References',
+        referencesTitle: 'Prompt Engineering References & Resources',
+        referencesSubtitle: 'Official Promptometer links, OpenAI/Anthropic/Google guides, research papers, and security standards.',
+        visitLink: 'Visit resource',
       },
 
       footer: {

@@ -929,6 +929,131 @@ If the query is ambiguous, ask for clarification before recommending.
     },
   ],
 
+  /* ── 5. Referencias & Novedades: official links, guides, research papers ── */
+  references: [
+    {
+      id: 'ref-promptometer-core',
+      title: { es: 'Promptometer Core Engine (npm & PyPI)', en: 'Promptometer Core Engine (npm & PyPI)' },
+      type: 'official',
+      source: 'GitHub / npm / PyPI',
+      url: 'https://github.com/j0sp0nc3/promptometer',
+      desc: {
+        es: 'Motor desacoplado de scoring multidimensional en 8 dimensiones. Disponible como paquete npm `promptometer-core` y librería nativa Python.',
+        en: 'Decoupled 8-dimension scoring engine. Available as `promptometer-core` npm package and native Python library.',
+      },
+    },
+    {
+      id: 'ref-promptometer-app',
+      title: { es: 'Promptometer Web Workbench App', en: 'Promptometer Web Workbench App' },
+      type: 'official',
+      source: 'GitHub / Vercel',
+      url: 'https://promptforge-beta-ten.vercel.app/',
+      desc: {
+        es: 'Repositorio oficial y aplicación web en vivo con la suite de evaluación, pruebas adversariales, reescritor y hub educativo.',
+        en: 'Official repository and live web app featuring evaluation suite, adversarial testing, rewriter, and learning hub.',
+      },
+    },
+    {
+      id: 'ref-anthropic-guide',
+      title: { es: 'Anthropic Claude Prompt Engineering Guide', en: 'Anthropic Claude Prompt Engineering Guide' },
+      type: 'guide',
+      source: 'Anthropic Docs',
+      url: 'https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview',
+      desc: {
+        es: 'Guía oficial de Anthropic para estructuración con etiquetas XML, claridad de roles y optimización de contexto en modelos Claude.',
+        en: 'Official Anthropic guide for XML tag structuring, role clarity, and context optimization in Claude models.',
+      },
+    },
+    {
+      id: 'ref-openai-guide',
+      title: { es: 'OpenAI Prompt Engineering Best Practices', en: 'OpenAI Prompt Engineering Best Practices' },
+      type: 'guide',
+      source: 'OpenAI Platform',
+      url: 'https://platform.openai.com/docs/guides/prompt-engineering',
+      desc: {
+        es: 'Estrategias oficiales de OpenAI para instruir modelos, estructurar entradas/salidas y reducir alucinaciones en GPT-4o.',
+        en: 'Official OpenAI strategies for model instruction, input/output structuring, and mitigating hallucinations in GPT-4o.',
+      },
+    },
+    {
+      id: 'ref-google-gemini',
+      title: { es: 'Google Gemini Prompting Strategies', en: 'Google Gemini Prompting Strategies' },
+      type: 'guide',
+      source: 'Google AI for Developers',
+      url: 'https://ai.google.dev/gemini-api/docs/prompting-strategies',
+      desc: {
+        es: 'Principios de Google DeepMind para optimizar prompts en modelos Gemini, pocos ejemplos (few-shot) y formateo de datos.',
+        en: 'Google DeepMind principles for optimizing Gemini prompts, few-shot prompting, and data formatting.',
+      },
+    },
+    {
+      id: 'ref-dair-ai-guide',
+      title: { es: 'DAIR.AI Prompt Engineering Guide', en: 'DAIR.AI Prompt Engineering Guide' },
+      type: 'guide',
+      source: 'PromptingGuide.ai',
+      url: 'https://www.promptingguide.ai/',
+      desc: {
+        es: 'Referencia académica abierta de la comunidad de IA sobre todas las técnicas modernas de prompting, CoT, RAG y agentes.',
+        en: 'Open academic reference by the AI community covering modern prompting techniques, CoT, RAG, and agents.',
+      },
+    },
+    {
+      id: 'ref-dspy-stanford',
+      title: { es: 'Stanford DSPy: Declarative Prompt Optimization', en: 'Stanford DSPy: Declarative Prompt Optimization' },
+      type: 'paper',
+      source: 'Stanford NLP',
+      url: 'https://dspy.ai/',
+      desc: {
+        es: 'Framework de Stanford que reemplaza el prompting manual compilando automáticamente instrucciones y ejemplos contra métricas.',
+        en: 'Stanford framework replacing manual prompting by automatically compiling instructions and examples against metrics.',
+      },
+    },
+    {
+      id: 'ref-cot-paper',
+      title: { es: 'Chain-of-Thought Prompting (Google Research 2022)', en: 'Chain-of-Thought Prompting (Google Research 2022)' },
+      type: 'paper',
+      source: 'arXiv:2201.11903',
+      url: 'https://arxiv.org/abs/2201.11903',
+      desc: {
+        es: 'Paper científico seminal (Wei et al.) que introdujo el razonamiento paso a paso en modelos de lenguaje.',
+        en: 'Seminal research paper (Wei et al.) introducing step-by-step reasoning in large language models.',
+      },
+    },
+    {
+      id: 'ref-react-paper',
+      title: { es: 'ReAct: Synergizing Reasoning & Acting (Princeton/Google 2023)', en: 'ReAct: Synergizing Reasoning & Acting (Princeton/Google 2023)' },
+      type: 'paper',
+      source: 'arXiv:2210.03629',
+      url: 'https://arxiv.org/abs/2210.03629',
+      desc: {
+        es: 'Investigación fundamental sobre la alternancia de pensamiento y acciones externas en agentes de IA (Yao et al.).',
+        en: 'Foundational paper on alternating reasoning thoughts and external tool actions in AI agents (Yao et al.).',
+      },
+    },
+    {
+      id: 'ref-cove-paper',
+      title: { es: 'Chain-of-Verification (Meta AI 2023)', en: 'Chain-of-Verification (Meta AI 2023)' },
+      type: 'paper',
+      source: 'arXiv:2309.11495',
+      url: 'https://arxiv.org/abs/2309.11495',
+      desc: {
+        es: 'Paper de Meta AI (Dhuliawala et al.) demostrando la reducción drástica de alucinaciones mediante preguntas de autoverificación.',
+        en: 'Meta AI research (Dhuliawala et al.) demonstrating drastic reduction of hallucinations using self-verification questions.',
+      },
+    },
+    {
+      id: 'ref-owasp-llm',
+      title: { es: 'OWASP Top 10 for LLM Applications', en: 'OWASP Top 10 for LLM Applications' },
+      type: 'security',
+      source: 'OWASP Foundation',
+      url: 'https://genai.owasp.org/llm-top-10/',
+      desc: {
+        es: 'Estándar global de seguridad sobre vulnerabilidades críticas en LLMs (inyección de prompts, fuga de datos, etc.).',
+        en: 'Global security standard for critical vulnerabilities in LLM apps (prompt injection, data leakage, etc.).',
+      },
+    },
+  ],
+
   /* ── Helpers ────────────────────────────────────────────────── */
   getById(section, id) {
     const list = this[section] || [];

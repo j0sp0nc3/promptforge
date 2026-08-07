@@ -781,6 +781,7 @@ small { color: var(--ink-faint); }
 .learn-card-framework { border-left-color: var(--accent); }
 .learn-card-template { border-left-color: var(--sev-low); }
 .learn-card-linked { border-left-color: var(--ok); }
+.learn-card-reference { border-left-color: var(--accent); }
 
 .learn-card-header {
   display: flex;
