@@ -127,19 +127,22 @@ interactiva desplegada en Vercel.
 ```
 promptforge/                    ← App Web (Vercel)
 ├── index.html                  ← SPA principal
+├── favicon.svg                 ← Favicon vectorial de alta resolución
 ├── css/index.css               ← Design system Editorial Technical
 ├── js/
 │   ├── app.js                  ← Controlador principal de UI
 │   ├── analyzer.js             ← Motor de análisis (8 dimensiones)
 │   ├── signals.js              ← Extracción de señales compartidas
-│   ├── patterns.js             ← Detección de anti-patrones
+│   ├── patterns.js             ← Detección de anti-patrones (35 APs / 15 BPs)
 │   ├── i18n.js                 ← Diccionarios ES/EN
+│   ├── knowledge.js            ← Hub de conocimiento (20 términos, 13 técnicas, 6 frameworks, 11 refs)
+│   ├── leaderboard.js          ← Módulo de ranking Top 10 y persistencia
 │   ├── rewriter.js             ← Mejora automática de prompts
-│   └── export.js               ← Exportación de resultados
-├── api/index.js                ← Vercel Serverless Functions
+│   └── export.js               ← Exportación JSON, Markdown, Clipboard y URL
+├── api/index.js                ← API serverless desplegada en Vercel (incluye /api/leaderboard)
 ├── server.js                   ← Servidor local de desarrollo
 ├── vercel.json                 ← Configuración de despliegue Vercel
-├── test_edge_cases.js          ← Suite de 14 tests de estrés
+├── test_edge_cases.js          ← Suite de 14 tests de estrés (PASS)
 └── package.json                ← Dependencia: promptometer-core@^1.0.0
 
 promptquill/                    ← Monorepo del Motor Core (npm)
@@ -153,18 +156,14 @@ promptquill/                    ← Monorepo del Motor Core (npm)
 
 ## 🔄 Última Actualización
 
-- **Fecha:** 2026-08-06
-- **Último commit promptforge:** `ffc2d5b` (biblioteca con detalle expandible para anti-patrones/best-practices/adversarial)
+- **Fecha:** 2026-08-07
+- **Último commit promptforge:** `9b29d5d` (fix Stale-While-Revalidate render en Top 10 + API serverless `/api/leaderboard` + 13 técnicas + 6 frameworks + 11 referencias)
 - **Último commit promptometer:** `67436ff` (fix scoring ultra-short)
-- **Sesión con:** ZCode (GLM-5.2) — **Hub de Conocimiento COMPLETO** (fases 0-5)
-- **Estado:** Las 6 fases del Hub están completas. Ver "Progreso por fases" arriba.
+- **Sesión con:** Antigravity AI — **Ranking Top 10 + SOTA Techniques & Frameworks 2026 + References Hub COMPLETO**
+- **Estado:** 14/14 tests de estrés en PASS. Paridad ES/EN verificada. Desplegado en Vercel.
 
-> 📌 **Hub de Conocimiento COMPLETO.** Resumen de lo implementado en esta sesión:
-> - **Fase 0** (`7a4db77`): Esqueleto — tab "Aprender", 4 sub-secciones, `App.loadPrompt()`, biblioteca unificada
-> - **Fase 1** (`f3f4fd3`): Glosario — 20 términos bilingües (token, temperature, RAG, CoT, etc.)
-> - **Fase 2** (`0f34034`): Técnicas — 6 nuevas (ReAct, ToT, Self-Consistency, Reflexion, Zero-shot, Metaprompting) + 4 cross-linkadas
-> - **Fase 3** (`27510cf`): Frameworks — RTF, CRISPE, RACE, anatomía XML nativa de Promptometer
-> - **Fase 5** (este commit): Fix 18 claves i18n rotas (promptType.*, técnicas modernas, safety)
->
-> **Principio rector cumplido:** cero duplicación. El hub añade solo conocimiento nuevo (30 entradas)
-> y cross-linka lo existente (12 templates, 35 anti-patrones, 13 tests adversariales).
+> 📌 **RESUMEN DE ACTUALIZACIÓN DE DOCUMENTACIÓN:**
+> - **Técnicas:** 13 en total (ReAct, ToT, Self-Consistency, Reflexion, Zero-shot, Metaprompting, CoVe, SoT, Hi-CoT + 4 clásicas).
+> - **Frameworks:** 6 en total (RTF, CRISPE, RACE, CO-STAR, Bento-Box y Anatomía XML Nativa de 7 secciones).
+> - **Pestaña Referencias & Novedades:** 11 recursos con enlaces oficiales.
+> - **Ranking Top 10 / Pabellón de la Fama:** Pestaña nativa `Top 10`, modal de envio, 10 prompts curados (94-99/100), endpoint `/api/leaderboard` sin autenticación obligatoria y Stale-While-Revalidate.

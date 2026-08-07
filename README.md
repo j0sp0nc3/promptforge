@@ -36,7 +36,8 @@ Promptometer is a complete professional workspace and engine to **evaluate, benc
 - **Multidimensional Score (0–100)** with letter grades (A to F) across **8 dimensions**.
 - **Anti-Pattern Catalog** (35 anti-patterns) & **Best Practices** (15 strengths) with expandable `<details>` accordions.
 - **Adversarial Security Suite** (13 security tests: jailbreak resistance, prompt exfiltration, hallucination mitigation, etc.).
-- **Interactive Knowledge Hub** with a 20-term bilingual glossary, 10 prompting techniques, 4 structural frameworks, and full-text real-time search.
+- **Interactive Knowledge Hub** with a 20-term bilingual glossary, 13 prompting techniques (including CoVe, SoT, Hi-CoT), 6 structural frameworks (including CO-STAR and Bento-Box), 11 curated research references, and full-text real-time search.
+- **Top 10 Hall of Fame Leaderboard** with zero-login global API sync (`/api/leaderboard`), instant URL sharing (`?p=base64`), 10 elite seed prompts (94–99/100), and interactive "Analyze & Try" buttons.
 - **Non-Destructive XML Rewriter** preserving user context with a Before vs After impact analysis.
 - **Production REST API & CLI** with API Key authentication, strict CORS, rate limiting, and 100 KB payload protection.
 
@@ -75,15 +76,17 @@ The application uses a custom high-end UI designed for clarity and precision rea
 
 ---
 
-## 📚 Knowledge Hub (Educational Suite)
+## 📚 Knowledge Hub & Leaderboard
 
-The **Learn ("Aprender")** tab provides an interactive learning hub for prompt engineering:
+The **Learn ("Aprender")** and **Top 10** tabs provide an interactive educational suite:
 
 - **Bilingual Glossary (20 Terms):** Tokenization, Temperature, Top-p, Context Window, System/User/Assistant messages, Embeddings, Vector Stores, Fine-tuning, Grounding, Few-shot/Zero-shot, Chain of Thought, Prompt Injection, LLM-as-a-Judge, In-Context Learning, Delimiters, etc.
-- **10 Prompting Techniques:** ReAct, Tree of Thought, Self-Consistency, Reflexion, Zero-shot, Metaprompting, Few-shot, CoT, RAG, and Role Prompting — with one-click **"Analyze"** buttons that load example prompts directly into the editor.
-- **4 Structural Frameworks:** RTF (Role-Task-Format), CRISPE, RACE, and the native 7-section XML Anatomy of Promptometer.
+- **13 Prompting Techniques:** ReAct, Tree of Thought, Self-Consistency, Reflexion, Zero-shot, Metaprompting, Chain of Verification (CoVe), Skeleton-of-Thought (SoT), Hierarchical CoT (Hi-CoT), Few-shot, CoT, RAG, and Role Prompting — with one-click **"Analyze"** buttons that load example prompts directly into the editor.
+- **6 Structural Frameworks:** RTF (Role-Task-Format), CRISPE, RACE, CO-STAR (GovTech Singapore), Bento-Box Modular Architecture, and native 7-section XML Anatomy.
+- **11 Research References:** Curated links to official Promptometer repos, OpenAI/Anthropic/Google guides, Stanford/Google/Meta papers, and OWASP Security standards.
+- **Top 10 Hall of Fame (`js/leaderboard.js` & `/api/leaderboard`):** Global community ranking with zero-login API sync, gold/silver/bronze badges, submission modal, and "Analyze & Try" buttons.
 - **Unified Expandable Library:** Browse 35 anti-patterns, 15 best practices, and 13 adversarial tests as expandable accordions displaying dimension, description, and suggestions.
-- **Real-Time Interactive Search:** Search bar filtering all terms, techniques, frameworks, and library entries dynamically as you type.
+- **Real-Time Interactive Search:** Search bar filtering all terms, techniques, frameworks, references, and library entries dynamically as you type.
 
 ---
 
@@ -209,7 +212,8 @@ promptforge/                    # Web App Repo (Vercel deployment)
 │   ├── adversarial.js          # Security & Resilience Simulator (13 tests)
 │   ├── rewriter.js             # Non-Destructive XML Rewriter
 │   ├── templates.js            # 12 Production-Ready Prompt Templates
-│   ├── knowledge.js            # Knowledge Hub (Glossary, Techniques, Frameworks)
+│   ├── knowledge.js            # Knowledge Hub (Glossary, Techniques, Frameworks, References)
+│   ├── leaderboard.js          # Top 10 Hall of Fame & Persistence Module
 │   ├── history.js              # Persistence & Evolution Charts
 │   ├── charts.js               # Chart.js Radar & Line Wrapper
 │   ├── export.js               # JSON, Markdown, Clipboard & URL Exporters
