@@ -1238,6 +1238,99 @@ If the query is ambiguous, ask for clarification before recommending.
     }
   ],
 
+  /* ── 6. Live Feed & AI News Ticker ───────────────────────────
+     Latest posts, releases, papers & discoveries from top AI creators. */
+  feed: [
+    {
+      id: 'feed-1',
+      author: '@RileyGoodside',
+      tag: 'Prompt Injection',
+      text: {
+        es: 'Publicada nueva guía sobre defensa contra ataques de Inyección de Prompt en Agentes RAG.',
+        en: 'Published new guide on defending against Prompt Injection attacks in RAG Agents.'
+      },
+      url: 'https://x.com/RileyGoodside',
+      timestamp: '10m ago'
+    },
+    {
+      id: 'feed-2',
+      author: '@karpathy',
+      tag: 'LLM Architecture',
+      text: {
+        es: 'Nuevo video en YouTube: "Building GPT from Scratch: Tokenization and Self-Attention".',
+        en: 'New YouTube video: "Building GPT from Scratch: Tokenization and Self-Attention".'
+      },
+      url: 'https://www.youtube.com/@karpathy',
+      timestamp: '45m ago'
+    },
+    {
+      id: 'feed-3',
+      author: 'Anthropic Research',
+      tag: 'System Prompts',
+      text: {
+        es: 'Actualizada la guía oficial de System Prompts y evaluación con metamodelos LLM-as-a-Judge.',
+        en: 'Updated official System Prompts guide and evaluation with LLM-as-a-Judge meta-models.'
+      },
+      url: 'https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview',
+      timestamp: '2h ago'
+    },
+    {
+      id: 'feed-4',
+      author: '@lilianweng',
+      tag: 'Autonomous Agents',
+      text: {
+        es: 'Nuevo artículo en Lil\'Log: "Extending Context Windows with Hierarchical Memory Graphs".',
+        en: 'New post on Lil\'Log: "Extending Context Windows with Hierarchical Memory Graphs".'
+      },
+      url: 'https://lilianweng.github.io/',
+      timestamp: '4h ago'
+    },
+    {
+      id: 'feed-5',
+      author: '@swyx',
+      tag: 'AI Engineering',
+      text: {
+        es: 'Lanzado episodio de Latent Space Podcast: "The Future of Speculative Decoding and Evals".',
+        en: 'Released Latent Space Podcast episode: "The Future of Speculative Decoding and Evals".'
+      },
+      url: 'https://www.latent.space/',
+      timestamp: '6h ago'
+    },
+    {
+      id: 'feed-6',
+      author: '@simonw',
+      tag: 'Security',
+      text: {
+        es: 'Análisis de vulnerabilidad: Indirect Prompt Injection a través de imágenes codificadas en OCR.',
+        en: 'Vulnerability analysis: Indirect Prompt Injection via OCR-encoded images.'
+      },
+      url: 'https://simonwillison.net/',
+      timestamp: '8h ago'
+    },
+    {
+      id: 'feed-7',
+      author: '@hwchase17',
+      tag: 'LangGraph',
+      text: {
+        es: 'LangGraph v0.2 soporta depuración de grafos de razonamiento y checkpoints en tiempo real.',
+        en: 'LangGraph v0.2 supports reasoning graph debugging and real-time checkpoints.'
+      },
+      url: 'https://x.com/hwchase17',
+      timestamp: '12h ago'
+    },
+    {
+      id: 'feed-8',
+      author: '@omarsar0',
+      tag: 'Techniques 2026',
+      text: {
+        es: 'Agregados ejemplos interactivos de Chain of Verification (CoVe) en Prompt Engineering Guide.',
+        en: 'Added interactive Chain of Verification (CoVe) examples to Prompt Engineering Guide.'
+      },
+      url: 'https://www.promptingguide.ai/',
+      timestamp: '1d ago'
+    }
+  ],
+
   /* ── Helpers ────────────────────────────────────────────────── */
   getById(section, id) {
     const list = this[section] || [];

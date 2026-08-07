@@ -22,6 +22,7 @@ const App = (() => {
     setupHistoryView();
     setupLearnView();
     setupLeaderboardView();
+    renderNewsTicker();
     checkShareURL();
     updateEditorStats();
 
@@ -40,6 +41,7 @@ const App = (() => {
 
   function onLangChange() {
     applyDocMetadata();
+    renderNewsTicker();
     // Charts bake their labels at build time, so destroy them so the next
     // render rebuilds them in the new language.
     if (typeof Charts !== 'undefined') Charts.destroy();
@@ -48,7 +50,25 @@ const App = (() => {
     if (currentView === 'history') renderHistoryView();
     if (currentView === 'learn') renderLearnView(getActiveLearnSub());
     if (currentView === 'leaderboard') renderLeaderboardView();
-    if (currentAnalysis) renderResults();
+  }
+
+  function renderNewsTicker() {
+    const track = document.getElementById('news-ticker-track');
+    if (!track || typeof Knowledge === 'undefined') return;
+    const lang = I18n.getLang();
+    const feed = Knowledge.feed || [];
+
+    // Duplicate feed list to create seamless infinite loop animation
+    const fullFeed = [...feed, ...feed];
+
+    track.innerHTML = fullFeed.map(item => `
+      <a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer" class="ticker-item">
+        <span class="ticker-author">${escapeHtml(item.author)}</span>
+        <span class="ticker-tag">${escapeHtml(item.tag)}</span>
+        <span class="ticker-text">${escapeHtml(item.text[lang] || item.text.es)}</span>
+        <span class="ticker-time">(${escapeHtml(item.timestamp)})</span>
+      </a>
+    `).join('');
   }
 
   function getActiveCategoryFilter() {

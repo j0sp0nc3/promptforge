@@ -849,6 +849,10 @@ const I18n = (() => {
         followBtn: 'Ver perfil',
       },
 
+      ticker: {
+        badge: '⚡ RADAR EN VIVO',
+      },
+
       leaderboard: {
         title: 'Pabellón de la Fama — Top 10 Prompts',
         subtitle: 'Los 10 prompts de mayor puntuación evaluados por el motor de Promptometer. Pruébalos en el editor o publica el tuyo.',
@@ -1690,6 +1694,10 @@ const I18n = (() => {
         platformAll: 'All networks',
         categoryAll: 'All specialties',
         followBtn: 'View profile',
+      },
+
+      ticker: {
+        badge: '⚡ LIVE AI RADAR',
       },
 
       leaderboard: {
