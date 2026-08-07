@@ -78,6 +78,7 @@ interactiva desplegada en Vercel.
 - [x] **Tema Novedoso "Cosmic Event Horizon / Singularity Precision" (Modo Oscuro Galáctico)**: Rediseño temático avanzado con fondos Deep Void (`#08090E`), anillo fotónico de acreción (`#FF9E00`), azul púlsar cyan (`#00E5FF`) y tipografías Orbitron/Space Grotesk & JetBrains Mono. Incluye **Selector de Temas (Theme Switcher)** `#theme-toggle-btn` en la cabecera para cambiar en vivo entre Modo Cósmico (predeterminado) y Modo Editorial Clásico (crema/vermilion) con persistencia en localStorage y 22/22 tests PASS.
 - [x] **Tutorial Interactivo Oficial de Anthropic en Referencias**: Incorporados los enlaces a Anthropic Interactive Prompt Engineering Tutorial (GitHub `anthropics/prompt-eng-interactive-tutorial` y Google Sheets ejecutable de 9 capítulos) en la pestaña **Radar IA > Referencias & Guías** (`js/knowledge.js`).
 - [x] **Optimización Responsiva para Teléfonos/Móviles**: Corrección completa del layout en pantallas pequeñas (< 850px y < 480px). Sistema de Grid de 2 filas para la cabecera (Fila 1: Logo + Controles de tema e idioma compactos; Fila 2: Menú navegable horizontal con desplazamiento suave sin scrollbar visible y máscara de desvanecimiento `mask-image`), reposicionamiento adaptativo de la barra **Radar IA en Vivo** (`#news-ticker-bar`) y ajuste dinámico de `padding-top` en `.app-main` para evitar superposiciones.
+- [x] **Footer Responsivo para Móviles**: Footer rediseñado para pantallas < 850px — apilado vertical con centrado, autor con avatar a la izquierda, bloque de marca centrado y 4 links en grid 2×2 con estilos de botón para mayor usabilidad táctil.
 
 ---
 
@@ -163,10 +164,10 @@ promptquill/                    ← Monorepo del Motor Core (npm)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-07
-- **Último commit promptforge:** `c7acaaa` (fix(responsive): optimize mobile header grid, smooth nav scroll & ticker bar position)
+- **Último commit promptforge:** `667da53` (fix(responsive): add mobile footer grid layout, 2-col links on small screens)
 - **Último commit promptometer:** `67436ff` (fix scoring ultra-short)
-- **Sesión con:** Antigravity AI — **Optimización Responsiva para Teléfonos Celulares / Móviles COMPLETA**
-- **Estado:** 22/22 tests de estrés y suites de prueba en PASS. Paridad ES/EN verificada. Desplegado en Vercel.
+- **Sesión con:** Antigravity AI / Claude Sonnet — **Footer Responsivo Móvil + Push a producción COMPLETO**
+- **Estado:** 22/22 tests en PASS. Paridad ES/EN verificada. Desplegado en Vercel.
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
 > - **Nuevo Tema Novedoso Cosmic Event Horizon**: Estética visual galáctica de alta precisión de instrumentos astrofísicos y agujero negro como tema predeterminado.
