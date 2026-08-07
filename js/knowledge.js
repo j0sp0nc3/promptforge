@@ -965,6 +965,28 @@ If the query is ambiguous, ask for clarification before recommending.
       },
     },
     {
+      id: 'ref-anthropic-tutorial',
+      title: { es: 'Anthropic Interactive Prompt Engineering Tutorial (GitHub)', en: 'Anthropic Interactive Prompt Engineering Tutorial (GitHub)' },
+      type: 'official',
+      source: 'GitHub / Anthropic',
+      url: 'https://github.com/anthropics/prompt-eng-interactive-tutorial',
+      desc: {
+        es: 'Tutorial interactivo oficial de 9 capítulos creado por Anthropic con ejercicios de estructura básica, separación XML, roles y evitación de alucinaciones.',
+        en: 'Official 9-chapter interactive tutorial by Anthropic covering prompt structure, XML separation, roles, and hallucination avoidance.',
+      },
+    },
+    {
+      id: 'ref-anthropic-sheets',
+      title: { es: 'Anthropic Prompt Engineering Tutorial (Google Sheets)', en: 'Anthropic Prompt Engineering Tutorial (Google Sheets)' },
+      type: 'official',
+      source: 'Google Sheets / Anthropic',
+      url: 'https://docs.google.com/spreadsheets/d/19jzLgRruG9kjUQNKtCg1ZjdD6l6weA6qRXG5zLIAhC8/edit?pli=1#gid=1733615301',
+      desc: {
+        es: 'Versión ejecutable interactiva en Google Sheets de los 9 capítulos del curso de Anthropic utilizando la extensión Claude for Sheets.',
+        en: 'Executable interactive Google Sheets version of Anthropic\'s 9-chapter course using the Claude for Sheets extension.',
+      },
+    },
+    {
       id: 'ref-openai-guide',
       title: { es: 'OpenAI Prompt Engineering Best Practices', en: 'OpenAI Prompt Engineering Best Practices' },
       type: 'guide',

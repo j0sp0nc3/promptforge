@@ -76,6 +76,7 @@ interactiva desplegada en Vercel.
 - [x] **Hub de Conocimiento Fase 3 (Frameworks)**: 4 frameworks en `Knowledge.frameworks` — RTF (Role-Task-Format), CRISPE (6 componentes), RACE (Role-Action-Context-Expectation), y la **anatomía XML de 7 secciones nativa de Promptometer** (documentada con cross-refs a BP001/002/003/004/006/010/015 y rewriter._restructure). Los 2 principales (RTF + XML nativo) tienen ejemplos Analizables.
 - [x] **Hub de Conocimiento Fase 5 (Fix i18n rotas)**: 18 claves i18n que mostraban la key cruda ahora tienen texto real ES/EN: `promptType.{system,few-shot,task,creative,rag,tool-use,general}` (7), `analyzer.chainOfThought.{treeOfThought,reactTechnique,selfConsistency,reflexion}` (4), `analyzer.safety.{piiLeak,piiLeakSugg,assumesCapability,assumesCapabilitySugg,postCutoff,postCutoffSugg}` (6), `adversarialCategory.safety` (1). Paridad ES/EN global verificada (0 diferencias).
 - [x] **Tema Novedoso "Cosmic Event Horizon / Singularity Precision" (Modo Oscuro Galáctico)**: Rediseño temático avanzado con fondos Deep Void (`#08090E`), anillo fotónico de acreción (`#FF9E00`), azul púlsar cyan (`#00E5FF`) y tipografías Orbitron/Space Grotesk & JetBrains Mono. Incluye **Selector de Temas (Theme Switcher)** `#theme-toggle-btn` en la cabecera para cambiar en vivo entre Modo Cósmico (predeterminado) y Modo Editorial Clásico (crema/vermilion) con persistencia en localStorage y 22/22 tests PASS.
+- [x] **Tutorial Interactivo Oficial de Anthropic en Referencias**: Incorporados los enlaces a Anthropic Interactive Prompt Engineering Tutorial (GitHub `anthropics/prompt-eng-interactive-tutorial` y Google Sheets ejecutable de 9 capítulos) en la pestaña **Radar IA > Referencias & Guías** (`js/knowledge.js`).
 
 ---
 
@@ -139,7 +140,7 @@ promptforge/                    ← App Web (Vercel)
 │   ├── signals.js              ← Extracción de señales compartidas
 │   ├── patterns.js             ← Detección de anti-patrones (35 APs / 15 BPs)
 │   ├── i18n.js                 ← Diccionarios ES/EN
-│   ├── knowledge.js            ← Hub de conocimiento (20 términos, 13 técnicas, 6 frameworks, 11 refs)
+│   ├── knowledge.js            ← Hub de conocimiento (20 términos, 13 técnicas, 6 frameworks, 13 refs)
 │   ├── leaderboard.js          ← Módulo de ranking Top 10 y persistencia
 │   ├── rewriter.js             ← Mejora automática de prompts
 │   └── export.js               ← Exportación JSON, Markdown, Clipboard y URL
@@ -161,13 +162,12 @@ promptquill/                    ← Monorepo del Motor Core (npm)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-07
-- **Último commit promptforge:** `4831557` (docs: sync HANDOFF.md commit hash e6142cf)
+- **Último commit promptforge:** `PENDING` (feat(radar): add Anthropic Interactive Tutorial GitHub & Google Sheets to references)
 - **Último commit promptometer:** `67436ff` (fix scoring ultra-short)
-- **Sesión con:** Antigravity AI — **Diseño Novedoso Cosmic Event Horizon + Selector de Modo Dual COMPLETO**
+- **Sesión con:** Antigravity AI — **Integración de Tutorial Interactivo Oficial de Anthropic COMPLETO**
 - **Estado:** 22/22 tests de estrés y suites de prueba en PASS. Paridad ES/EN verificada. Desplegado en Vercel.
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
 > - **Nuevo Tema Novedoso Cosmic Event Horizon**: Estética visual galáctica de alta precisión de instrumentos astrofísicos y agujero negro como tema predeterminado.
 > - **Selector de Temas Dual (Theme Switcher)**: Botón interactivo en el encabezado (`#theme-toggle-btn`) para alternar entre Modo Cósmico 🌌 y Modo Editorial 📜.
-> - **Tipografías Espaciales**: Integración de Space Grotesk y JetBrains Mono.
-> - **Favicon & Logo Galácticos**: Favicon SVG actualizado con el anillo fotónico de acreción.
+> - **Integración de Referencias Anthropic**: Añadidos los enlaces oficiales del Tutorial Interactivo de 9 Capítulos (GitHub & Google Sheets) en el Radar de Referencias.
