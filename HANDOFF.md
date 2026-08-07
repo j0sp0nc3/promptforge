@@ -77,6 +77,7 @@ interactiva desplegada en Vercel.
 - [x] **Hub de Conocimiento Fase 5 (Fix i18n rotas)**: 18 claves i18n que mostraban la key cruda ahora tienen texto real ES/EN: `promptType.{system,few-shot,task,creative,rag,tool-use,general}` (7), `analyzer.chainOfThought.{treeOfThought,reactTechnique,selfConsistency,reflexion}` (4), `analyzer.safety.{piiLeak,piiLeakSugg,assumesCapability,assumesCapabilitySugg,postCutoff,postCutoffSugg}` (6), `adversarialCategory.safety` (1). Paridad ES/EN global verificada (0 diferencias).
 - [x] **Tema Novedoso "Cosmic Event Horizon / Singularity Precision" (Modo Oscuro Galáctico)**: Rediseño temático avanzado con fondos Deep Void (`#08090E`), anillo fotónico de acreción (`#FF9E00`), azul púlsar cyan (`#00E5FF`) y tipografías Orbitron/Space Grotesk & JetBrains Mono. Incluye **Selector de Temas (Theme Switcher)** `#theme-toggle-btn` en la cabecera para cambiar en vivo entre Modo Cósmico (predeterminado) y Modo Editorial Clásico (crema/vermilion) con persistencia en localStorage y 22/22 tests PASS.
 - [x] **Tutorial Interactivo Oficial de Anthropic en Referencias**: Incorporados los enlaces a Anthropic Interactive Prompt Engineering Tutorial (GitHub `anthropics/prompt-eng-interactive-tutorial` y Google Sheets ejecutable de 9 capítulos) en la pestaña **Radar IA > Referencias & Guías** (`js/knowledge.js`).
+- [x] **Optimización Responsiva para Teléfonos/Móviles**: Corrección completa del layout en pantallas pequeñas (< 850px y < 480px). Sistema de Grid de 2 filas para la cabecera (Fila 1: Logo + Controles de tema e idioma compactos; Fila 2: Menú navegable horizontal con desplazamiento suave sin scrollbar visible y máscara de desvanecimiento `mask-image`), reposicionamiento adaptativo de la barra **Radar IA en Vivo** (`#news-ticker-bar`) y ajuste dinámico de `padding-top` en `.app-main` para evitar superposiciones.
 
 ---
 
@@ -162,12 +163,13 @@ promptquill/                    ← Monorepo del Motor Core (npm)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-07
-- **Último commit promptforge:** `bbf0cc6` (feat(radar): add Anthropic Interactive Tutorial GitHub & Google Sheets to references)
+- **Último commit promptforge:** `PENDING` (fix(responsive): optimize mobile header grid, smooth nav scroll & ticker bar position)
 - **Último commit promptometer:** `67436ff` (fix scoring ultra-short)
-- **Sesión con:** Antigravity AI — **Integración de Tutorial Interactivo Oficial de Anthropic COMPLETO**
+- **Sesión con:** Antigravity AI — **Optimización Responsiva para Teléfonos Celulares / Móviles COMPLETA**
 - **Estado:** 22/22 tests de estrés y suites de prueba en PASS. Paridad ES/EN verificada. Desplegado en Vercel.
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
 > - **Nuevo Tema Novedoso Cosmic Event Horizon**: Estética visual galáctica de alta precisión de instrumentos astrofísicos y agujero negro como tema predeterminado.
 > - **Selector de Temas Dual (Theme Switcher)**: Botón interactivo en el encabezado (`#theme-toggle-btn`) para alternar entre Modo Cósmico 🌌 y Modo Editorial 📜.
 > - **Integración de Referencias Anthropic**: Añadidos los enlaces oficiales del Tutorial Interactivo de 9 Capítulos (GitHub & Google Sheets) en el Radar de Referencias.
+> - **Diseño Responsivo Móvil de Alta Precisión**: Corrección del header en 2 filas grid para teléfonos (< 850px y < 480px), scroll horizontal suave y limpio con efecto fade en la navegación, y visibilidad impecable de la barra Radar IA en Vivo (`#news-ticker-bar`) sin superposición ni cortes.
