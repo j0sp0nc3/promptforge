@@ -1372,6 +1372,11 @@ small { color: var(--ink-faint); }
 }
 
 /* ── Radar IA / Creadores UI ───────────────────────────── */
+#view-radar {
+  padding: var(--space-xl);
+  max-width: 1400px;
+  margin: 0 auto;
+}
 .radar-header-panel {
   display: flex;
   justify-content: space-between;
@@ -1380,6 +1385,44 @@ small { color: var(--ink-faint); }
   margin-bottom: var(--space-lg);
   padding-bottom: var(--space-md);
   border-bottom: var(--rule);
+}
+.radar-subnav-bar {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+  border-bottom: var(--rule);
+  padding-bottom: var(--space-xs);
+}
+.radar-subnav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--ink-soft);
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.radar-subnav-btn:hover {
+  color: var(--vermilion);
+  background: var(--bg-sunken);
+}
+.radar-subnav-btn.active {
+  background: var(--bg-paper);
+  border-color: var(--rule-color);
+  color: var(--vermilion);
+  font-weight: 700;
+}
+.radar-panel {
+  display: none;
+}
+.radar-panel.active {
+  display: block;
 }
 .radar-grid {
   display: grid;

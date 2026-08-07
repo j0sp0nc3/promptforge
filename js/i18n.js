@@ -40,6 +40,7 @@ const I18n = (() => {
         templates: 'Templates',
         history: 'Historial',
         learn: 'Aprender',
+        radar: 'Radar IA',
         leaderboard: 'Top 10',
         export: 'Exportar',
       },
@@ -830,7 +831,7 @@ const I18n = (() => {
 
       radar: {
         title: 'Radar IA — Creadores & Fuentes Gen AI',
-        subtitle: 'Directorio curado de investigadores, ingenieros y creadores clave que comparten avances de Prompt Engineering, Agentes y Generative AI.',
+        subtitle: 'Directorio curado de investigadores, ingenieros y fuentes clave sobre Prompt Engineering, Agentes y Generative AI.',
         suggestBtn: 'Sugerir Creador',
         modalTitle: 'Sugerir Creador / Cuenta AI',
         modalDesc: 'Propón un perfil de redes sociales o canal técnico enfocado en Prompt Engineering o Gen AI para la comunidad.',
@@ -842,11 +843,14 @@ const I18n = (() => {
         placeholderReason: 'Ej. Comparte guías profundas de arquitectura de LLMs y tokenización.',
         confirmSuggest: 'Enviar Sugerencia',
         suggestSuccess: '¡Gracias! Tu sugerencia ha sido recibida.',
+        subCreators: 'Creadores AI',
+        subReferences: 'Referencias & Guías',
         filterPlatform: 'Plataforma',
         filterCategory: 'Especialidad',
         platformAll: 'Todas las redes',
         categoryAll: 'Todas las especialidades',
         followBtn: 'Ver perfil',
+        visitLink: 'Visitar recurso',
       },
 
       ticker: {
@@ -917,6 +921,7 @@ const I18n = (() => {
         templates: 'Templates',
         history: 'History',
         learn: 'Learn',
+        radar: 'AI Radar',
         leaderboard: 'Top 10',
         export: 'Export',
       },
@@ -1689,11 +1694,14 @@ const I18n = (() => {
         placeholderReason: 'e.g. Shares deep-dive courses on LLM architecture and tokenization.',
         confirmSuggest: 'Send Suggestion',
         suggestSuccess: 'Thank you! Your suggestion has been received.',
+        subCreators: 'AI Creators',
+        subReferences: 'References & Guides',
         filterPlatform: 'Platform',
         filterCategory: 'Specialty',
         platformAll: 'All networks',
         categoryAll: 'All specialties',
         followBtn: 'View profile',
+        visitLink: 'Visit resource',
       },
 
       ticker: {

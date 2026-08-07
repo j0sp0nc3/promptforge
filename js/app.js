@@ -21,6 +21,7 @@ const App = (() => {
     setupTemplatesView();
     setupHistoryView();
     setupLearnView();
+    setupRadarView();
     setupLeaderboardView();
     renderNewsTicker();
     checkShareURL();
@@ -49,6 +50,7 @@ const App = (() => {
     if (currentView === 'templates') renderTemplatesView(getActiveCategoryFilter());
     if (currentView === 'history') renderHistoryView();
     if (currentView === 'learn') renderLearnView(getActiveLearnSub());
+    if (currentView === 'radar') renderRadarView(getActiveRadarSub());
     if (currentView === 'leaderboard') renderLeaderboardView();
   }
 
@@ -118,6 +120,7 @@ const App = (() => {
     if (viewName === 'history') renderHistoryView();
     if (viewName === 'templates') renderTemplatesView(getActiveCategoryFilter());
     if (viewName === 'learn') renderLearnView(getActiveLearnSub());
+    if (viewName === 'radar') renderRadarView(getActiveRadarSub());
     if (viewName === 'leaderboard') renderLeaderboardView();
   }
 
@@ -849,7 +852,7 @@ const App = (() => {
     });
 
     // Show only the matching panel
-    ['glossary', 'techniques', 'frameworks', 'library', 'references', 'radar'].forEach(name => {
+    ['glossary', 'techniques', 'frameworks', 'library'].forEach(name => {
       const panel = document.getElementById(`learn-${name}`);
       if (panel) panel.classList.toggle('active', name === activeSub);
     });
@@ -859,16 +862,56 @@ const App = (() => {
     if (activeSub === 'techniques') renderTechniques();
     if (activeSub === 'frameworks') renderFrameworks();
     if (activeSub === 'library') renderLibrary();
-    if (activeSub === 'references') renderReferences();
-    if (activeSub === 'radar') renderRadar();
 
     const searchInput = document.getElementById('learn-search-input');
     const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
     applyLearnSearchFilter(query);
   }
 
-  function renderRadar() {
-    const container = document.getElementById('learn-radar');
+  // ── Radar IA View (Top-Level) ──────────────────────────
+  let currentRadarSub = 'creators';
+
+  function setupRadarView() {
+    const subnav = document.getElementById('radar-subnav-bar');
+    if (subnav) {
+      subnav.addEventListener('click', (e) => {
+        const btn = e.target.closest('.radar-subnav-btn');
+        if (!btn) return;
+        renderRadarView(btn.dataset.radarSub);
+      });
+    }
+
+    const btnSuggestTop = document.getElementById('btn-open-suggest-creator-modal-top');
+    if (btnSuggestTop) {
+      btnSuggestTop.addEventListener('click', openSuggestCreatorModal);
+    }
+  }
+
+  function getActiveRadarSub() {
+    const active = document.querySelector('.radar-subnav-btn.active');
+    return active ? active.dataset.radarSub : 'creators';
+  }
+
+  function renderRadarView(sub) {
+    if (sub) currentRadarSub = sub;
+    const activeSub = currentRadarSub;
+
+    document.querySelectorAll('.radar-subnav-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.radarSub === activeSub);
+    });
+
+    const creatorsPanel = document.getElementById('radar-creators-panel');
+    const refsPanel = document.getElementById('radar-references-panel');
+
+    if (creatorsPanel) creatorsPanel.classList.toggle('active', activeSub === 'creators');
+    if (refsPanel) refsPanel.classList.toggle('active', activeSub === 'references');
+
+    if (activeSub === 'creators') _renderRadarCreatorsPanel();
+    if (activeSub === 'references') _renderRadarReferencesPanel();
+  }
+
+  function _renderRadarCreatorsPanel() {
+    const container = document.getElementById('radar-creators-panel');
     if (!container || typeof Knowledge === 'undefined') return;
     const lang = I18n.getLang();
     const creators = Knowledge.radar || [];
@@ -882,16 +925,6 @@ const App = (() => {
     };
 
     container.innerHTML = `
-      <div class="radar-header-panel">
-        <div class="radar-title-block">
-          <h2 class="view-title">${t('radar.title')}</h2>
-          <p class="view-subtitle">${t('radar.subtitle')}</p>
-        </div>
-        <button class="btn btn-primary" id="btn-open-suggest-creator-modal">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-          <span>${t('radar.suggestBtn')}</span>
-        </button>
-      </div>
       <div class="radar-grid">
         ${creators.map(c => {
           const initial = c.name.charAt(0).toUpperCase();
@@ -918,11 +951,44 @@ const App = (() => {
         }).join('')}
       </div>
     `;
+  }
 
-    const btnSuggest = container.querySelector('#btn-open-suggest-creator-modal');
-    if (btnSuggest) {
-      btnSuggest.addEventListener('click', openSuggestCreatorModal);
-    }
+  function _renderRadarReferencesPanel() {
+    const container = document.getElementById('radar-references-panel');
+    if (!container || typeof Knowledge === 'undefined') return;
+    const lang = I18n.getLang();
+    const references = Knowledge.references || [];
+
+    const badgeMap = {
+      official: { class: 'badge-success', label: { es: 'Oficial', en: 'Official' } },
+      guide: { class: 'badge-info', label: { es: 'Guía', en: 'Guide' } },
+      paper: { class: 'badge-warning', label: { es: 'Investigación', en: 'Paper' } },
+      security: { class: 'badge-critical', label: { es: 'Seguridad', en: 'Security' } },
+    };
+
+    container.innerHTML = `
+      <div class="learn-grid">
+        ${references.map(ref => {
+          const badgeInfo = badgeMap[ref.type] || { class: 'badge-info', label: { es: ref.type, en: ref.type } };
+          const badgeText = badgeInfo.label[lang] || badgeInfo.label.es;
+          return `
+          <article class="learn-card learn-card-reference" data-id="${ref.id}">
+            <div class="learn-card-header">
+              <span class="learn-term-name">${escapeHtml(ref.title[lang] || ref.title.es)}</span>
+              <span class="badge ${badgeInfo.class}">${escapeHtml(badgeText)}</span>
+            </div>
+            <p class="learn-meta"><strong>${escapeHtml(ref.source)}</strong></p>
+            <p class="learn-term-def">${escapeHtml(ref.desc[lang] || ref.desc.es)}</p>
+            <div class="learn-example-block" style="margin-top:auto">
+              <a href="${escapeHtml(ref.url)}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm learn-link-btn" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px">
+                ${t('radar.visitLink')}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+            </div>
+          </article>`;
+        }).join('')}
+      </div>
+    `;
   }
 
   function setupSuggestCreatorModal() {

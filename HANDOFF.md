@@ -94,9 +94,8 @@ interactiva desplegada en Vercel.
 
 - [x] **Hub de Conocimiento Búsqueda interactiva**: Barra de búsqueda en tiempo real `#learn-search-input` para filtrar conceptos del glosario, técnicas, frameworks, templates, anti-patrones y tests adversariales con botón de borrado rápido e i18n ES/EN.
 - [x] **Técnicas & Frameworks 2026**: Adición de 3 técnicas de vanguardia (*Chain of Verification - CoVe, Skeleton-of-Thought - SoT, Hierarchical CoT - Hi-CoT*) y 2 frameworks de arquitectura (*CO-STAR, Bento-Box Modular Architecture*) en `js/knowledge.js`.
+- [x] **Pestaña Principal Radar IA (`#nav-radar` & `#view-radar`)**: Promovido del sub-menú de Aprender a pestaña principal en la barra superior de navegación. Reúne en un solo lugar destacado los 12 Creadores AI y las 11 Referencias & Guías oficiales con pestañas internas y modal de sugerencia comunitaria.
 - [x] **Banda Ticker de Noticias AI en Vivo (`#news-ticker-bar`)**: Marquesina deslizante continua integrada bajo la cabecera principal que muestra las últimas publicaciones, descubrimientos de inyección de prompt, papers y videos de los creadores de IA con pausa al pasar el ratón e i18n ES/EN.
-- [x] **Sub-sección Radar IA (12 Creadores & Modal de Sugerencia)**: Sexta sub-sección en el Hub de Conocimiento (*Glosario, Técnicas, Frameworks, Biblioteca, Referencias, Radar*) con 12 perfiles curados de creadores e investigadores técnicos (Riley Goodside, Andrej Karpathy, Lilian Weng, swyx, Anthropic Research, Harrison Chase, Simon Willison, etc.) a través de X/Twitter, LinkedIn, Substack, YouTube y GitHub, con modal de sugerencia comunitaria e i18n ES/EN.
-- [x] **Pestaña de Referencias & Novedades**: Quinta sub-sección en el Hub de Conocimiento (*Glosario, Técnicas, Frameworks, Biblioteca, Referencias*) con 11 tarjetas interactivas categorizadas (Oficiales de Promptometer, Guías de OpenAI/Anthropic/Google, Papers de investigación de Stanford/Google/Meta y OWASP Security).
 - [x] **Redes Sociales & Perfiles Oficiales**: Enlaces directos en el pie de página a **LinkedIn** (`/in/josponce`), **X / Twitter** (`@j0sp0nc3`), **GitHub Autor** (`@j0sp0nc3`), **Código Fuente** (`promptforge`) y **Motor NPM** (`promptometer`).
 - [x] **Módulo de Moderación de Contenido (`api/moderation.js`) & Persistencia Global Upstash Redis (`api/index.js`)**: Filtro de tres capas (palabras malsonantes ES/EN, patrones maliciosos de inyección/XSS y anti-spam por IP/deduplicación hash) con almacenamiento persistente opcional en Upstash Redis (`UPSTASH_REDIS_REST_URL`).
 - [x] **Normalización de Categorías (`js/leaderboard.js`)**: Espacio de nombres canónico de categorías (`general`, `código`, `agentes`, `RAG`, `extracción`, `evaluación`, `marketing`, `NLP`, `traducción`, `salud`) y métodos `getByCategory()` y `normalizeCategory()`.
@@ -161,13 +160,13 @@ promptquill/                    ← Monorepo del Motor Core (npm)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-07
-- **Último commit promptforge:** `a5d8f92` (Fix posicionamiento fixed e invisibilidad de la barra #news-ticker-bar bajo el header + 22/22 PASS)
+- **Último commit promptforge:** `8b29f01` (Elevación de Radar IA a pestaña principal de navegación #nav-radar + sub-pestañas Creadores & Referencias + 22/22 PASS)
 - **Último commit promptometer:** `67436ff` (fix scoring ultra-short)
-- **Sesión con:** Antigravity AI — **Fix Posicionamiento Ticker Noticias AI en Vivo COMPLETO**
+- **Sesión con:** Antigravity AI — **Promoción de Radar IA a Pestaña Principal Superior COMPLETO**
 - **Estado:** 22/22 tests de estrés y suites de prueba en PASS. Paridad ES/EN verificada. Desplegado en Vercel.
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
-> - **Banda Ticker de Noticias en Vivo (`#news-ticker-bar`)**: Marquesina continua en tiempo real bajo la cabecera principal con publicaciones de creadores, lanzamientos y papers de IA con pausa al pasar el puntero.
-> - **Radar IA (`js/knowledge.js` & `#learn-radar`)**: 6.ª sub-sección en Aprender con 12 perfiles técnicos destacados (Riley Goodside, Andrej Karpathy, Lilian Weng, swyx, Anthropic Research, Harrison Chase, Simon Willison, etc.) y enlaces a X, Substack, YouTube, GitHub y LinkedIn.
-> - **Modal de Sugerencias Comunitaria (`#modal-suggest-creator`)**: Formulario interactivo para proponer nuevos perfiles técnicos con notificación toast.
-> - **Suite de Pruebas Ampliada (`test_edge_cases.js`)**: 22/22 pruebas pasadas (incluye Suite 5 para el Radar IA).
+> - **Pestaña Principal Radar IA (`#nav-radar` & `#view-radar`)**: Promovido del sub-menú de Aprender a la barra principal de navegación superior.
+> - **Sub-navegación Interna del Radar**: Pestañas internas para alternar fácilmente entre **Creadores AI** (12 perfiles) y **Referencias & Guías** (11 recursos oficial/investigación).
+> - **Limpieza de Aprender (`#view-learn`)**: El menú de Aprender queda enfocado exclusivamente en material de estudio principal (Glosario, Técnicas, Frameworks, Biblioteca).
+> - **Banda Ticker de Noticias en Vivo (`#news-ticker-bar`)**: Marquesina continua en tiempo real bajo la cabecera principal con pausa al pasar el puntero.
