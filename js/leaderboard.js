@@ -365,8 +365,8 @@ Salida en Markdown limpio preservando encabezados y bloques de código.
 </restricciones>
 
 <ejemplos>
-Entrada: "Deploy the service using the CLI command `npm run build`."
-Salida: "Despliega el servicio utilizando el comando CLI `npm run build`."
+Entrada: "Deploy the service using the CLI command \`npm run build\`."
+Salida: "Despliega el servicio utilizando el comando CLI \`npm run build\`."
 </ejemplos>
 
 <manejo_errores>
