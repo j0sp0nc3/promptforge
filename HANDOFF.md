@@ -94,6 +94,7 @@ interactiva desplegada en Vercel.
 
 - [x] **Hub de Conocimiento Búsqueda interactiva**: Barra de búsqueda en tiempo real `#learn-search-input` para filtrar conceptos del glosario, técnicas, frameworks, templates, anti-patrones y tests adversariales con botón de borrado rápido e i18n ES/EN.
 - [x] **Técnicas & Frameworks 2026**: Adición de 3 técnicas de vanguardia (*Chain of Verification - CoVe, Skeleton-of-Thought - SoT, Hierarchical CoT - Hi-CoT*) y 2 frameworks de arquitectura (*CO-STAR, Bento-Box Modular Architecture*) en `js/knowledge.js`.
+- [x] **Sub-sección Radar IA (12 Creadores & Modal de Sugerencia)**: Sexta sub-sección en el Hub de Conocimiento (*Glosario, Técnicas, Frameworks, Biblioteca, Referencias, Radar*) con 12 perfiles curados de creadores e investigadores técnicos (Riley Goodside, Andrej Karpathy, Lilian Weng, swyx, Anthropic Research, Harrison Chase, Simon Willison, etc.) a través de X/Twitter, LinkedIn, Substack, YouTube y GitHub, con modal de sugerencia comunitaria e i18n ES/EN.
 - [x] **Pestaña de Referencias & Novedades**: Quinta sub-sección en el Hub de Conocimiento (*Glosario, Técnicas, Frameworks, Biblioteca, Referencias*) con 11 tarjetas interactivas categorizadas (Oficiales de Promptometer, Guías de OpenAI/Anthropic/Google, Papers de investigación de Stanford/Google/Meta y OWASP Security).
 - [x] **Redes Sociales & Perfiles Oficiales**: Enlaces directos en el pie de página a **LinkedIn** (`/in/josponce`), **X / Twitter** (`@j0sp0nc3`), **GitHub Autor** (`@j0sp0nc3`), **Código Fuente** (`promptforge`) y **Motor NPM** (`promptometer`).
 - [x] **Módulo de Moderación de Contenido (`api/moderation.js`) & Persistencia Global Upstash Redis (`api/index.js`)**: Filtro de tres capas (palabras malsonantes ES/EN, patrones maliciosos de inyección/XSS y anti-spam por IP/deduplicación hash) con almacenamiento persistente opcional en Upstash Redis (`UPSTASH_REDIS_REST_URL`).
@@ -159,14 +160,12 @@ promptquill/                    ← Monorepo del Motor Core (npm)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-07
-- **Último commit promptforge:** `6fc8958` (completada la capa de moderación de contenido api/moderation.js + persistencia Upstash Redis en /api/leaderboard + normalización de categorías en js/leaderboard.js)
+- **Último commit promptforge:** `360eaf8` (Radar IA con 12 creadores + modal de sugerencias + 22/22 pruebas PASS)
 - **Último commit promptometer:** `67436ff` (fix scoring ultra-short)
-- **Sesión con:** Antigravity AI + ZCode — **Módulo de Moderación + Persistencia Upstash Redis COMPLETO**
-- **Estado:** 14/14 tests de estrés en PASS. Paridad ES/EN verificada. Desplegado en Vercel.
+- **Sesión con:** Antigravity AI — **Radar IA (Creadores & Fuentes Gen AI) + Moderación + Upstash Redis COMPLETO**
+- **Estado:** 22/22 tests de estrés y suites de prueba en PASS. Paridad ES/EN verificada. Desplegado en Vercel.
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
-> - **Capa de Moderación de Contenido (`api/moderation.js`)**: 3 capas activas (palabras malsonantes ES/EN, patrones de inyección de prompt/código peligroso XSS, y anti-spam por IP/deduplicación SHA-256).
-> - **Persistencia Global Upstash Redis (`api/index.js`)**: Integración con comandos HTTP REST `ZADD`, `ZRANGE`, `HSET`, `HGETALL` sin dependencias externas, con fallback suave a arreglo en memoria.
-> - **Normalización de Categorías (`js/leaderboard.js`)**: Mapeo canónico a 10 categorías (`general`, `código`, `agentes`, `RAG`, `extracción`, `evaluación`, `marketing`, `NLP`, `traducción`, `salud`) y métodos `getByCategory()` y `normalizeCategory()`.
-> Referencias, búsqueda interactiva, link de X/Twitter en footer, fixes de API 401
-> y SyntaxError en leaderboard.js.
+> - **Radar IA (`js/knowledge.js` & `#learn-radar`)**: 6.ª sub-sección en Aprender con 12 perfiles técnicos destacados (Riley Goodside, Andrej Karpathy, Lilian Weng, swyx, Anthropic Research, Harrison Chase, Simon Willison, etc.) y enlaces a X, Substack, YouTube, GitHub y LinkedIn.
+> - **Modal de Sugerencias Comunitaria (`#modal-suggest-creator`)**: Formulario interactivo para proponer nuevos perfiles técnicos con notificación toast.
+> - **Suite de Pruebas Ampliada (`test_edge_cases.js`)**: 22/22 pruebas pasadas (incluye Suite 5 para el Radar IA).

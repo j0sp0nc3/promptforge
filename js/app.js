@@ -781,6 +781,8 @@ const App = (() => {
         searchInput.focus();
       });
     }
+
+    setupSuggestCreatorModal();
   }
 
   function applyLearnSearchFilter(query) {
@@ -827,7 +829,7 @@ const App = (() => {
     });
 
     // Show only the matching panel
-    ['glossary', 'techniques', 'frameworks', 'library', 'references'].forEach(name => {
+    ['glossary', 'techniques', 'frameworks', 'library', 'references', 'radar'].forEach(name => {
       const panel = document.getElementById(`learn-${name}`);
       if (panel) panel.classList.toggle('active', name === activeSub);
     });
@@ -838,10 +840,110 @@ const App = (() => {
     if (activeSub === 'frameworks') renderFrameworks();
     if (activeSub === 'library') renderLibrary();
     if (activeSub === 'references') renderReferences();
+    if (activeSub === 'radar') renderRadar();
 
     const searchInput = document.getElementById('learn-search-input');
     const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
     applyLearnSearchFilter(query);
+  }
+
+  function renderRadar() {
+    const container = document.getElementById('learn-radar');
+    if (!container || typeof Knowledge === 'undefined') return;
+    const lang = I18n.getLang();
+    const creators = Knowledge.radar || [];
+
+    const platformIcons = {
+      x: '𝕏',
+      linkedin: 'in',
+      youtube: '▶',
+      substack: '✍',
+      github: '⚙',
+    };
+
+    container.innerHTML = `
+      <div class="radar-header-panel">
+        <div class="radar-title-block">
+          <h2 class="view-title">${t('radar.title')}</h2>
+          <p class="view-subtitle">${t('radar.subtitle')}</p>
+        </div>
+        <button class="btn btn-primary" id="btn-open-suggest-creator-modal">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+          <span>${t('radar.suggestBtn')}</span>
+        </button>
+      </div>
+      <div class="radar-grid">
+        ${creators.map(c => {
+          const initial = c.name.charAt(0).toUpperCase();
+          return `
+          <article class="radar-card" data-id="${c.id}">
+            <div class="radar-card-header">
+              <div class="radar-avatar">${initial}</div>
+              <div class="radar-info">
+                <span class="radar-name">${escapeHtml(c.name)}</span>
+                <span class="radar-handle">${escapeHtml(c.handle)}</span>
+                <span class="radar-role">${escapeHtml(c.role[lang] || c.role.es)}</span>
+              </div>
+            </div>
+            <p class="radar-desc">${escapeHtml(c.desc[lang] || c.desc.es)}</p>
+            <div class="radar-platforms">
+              ${c.platforms.map(p => `
+                <a href="${escapeHtml(p.url)}" target="_blank" rel="noopener noreferrer" class="platform-pill">
+                  <span>${platformIcons[p.type] || '🌐'}</span>
+                  <span>${escapeHtml(p.name)}</span>
+                </a>
+              `).join('')}
+            </div>
+          </article>`;
+        }).join('')}
+      </div>
+    `;
+
+    const btnSuggest = container.querySelector('#btn-open-suggest-creator-modal');
+    if (btnSuggest) {
+      btnSuggest.addEventListener('click', openSuggestCreatorModal);
+    }
+  }
+
+  function setupSuggestCreatorModal() {
+    const btnClose = document.getElementById('btn-close-suggest-modal');
+    const btnCancel = document.getElementById('btn-cancel-suggest-modal');
+    const btnConfirm = document.getElementById('btn-confirm-suggest-creator');
+
+    if (btnClose) btnClose.addEventListener('click', closeSuggestCreatorModal);
+    if (btnCancel) btnCancel.addEventListener('click', closeSuggestCreatorModal);
+    if (btnConfirm) btnConfirm.addEventListener('click', submitCreatorSuggestion);
+  }
+
+  function openSuggestCreatorModal() {
+    const modal = document.getElementById('modal-suggest-creator');
+    if (modal) modal.classList.remove('hidden');
+  }
+
+  function closeSuggestCreatorModal() {
+    const modal = document.getElementById('modal-suggest-creator');
+    if (modal) modal.classList.add('hidden');
+  }
+
+  function submitCreatorSuggestion() {
+    const nameInput = document.getElementById('suggest-creator-name');
+    const handleInput = document.getElementById('suggest-creator-handle');
+    const reasonInput = document.getElementById('suggest-creator-reason');
+
+    const name = nameInput ? nameInput.value.trim() : '';
+    const handle = handleInput ? handleInput.value.trim() : '';
+
+    if (!name || !handle) {
+      showToast(t('leaderboard.noPromptToSubmit'), 'warning');
+      return;
+    }
+
+    closeSuggestCreatorModal();
+    if (nameInput) nameInput.value = '';
+    if (handleInput) handleInput.value = '';
+    if (reasonInput) reasonInput.value = '';
+
+    showToast(t('radar.suggestSuccess'), 'success');
   }
 
   function renderReferences() {

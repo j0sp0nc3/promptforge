@@ -25,12 +25,14 @@ globalThis.localStorage = {
   removeItem(k) { delete this._store[k]; }
 };
 
-// Evaluate i18n & Leaderboard scripts safely into global scope
+// Evaluate i18n, Leaderboard & Knowledge scripts safely into global scope
 const i18nCode = fs.readFileSync(path.join(__dirname, 'js/i18n.js'), 'utf8');
 const leaderboardCode = fs.readFileSync(path.join(__dirname, 'js/leaderboard.js'), 'utf8');
+const knowledgeCode = fs.readFileSync(path.join(__dirname, 'js/knowledge.js'), 'utf8');
 
 (0, eval)(i18nCode.replace('const I18n =', 'globalThis.I18n ='));
 (0, eval)(leaderboardCode.replace('const Leaderboard =', 'globalThis.Leaderboard ='));
+(0, eval)(knowledgeCode.replace('const Knowledge =', 'globalThis.Knowledge ='));
 
 // ============================================================
 // 1. ENGINE STRESS & EDGE CASE SUITE (14 Vectors)
@@ -168,6 +170,28 @@ const moderationTests = [
   } catch (err) {
     failedCount++;
     console.log(` ❌ 4.1 i18n Parity Suite                         | CRASH: ${err.message}`);
+  }
+
+  // ============================================================
+  // 5. RADAR & KNOWLEDGE HUB INTEGRITY SUITE
+  // ============================================================
+  console.log("\n📌 SUITE 5: Radar de Creadores AI (js/knowledge.js)\n");
+
+  try {
+    const radarEntries = Knowledge.radar || [];
+    const validRadar = Array.isArray(radarEntries) && radarEntries.length >= 12;
+    const hasPlatforms = radarEntries.every(c => Array.isArray(c.platforms) && c.platforms.length > 0);
+
+    if (validRadar && hasPlatforms) {
+      passedCount++;
+      console.log(` ✅ 5.1 Radar AI Creators (${radarEntries.length} Creadores)   | PASS | Estructura y Redes OK`);
+    } else {
+      failedCount++;
+      console.log(` ❌ 5.1 Radar AI Creators                        | FAIL | Entries: ${radarEntries.length}, Platforms OK: ${hasPlatforms}`);
+    }
+  } catch (err) {
+    failedCount++;
+    console.log(` ❌ 5.1 Radar Suite                               | CRASH: ${err.message}`);
   }
 
   console.log("\n------------------------------------------------------------");

@@ -84,6 +84,7 @@ The **Learn ("Aprender")** and **Top 10** tabs provide an interactive educationa
 - **13 Prompting Techniques:** ReAct, Tree of Thought, Self-Consistency, Reflexion, Zero-shot, Metaprompting, Chain of Verification (CoVe), Skeleton-of-Thought (SoT), Hierarchical CoT (Hi-CoT), Few-shot, CoT, RAG, and Role Prompting — with one-click **"Analyze"** buttons that load example prompts directly into the editor.
 - **6 Structural Frameworks:** RTF (Role-Task-Format), CRISPE, RACE, CO-STAR (GovTech Singapore), Bento-Box Modular Architecture, and native 7-section XML Anatomy.
 - **11 Research References:** Curated links to official Promptometer repos, OpenAI/Anthropic/Google guides, Stanford/Google/Meta papers, and OWASP Security standards.
+- **AI Creators Radar (12 Accounts):** Curated directory of top researchers and engineers (Riley Goodside, Andrej Karpathy, Lilian Weng, swyx, Anthropic Research, Harrison Chase, Simon Willison, etc.) across X/Twitter, LinkedIn, Substack, YouTube, and GitHub with a community suggestion modal.
 - **Top 10 Hall of Fame (`js/leaderboard.js` & `/api/leaderboard`):** Global community ranking with zero-login API sync, gold/silver/bronze badges, submission modal, and "Analyze & Try" buttons.
 - **Unified Expandable Library:** Browse 34 anti-patterns, 15 best practices, and 13 adversarial tests as expandable accordions displaying dimension, description, and suggestions.
 - **Real-Time Interactive Search:** Search bar filtering all terms, techniques, frameworks, references, and library entries dynamically as you type.

@@ -428,6 +428,10 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
           <span data-i18n="learn.subReferences">Referencias</span>
         </button>
+        <button class="learn-subnav-btn" data-sub="radar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a7 7 0 1 0 10 10"/><path d="M12 12 8 8"/><circle cx="12" cy="12" r="2"/></svg>
+          <span data-i18n="learn.subRadar">Radar</span>
+        </button>
       </aside>
       <div class="learn-content">
         <div class="learn-panel active" id="learn-glossary"></div>
@@ -435,8 +439,10 @@
         <div class="learn-panel" id="learn-frameworks"></div>
         <div class="learn-panel" id="learn-library"></div>
         <div class="learn-panel" id="learn-references"></div>
+        <div class="learn-panel" id="learn-radar"></div>
       </div>
     </div>
+  </div>
   <!-- Leaderboard / Top 10 Hall of Fame -->
   <div class="view" id="view-leaderboard">
     <div class="leaderboard-header-panel">
@@ -479,6 +485,35 @@
       <div class="modal-footer">
         <button class="btn btn-secondary" id="btn-cancel-submit-modal" data-i18n="leaderboard.cancel">Cancelar</button>
         <button class="btn btn-primary" id="btn-confirm-submit" data-i18n="leaderboard.confirmSubmit">Enviar al Ranking</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Suggest Creator Modal -->
+  <div class="modal-backdrop hidden" id="modal-suggest-creator">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" data-i18n="radar.modalTitle">Sugerir Creador / Cuenta AI</h3>
+        <button class="modal-close" id="btn-close-suggest-modal" type="button">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc" data-i18n="radar.modalDesc">Propón un perfil de redes sociales o canal técnico enfocado en Prompt Engineering o Gen AI para la comunidad.</p>
+        <div class="form-group">
+          <label for="suggest-creator-name" data-i18n="radar.labelName">Nombre / Organización</label>
+          <input type="text" id="suggest-creator-name" class="form-control" data-i18n-placeholder="radar.placeholderName" placeholder="Ej. Andrej Karpathy">
+        </div>
+        <div class="form-group">
+          <label for="suggest-creator-handle" data-i18n="radar.labelHandle">Handle / Enlace a Red Social</label>
+          <input type="text" id="suggest-creator-handle" class="form-control" data-i18n-placeholder="radar.placeholderHandle" placeholder="Ej. @karpathy o https://x.com/karpathy">
+        </div>
+        <div class="form-group">
+          <label for="suggest-creator-reason" data-i18n="radar.labelReason">¿Por qué recomendarlo? (opcional)</label>
+          <textarea id="suggest-creator-reason" class="form-control" rows="2" data-i18n-placeholder="radar.placeholderReason" placeholder="Ej. Comparte guías profundas de arquitectura de LLMs y tokenización."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btn-cancel-suggest-modal" data-i18n="leaderboard.cancel">Cancelar</button>
+        <button class="btn btn-primary" id="btn-confirm-suggest-creator" data-i18n="radar.confirmSuggest">Enviar Sugerencia</button>
       </div>
     </div>
   </div>

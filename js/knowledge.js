@@ -1054,6 +1054,190 @@ If the query is ambiguous, ask for clarification before recommending.
     },
   ],
 
+  /* ── 5. Radar de Creadores & Fuentes Gen AI ───────────────────
+     Top accounts, researchers, engineers & channels sharing Prompt Engineering & Gen AI content. */
+  radar: [
+    {
+      id: 'cr-riley-goodside',
+      name: 'Riley Goodside',
+      handle: '@RileyGoodside',
+      role: { es: 'Staff Prompt Engineer en Scale AI', en: 'Staff Prompt Engineer at Scale AI' },
+      category: 'prompting',
+      platforms: [
+        { name: 'X / Twitter', url: 'https://x.com/RileyGoodside', type: 'x' }
+      ],
+      desc: {
+        es: 'Primer Staff Prompt Engineer de la industria. Conocido por sus descubrimientos de inyección de prompt, jailbreaks y técnicas de prompting.',
+        en: 'The industry’s first Staff Prompt Engineer. Known for pioneering prompt injection research, jailbreak security, and advanced prompting techniques.'
+      }
+    },
+    {
+      id: 'cr-andrej-karpathy',
+      name: 'Andrej Karpathy',
+      handle: '@karpathy',
+      role: { es: 'Ex-Director de AI en Tesla & Co-fundador de OpenAI', en: 'Ex-Director of AI at Tesla & OpenAI Co-founder' },
+      category: 'architecture',
+      platforms: [
+        { name: 'X / Twitter', url: 'https://x.com/karpathy', type: 'x' },
+        { name: 'YouTube', url: 'https://www.youtube.com/@karpathy', type: 'youtube' }
+      ],
+      desc: {
+        es: 'Divulgador de IA y creador del concepto "LLM OS". Publica cursos profundos desde cero sobre arquitectura de LLMs y tokenización.',
+        en: 'AI educator and creator of the "LLM OS" concept. Publishes deep-dive Zero-to-Hero courses on LLM architecture and tokenization.'
+      }
+    },
+    {
+      id: 'cr-lilian-weng',
+      name: 'Lilian Weng',
+      handle: '@lilianweng',
+      role: { es: 'Ex-Head of Safety Systems en OpenAI', en: 'Ex-Head of Safety Systems at OpenAI' },
+      category: 'agents',
+      platforms: [
+        { name: 'X / Twitter', url: 'https://x.com/lilianweng', type: 'x' },
+        { name: 'Blog (Lil\'Log)', url: 'https://lilianweng.github.io/', type: 'substack' }
+      ],
+      desc: {
+        es: 'Autora de "Lil\'Log", la referencia técnica más respetada sobre agentes basados en LLMs, memoria, planificación y razonamiento.',
+        en: 'Author of "Lil\'Log", the gold-standard technical blog on LLM-based autonomous agents, memory, planning, and tool use.'
+      }
+    },
+    {
+      id: 'cr-swyx',
+      name: 'Shawn Wang (swyx)',
+      handle: '@swyx',
+      role: { es: 'Fundador de Latent Space & AI Engineer Podcast', en: 'Founder of Latent Space & AI Engineer Podcast' },
+      category: 'architecture',
+      platforms: [
+        { name: 'X / Twitter', url: 'https://x.com/swyx', type: 'x' },
+        { name: 'Substack', url: 'https://www.latent.space/', type: 'substack' }
+      ],
+      desc: {
+        es: 'Pionero del movimiento "AI Engineer". Analiza la evolución del desarrollo con LLMs, patrones de diseño de agentes y ecosistemas de IA.',
+        en: 'Pioneer of the "AI Engineer" movement. Analyzes LLM developer stack evolution, agent design patterns, and AI ecosystem trends.'
+      }
+    },
+    {
+      id: 'cr-anthropic-ai',
+      name: 'Anthropic Research',
+      handle: '@AnthropicAI',
+      role: { es: 'Creadores de Claude & Anthropic Prompting Guides', en: 'Creators of Claude & Anthropic Prompting Guides' },
+      category: 'prompting',
+      platforms: [
+        { name: 'X / Twitter', url: 'https://x.com/AnthropicAI', type: 'x' },
+        { name: 'Docs', url: 'https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview', type: 'substack' }
+      ],
+      desc: {
+        es: 'Canal oficial de investigación sobre prompting estructurado en XML, metáforas de sistema, evaluadores LLM-as-a-Judge y Anthropic Console.',
+        en: 'Official research channel for XML-structured prompting, system prompt metaphors, LLM-as-a-Judge evaluators, and Anthropic Console.'
+      }
+    },
+    {
+      id: 'cr-harrison-chase',
+      name: 'Harrison Chase',
+      handle: '@hwchase17',
+      role: { es: 'Co-fundador & CEO de LangChain', en: 'Co-founder & CEO of LangChain' },
+      category: 'agents',
+      platforms: [
+        { name: 'X / Twitter', url: 'https://x.com/hwchase17', type: 'x' },
+        { name: 'GitHub', url: 'https://github.com/langchain-ai', type: 'github' }
+      ],
+      desc: {
+        es: 'Creador del ecosistema LangChain y LangGraph. Comparte avances sobre orquestación de prompts, memoria persistente y grafos de agentes.',
+        en: 'Creator of the LangChain and LangGraph ecosystem. Shares insights on prompt orchestration, persistent memory, and agent graphs.'
+      }
+    },
+    {
+      id: 'cr-simon-willison',
+      name: 'Simon Willison',
+      handle: '@simonw',
+      role: { es: 'Co-creador de Django & Investigador de Prompt Injection', en: 'Co-creator of Django & Prompt Injection Researcher' },
+      category: 'security',
+      platforms: [
+        { name: 'X / Twitter', url: 'https://x.com/simonw', type: 'x' },
+        { name: 'Blog', url: 'https://simonwillison.net/', type: 'substack' }
+      ],
+      desc: {
+        es: 'Pionero en acuñar e investigar los ataques de "Prompt Injection Indirecto" y la arquitectura defensiva frente a exploits de LLMs.',
+        en: 'Pioneered research on "Indirect Prompt Injection" attacks and defensive architectures against LLM exploit vectors.'
+      }
+    },
+    {
+      id: 'cr-elvis-saravia',
+      name: 'Elvis Saravia',
+      handle: '@omarsar0',
+      role: { es: 'Fundador de DAIR.AI & Prompt Engineering Guide', en: 'Founder of DAIR.AI & Prompt Engineering Guide' },
+      category: 'prompting',
+      platforms: [
+        { name: 'X / Twitter', url: 'https://x.com/omarsar0', type: 'x' },
+        { name: 'Guía Prompting', url: 'https://www.promptingguide.ai/', type: 'substack' }
+      ],
+      desc: {
+        es: 'Creador de "Prompt Engineering Guide" (promptingguide.ai), el recurso educativo abierto más utilizado sobre técnicas de prompting.',
+        en: 'Creator of "Prompt Engineering Guide" (promptingguide.ai), the most widely used open education resource on prompting techniques.'
+      }
+    },
+    {
+      id: 'cr-hamel-husain',
+      name: 'Hamel Husain',
+      handle: '@hamelhusain',
+      role: { es: 'Consultor de LLMs & Especialista en Evals', en: 'LLM Consultant & Fine-Tuning/Eval Specialist' },
+      category: 'evals',
+      platforms: [
+        { name: 'X / Twitter', url: 'https://x.com/hamelhusain', type: 'x' },
+        { name: 'Blog', url: 'https://hamel.dev/', type: 'substack' }
+      ],
+      desc: {
+        es: 'Especialista en evaluación rigurosa de prompts en producción (Evals), métricas objetivas y ajuste fino de modelos pequeños.',
+        en: 'Specialist in production LLM prompt evaluation (Evals), domain-specific metrics, and fine-tuning small open-weights models.'
+      }
+    },
+    {
+      id: 'cr-sander-schulhoff',
+      name: 'Sander Schulhoff',
+      handle: '@LearnPrompting',
+      role: { es: 'Fundador de Learn Prompting & HackAPrompt', en: 'Founder of Learn Prompting & HackAPrompt' },
+      category: 'prompting',
+      platforms: [
+        { name: 'X / Twitter', url: 'https://x.com/LearnPrompting', type: 'x' },
+        { name: 'Web', url: 'https://learnprompting.org/', type: 'substack' }
+      ],
+      desc: {
+        es: 'Organizador del mayor concurso global de seguridad de prompts "HackAPrompt" y la comunidad educativa de Learn Prompting.',
+        en: 'Organizer of the world’s largest prompt security competition "HackAPrompt" and founder of the Learn Prompting community.'
+      }
+    },
+    {
+      id: 'cr-chip-huyen',
+      name: 'Chip Huyen',
+      handle: '@chipro',
+      role: { es: 'Autora de "Designing Machine Learning Systems"', en: 'Author of "Designing Machine Learning Systems"' },
+      category: 'architecture',
+      platforms: [
+        { name: 'X / Twitter', url: 'https://x.com/chipro', type: 'x' },
+        { name: 'Blog', url: 'https://huyenchip.com/', type: 'substack' }
+      ],
+      desc: {
+        es: 'Experta en sistemas de IA en tiempo real, ingeniería de contextos para LLMs y optimización del flujo de datos en aplicaciones de IA.',
+        en: 'Expert in real-time AI systems, context engineering for LLMs, and data pipeline optimization for generative AI apps.'
+      }
+    },
+    {
+      id: 'cr-sentdex',
+      name: 'Harrison Kinsley (sentdex)',
+      handle: '@sentdex',
+      role: { es: 'Educador de Python & Deep Learning', en: 'Python & Deep Learning Educator' },
+      category: 'architecture',
+      platforms: [
+        { name: 'YouTube', url: 'https://www.youtube.com/@sentdex', type: 'youtube' },
+        { name: 'X / Twitter', url: 'https://x.com/sentdex', type: 'x' }
+      ],
+      desc: {
+        es: 'Creador de tutoriales en video sobre cómo entrenar, evaluar y desplegar modelos de lenguaje locales (LLMs local / Ollama).',
+        en: 'Creator of practical video tutorials on training, evaluating, and deploying local open-source language models.'
+      }
+    }
+  ],
+
   /* ── Helpers ────────────────────────────────────────────────── */
   getById(section, id) {
     const list = this[section] || [];
