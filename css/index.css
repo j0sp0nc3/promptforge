@@ -1539,6 +1539,47 @@ body.theme-editorial ::-webkit-scrollbar-thumb { background: #C7BBA3; border-rad
     gap: var(--space-md);
     padding: var(--space-md);
   }
+
+  /* ── Responsive Footer ─────────────────────── */
+  .site-footer {
+    padding: var(--space-xl) var(--space-md);
+  }
+  .footer-inner {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-lg);
+  }
+  .footer-author {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+  .footer-author-text {
+    align-items: flex-start;
+    text-align: left;
+  }
+  .footer-brand {
+    align-items: center;
+    text-align: center;
+  }
+  .footer-links {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
+    justify-content: center;
+  }
+  .footer-link {
+    justify-content: center;
+    background: var(--bg-paper);
+    border: var(--rule);
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+  }
 }
 
 @media (max-width: 480px) {
