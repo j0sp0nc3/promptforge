@@ -1257,6 +1257,133 @@ If the query is ambiguous, ask for clarification before recommending.
         es: 'Creador de tutoriales en video sobre cómo entrenar, evaluar y desplegar modelos de lenguaje locales (LLMs local / Ollama).',
         en: 'Creator of practical video tutorials on training, evaluating, and deploying local open-source language models.'
       }
+    },
+    {
+      id: 'cr-yann-lecun',
+      name: 'Yann LeCun',
+      handle: '@ylecun',
+      role: { es: 'VP & Chief AI Scientist en Meta / Premio Turing', en: 'VP & Chief AI Scientist at Meta / Turing Award Winner' },
+      category: 'architecture',
+      platforms: [
+        { name: 'X / Twitter', url: 'https://x.com/ylecun', type: 'x' },
+        { name: 'LinkedIn', url: 'https://www.linkedin.com/in/yann-lecun/', type: 'linkedin' },
+        { name: 'Facebook', url: 'https://www.facebook.com/yann.lecun', type: 'substack' }
+      ],
+      desc: {
+        es: 'Ganador del Premio Turing y padre del deep learning moderno. Defiende los "World Models" y el open-source de Meta (Llama). Su crítica al escalado como vía hacia la AGI genera los debates más influyentes del campo.',
+        en: 'Turing Award winner and father of modern deep learning. Advocates for "World Models" and Meta open-source (Llama). His critiques of LLM scaling spark the most influential debates in the field.'
+      }
+    },
+    {
+      id: 'cr-francois-chollet',
+      name: 'François Chollet',
+      handle: '@fchollet',
+      role: { es: 'Creador de Keras \u0026 ARC-AGI Benchmark (Google DeepMind)', en: 'Creator of Keras \u0026 ARC-AGI Benchmark (Google DeepMind)' },
+      category: 'architecture',
+      platforms: [
+        { name: 'X / Twitter', url: 'https://x.com/fchollet', type: 'x' },
+        { name: 'GitHub', url: 'https://github.com/fchollet', type: 'github' },
+        { name: 'ARC Prize', url: 'https://arcprize.org/', type: 'substack' }
+      ],
+      desc: {
+        es: 'Creador de Keras y el benchmark ARC-AGI, la prueba más exigente de razonamiento abstracto para LLMs. Ofrece el análisis crítico más riguroso sobre las limitaciones de los modelos actuales y el camino real hacia la IA general.',
+        en: 'Creator of Keras and the ARC-AGI benchmark, the hardest abstract reasoning test for LLMs. Provides the most rigorous critical analysis of current model limitations and the genuine path toward AGI.'
+      }
+    },
+    {
+      id: 'cr-andrew-ng',
+      name: 'Andrew Ng',
+      handle: '@AndrewYNg',
+      role: { es: 'Fundador de DeepLearning.AI \u0026 The Batch Newsletter', en: 'Founder of DeepLearning.AI \u0026 The Batch Newsletter' },
+      category: 'prompting',
+      platforms: [
+        { name: 'X / Twitter', url: 'https://x.com/AndrewYNg', type: 'x' },
+        { name: 'LinkedIn', url: 'https://www.linkedin.com/in/andrewyng/', type: 'linkedin' },
+        { name: 'Newsletter (The Batch)', url: 'https://www.deeplearning.ai/the-batch/', type: 'substack' },
+        { name: 'YouTube', url: 'https://www.youtube.com/@Deeplearningai', type: 'youtube' }
+      ],
+      desc: {
+        es: 'Co-fundador de Google Brain y Coursera. Su newsletter semanal "The Batch" y sus cursos de DeepLearning.AI son la referencia educativa más respetada del mundo sobre IA aplicada, agentes y frameworks de prompting.',
+        en: 'Co-founder of Google Brain and Coursera. His weekly newsletter "The Batch" and DeepLearning.AI courses are the world\'s most respected educational reference for applied AI, agents, and prompting frameworks.'
+      }
+    },
+    {
+      id: 'cr-alex-albert',
+      name: 'Alex Albert',
+      handle: '@alexalbert__',
+      role: { es: 'Head of Developer Relations en Anthropic', en: 'Head of Developer Relations at Anthropic' },
+      category: 'prompting',
+      platforms: [
+        { name: 'X / Twitter', url: 'https://x.com/alexalbert__', type: 'x' },
+        { name: 'LinkedIn', url: 'https://www.linkedin.com/in/alex-albert/', type: 'linkedin' }
+      ],
+      desc: {
+        es: 'Primer "Prompt Engineer" oficial de Anthropic y actual Head of DevRel. Comparte técnicas avanzadas de prompt caching, structured outputs, uso de Claude en producción y la filosofía interna de Anthropic sobre el diseño de prompts.',
+        en: 'Anthropic\'s original Prompt Engineer and current Head of DevRel. Shares advanced prompt caching techniques, structured outputs, Claude in production, and Anthropic\'s internal philosophy on prompt design.'
+      }
+    },
+    {
+      id: 'cr-jerry-liu',
+      name: 'Jerry Liu',
+      handle: '@jerryjliu0',
+      role: { es: 'Co-fundador \u0026 CEO de LlamaIndex', en: 'Co-founder \u0026 CEO of LlamaIndex' },
+      category: 'agents',
+      platforms: [
+        { name: 'X / Twitter', url: 'https://x.com/jerryjliu0', type: 'x' },
+        { name: 'LinkedIn', url: 'https://www.linkedin.com/in/jerry-liu-4b84b34/', type: 'linkedin' },
+        { name: 'GitHub', url: 'https://github.com/run-llama/llama_index', type: 'github' }
+      ],
+      desc: {
+        es: 'Co-fundador de LlamaIndex, el framework de referencia para RAG, indexación de documentos y pipelines de agentes en producción. Voz líder en el diseño de sistemas de recuperación semántica para LLMs.',
+        en: 'Co-founder of LlamaIndex, the go-to framework for RAG, document indexing, and production agent pipelines. Leading voice on semantic retrieval system design for LLMs.'
+      }
+    },
+    {
+      id: 'cr-matt-shumer',
+      name: 'Matt Shumer',
+      handle: '@mattshumer_',
+      role: { es: 'CEO de HyperWrite \u0026 Teórico de Agentes Autónomos', en: 'CEO of HyperWrite \u0026 Autonomous Agent Theorist' },
+      category: 'agents',
+      platforms: [
+        { name: 'X / Twitter', url: 'https://x.com/mattshumer_', type: 'x' },
+        { name: 'LinkedIn', url: 'https://www.linkedin.com/in/mattshumer/', type: 'linkedin' },
+        { name: 'Blog', url: 'https://shumer.dev/', type: 'substack' }
+      ],
+      desc: {
+        es: 'CEO de HyperWrite. Publica experimentos de vanguardia con agentes LLM autónomos, automatización de flujos de trabajo complejos y reflexiones sobre el impacto transformador de la IA en el trabajo del conocimiento.',
+        en: 'CEO of HyperWrite. Publishes cutting-edge experiments with autonomous LLM agents, complex workflow automation, and reflections on the transformative impact of AI on knowledge work.'
+      }
+    },
+    {
+      id: 'cr-ben-hylak',
+      name: 'Ben Hylak',
+      handle: '@benhylak',
+      role: { es: 'Fundador de Raindrop (Observabilidad para Agentes AI)', en: 'Founder of Raindrop (AI Agent Observability)' },
+      category: 'security',
+      platforms: [
+        { name: 'X / Twitter', url: 'https://x.com/benhylak', type: 'x' },
+        { name: 'LinkedIn', url: 'https://www.linkedin.com/in/ben-hylak/', type: 'linkedin' }
+      ],
+      desc: {
+        es: 'Fundador de Raindrop, plataforma de observabilidad y seguridad para agentes AI en producción. Pionero en trazabilidad de agentes, depuración de fallos silenciosos y defensa contra ataques en pipelines agénticos.',
+        en: 'Founder of Raindrop, an observability and security platform for production AI agents. Pioneer in agent tracing, silent failure debugging, and attack defense in agentic pipelines.'
+      }
+    },
+    {
+      id: 'cr-matt-wolfe',
+      name: 'Matt Wolfe',
+      handle: '@mreflow',
+      role: { es: 'Creador de contenido AI \u0026 Host de "Future Tools"', en: 'AI Content Creator \u0026 Host of "Future Tools"' },
+      category: 'prompting',
+      platforms: [
+        { name: 'X / Twitter', url: 'https://x.com/mreflow', type: 'x' },
+        { name: 'YouTube', url: 'https://www.youtube.com/@mreflow', type: 'youtube' },
+        { name: 'Newsletter', url: 'https://futuretools.io/', type: 'substack' }
+      ],
+      desc: {
+        es: 'Uno de los creadores de contenido sobre IA con mayor crecimiento. Su canal de YouTube y newsletter "Future Tools" son el mapa definitivo de las nuevas herramientas de IA, demos prácticas y prompts aplicados a flujos creativos.',
+        en: 'One of the fastest-growing AI content creators. His YouTube channel and "Future Tools" newsletter are the definitive map of new AI tools, practical demos, and prompts applied to creative workflows.'
+      }
     }
   ],
 

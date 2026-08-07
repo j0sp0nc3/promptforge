@@ -79,6 +79,7 @@ interactiva desplegada en Vercel.
 - [x] **Tutorial Interactivo Oficial de Anthropic en Referencias**: Incorporados los enlaces a Anthropic Interactive Prompt Engineering Tutorial (GitHub `anthropics/prompt-eng-interactive-tutorial` y Google Sheets ejecutable de 9 capítulos) en la pestaña **Radar IA > Referencias & Guías** (`js/knowledge.js`).
 - [x] **Optimización Responsiva para Teléfonos/Móviles**: Corrección completa del layout en pantallas pequeñas (< 850px y < 480px). Sistema de Grid de 2 filas para la cabecera (Fila 1: Logo + Controles de tema e idioma compactos; Fila 2: Menú navegable horizontal con desplazamiento suave sin scrollbar visible y máscara de desvanecimiento `mask-image`), reposicionamiento adaptativo de la barra **Radar IA en Vivo** (`#news-ticker-bar`) y ajuste dinámico de `padding-top` en `.app-main` para evitar superposiciones.
 - [x] **Footer Responsivo para Móviles**: Footer rediseñado para pantallas < 850px — apilado vertical con centrado, autor con avatar a la izquierda, bloque de marca centrado y 4 links en grid 2×2 con estilos de botón para mayor usabilidad táctil.
+- [x] **Radar de Creadores Expandido (20 Creadores)**: Añadidos 8 nuevos creadores al Radar: *Yann LeCun* (Meta/Turing), *François Chollet* (Keras/ARC-AGI), *Andrew Ng* (DeepLearning.AI/The Batch), *Alex Albert* (Anthropic DevRel), *Jerry Liu* (LlamaIndex), *Matt Shumer* (HyperWrite/Agentes), *Ben Hylak* (Raindrop/Observabilidad), *Matt Wolfe* (Future Tools/YouTube). Cada uno con múltiples plataformas: X/Twitter, LinkedIn, YouTube, Newsletter, GitHub y/o Blog. Total: 20 creadores con 5 categorías (prompting, architecture, agents, security, evals).
 
 ---
 
@@ -142,7 +143,7 @@ promptforge/                    ← App Web (Vercel)
 │   ├── signals.js              ← Extracción de señales compartidas
 │   ├── patterns.js             ← Detección de anti-patrones (35 APs / 15 BPs)
 │   ├── i18n.js                 ← Diccionarios ES/EN
-│   ├── knowledge.js            ← Hub de conocimiento (20 términos, 13 técnicas, 6 frameworks, 13 refs)
+│   ├── knowledge.js            ← Hub de conocimiento (20 términos, 13 técnicas, 6 frameworks, 13 refs, 20 creadores)
 │   ├── leaderboard.js          ← Módulo de ranking Top 10 y persistencia
 │   ├── rewriter.js             ← Mejora automática de prompts
 │   └── export.js               ← Exportación JSON, Markdown, Clipboard y URL
@@ -164,10 +165,10 @@ promptquill/                    ← Monorepo del Motor Core (npm)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-07
-- **Último commit promptforge:** `667da53` (fix(responsive): add mobile footer grid layout, 2-col links on small screens)
+- **Último commit promptforge:** `PENDING` (feat(radar): expand creators to 20 — Yann LeCun, François Chollet, Andrew Ng, Alex Albert, Jerry Liu, Matt Shumer, Ben Hylak, Matt Wolfe)
 - **Último commit promptometer:** `67436ff` (fix scoring ultra-short)
-- **Sesión con:** Antigravity AI / Claude Sonnet — **Footer Responsivo Móvil + Push a producción COMPLETO**
-- **Estado:** 22/22 tests en PASS. Paridad ES/EN verificada. Desplegado en Vercel.
+- **Sesión con:** Antigravity AI / Claude Sonnet — **Radar de Creadores Expandido a 20 + Push a producción COMPLETO**
+- **Estado:** 22/22 tests en PASS (Suite 5 ahora muestra 20 Creadores). Paridad ES/EN verificada. Desplegado en Vercel.
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
 > - **Nuevo Tema Novedoso Cosmic Event Horizon**: Estética visual galáctica de alta precisión de instrumentos astrofísicos y agujero negro como tema predeterminado.
