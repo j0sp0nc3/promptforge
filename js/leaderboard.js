@@ -527,6 +527,28 @@ Si la reseña está en un idioma no soportado o indescifrable, marca polaridad_g
     return SEED_PROMPTS;
   }
 
+  async function fetchGlobalTop10() {
+    try {
+      const res = await fetch('/api/leaderboard');
+      if (res.ok) {
+        const globalList = await res.json();
+        if (Array.isArray(globalList) && globalList.length > 0) {
+          const localList = getTop10();
+          const mergedMap = new Map();
+          [...localList, ...globalList].forEach(item => mergedMap.set(item.id, item));
+          const merged = Array.from(mergedMap.values())
+            .sort((a, b) => b.overallScore - a.overallScore)
+            .slice(0, 10);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+          return merged;
+        }
+      }
+    } catch (e) {
+      console.warn('Backend API /api/leaderboard unreachable, using local storage:', e);
+    }
+    return getTop10();
+  }
+
   function submit(title, author, promptText, analysis) {
     if (!analysis || typeof analysis.overallScore !== 'number') {
       return { success: false, reason: 'invalid_analysis' };
@@ -545,7 +567,18 @@ Si la reseña está en un idioma no soportado o indescifrable, marca polaridad_g
       prompt: promptText,
     };
 
-    // Combine and sort
+    // Fire & forget sync to zero-login serverless API endpoint
+    fetch('/api/leaderboard', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title: title || 'Prompt de Usuario',
+        author: author || 'Anónimo',
+        prompt: promptText
+      })
+    }).catch(() => {});
+
+    // Combine and sort locally
     const combined = [...currentList, newEntry].sort((a, b) => b.overallScore - a.overallScore);
     const top10 = combined.slice(0, 10);
 
@@ -569,5 +602,5 @@ Si la reseña está en un idioma no soportado o indescifrable, marca polaridad_g
     return SEED_PROMPTS;
   }
 
-  return { init: getTop10, getTop10, submit, resetToDefault, SEED_PROMPTS };
+  return { init: fetchGlobalTop10, getTop10, fetchGlobalTop10, submit, resetToDefault, SEED_PROMPTS };
 })();

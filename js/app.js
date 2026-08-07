@@ -1216,12 +1216,12 @@ const App = (() => {
     }
   }
 
-  function renderLeaderboardView() {
+  async function renderLeaderboardView() {
     const container = document.getElementById('leaderboard-grid');
     if (!container || typeof Leaderboard === 'undefined') return;
 
     const lang = I18n.getLang();
-    const top10 = Leaderboard.getTop10();
+    const top10 = await Leaderboard.fetchGlobalTop10();
 
     const rankMedals = { 1: '🥇', 2: '🥈', 3: '🥉' };
 
