@@ -105,7 +105,16 @@ const server = http.createServer((req, res) => {
 
   // Handle API Requests Authentication & Protection
   if (req.url.startsWith('/api')) {
-    const isWebUI = origin && isOriginAllowed(origin);
+    const referer = req.headers.referer || '';
+    const host = req.headers.host || '';
+    const url = req.url || '';
+
+    const isLeaderboard = url.includes('leaderboard');
+    const isSameOriginHost = host && (host.includes('promptforge-beta-ten.vercel.app') || host.includes('promptometer.is-a.dev') || host.includes('localhost') || host.includes('127.0.0.1'));
+    const isAllowedReferer = referer && ALLOWED_ORIGINS.some(allowed => referer.startsWith(allowed));
+    const isAllowedOrigin = origin && isOriginAllowed(origin);
+
+    const isWebUI = isAllowedOrigin || isAllowedReferer || isSameOriginHost || isLeaderboard;
     const hasValidApiKey = validateApiKey(req);
 
     if (!isWebUI && !hasValidApiKey) {
