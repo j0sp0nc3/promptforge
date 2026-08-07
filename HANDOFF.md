@@ -157,7 +157,7 @@ promptquill/                    ← Monorepo del Motor Core (npm)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-07
-- **Último commit promptforge:** pendiente (corrección de conteo anti-patrones 35→34 en docs)
+- **Último commit promptforge:** `9b9f27f` (corrección de conteo anti-patrones 35→34 en docs)
 - **Último commit promptometer:** `67436ff` (fix scoring ultra-short)
 - **Sesión con:** ZCode (GLM-5.2) — corrección de conteos en documentación
 - **Estado:** 14/14 tests de estrés en PASS. Paridad ES/EN verificada. Desplegado en Vercel.
