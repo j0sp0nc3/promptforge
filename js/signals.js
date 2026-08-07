@@ -67,14 +67,22 @@ const Signals = {
     const audienceDefined = /\b(audience|audiencia|público|reader|lector|for (developers?|students?|beginners?|managers?|clients?|customers?)|para (desarrolladores|estudiantes|principiantes|gerentes|clientes))\b/i.test(lower);
 
     // ── Robustness signals (each counted once) ─────────────────────────
-    const errorHandling = /\b(if.{0,20}(invalid|missing|malformed|empty|incorrect)|si.{0,20}(inválid|faltante|malformad|vacío|incorrecto)|when.{0,12}(fail|error)|cuando.{0,12}(fall|error)|fallback|por defecto|default value|handle.{0,8}error|manejo de error|otherwise|de lo contrario)\b/i.test(lower);
+    const errorHandling = /\b(if.{0,20}(invalid|missing|malformed|empty|incorrect)|si.{0,20}(inválid|faltante|malformad|vacío|incorrecto)|when.{0,12}(fail|error)|cuando.{0,12}(fall|error)|fallback|por defecto|default value|handle.{0,8}error|manejo de error|otherwise|de lo contrario)\b/i.test(lower)
+                       || /<(manejo_errores|error_handling|fallback)[^>]*>/i.test(prompt)
+                       || /\b(si el texto (de entrada )?(no contiene|no incluye|no tiene)|if.{0,10}(text|input).{0,10}(does not contain|has no|lacks))\b/i.test(lower)
+                       || /\b(responde exactamente con|respond exactly with|error response|respuesta de error)\b/i.test(lower);
     const edgeCases = /\b(edge case|caso borde|caso límite|corner case|boundary|frontera|null|undefined|NaN|empty input|entrada vacía|missing data|dato faltante)\b/i.test(lower);
     const validation = /\b(validate|valida|verify|verifica|check|comprueba|ensure|asegúrate|confirm|confirma|double.?check)\b/i.test(lower);
 
     // ── Safety signals (stricter than before) ──────────────────────────
     // Anti-hallucination requires explicit anti-fabrication language, not just "verify".
-    const antiHallucination = /\b(don'?t make up|no inventes|don'?t fabricate|no fabriques|do not hallucinate|no alucines|cite your sources?|cita tus fuentes|if you'?re unsure|si no estás seguro|say "?i don'?t know"?|di "?no sé"?|not enough (info|information)|sin suficiente (info|información))\b/i.test(lower);
-    const scopeLimit = /\b(scope|alcance|only (respond|answer|about)|solo (responde|contest|sobre)|limited to|limitado a|restricted to|restringido a|stay within|mantente dentro|do not (go|discuss) beyond|no (vayas|discutes) más allá)\b/i.test(lower);
+    const antiHallucination = /\b(don'?t make up|no inventes|don'?t fabricate|no fabriques|do not hallucinate|no alucines|cite your sources?|cita tus fuentes|if you'?re unsure|si no estás seguro|say "?i don'?t know"?|di "?no sé"?|not enough (info|information)|sin suficiente (info|información))\b/i.test(lower)
+                            || /\b(cita.{0,20}(únicamente|solo|solamente).{0,30}(texto|original|documento|fuente)|only.{0,20}(cite|use|include).{0,20}(text|source|document))\b/i.test(lower)
+                            || /\b(no asumas|do not assume|don'?t assume|no inventes|no inferas datos|do not infer|datos no especificados|unspecified data)\b/i.test(lower)
+                            || /\b(únicamente datos (presentes|del|en el)|only data (present|from|in the))\b/i.test(lower);
+    const scopeLimit = /\b(scope|alcance|only (respond|answer|about)|solo (responde|contest|sobre)|limited to|limitado a|restricted to|restringido a|stay within|mantente dentro|do not (go|discuss) beyond|no (vayas|discutes) más allá)\b/i.test(lower)
+                    || /\b(únicamente con|respond.{0,10}only with|responde.{0,10}(únicamente|exclusivamente|solo) con|only.{0,10}respond with|no incluyas.{0,40}fuera (del|de el)|do not include.{0,40}outside)\b/i.test(lower)
+                    || /\bÚNICAMENTE\b/.test(prompt); // uppercase = intentional strict restriction
     const injectionGuard = /\b(ignore (any|previous|user).{0,20}instruction|ignora (cualquier|anterior|del usuario).{0,20}instrucción|do not reveal|no reveles|never share these instructions|nunca compartas estas instrucciones|disregard (external|user) commands|ignora comandos externos)\b/i.test(lower);
     const untrustedDelim = /\b(treat.{0,15}(content|text|input) as (data|untrusted)|trata.{0,15}(contenido|texto|entrada) como (dato|no confiable)|<untrusted>|<user_input>|contenido no confiable)\b/i.test(lower);
 
@@ -164,6 +172,11 @@ const Signals = {
   inferType(prompt, signals, wordCount) {
     if (signals.hasToolUse) return 'tool-use';
     if (signals.hasRagContext) return 'rag';
+    // Extraction: XML tags + JSON output schema + no creative/agent cues
+    const lower = prompt.toLowerCase();
+    const hasJsonSchema = /\bjson\b/i.test(lower) && signals.xmlPairs >= 3;
+    const hasExtractionCue = /\b(extract|extrae|extraer|extraction|extracción|structured data|datos estructurados|schema|esquema|parse|parsear)\b/i.test(lower);
+    if (hasJsonSchema && hasExtractionCue && !signals.creativeTask) return 'extraction';
     if (signals.systemPromptCue && wordCount > 40) return 'system';
     if (signals.hasFewShot) return 'few-shot';
     if (signals.creativeTask) return 'creative';
@@ -190,6 +203,8 @@ const Signals = {
     rag:       { clarity: 0.10, specificity: 0.14, structure: 0.10, robustness: 0.14, context: 0.12, outputFormat: 0.14, chainOfThought: 0.06, safety: 0.20 },
     // Tool use: validation/schema matter most.
     'tool-use': { clarity: 0.12, specificity: 0.16, structure: 0.18, robustness: 0.18, context: 0.08, outputFormat: 0.16, chainOfThought: 0.04, safety: 0.08 },
+    // Extraction: structure + output format + robustness dominate; CoT irrelevant.
+    'extraction': { clarity: 0.12, specificity: 0.14, structure: 0.18, robustness: 0.18, context: 0.08, outputFormat: 0.20, chainOfThought: 0.02, safety: 0.08 },
   },
 
   weightsFor(type) {
