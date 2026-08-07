@@ -1156,6 +1156,8 @@ const App = (() => {
   }
 
   // ── Leaderboard (Top 10 Hall of Fame) ───────────────────
+  let currentLeaderboardCategory = 'all';
+
   function setupLeaderboardView() {
     const btnOpenModal = document.getElementById('btn-open-submit-modal');
     const btnCloseModal = document.getElementById('btn-close-submit-modal');
@@ -1168,6 +1170,8 @@ const App = (() => {
     if (btnCloseModal) btnCloseModal.addEventListener('click', closeLeaderboardSubmitModal);
     if (btnCancelModal) btnCancelModal.addEventListener('click', closeLeaderboardSubmitModal);
     if (btnConfirmSubmit) btnConfirmSubmit.addEventListener('click', submitPromptToLeaderboard);
+
+    setupLeaderboardFilters();
   }
 
   function openLeaderboardSubmitModal() {
@@ -1216,30 +1220,79 @@ const App = (() => {
     }
   }
 
-  function renderLeaderboardView() {
+  function renderLeaderboardView(category) {
     const container = document.getElementById('leaderboard-grid');
     if (!container || typeof Leaderboard === 'undefined') return;
 
-    // Render immediately from local/seed storage (no delay)
-    const localTop10 = Leaderboard.getTop10();
-    _renderLeaderboardCards(container, localTop10);
+    // Resolve active category filter (persisted in-session state)
+    if (category) currentLeaderboardCategory = category;
+    const activeCat = currentLeaderboardCategory || 'all';
 
-    // Asynchronously fetch global top 10 and refresh
+    // Render category filter buttons (translated)
+    _renderLeaderboardFilters(activeCat);
+
+    // Render immediately from local/seed storage filtered by category
+    const localTop10 = activeCat === 'all'
+      ? Leaderboard.getTop10()
+      : Leaderboard.getByCategory(activeCat);
+    _renderLeaderboardCards(container, localTop10, activeCat);
+
+    // Asynchronously fetch global top 10 and refresh (re-filter after merge)
     Leaderboard.fetchGlobalTop10().then(globalTop10 => {
-      _renderLeaderboardCards(container, globalTop10);
+      const filtered = activeCat === 'all'
+        ? globalTop10
+        : globalTop10.filter(item => Leaderboard.normalizeCategory(item.category) === activeCat);
+      _renderLeaderboardCards(container, filtered, activeCat);
     }).catch(() => {});
   }
 
-  function _renderLeaderboardCards(container, list) {
+  function _renderLeaderboardFilters(activeCat) {
+    const filtersContainer = document.getElementById('leaderboard-filters');
+    if (!filtersContainer) return;
+
+    // "All" button + one per canonical category
+    const cats = Leaderboard.CATEGORIES;
+    const buttons = [
+      `<button class="filter-btn ${activeCat === 'all' ? 'active' : ''}" data-category="all">${escapeHtml(t('leaderboard.filterAll'))}</button>`,
+      ...cats.map(cat =>
+        `<button class="filter-btn ${activeCat === cat ? 'active' : ''}" data-category="${escapeHtml(cat)}">${escapeHtml(Leaderboard.getCategoryLabel(cat))}</button>`
+      ),
+    ];
+    filtersContainer.innerHTML = buttons.join('');
+    filtersContainer.className = 'leaderboard-filter';
+  }
+
+  function setupLeaderboardFilters() {
+    const filtersContainer = document.getElementById('leaderboard-filters');
+    if (!filtersContainer) return;
+    filtersContainer.addEventListener('click', (e) => {
+      const btn = e.target.closest('.filter-btn');
+      if (!btn) return;
+      renderLeaderboardView(btn.dataset.category);
+    });
+  }
+
+  function _renderLeaderboardCards(container, list, activeCat) {
     if (!container || !Array.isArray(list)) return;
     const lang = I18n.getLang();
     const rankMedals = { 1: '🥇', 2: '🥈', 3: '🥉' };
+
+    if (list.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state" style="grid-column:1/-1">
+          <p class="empty-text">${escapeHtml(t('leaderboard.emptyCategory'))}</p>
+        </div>`;
+      return;
+    }
 
     container.innerHTML = list.map((item, index) => {
       const rank = index + 1;
       const medal = rankMedals[rank] ? ` ${rankMedals[rank]}` : '';
       const titleText = (typeof item.title === 'object') ? (item.title[lang] || item.title.es) : item.title;
       const rankClass = rank <= 3 ? `rank-${rank}` : '';
+      const catLabel = (typeof Leaderboard !== 'undefined')
+        ? Leaderboard.getCategoryLabel(Leaderboard.normalizeCategory(item.category))
+        : item.category;
 
       return `
         <article class="leaderboard-card" data-id="${item.id}">
@@ -1250,8 +1303,8 @@ const App = (() => {
               <span class="badge badge-success" style="font-size:0.85rem;font-weight:700">${item.overallScore}/100 (${item.grade})</span>
             </div>
             <p class="learn-meta">
-              <strong>${t('leaderboard.labelAuthor').split(' ')[0]}:</strong> ${escapeHtml(item.author || 'Anónimo')} · 
-              <span class="tag">${escapeHtml(item.category)}</span> · 
+              <strong>${t('leaderboard.labelAuthor').split(' ')[0]}:</strong> ${escapeHtml(item.author || 'Anónimo')} ·
+              <span class="tag">${escapeHtml(catLabel)}</span> ·
               <span>${escapeHtml(item.date)}</span>
             </p>
             <div class="leaderboard-prompt-preview"><code>${escapeHtml(item.prompt)}</code></div>
