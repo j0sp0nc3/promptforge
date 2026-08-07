@@ -103,13 +103,17 @@
         </svg>
         <span data-i18n="nav.history">Historial</span>
       </button>
-      <button class="nav-btn" data-view="learn" id="nav-learn">
+      <button class="nav-btn" data-view="leaderboard" id="nav-leaderboard">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
           stroke-linecap="round" stroke-linejoin="round">
-          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+          <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+          <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+          <path d="M4 22h16"/>
+          <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+          <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+          <path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/>
         </svg>
-        <span data-i18n="nav.learn">Aprender</span>
+        <span data-i18n="nav.leaderboard">Top 10</span>
       </button>
     </nav>
     <div class="header-right">
@@ -225,6 +229,10 @@
                   <span class="badge" id="badge-complexity">—</span>
                   <span class="badge" id="badge-language">—</span>
                 </div>
+                <button class="btn btn-secondary btn-sm" id="btn-submit-to-leaderboard" style="margin-top:8px" type="button">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <span data-i18n="leaderboard.submitCurrent">Publicar en Top 10</span>
+                </button>
               </div>
             </div>
 
@@ -421,9 +429,50 @@
         <div class="learn-panel" id="learn-references"></div>
       </div>
     </div>
+  <!-- Leaderboard / Top 10 Hall of Fame -->
+  <div class="view" id="view-leaderboard">
+    <div class="leaderboard-header-panel">
+      <div class="leaderboard-title-block">
+        <h2 class="view-title" data-i18n="leaderboard.title">Pabellón de la Fama — Top 10 Prompts</h2>
+        <p class="view-subtitle" data-i18n="leaderboard.subtitle">Los 10 prompts de mayor puntuación evaluados por el motor de Promptometer. Pruébalos en el editor o publica el tuyo.</p>
+      </div>
+      <button class="btn btn-primary" id="btn-open-submit-modal">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span data-i18n="leaderboard.submitCurrent">Publicar mi Prompt Actual</span>
+      </button>
+    </div>
+    <div class="leaderboard-grid" id="leaderboard-grid"></div>
   </div>
 
   </main>
+
+  <!-- Submit to Leaderboard Modal -->
+  <div class="modal-backdrop hidden" id="modal-submit-leaderboard">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" data-i18n="leaderboard.modalTitle">Publicar Prompt en el Top 10</h3>
+        <button class="modal-close" id="btn-close-submit-modal" type="button">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc" data-i18n="leaderboard.modalDesc">Ingresa un título descriptivo y tu nombre o alias para enviar tu prompt actual al ranking.</p>
+        <div class="form-group">
+          <label for="submit-prompt-title" data-i18n="leaderboard.labelTitle">Título del Prompt</label>
+          <input type="text" id="submit-prompt-title" class="form-control" data-i18n-placeholder="leaderboard.placeholderTitle" placeholder="Ej. Extractor de Entidades Corporativas en JSON">
+        </div>
+        <div class="form-group">
+          <label for="submit-prompt-author" data-i18n="leaderboard.labelAuthor">Tu Nombre / Alias (opcional)</label>
+          <input type="text" id="submit-prompt-author" class="form-control" data-i18n-placeholder="leaderboard.placeholderAuthor" placeholder="Ej. Alex R. (@alexr)">
+        </div>
+        <div class="modal-score-preview" id="modal-score-preview">
+          <!-- Filled dynamically with current prompt score -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btn-cancel-submit-modal" data-i18n="leaderboard.cancel">Cancelar</button>
+        <button class="btn btn-primary" id="btn-confirm-submit" data-i18n="leaderboard.confirmSubmit">Enviar al Ranking</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Export Menu Dropdown -->
   <div class="dropdown-menu hidden" id="export-menu">
@@ -510,6 +559,7 @@
   <script src="js/charts.js"></script>
   <script src="js/export.js"></script>
   <script src="js/knowledge.js"></script>
+  <script src="js/leaderboard.js"></script>
   <script src="js/app.js"></script>
 </body>
 

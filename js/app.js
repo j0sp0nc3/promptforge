@@ -21,6 +21,7 @@ const App = (() => {
     setupTemplatesView();
     setupHistoryView();
     setupLearnView();
+    setupLeaderboardView();
     checkShareURL();
     updateEditorStats();
 
@@ -46,6 +47,7 @@ const App = (() => {
     if (currentView === 'templates') renderTemplatesView(getActiveCategoryFilter());
     if (currentView === 'history') renderHistoryView();
     if (currentView === 'learn') renderLearnView(getActiveLearnSub());
+    if (currentView === 'leaderboard') renderLeaderboardView();
     if (currentAnalysis) renderResults();
   }
 
@@ -96,6 +98,7 @@ const App = (() => {
     if (viewName === 'history') renderHistoryView();
     if (viewName === 'templates') renderTemplatesView(getActiveCategoryFilter());
     if (viewName === 'learn') renderLearnView(getActiveLearnSub());
+    if (viewName === 'leaderboard') renderLeaderboardView();
   }
 
   function getActiveLearnSub() {
@@ -1147,6 +1150,133 @@ const App = (() => {
           const promptText = item.example[lang] || item.example.es;
           loadPrompt(promptText);
           showToast(t('learn.exampleLoaded'), 'success');
+        }
+      });
+    });
+  }
+
+  // ── Leaderboard (Top 10 Hall of Fame) ───────────────────
+  function setupLeaderboardView() {
+    const btnOpenModal = document.getElementById('btn-open-submit-modal');
+    const btnCloseModal = document.getElementById('btn-close-submit-modal');
+    const btnCancelModal = document.getElementById('btn-cancel-submit-modal');
+    const btnConfirmSubmit = document.getElementById('btn-confirm-submit');
+    const btnSubmitHero = document.getElementById('btn-submit-to-leaderboard');
+
+    if (btnOpenModal) btnOpenModal.addEventListener('click', openLeaderboardSubmitModal);
+    if (btnSubmitHero) btnSubmitHero.addEventListener('click', openLeaderboardSubmitModal);
+    if (btnCloseModal) btnCloseModal.addEventListener('click', closeLeaderboardSubmitModal);
+    if (btnCancelModal) btnCancelModal.addEventListener('click', closeLeaderboardSubmitModal);
+    if (btnConfirmSubmit) btnConfirmSubmit.addEventListener('click', submitPromptToLeaderboard);
+  }
+
+  function openLeaderboardSubmitModal() {
+    if (!currentAnalysis || !currentAnalysis.prompt) {
+      showToast(t('leaderboard.noPromptToSubmit'), 'warning');
+      return;
+    }
+
+    const modal = document.getElementById('modal-submit-leaderboard');
+    const scorePreview = document.getElementById('modal-score-preview');
+    if (scorePreview) {
+      scorePreview.innerHTML = `
+        <span><strong>${escapeHtml(t('score.label'))}:</strong> ${currentAnalysis.analysis.overallScore}/100</span>
+        <span class="badge badge-info">${escapeHtml(t(`complexity.${currentAnalysis.analysis.complexity}`))}</span>
+      `;
+    }
+    if (modal) modal.classList.remove('hidden');
+  }
+
+  function closeLeaderboardSubmitModal() {
+    const modal = document.getElementById('modal-submit-leaderboard');
+    if (modal) modal.classList.add('hidden');
+  }
+
+  function submitPromptToLeaderboard() {
+    if (!currentAnalysis || !currentAnalysis.prompt) return;
+
+    const titleInput = document.getElementById('submit-prompt-title');
+    const authorInput = document.getElementById('submit-prompt-author');
+
+    const title = titleInput ? titleInput.value.trim() : '';
+    const author = authorInput ? authorInput.value.trim() : '';
+
+    const res = Leaderboard.submit(title, author, currentAnalysis.prompt, currentAnalysis.analysis);
+
+    closeLeaderboardSubmitModal();
+
+    if (res.success) {
+      if (res.isRanked) {
+        showToast(t('leaderboard.submittedSuccess', { rank: res.rank }), 'success');
+      } else {
+        const minScore = res.top10[res.top10.length - 1].overallScore;
+        showToast(t('leaderboard.submittedNotRanked', { score: currentAnalysis.analysis.overallScore, minScore }), 'info');
+      }
+      switchView('leaderboard');
+    }
+  }
+
+  function renderLeaderboardView() {
+    const container = document.getElementById('leaderboard-grid');
+    if (!container || typeof Leaderboard === 'undefined') return;
+
+    const lang = I18n.getLang();
+    const top10 = Leaderboard.getTop10();
+
+    const rankMedals = { 1: '🥇', 2: '🥈', 3: '🥉' };
+
+    container.innerHTML = top10.map((item, index) => {
+      const rank = index + 1;
+      const medal = rankMedals[rank] ? ` ${rankMedals[rank]}` : '';
+      const titleText = (typeof item.title === 'object') ? (item.title[lang] || item.title.es) : item.title;
+      const rankClass = rank <= 3 ? `rank-${rank}` : '';
+
+      return `
+        <article class="leaderboard-card" data-id="${item.id}">
+          <div class="leaderboard-rank ${rankClass}">#${rank}${medal}</div>
+          <div class="leaderboard-content-block">
+            <div class="leaderboard-card-header">
+              <span class="learn-term-name">${escapeHtml(titleText)}</span>
+              <span class="badge badge-success" style="font-size:0.85rem;font-weight:700">${item.overallScore}/100 (${item.grade})</span>
+            </div>
+            <p class="learn-meta">
+              <strong>${t('leaderboard.labelAuthor').split(' ')[0]}:</strong> ${escapeHtml(item.author || 'Anónimo')} · 
+              <span class="tag">${escapeHtml(item.category)}</span> · 
+              <span>${escapeHtml(item.date)}</span>
+            </p>
+            <div class="leaderboard-prompt-preview"><code>${escapeHtml(item.prompt)}</code></div>
+            <div class="leaderboard-actions">
+              <button class="btn btn-secondary btn-sm load-leaderboard-btn" data-prompt-id="${item.id}">${t('leaderboard.tryPrompt')}</button>
+              <button class="btn btn-secondary btn-sm copy-leaderboard-btn" data-prompt-id="${item.id}">${t('leaderboard.copyPrompt')}</button>
+            </div>
+          </div>
+        </article>
+      `;
+    }).join('');
+
+    // Bind action buttons
+    container.querySelectorAll('.load-leaderboard-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.promptId;
+        const item = top10.find(x => x.id === id);
+        if (item) {
+          loadPrompt(item.prompt);
+          showToast(t('learn.exampleLoaded'), 'success');
+        }
+      });
+    });
+
+    container.querySelectorAll('.copy-leaderboard-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.dataset.promptId;
+        const item = top10.find(x => x.id === id);
+        if (item) {
+          try {
+            await navigator.clipboard.writeText(item.prompt);
+            showToast(t('toast.copied'), 'success');
+          } catch {
+            showToast(t('toast.copyError'), 'error');
+          }
         }
       });
     });

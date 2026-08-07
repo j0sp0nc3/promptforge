@@ -40,6 +40,7 @@ const I18n = (() => {
         templates: 'Templates',
         history: 'Historial',
         learn: 'Aprender',
+        leaderboard: 'Top 10',
         export: 'Exportar',
       },
 
@@ -823,6 +824,27 @@ const I18n = (() => {
         visitLink: 'Visitar recurso',
       },
 
+      leaderboard: {
+        title: 'Pabellón de la Fama — Top 10 Prompts',
+        subtitle: 'Los 10 prompts de mayor puntuación evaluados por el motor de Promptometer. Pruébalos en el editor o publica el tuyo.',
+        submitCurrent: 'Publicar mi Prompt Actual',
+        modalTitle: 'Publicar Prompt en el Top 10',
+        modalDesc: 'Ingresa un título descriptivo y tu nombre o alias para enviar tu prompt actual al ranking.',
+        labelTitle: 'Título del Prompt',
+        labelAuthor: 'Tu Nombre / Alias (opcional)',
+        placeholderTitle: 'Ej. Extractor de Entidades Corporativas en JSON',
+        placeholderAuthor: 'Ej. Alex R. (@alexr)',
+        cancel: 'Cancelar',
+        confirmSubmit: 'Enviar al Ranking',
+        tryPrompt: 'Analizar y Probar',
+        copyPrompt: 'Copiar Prompt',
+        rankLabel: 'Puesto #{rank}',
+        scoreLabel: 'Puntuación: {score}/100',
+        submittedSuccess: '¡Genial! Tu prompt ingresó al ranking Top 10 en el puesto #{rank}.',
+        submittedNotRanked: 'Tu prompt obtuvo {score}/100 pero se requiere una puntuación superior a {minScore} para ingresar al Top 10.',
+        noPromptToSubmit: 'Primero escribe y analiza un prompt en la pestaña Analizar antes de publicar.',
+      },
+
       footer: {
         tagline: 'Analizador de Prompts Avanzado',
         copy: '© 2026 · Licencia MIT',
@@ -846,6 +868,7 @@ const I18n = (() => {
         templates: 'Templates',
         history: 'History',
         learn: 'Learn',
+        leaderboard: 'Top 10',
         export: 'Export',
       },
 
@@ -1597,6 +1620,27 @@ const I18n = (() => {
         referencesTitle: 'Prompt Engineering References & Resources',
         referencesSubtitle: 'Official Promptometer links, OpenAI/Anthropic/Google guides, research papers, and security standards.',
         visitLink: 'Visit resource',
+      },
+
+      leaderboard: {
+        title: 'Hall of Fame — Top 10 Prompts',
+        subtitle: 'The 10 highest-scoring prompts evaluated by the Promptometer engine. Try them in the editor or publish yours.',
+        submitCurrent: 'Submit Current Prompt',
+        modalTitle: 'Publish Prompt to Top 10',
+        modalDesc: 'Enter a descriptive title and your name or handle to submit your current prompt to the ranking.',
+        labelTitle: 'Prompt Title',
+        labelAuthor: 'Your Name / Handle (optional)',
+        placeholderTitle: 'e.g. Corporate Entity Extractor in JSON',
+        placeholderAuthor: 'e.g. Alex R. (@alexr)',
+        cancel: 'Cancel',
+        confirmSubmit: 'Submit to Ranking',
+        tryPrompt: 'Analyze & Try',
+        copyPrompt: 'Copy Prompt',
+        rankLabel: 'Rank #{rank}',
+        scoreLabel: 'Score: {score}/100',
+        submittedSuccess: 'Awesome! Your prompt entered the Top 10 ranking at position #{rank}.',
+        submittedNotRanked: 'Your prompt scored {score}/100 but requires a score above {minScore} to enter the Top 10.',
+        noPromptToSubmit: 'First write and analyze a prompt in the Analyze tab before publishing.',
       },
 
       footer: {
