@@ -1216,16 +1216,26 @@ const App = (() => {
     }
   }
 
-  async function renderLeaderboardView() {
+  function renderLeaderboardView() {
     const container = document.getElementById('leaderboard-grid');
     if (!container || typeof Leaderboard === 'undefined') return;
 
-    const lang = I18n.getLang();
-    const top10 = await Leaderboard.fetchGlobalTop10();
+    // Render immediately from local/seed storage (no delay)
+    const localTop10 = Leaderboard.getTop10();
+    _renderLeaderboardCards(container, localTop10);
 
+    // Asynchronously fetch global top 10 and refresh
+    Leaderboard.fetchGlobalTop10().then(globalTop10 => {
+      _renderLeaderboardCards(container, globalTop10);
+    }).catch(() => {});
+  }
+
+  function _renderLeaderboardCards(container, list) {
+    if (!container || !Array.isArray(list)) return;
+    const lang = I18n.getLang();
     const rankMedals = { 1: '🥇', 2: '🥈', 3: '🥉' };
 
-    container.innerHTML = top10.map((item, index) => {
+    container.innerHTML = list.map((item, index) => {
       const rank = index + 1;
       const medal = rankMedals[rank] ? ` ${rankMedals[rank]}` : '';
       const titleText = (typeof item.title === 'object') ? (item.title[lang] || item.title.es) : item.title;
@@ -1258,7 +1268,7 @@ const App = (() => {
     container.querySelectorAll('.load-leaderboard-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const id = btn.dataset.promptId;
-        const item = top10.find(x => x.id === id);
+        const item = list.find(x => x.id === id);
         if (item) {
           loadPrompt(item.prompt);
           showToast(t('learn.exampleLoaded'), 'success');
@@ -1269,7 +1279,7 @@ const App = (() => {
     container.querySelectorAll('.copy-leaderboard-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
         const id = btn.dataset.promptId;
-        const item = top10.find(x => x.id === id);
+        const item = list.find(x => x.id === id);
         if (item) {
           try {
             await navigator.clipboard.writeText(item.prompt);
