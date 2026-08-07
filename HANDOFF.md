@@ -96,6 +96,8 @@ interactiva desplegada en Vercel.
 - [x] **Técnicas & Frameworks 2026**: Adición de 3 técnicas de vanguardia (*Chain of Verification - CoVe, Skeleton-of-Thought - SoT, Hierarchical CoT - Hi-CoT*) y 2 frameworks de arquitectura (*CO-STAR, Bento-Box Modular Architecture*) en `js/knowledge.js`.
 - [x] **Pestaña de Referencias & Novedades**: Quinta sub-sección en el Hub de Conocimiento (*Glosario, Técnicas, Frameworks, Biblioteca, Referencias*) con 11 tarjetas interactivas categorizadas (Oficiales de Promptometer, Guías de OpenAI/Anthropic/Google, Papers de investigación de Stanford/Google/Meta y OWASP Security).
 - [x] **Redes Sociales & Perfiles Oficiales**: Enlaces directos en el pie de página a **LinkedIn** (`/in/josponce`), **X / Twitter** (`@j0sp0nc3`), **GitHub Autor** (`@j0sp0nc3`), **Código Fuente** (`promptforge`) y **Motor NPM** (`promptometer`).
+- [x] **Módulo de Moderación de Contenido (`api/moderation.js`) & Persistencia Global Upstash Redis (`api/index.js`)**: Filtro de tres capas (palabras malsonantes ES/EN, patrones maliciosos de inyección/XSS y anti-spam por IP/deduplicación hash) con almacenamiento persistente opcional en Upstash Redis (`UPSTASH_REDIS_REST_URL`).
+- [x] **Normalización de Categorías (`js/leaderboard.js`)**: Espacio de nombres canónico de categorías (`general`, `código`, `agentes`, `RAG`, `extracción`, `evaluación`, `marketing`, `NLP`, `traducción`, `salud`) y métodos `getByCategory()` y `normalizeCategory()`.
 - [x] **Fix Renderizado Inmediato Top 10 (`js/app.js`)**: Aplicado el patrón *Stale-While-Revalidate* en `renderLeaderboardView()`. Los 10 prompts curados iniciales se renderizan a 0ms (sin espera de red) y luego se actualizan asíncronamente cuando responde la API.
 - [x] **Fix 401 Unauthorized en `/api/leaderboard`**: Ajustada la verificación de autenticación en `api/index.js` y `server.js` para permitir peticiones `GET` del mismo origen (que no envían header `Origin` explícito en navegadores) e indicar acceso público al endpoint del Top 10.
 - [x] **Fix SyntaxError en `js/leaderboard.js`**: Escapadas las comillas invertidas unescaped (\`npm run build\`) en el prompt semilla #7 que impedían la carga del script en el navegador.
@@ -157,19 +159,14 @@ promptquill/                    ← Monorepo del Motor Core (npm)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-07
-- **Último commit promptforge:** `9b9f27f` (corrección de conteo anti-patrones 35→34 en docs)
+- **Último commit promptforge:** `6fc8958` (completada la capa de moderación de contenido api/moderation.js + persistencia Upstash Redis en /api/leaderboard + normalización de categorías en js/leaderboard.js)
 - **Último commit promptometer:** `67436ff` (fix scoring ultra-short)
-- **Sesión con:** ZCode (GLM-5.2) — corrección de conteos en documentación
+- **Sesión con:** Antigravity AI + ZCode — **Módulo de Moderación + Persistencia Upstash Redis COMPLETO**
 - **Estado:** 14/14 tests de estrés en PASS. Paridad ES/EN verificada. Desplegado en Vercel.
 
-> 📌 **CORRECCIÓN DE DOCUMENTACIÓN (esta sesión):**
-> Auditoría completa del estado real del proyecto vs. documentación. Se corrigió el
-> conteo de anti-patrones de "35" → **34** en 6 lugares (README ×3, HANDOFF ×2,
-> comentario en patterns.js). Conteos verificados contra el código:
-> - 12 templates · **34 anti-patrones** · 15 best-practices · 13 tests adversariales
-> - 20 términos de glosario · 13 técnicas (9 nuevas + 4 cross-link) · 6 frameworks
->
-> **Trabajo previo de Antigravity (commits `9f232e9`..`d41df39`):** Top 10 Leaderboard,
-> 3 técnicas SOTA 2026 (CoVe/SoT/Hi-CoT), 2 frameworks (CO-STAR/Bento-Box), sub-tab
+> 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
+> - **Capa de Moderación de Contenido (`api/moderation.js`)**: 3 capas activas (palabras malsonantes ES/EN, patrones de inyección de prompt/código peligroso XSS, y anti-spam por IP/deduplicación SHA-256).
+> - **Persistencia Global Upstash Redis (`api/index.js`)**: Integración con comandos HTTP REST `ZADD`, `ZRANGE`, `HSET`, `HGETALL` sin dependencias externas, con fallback suave a arreglo en memoria.
+> - **Normalización de Categorías (`js/leaderboard.js`)**: Mapeo canónico a 10 categorías (`general`, `código`, `agentes`, `RAG`, `extracción`, `evaluación`, `marketing`, `NLP`, `traducción`, `salud`) y métodos `getByCategory()` y `normalizeCategory()`.
 > Referencias, búsqueda interactiva, link de X/Twitter en footer, fixes de API 401
 > y SyntaxError en leaderboard.js.
