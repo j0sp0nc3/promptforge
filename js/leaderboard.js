@@ -15,6 +15,60 @@
 const Leaderboard = (() => {
   const STORAGE_KEY = 'promptometer_leaderboard_v1';
 
+  // ── Canonical categories (unified namespace for seeds + user prompts) ──
+  // These keys map to i18n labels via `leaderboard.cat_<key>`.
+  const CATEGORIES = [
+    'general', 'código', 'agentes', 'RAG', 'extracción',
+    'evaluación', 'marketing', 'NLP', 'traducción', 'salud',
+  ];
+
+  // Map any raw category/promptType value to a canonical key.
+  // Handles seed categories (mixed ES/EN/acronyms) and analyzer
+  // promptType output (system, few-shot, task, creative, rag, tool-use...).
+  const CATEGORY_MAP = {
+    // Analyzer promptType values → canonical
+    'system': 'general',
+    'few-shot': 'general',
+    'task': 'general',
+    'general': 'general',
+    'creative': 'marketing',
+    'rag': 'RAG',
+    'tool-use': 'agentes',
+    'chainofthought': 'agentes',
+    'chain of thought': 'agentes',
+    'cot': 'agentes',
+    // Seed categories → canonical (already close, normalized here)
+    'extraccion': 'extracción',
+    'agentes': 'agentes',
+    'agente': 'agentes',
+    'evaluacion': 'evaluación',
+    'rag': 'RAG',
+    'codigo': 'código',
+    'code': 'código',
+    'salud': 'salud',
+    'medical': 'salud',
+    'traduccion': 'traducción',
+    'translation': 'traducción',
+    'marketing': 'marketing',
+    'nlp': 'NLP',
+  };
+
+  function normalizeCategory(raw) {
+    if (!raw) return 'general';
+    const key = String(raw).toLowerCase().trim();
+    return CATEGORY_MAP[key] || 'general';
+  }
+
+  function getCategoryLabel(key) {
+    if (typeof I18n !== 'undefined') {
+      const label = I18n.t('leaderboard.cat_' + key);
+      // I18n.t returns the key itself if missing — guard against that.
+      if (label && label !== ('leaderboard.cat_' + key)) return label;
+    }
+    return key;
+  }
+
+
   // ── Seed Prompts (High-scoring 94-99/100 prompts) ─────────
   const SEED_PROMPTS = [
     {
@@ -562,7 +616,7 @@ Si la reseña está en un idioma no soportado o indescifrable, marca polaridad_g
       overallScore: analysis.overallScore,
       grade: analysis.grade || 'A',
       complexity: analysis.complexity || 'intermediate',
-      category: analysis.promptType || 'general',
+      category: normalizeCategory(analysis.promptType),
       date: new Date().toISOString().split('T')[0],
       prompt: promptText,
     };
@@ -602,5 +656,23 @@ Si la reseña está en un idioma no soportado o indescifrable, marca polaridad_g
     return SEED_PROMPTS;
   }
 
-  return { init: fetchGlobalTop10, getTop10, fetchGlobalTop10, submit, resetToDefault, SEED_PROMPTS };
+  // Get entries filtered by canonical category. 'all' returns everything.
+  function getByCategory(category) {
+    const all = getTop10();
+    if (!category || category === 'all') return all;
+    return all.filter(item => normalizeCategory(item.category) === category);
+  }
+
+  return {
+    init: fetchGlobalTop10,
+    getTop10,
+    fetchGlobalTop10,
+    getByCategory,
+    submit,
+    resetToDefault,
+    SEED_PROMPTS,
+    CATEGORIES,
+    normalizeCategory,
+    getCategoryLabel,
+  };
 })();
