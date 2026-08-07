@@ -160,7 +160,7 @@ promptquill/                    ← Monorepo del Motor Core (npm)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-07
-- **Último commit promptforge:** `8b29f01` (Elevación de Radar IA a pestaña principal de navegación #nav-radar + sub-pestañas Creadores & Referencias + 22/22 PASS)
+- **Último commit promptforge:** `0127b75` (feat(ui): promote Radar IA and References to top-level main navigation tab (#nav-radar) with subnav tabs for Creators & References)
 - **Último commit promptometer:** `67436ff` (fix scoring ultra-short)
 - **Sesión con:** Antigravity AI — **Promoción de Radar IA a Pestaña Principal Superior COMPLETO**
 - **Estado:** 22/22 tests de estrés y suites de prueba en PASS. Paridad ES/EN verificada. Desplegado en Vercel.
