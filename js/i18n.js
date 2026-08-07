@@ -851,6 +851,7 @@ const I18n = (() => {
         source: 'Código fuente',
         engine: 'Motor',
         linkedin: 'Perfil de LinkedIn',
+        x: 'Perfil de X (Twitter)',
       },
     },
 
@@ -1649,6 +1650,7 @@ const I18n = (() => {
         source: 'Source code',
         engine: 'Engine',
         linkedin: 'LinkedIn profile',
+        x: 'X (Twitter) profile',
       },
     },
   };
