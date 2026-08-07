@@ -70,7 +70,7 @@ interactiva desplegada en Vercel.
 - [x] Seguritización de API: Autenticación por API Key privada (`x-api-key` / `Authorization: Bearer` configurada vía `PROMPTOMETER_API_KEY` en Vercel, 0 secretos en el código fuente), CORS restrictivo, Rate Limiting (30 req/min/IP), Límite de Payload (100 KB) y Headers OWASP.
 - [x] Tests de estrés: 14/14 PASS
 - [x] Footer rediseñado (Editorial Technical): avatar circular de GitHub + bloque de marca (wordmark + tagline) + links con íconos SVG (GitHub, Motor, LinkedIn)
-- [x] **Hub de Conocimiento Fase 0 (esqueleto)**: nuevo tab "Aprender" con 4 sub-secciones (Glosario, Técnicas, Frameworks, Biblioteca). `App.loadPrompt()` expuesto. CSS `.learn-*` completo. `knowledge.js` creado (vacío, se rellena en fases 1-3). Biblioteca unificada renderiza los 12 templates + 35 anti-patrones + 15 best-practices + 13 tests adversariales existentes. i18n `learn.*` y `nav.learn` en ES/EN.
+- [x] **Hub de Conocimiento Fase 0 (esqueleto)**: nuevo tab "Aprender" con 4 sub-secciones (Glosario, Técnicas, Frameworks, Biblioteca). `App.loadPrompt()` expuesto. CSS `.learn-*` completo. `knowledge.js` creado (vacío, se rellena en fases 1-3). Biblioteca unificada renderiza los 12 templates + 34 anti-patrones + 15 best-practices + 13 tests adversariales existentes. i18n `learn.*` y `nav.learn` en ES/EN.
 - [x] **Hub de Conocimiento Fase 1 (Glosario)**: 20 términos bilingües ES/EN en `Knowledge.glossary` (token, temperature, top-p, context window, system/user/assistant, embedding, vector store, fine-tuning, hallucination, grounding, stop sequence, max tokens, function calling, prompt chaining, few-shot/zero-shot, CoT, prompt injection, LLM-as-judge, in-context learning, delimiters). 14 con cross-refs a items existentes (AP###, BP###, tpl-*, adv.*). 8 categorías.
 - [x] **Hub de Conocimiento Fase 2 (Técnicas)**: 10 técnicas en `Knowledge.techniques` — 6 nuevas (ReAct, Tree-of-Thought, Self-Consistency, Reflexion, Zero-shot, Metaprompting) con ejemplos Analizables, + 4 clásicas cross-linkadas (Few-shot, CoT, RAG, Role prompting) que ya están en el motor/rewriter. Todas bilingües ES/EN con crossRefs.
 - [x] **Hub de Conocimiento Fase 3 (Frameworks)**: 4 frameworks en `Knowledge.frameworks` — RTF (Role-Task-Format), CRISPE (6 componentes), RACE (Role-Action-Context-Expectation), y la **anatomía XML de 7 secciones nativa de Promptometer** (documentada con cross-refs a BP001/002/003/004/006/010/015 y rewriter._restructure). Los 2 principales (RTF + XML nativo) tienen ejemplos Analizables.
@@ -89,7 +89,7 @@ interactiva desplegada en Vercel.
 - [x] **Biblioteca con detalle expandible**: los anti-patrones (35), buenas prácticas (15) y tests adversariales (13) ahora son acordeones `<details>` expandibles que muestran descripción, dimensión y sugerencia (todo desde i18n existente, sin duplicar contenido).
 
 > ✅ **HUB DE CONOCIMIENTO COMPLETO.** 30 entradas nuevas (20 glosario + 6 técnicas + 4 frameworks),
-> bilingües ES/EN, + biblioteca unificada de los 12 templates + 35 anti-patrones + 15 best-practices
+> bilingües ES/EN, + biblioteca unificada de los 12 templates + 34 anti-patrones + 15 best-practices
 > + 13 tests adversariales existentes (con detalle expandible). + 18 bugs de i18n arreglados.
 
 - [x] **Hub de Conocimiento Búsqueda interactiva**: Barra de búsqueda en tiempo real `#learn-search-input` para filtrar conceptos del glosario, técnicas, frameworks, templates, anti-patrones y tests adversariales con botón de borrado rápido e i18n ES/EN.
@@ -157,13 +157,19 @@ promptquill/                    ← Monorepo del Motor Core (npm)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-07
-- **Último commit promptforge:** `9b29d5d` (fix Stale-While-Revalidate render en Top 10 + API serverless `/api/leaderboard` + 13 técnicas + 6 frameworks + 11 referencias)
+- **Último commit promptforge:** pendiente (corrección de conteo anti-patrones 35→34 en docs)
 - **Último commit promptometer:** `67436ff` (fix scoring ultra-short)
-- **Sesión con:** Antigravity AI — **Ranking Top 10 + SOTA Techniques & Frameworks 2026 + References Hub COMPLETO**
+- **Sesión con:** ZCode (GLM-5.2) — corrección de conteos en documentación
 - **Estado:** 14/14 tests de estrés en PASS. Paridad ES/EN verificada. Desplegado en Vercel.
 
-> 📌 **RESUMEN DE ACTUALIZACIÓN DE DOCUMENTACIÓN:**
-> - **Técnicas:** 13 en total (ReAct, ToT, Self-Consistency, Reflexion, Zero-shot, Metaprompting, CoVe, SoT, Hi-CoT + 4 clásicas).
-> - **Frameworks:** 6 en total (RTF, CRISPE, RACE, CO-STAR, Bento-Box y Anatomía XML Nativa de 7 secciones).
-> - **Pestaña Referencias & Novedades:** 11 recursos con enlaces oficiales.
-> - **Ranking Top 10 / Pabellón de la Fama:** Pestaña nativa `Top 10`, modal de envio, 10 prompts curados (94-99/100), endpoint `/api/leaderboard` sin autenticación obligatoria y Stale-While-Revalidate.
+> 📌 **CORRECCIÓN DE DOCUMENTACIÓN (esta sesión):**
+> Auditoría completa del estado real del proyecto vs. documentación. Se corrigió el
+> conteo de anti-patrones de "35" → **34** en 6 lugares (README ×3, HANDOFF ×2,
+> comentario en patterns.js). Conteos verificados contra el código:
+> - 12 templates · **34 anti-patrones** · 15 best-practices · 13 tests adversariales
+> - 20 términos de glosario · 13 técnicas (9 nuevas + 4 cross-link) · 6 frameworks
+>
+> **Trabajo previo de Antigravity (commits `9f232e9`..`d41df39`):** Top 10 Leaderboard,
+> 3 técnicas SOTA 2026 (CoVe/SoT/Hi-CoT), 2 frameworks (CO-STAR/Bento-Box), sub-tab
+> Referencias, búsqueda interactiva, link de X/Twitter en footer, fixes de API 401
+> y SyntaxError en leaderboard.js.

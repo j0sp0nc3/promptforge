@@ -34,7 +34,7 @@
 Promptometer is a complete professional workspace and engine to **evaluate, benchmark, learn, and optimize prompts for LLMs**. It provides:
 
 - **Multidimensional Score (0–100)** with letter grades (A to F) across **8 dimensions**.
-- **Anti-Pattern Catalog** (35 anti-patterns) & **Best Practices** (15 strengths) with expandable `<details>` accordions.
+- **Anti-Pattern Catalog** (34 anti-patterns) & **Best Practices** (15 strengths) with expandable `<details>` accordions.
 - **Adversarial Security Suite** (13 security tests: jailbreak resistance, prompt exfiltration, hallucination mitigation, etc.).
 - **Interactive Knowledge Hub** with a 20-term bilingual glossary, 13 prompting techniques (including CoVe, SoT, Hi-CoT), 6 structural frameworks (including CO-STAR and Bento-Box), 11 curated research references, and full-text real-time search.
 - **Top 10 Hall of Fame Leaderboard** with zero-login global API sync (`/api/leaderboard`), instant URL sharing (`?p=base64`), 10 elite seed prompts (94–99/100), and interactive "Analyze & Try" buttons.
@@ -85,7 +85,7 @@ The **Learn ("Aprender")** and **Top 10** tabs provide an interactive educationa
 - **6 Structural Frameworks:** RTF (Role-Task-Format), CRISPE, RACE, CO-STAR (GovTech Singapore), Bento-Box Modular Architecture, and native 7-section XML Anatomy.
 - **11 Research References:** Curated links to official Promptometer repos, OpenAI/Anthropic/Google guides, Stanford/Google/Meta papers, and OWASP Security standards.
 - **Top 10 Hall of Fame (`js/leaderboard.js` & `/api/leaderboard`):** Global community ranking with zero-login API sync, gold/silver/bronze badges, submission modal, and "Analyze & Try" buttons.
-- **Unified Expandable Library:** Browse 35 anti-patterns, 15 best practices, and 13 adversarial tests as expandable accordions displaying dimension, description, and suggestions.
+- **Unified Expandable Library:** Browse 34 anti-patterns, 15 best practices, and 13 adversarial tests as expandable accordions displaying dimension, description, and suggestions.
 - **Real-Time Interactive Search:** Search bar filtering all terms, techniques, frameworks, references, and library entries dynamically as you type.
 
 ---
@@ -207,7 +207,7 @@ promptforge/                    # Web App Repo (Vercel deployment)
 ├── js/
 │   ├── i18n.js                 # Internationalization Engine (ES/EN)
 │   ├── signals.js              # Single Source of Truth Signal Extractor
-│   ├── patterns.js             # Catalog of 35 Anti-Patterns & 15 Strengths
+│   ├── patterns.js             # Catalog of 34 Anti-Patterns & 15 Strengths
 │   ├── analyzer.js             # 8-Dimension Scoring Engine
 │   ├── adversarial.js          # Security & Resilience Simulator (13 tests)
 │   ├── rewriter.js             # Non-Destructive XML Rewriter
