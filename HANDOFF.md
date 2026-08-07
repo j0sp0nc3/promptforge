@@ -163,7 +163,7 @@ promptquill/                    ← Monorepo del Motor Core (npm)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-07
-- **Último commit promptforge:** `PENDING` (fix(responsive): optimize mobile header grid, smooth nav scroll & ticker bar position)
+- **Último commit promptforge:** `c7acaaa` (fix(responsive): optimize mobile header grid, smooth nav scroll & ticker bar position)
 - **Último commit promptometer:** `67436ff` (fix scoring ultra-short)
 - **Sesión con:** Antigravity AI — **Optimización Responsiva para Teléfonos Celulares / Móviles COMPLETA**
 - **Estado:** 22/22 tests de estrés y suites de prueba en PASS. Paridad ES/EN verificada. Desplegado en Vercel.
