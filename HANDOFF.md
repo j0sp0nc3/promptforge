@@ -165,7 +165,7 @@ promptquill/                    ← Monorepo del Motor Core (npm)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-07
-- **Último commit promptforge:** `PENDING` (feat(radar): expand creators to 20 — Yann LeCun, François Chollet, Andrew Ng, Alex Albert, Jerry Liu, Matt Shumer, Ben Hylak, Matt Wolfe)
+- **Último commit promptforge:** `d3d2d14` (feat(radar): expand creators to 20 — Yann LeCun, Chollet, Andrew Ng, Alex Albert, Jerry Liu, Matt Shumer, Ben Hylak, Matt Wolfe)
 - **Último commit promptometer:** `67436ff` (fix scoring ultra-short)
 - **Sesión con:** Antigravity AI / Claude Sonnet — **Radar de Creadores Expandido a 20 + Push a producción COMPLETO**
 - **Estado:** 22/22 tests en PASS (Suite 5 ahora muestra 20 Creadores). Paridad ES/EN verificada. Desplegado en Vercel.
