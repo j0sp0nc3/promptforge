@@ -428,6 +428,101 @@ location, and people involved, in JSON format."""`,
       },
       crossRefs: ['rewriter.improve'],
     },
+    {
+      id: 't-cove',
+      name: { es: 'Chain of Verification (CoVe)', en: 'Chain of Verification (CoVe)' },
+      category: 'reasoning',
+      crossLinkOnly: false,
+      what: {
+        es: 'Patrón de 4 pasos para mitigar alucinaciones en datos críticos: 1) Generar borrador inicial 2) Formular preguntas de verificación sobre las afirmaciones clave 3) Responder las preguntas de forma independiente 4) Reconstruir la respuesta final corregida basándose en la evidencia verificada.',
+        en: 'A 4-step pattern to mitigate hallucinations in high-stakes outputs: 1) Generate initial draft 2) Plan verification questions for key claims 3) Answer verification questions independently 4) Reconstruct final corrected response grounded in verified evidence.',
+      },
+      when: {
+        es: 'Generación de informes médicos, legales, financieros o técnicos donde el costo de una alucinación es inaceptable.',
+        en: 'Generating medical, legal, financial, or technical reports where the cost of a hallucination is unacceptable.',
+      },
+      example: {
+        es: `<tarea>
+Genera un informe sobre el tratamiento de la hipertensión leve.
+</tarea>
+
+<flujo_cove>
+Paso 1: Redacta un borrador inicial de recomendaciones.
+Paso 2: Genera 3 preguntas de verificación independientes sobre las dosis y contraindicaciones mencionadas.
+Paso 3: Responde las preguntas de verificación usando solo evidencia médica establecida.
+Paso 4: Reescribe el informe final corrigiendo cualquier discrepancia encontrada en el Paso 3.
+</flujo_cove>`,
+        en: `<task>
+Generate a report on treating mild hypertension.
+</task>
+
+<cove_flow>
+Step 1: Write an initial draft of recommendations.
+Step 2: Generate 3 independent verification questions about doses and contraindications mentioned.
+Step 3: Answer verification questions using only established medical evidence.
+Step 4: Rewrite the final report correcting any discrepancies found in Step 3.
+</cove_flow>`,
+      },
+      crossRefs: ['g-hallucination', 'g-grounding', 'antiHallucination'],
+    },
+    {
+      id: 't-sot',
+      name: { es: 'Skeleton-of-Thought (SoT)', en: 'Skeleton-of-Thought (SoT)' },
+      category: 'performance',
+      crossLinkOnly: false,
+      what: {
+        es: 'Técnica de optimización de latencia en 2 fases: 1) Pedir al modelo que genere un esquema/esqueleto conciso de los puntos principales de la respuesta 2) Expandir cada punto en detalle (ideal para procesamiento en paralelo). Reduce drásticamente el tiempo percibido de generación.',
+        en: 'A 2-phase latency optimization technique: 1) Ask the model to generate a concise skeleton outline of the main points 2) Expand each point in detail (ideal for parallel API calls). Drastically reduces total generation latency.',
+      },
+      when: {
+        es: 'Respuestas extensas en tiempo real o chatbots donde la velocidad de respuesta inicial es crítica.',
+        en: 'Long-form real-time responses or chatbots where initial response speed is critical.',
+      },
+      example: {
+        es: `<fase_esqueleto>
+Primero, genera ÚNICAMENTE un esqueleto numerado de 4 puntos clave para migrar un monolito a microservicios. No agregues detalles todavía.
+</fase_esqueleto>
+
+<fase_expansion>
+Para cada uno de los 4 puntos del esqueleto anterior, expande los aspectos técnicos en un párrafo detallado.
+</fase_expansion>`,
+        en: `<skeleton_phase>
+First, generate ONLY a numbered 4-point skeleton outline for migrating a monolith to microservices. Do not add details yet.
+</skeleton_phase>
+
+<expansion_phase>
+For each of the 4 points in the skeleton above, expand the technical details into a thorough paragraph.
+</expansion_phase>`,
+      },
+      crossRefs: ['g-token', 'g-context-window'],
+    },
+    {
+      id: 't-hicot',
+      name: { es: 'Hierarchical CoT (Hi-CoT)', en: 'Hierarchical CoT (Hi-CoT)' },
+      category: 'reasoning',
+      crossLinkOnly: false,
+      what: {
+        es: 'Evolución de Chain-of-Thought que descompone el razonamiento en niveles jerárquicos (Plan de alto nivel ➔ Sub-pasos instruccionales ➔ Ejecución detallada). Evita que el modelo pierda el hilo estratégico en problemas matemáticos o lógicos complejos.',
+        en: 'Evolution of Chain-of-Thought decomposing reasoning into hierarchical levels (High-level plan ➔ Instructional sub-steps ➔ Detailed execution). Prevents the model from losing strategic context in complex math or logic problems.',
+      },
+      when: {
+        es: 'Planificación de arquitectura de software, demostraciones matemáticas o análisis financiero de múltiples etapas.',
+        en: 'Software architecture planning, mathematical proofs, or multi-stage financial modeling.',
+      },
+      example: {
+        es: `<razonamiento_jerarquico>
+Nivel 1 (Estrategia): Define las 3 fases principales del plan de contingencia.
+Nivel 2 (Táctica): Para cada fase, desglosa los 2 pasos operativos clave.
+Nivel 3 (Ejecución): Ejecuta cada paso calculando los tiempos y costos involucrados.
+</razonamiento_jerarquico>`,
+        en: `<hierarchical_reasoning>
+Level 1 (Strategy): Define the 3 main phases of the contingency plan.
+Level 2 (Tactics): For each phase, break down the 2 key operational steps.
+Level 3 (Execution): Execute each step calculating the involved times and costs.
+</hierarchical_reasoning>`,
+      },
+      crossRefs: ['g-cot', 't-tot'],
+    },
 
     // ── 4 CLÁSICAS (ya integradas en el motor/rewriter — solo cross-link) ──
     {
@@ -640,6 +735,106 @@ Plain text, no additional comments.
 </expectation>`,
       },
       crossRefs: ['f-rtf'],
+    },
+    {
+      id: 'f-costar',
+      name: { es: 'CO-STAR Framework', en: 'CO-STAR Framework' },
+      acronym: 'CO-STAR',
+      category: 'framework',
+      def: {
+        es: 'Framework de 6 componentes diseñado por el GovTech de Singapur: Context (contexto), Objective (objetivo), Style (estilo de redacción), Tone (tono), Audience (audiencia) y Response (formato de respuesta). Muy popular para comunicaciones empresariales y marketing.',
+        en: 'A 6-component framework designed by Singapore\'s GovTech: Context, Objective, Style, Tone, Audience, and Response. Highly popular for corporate communications and marketing.',
+      },
+      structure: {
+        es: `<contexto>
+[Información de fondo relevante para el problema]
+</contexto>
+<objetivo>
+[Instrucción concreta de lo que debe lograr el modelo]
+</objetivo>
+<estilo>
+[Estilo de escritura: periodístico, corporativo, directo]
+</estilo>
+<tono>
+[Tono emocional: empático, profesional, persuasivo]
+</tono>
+<audiencia>
+[Público objetivo: inversores, clientes, estudiantes]
+</audiencia>
+<respuesta>
+[Formato exacto de salida: JSON, tabla, email]
+</respuesta>`,
+        en: `<context>
+[Relevant background information for the problem]
+</context>
+<objective>
+[Concrete instruction of what the model should accomplish]
+</objective>
+<style>
+[Writing style: journalistic, corporate, direct]
+</style>
+<tone>
+[Emotional tone: empathetic, professional, persuasive]
+</tone>
+<audience>
+[Target audience: investors, clients, students]
+</audience>
+<response>
+[Exact output format: JSON, table, email]
+</response>`,
+      },
+      crossRefs: ['f-crispe', 'f-race'],
+    },
+    {
+      id: 'f-bento',
+      name: { es: 'Bento-Box Modular Architecture', en: 'Bento-Box Modular Architecture' },
+      acronym: 'Bento',
+      category: 'framework',
+      def: {
+        es: 'Arquitectura modular moderna que separa el prompt en 5 bloques independientes ("compartimentos"): System Persona, Context Initializer, Input Contracts, Task Directives y Output Guardrails. Facilita la reutilización de bloques y optimiza el Prompt Caching.',
+        en: 'Modern modular architecture separating the prompt into 5 independent compartments: System Persona, Context Initializer, Input Contracts, Task Directives, and Output Guardrails. Enables block reuse and optimizes Prompt Caching.',
+      },
+      structure: {
+        es: `<1_system_persona>
+[Rol global y comportamiento permanente]
+</1_system_persona>
+
+<2_context_initializer>
+[Datos del dominio, tablas de referencia o conocimiento fijo]
+</2_context_initializer>
+
+<3_input_contract>
+[Esquema y variables recibidas del usuario]
+</3_input_contract>
+
+<4_task_directives>
+[Pasos concretos de ejecución]
+</4_task_directives>
+
+<5_output_guardrails>
+[Formato de respuesta, restricciones y manejo de errores]
+</5_output_guardrails>`,
+        en: `<1_system_persona>
+[Global role and permanent behavior]
+</1_system_persona>
+
+<2_context_initializer>
+[Domain data, reference tables, or static knowledge]
+</2_context_initializer>
+
+<3_input_contract>
+[Schema and variables received from the user]
+</3_input_contract>
+
+<4_task_directives>
+[Concrete execution steps]
+</4_task_directives>
+
+<5_output_guardrails>
+[Response format, constraints, and error handling]
+</5_output_guardrails>`,
+      },
+      crossRefs: ['f-promptometer-xml'],
     },
     {
       id: 'f-promptometer-xml',
