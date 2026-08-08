@@ -51,6 +51,9 @@ const API_KEY = process.env.PROMPTOMETER_API_KEY || process.env.API_KEY || '';
 
 const ALLOWED_ORIGINS = [
   'https://promptforge-beta-ten.vercel.app',
+  'https://promptometer.vercel.app',
+  'https://promptometer.tech',
+  'https://www.promptometer.tech',
   'https://promptometer.is-a.dev',
   'http://localhost:3000',
   'http://127.0.0.1:3000',
@@ -210,7 +213,7 @@ module.exports = (req, res) => {
   const url = req.url || '';
 
   const isLeaderboard = url.includes('leaderboard');
-  const isSameOriginHost = host && (host.includes('promptforge-beta-ten.vercel.app') || host.includes('promptometer.is-a.dev') || host.includes('localhost') || host.includes('127.0.0.1'));
+  const isSameOriginHost = host && (host.includes('promptforge-beta-ten.vercel.app') || host.includes('promptometer.is-a.dev') || host.includes('promptometer.tech') || host.includes('localhost') || host.includes('127.0.0.1'));
   const isAllowedReferer = referer && ALLOWED_ORIGINS.some(allowed => referer.startsWith(allowed));
   const isAllowedOrigin = origin && isOriginAllowed(origin);
 
