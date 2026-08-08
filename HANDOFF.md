@@ -102,20 +102,27 @@ interactiva desplegada en Vercel.
 - [x] **Técnicas & Frameworks 2026**: Adición de 3 técnicas de vanguardia (*Chain of Verification - CoVe, Skeleton-of-Thought - SoT, Hierarchical CoT - Hi-CoT*) y 2 frameworks de arquitectura (*CO-STAR, Bento-Box Modular Architecture*) en `js/knowledge.js`.
 - [x] **Pestaña Principal Radar IA (`#nav-radar` & `#view-radar`)**: Promovido del sub-menú de Aprender a pestaña principal en la barra superior de navegación. Reúne en un solo lugar destacado los 12 Creadores AI y las 11 Referencias & Guías oficiales con pestañas internas y modal de sugerencia comunitaria.
 - [x] **Banda Ticker de Noticias AI en Vivo (`#news-ticker-bar`)**: Marquesina deslizante continua integrada bajo la cabecera principal que muestra las últimas publicaciones, descubrimientos de inyección de prompt, papers y videos de los creadores de IA con pausa al pasar el ratón e i18n ES/EN.
-- [x] **Redes Sociales & Perfiles Oficiales**: Enlaces directos en el pie de página a **LinkedIn** (`/in/josponce`), **X / Twitter** (`@j0sp0nc3`), **GitHub Autor** (`@j0sp0nc3`), **Código Fuente** (`promptforge`) y **Motor NPM** (`promptometer`).
 - [x] **Módulo de Moderación de Contenido (`api/moderation.js`) & Persistencia Global Upstash Redis (`api/index.js`)**: Filtro de tres capas (palabras malsonantes ES/EN, patrones maliciosos de inyección/XSS y anti-spam por IP/deduplicación hash) con almacenamiento persistente opcional en Upstash Redis (`UPSTASH_REDIS_REST_URL`).
 - [x] **Normalización de Categorías (`js/leaderboard.js`)**: Espacio de nombres canónico de categorías (`general`, `código`, `agentes`, `RAG`, `extracción`, `evaluación`, `marketing`, `NLP`, `traducción`, `salud`) y métodos `getByCategory()` y `normalizeCategory()`.
 - [x] **Fix Renderizado Inmediato Top 10 (`js/app.js`)**: Aplicado el patrón *Stale-While-Revalidate* en `renderLeaderboardView()`. Los 10 prompts curados iniciales se renderizan a 0ms (sin espera de red) y luego se actualizan asíncronamente cuando responde la API.
 - [x] **Fix 401 Unauthorized en `/api/leaderboard`**: Ajustada la verificación de autenticación en `api/index.js` y `server.js` para permitir peticiones `GET` del mismo origen (que no envían header `Origin` explícito en navegadores) e indicar acceso público al endpoint del Top 10.
 - [x] **Fix SyntaxError en `js/leaderboard.js`**: Escapadas las comillas invertidas unescaped (\`npm run build\`) en el prompt semilla #7 que impedían la carga del script en el navegador.
 - [x] **Ranking Top 10 / Pabellón de la Fama (`js/leaderboard.js` & `/api/leaderboard`)**: Pestaña principal de navegación **Top 10** con clasificación dinámica de los 10 mejores prompts (94-99/100). Incluye modal de publicación *"Publicar mi Prompt Actual"*, medallas de oro/plata/bronce (`#1 🥇`, `#2 🥈`, `#3 🥉`), botones para *"Analizar y Probar"* y *"Copiar Prompt"*, sincronización global en tiempo real mediante API serverless `/api/leaderboard` (sin registro) y generación de enlaces de compartición directa (`?p=base64`). 10 prompts curados de élite incluidos de entrada.
+- [x] **Dominio Producción Configurado (`promptometer.tech`)**: Dominio de producción registrado en Spaceship.com y vinculado exitosamente a Vercel con registros A (`216.198.79.1`) y CNAME (`ab5e3e981cf6eed7.vercel-dns-017.com`). Redirección automática 307 activa para `www.promptometer.tech` → `https://promptometer.tech/`.
+- [x] **Optimización de SEO & Visibilidad para Inteligencia Artificial (AI Crawlers)**:
+  - **Especificación Machine-Readable `llms.txt` y `llms-full.txt`**: Estándar Answer.ai / Jeremy Howard implementado en `/llms.txt` y `/llms-full.txt` para que crawlers de IA (ChatGPT Search, Claude, Perplexity, Gemini, Copilot) entiendan el motor de 8D scoring, API serverless y paquete npm.
+  - **`robots.txt`**: Permisos explícitos para motores de búsqueda tradicionales y bots de IA (GPTBot, ClaudeBot, PerplexityBot, Google-Extended, Applebot-Extended, etc.).
+  - **`sitemap.xml`**: Mapa del sitio XML indexable con soporte hreflang ES/EN.
+  - **Estructura JSON-LD (Schema.org)**: Schemas `WebApplication`, `SoftwareSourceCode` y `FAQPage` integrados en `<head>` de `index.html`.
+  - **OpenGraph & Twitter Cards**: Banner vectorial `og-image.svg` (1200x630px) y metadatos sociales para vista previa en Twitter/X, LinkedIn, Slack y Discord.
+  - **Meta URL Canónica**: `<link rel="canonical" href="https://promptometer.tech/">`.
+  - **PWA Manifest**: Metadata `/manifest.json` para instalabilidad PWA.
+  - **Actualización `vercel.json`**: Rutas de compilación estática explícitas para todos los activos raíz (`robots.txt`, `sitemap.xml`, `llms.txt`, `llms-full.txt`, `manifest.json`, `og-image.svg`).
 
 ---
 
 ## 📝 Tareas Pendientes
 
-- [ ] Esperar aprobación del PR `promptometer.is-a.dev` por mantenedores de is-a-dev
-- [ ] Configurar dominio en Vercel una vez aprobado el PR
 - [ ] (Opcional) Lab interactivo transformador (roadmap — requiere técnicas que el rewriter NO cubre)
 
 ---
@@ -123,11 +130,12 @@ interactiva desplegada en Vercel.
 ## 🚫 Decisiones de Diseño (NO cambiar sin consultar)
 
 1. **Nombre de marca:** Promptometer (no PromptQuill, no PromptForge)
-2. **Tema visual:** Cosmic Event Horizon (Predeterminado: Oscuro Galáctico / Agujero negro) con Selector de Modo Dual a Editorial Classic.
-3. **Motor de scoring:** Base 50 por dimensión, penalización fuerte para < 3 palabras
-4. **i18n:** Español como idioma principal, inglés como secundario
-5. **Despliegue:** Vercel (free tier) con `@vercel/node` para API y `@vercel/static` para assets
-6. **Paquete npm:** `promptometer-core` (no `promptforge-core`)
+2. **Dominio principal:** `https://promptometer.tech` (con alias `www.promptometer.tech` -> 307 redirect)
+3. **Tema visual:** Cosmic Event Horizon (Predeterminado: Oscuro Galáctico / Agujero negro) con Selector de Modo Dual a Editorial Classic.
+4. **Motor de scoring:** Base 50 por dimensión, penalización fuerte para < 3 palabras
+5. **i18n:** Español como idioma principal, inglés como secundario
+6. **Despliegue:** Vercel (free tier) con `@vercel/node` para API y `@vercel/static` para assets
+7. **Paquete npm:** `promptometer-core` (no `promptforge-core`)
 
 ---
 
@@ -135,30 +143,30 @@ interactiva desplegada en Vercel.
 
 ```
 promptforge/                    ← App Web (Vercel)
-├── index.html                  ← SPA principal
+├── index.html                  ← SPA principal con Schema JSON-LD y OpenGraph
 ├── favicon.svg                 ← Favicon vectorial de alta resolución
-├── css/index.css               ← Design system Editorial Technical
+├── og-image.svg                ← Banner SVG de vista previa social OpenGraph (1200x630)
+├── robots.txt                  ← Reglas para buscadores y crawlers de IA
+├── sitemap.xml                 ← Mapa del sitio XML
+├── llms.txt                    ← Especificación para IA (Estándar Answer.ai / Jeremy Howard)
+├── llms-full.txt               ← Documentación extendida para modelos de IA
+├── manifest.json               ← Manifest PWA
+├── css/index.css               ← Design system Editorial Technical & Cosmic
 ├── js/
 │   ├── app.js                  ← Controlador principal de UI
 │   ├── analyzer.js             ← Motor de análisis (8 dimensiones)
 │   ├── signals.js              ← Extracción de señales compartidas
 │   ├── patterns.js             ← Detección de anti-patrones (34 APs / 15 BPs)
-│   ├── i18n.js                 ← Diccionarios ES/EN
+│   ├── i18n.js                 ← Diccionarios ES/EN + actualización dinámica de meta tags
 │   ├── knowledge.js            ← Hub de conocimiento (20 términos, 13 técnicas, 6 frameworks, 13 refs, 20 creadores)
 │   ├── leaderboard.js          ← Módulo de ranking Top 10 y persistencia
 │   ├── rewriter.js             ← Mejora automática de prompts
 │   └── export.js               ← Exportación JSON, Markdown, Clipboard y URL
-├── api/index.js                ← API serverless desplegada en Vercel (incluye /api/leaderboard)
+├── api/index.js                ← API serverless desplegada en Vercel (incluye /api/leaderboard y /api/suggest-creator)
 ├── server.js                   ← Servidor local de desarrollo
-├── vercel.json                 ← Configuración de despliegue Vercel
+├── vercel.json                 ← Configuración de despliegue Vercel (rutas estáticas)
 ├── test_edge_cases.js          ← Suite de 14 tests de estrés (PASS)
 └── package.json                ← Dependencia: promptometer-core@^1.0.0
-
-promptquill/                    ← Monorepo del Motor Core (npm)
-└── packages/core/
-    ├── promptometer-core.js    ← Motor JS (publicado en npm)
-    ├── promptometer_core.py    ← Motor Python (paridad)
-    └── promptometer-rules.json ← Reglas de evaluación
 ```
 
 ---
@@ -166,22 +174,15 @@ promptquill/                    ← Monorepo del Motor Core (npm)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-08
-- **Último commit promptforge:** pendiente (auditoría de seguridad + fix XSS + SECURITY.md)
+- **Último commit promptforge:** pendiente (feat(seo): promptometer.tech domain setup, robots.txt, sitemap.xml, llms.txt, og-image.svg, schema.org)
 - **Último commit promptometer:** `5662a93` (fix(core): sync signal parity)
-- **Sesión con:** ZCode (GLM-5.2) — **Auditoría de seguridad + fix promptType.extraction**
-- **Estado:** 22/22 tests en PASS. Paridad ES/EN verificada. Desplegado en Vercel.
-
-> 📌 **AUDITORÍA DE SEGURIDAD (esta sesión):**
-> - Penetration testing real contra el API en producción
-> - **VULN-1 (corregida)**: XSS almacenado en title/author/name/handle del
->   leaderboard y suggest-creator → fix con `_sanitizeText()` que strippa HTML
->   y neutraliza comillas antes de almacenar
-> - **VULN-2 (corregida)**: `promptType.extraction` faltaba en i18n → añadida ES/EN
-> - Documento `SECURITY.md` creado con auditoría completa de 6 capas de defensa
-> - Verificado: auth 401, CORS, rate limit, payload limit, moderación de contenido
+- **Sesión con:** Antigravity (Gemini 3.6 Flash) — **Dominio promptometer.tech + SEO & Visibilidad IA**
+- **Estado:** 22/22 tests en PASS. Paridad ES/EN verificada. Desplegado en Vercel y dominio `promptometer.tech`.
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
-> - **Nuevo Tema Novedoso Cosmic Event Horizon**: Estética visual galáctica de alta precisión de instrumentos astrofísicos y agujero negro como tema predeterminado.
-> - **Selector de Temas Dual (Theme Switcher)**: Botón interactivo en el encabezado (`#theme-toggle-btn`) para alternar entre Modo Cósmico 🌌 y Modo Editorial 📜.
+> - **Dominio promptometer.tech**: Configurado en Spaceship DNS (A record `216.198.79.1` y CNAME `www` a Vercel) y añadido a CORS/same-origin allowlist en `api/index.js`.
+> - **Visibilidad para IAs (`llms.txt` & `llms-full.txt`)**: Estándar machine-readable creado para asistentes de IA (ChatGPT, Claude, Perplexity, Gemini, Copilot).
+> - **SEO & Social Metadata**: Integrated `<link rel="canonical" href="https://promptometer.tech/">`, OpenGraph, Twitter Cards, PWA Manifest, y JSON-LD Schema.org (`WebApplication`, `SoftwareSourceCode`, `FAQPage`).
+> - **Robots & Sitemap**: `robots.txt` con permisos para crawlers tradicionales y de IA + `sitemap.xml`.
 > - **Integración de Referencias Anthropic**: Añadidos los enlaces oficiales del Tutorial Interactivo de 9 Capítulos (GitHub & Google Sheets) en el Radar de Referencias.
 > - **Diseño Responsivo Móvil de Alta Precisión**: Corrección del header en 2 filas grid para teléfonos (< 850px y < 480px), scroll horizontal suave y limpio con efecto fade en la navegación, y visibilidad impecable de la barra Radar IA en Vivo (`#news-ticker-bar`) sin superposición ni cortes.

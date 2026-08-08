@@ -20,6 +20,30 @@
     {
       "src": "favicon.svg",
       "use": "@vercel/static"
+    },
+    {
+      "src": "robots.txt",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "sitemap.xml",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "llms.txt",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "llms-full.txt",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "manifest.json",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "og-image.svg",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -34,6 +58,30 @@
     {
       "src": "/favicon.ico",
       "dest": "/favicon.svg"
+    },
+    {
+      "src": "/robots.txt",
+      "dest": "/robots.txt"
+    },
+    {
+      "src": "/sitemap.xml",
+      "dest": "/sitemap.xml"
+    },
+    {
+      "src": "/llms.txt",
+      "dest": "/llms.txt"
+    },
+    {
+      "src": "/llms-full.txt",
+      "dest": "/llms-full.txt"
+    },
+    {
+      "src": "/manifest.json",
+      "dest": "/manifest.json"
+    },
+    {
+      "src": "/og-image.svg",
+      "dest": "/og-image.svg"
     },
     {
       "src": "/css/(.*)",

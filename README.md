@@ -46,7 +46,7 @@ Promptometer is a complete professional workspace and engine to **evaluate, benc
 ## 🚀 Quick Start
 
 ### Live Web Application
-Try the live app immediately: **[https://promptforge-beta-ten.vercel.app/](https://promptforge-beta-ten.vercel.app/)**
+Try the live app immediately: **[https://promptometer.tech/](https://promptometer.tech/)** (or fallback mirror: `https://promptforge-beta-ten.vercel.app/`)
 
 ### Local Web App (Zero Setup)
 1. Clone the repository and serve static files:
@@ -202,8 +202,14 @@ Weights are dynamic: the engine infers the prompt type (system, few-shot, task, 
 
 ```
 promptforge/                    # Web App Repo (Vercel deployment)
-├── index.html                  # Main Workbench SPA
+├── index.html                  # Main Workbench SPA with JSON-LD Schema & OpenGraph
 ├── favicon.svg                 # High-resolution vector SVG favicon
+├── og-image.svg                # OpenGraph & Social Preview Banner
+├── robots.txt                  # Search Engine & AI Crawler Rules
+├── sitemap.xml                 # XML Sitemap for Search Engines
+├── llms.txt                    # Machine-Readable AI Spec (Answer.ai / Jeremy Howard Standard)
+├── llms-full.txt               # Extended Technical API & Core Specification for LLMs
+├── manifest.json               # Web App Manifest & PWA Metadata
 ├── css/
 │   └── index.css               # Editorial Technical Design System
 ├── js/
@@ -221,18 +227,20 @@ promptforge/                    # Web App Repo (Vercel deployment)
 │   ├── export.js               # JSON, Markdown, Clipboard & URL Exporters
 │   └── app.js                  # Main UI Orchestrator
 ├── api/
-│   └── index.js                # Secured Vercel Serverless API wrapper
+│   ├── index.js                # Secured Vercel Serverless API wrapper
+│   └── moderation.js           # Content moderation & anti-spam filter
 ├── server.js                   # REST API Microservice & Local Dev Server
 ├── cli.js                      # Node Terminal Executable
 ├── test_edge_cases.js          # JS Test Suite Runner (14/14 PASS)
 ├── test_edge_cases.py          # Python Test Suite Runner (14/14 PASS)
 ├── vercel.json                 # Vercel Deployment Config
 ├── HANDOFF.md                  # Project State & Handoff Document
+├── SECURITY.md                 # Security Audit & 6-Layer Defense Spec
 ├── .agents/                    # Agent & IDE Instruction Rules
-│   ├── AGENTS.md
-│   └── ACODE_INSTRUCTIONS.md
+│   └── AGENTS.md
 └── README.md                   # This file
 ```
+
 
 The core evaluation engine lives in a separate monorepo: **[j0sp0nc3/promptometer](https://github.com/j0sp0nc3/promptometer)** (`packages/core/`), published on npm as `promptometer-core`.
 

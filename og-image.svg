@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#08090E" />
+      <stop offset="50%" stop-color="#10131E" />
+      <stop offset="100%" stop-color="#181B2B" />
+    </linearGradient>
+
+    <!-- Glowing Accents -->
+    <radialGradient id="photon-glow" cx="80%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#FF9E00" stop-opacity="0.25" />
+      <stop offset="60%" stop-color="#00E5FF" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#08090E" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Gauge Gradient -->
+    <linearGradient id="gauge-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#C73E2D" />
+      <stop offset="50%" stop-color="#FF9E00" />
+      <stop offset="100%" stop-color="#00E5FF" />
+    </linearGradient>
+
+    <!-- Card Background -->
+    <linearGradient id="card-bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#161A29" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#0D101C" stop-opacity="0.9" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg-grad)" />
+  <rect width="1200" height="630" fill="url(#photon-glow)" />
+
+  <!-- Grid subtle overlay -->
+  <path d="M 0,90 L 1200,90 M 0,180 L 1200,180 M 0,270 L 1200,270 M 0,360 L 1200,360 M 0,450 L 1200,450 M 0,540 L 1200,540" stroke="#ffffff" stroke-opacity="0.03" stroke-width="1" />
+  <path d="M 150,0 L 150,630 M 300,0 L 300,630 M 450,0 L 450,630 M 600,0 L 600,630 M 750,0 L 750,630 M 900,0 L 900,630 M 1050,0 L 1050,630" stroke="#ffffff" stroke-opacity="0.03" stroke-width="1" />
+
+  <!-- Left Content Area -->
+  <g transform="translate(100, 100)">
+    <!-- Badge -->
+    <rect x="0" y="0" width="310" height="36" rx="18" fill="#C73E2D" fill-opacity="0.15" stroke="#C73E2D" stroke-opacity="0.4" stroke-width="1.5" />
+    <text x="16" y="23" font-family="system-ui, -apple-system, sans-serif" font-weight="700" font-size="14" fill="#FF9E00" letter-spacing="1">⚡ MOTOR DE EVALUACIÓN MULTIDIMENSIONAL</text>
+
+    <!-- Main Title -->
+    <text x="0" y="115" font-family="'Space Grotesk', system-ui, sans-serif" font-weight="700" font-size="64" fill="#FFFFFF" letter-spacing="-1">Prompt<tspan fill="#FF9E00">ometer</tspan></text>
+
+    <!-- Subtitle -->
+    <text x="0" y="175" font-family="system-ui, -apple-system, sans-serif" font-weight="400" font-size="24" fill="#A0A5B5">Evaluador de Prompts LLM &amp; Scoring 8D</text>
+
+    <!-- Description Paragraph -->
+    <text x="0" y="235" font-family="system-ui, -apple-system, sans-serif" font-weight="400" font-size="18" fill="#788096" width="550">
+      <tspan x="0" dy="0">Analiza, evalúa y mejora tus prompts con 8 dimensiones de scoring,</tspan>
+      <tspan x="0" dy="28">detección de 34 anti-patrones, reescritura automática con XML,</tspan>
+      <tspan x="0" dy="28">tests de seguridad adversarial y hub de conocimiento bilingüe.</tspan>
+    </text>
+
+    <!-- Feature Tags -->
+    <g transform="translate(0, 340)">
+      <rect x="0" y="0" width="130" height="32" rx="6" fill="#1C2234" stroke="#2D364F" stroke-width="1" />
+      <text x="14" y="21" font-family="monospace" font-size="14" fill="#00E5FF">✓ 8 Dimensiones</text>
+
+      <rect x="145" y="0" width="145" height="32" rx="6" fill="#1C2234" stroke="#2D364F" stroke-width="1" />
+      <text x="159" y="21" font-family="monospace" font-size="14" fill="#00E5FF">✓ 34 Anti-Patrones</text>
+
+      <rect x="305" y="0" width="135" height="32" rx="6" fill="#1C2234" stroke="#2D364F" stroke-width="1" />
+      <text x="319" y="21" font-family="monospace" font-size="14" fill="#00E5FF">✓ Security Lab</text>
+
+      <rect x="455" y="0" width="140" height="32" rx="6" fill="#1C2234" stroke="#2D364F" stroke-width="1" />
+      <text x="469" y="21" font-family="monospace" font-size="14" fill="#00E5FF">✓ npm core pkg</text>
+    </g>
+
+    <!-- Domain Footer -->
+    <g transform="translate(0, 420)">
+      <text x="0" y="0" font-family="'Space Grotesk', monospace" font-weight="700" font-size="22" fill="#FF9E00">https://promptometer.tech</text>
+    </g>
+  </g>
+
+  <!-- Right Visual Gauge Card -->
+  <g transform="translate(730, 90)">
+    <rect x="0" y="0" width="370" height="450" rx="20" fill="url(#card-bg)" stroke="#2D364F" stroke-width="2" />
+
+    <!-- Card Header -->
+    <text x="30" y="45" font-family="system-ui, sans-serif" font-weight="600" font-size="16" fill="#A0A5B5">SCORE PROMEDIO EN VIVO</text>
+    <text x="30" y="70" font-family="monospace" font-size="13" fill="#00E5FF">Evaluación Multidimensional</text>
+
+    <!-- Score Big Gauge Circle -->
+    <g transform="translate(185, 195)">
+      <!-- Background Arc -->
+      <path d="M -90 50 A 100 100 0 1 1 90 50" fill="none" stroke="#1C2234" stroke-width="18" stroke-linecap="round" />
+      <!-- Colored Gauge Arc -->
+      <path d="M -90 50 A 100 100 0 1 1 70 -71" fill="none" stroke="url(#gauge-grad)" stroke-width="18" stroke-linecap="round" />
+
+      <!-- Big Number -->
+      <text x="0" y="15" text-anchor="middle" font-family="'Space Grotesk', monospace" font-weight="700" font-size="68" fill="#FFFFFF">98<tspan font-size="28" fill="#A0A5B5">/100</tspan></text>
+      <!-- Grade Badge -->
+      <rect x="-30" y="38" width="60" height="28" rx="6" fill="#FF9E00" />
+      <text x="0" y="58" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="900" font-size="18" fill="#08090E">GRADO A+</text>
+    </g>
+
+    <!-- Dimension Mini-Bars -->
+    <g transform="translate(30, 315)">
+      <!-- Dim 1 -->
+      <text x="0" y="12" font-family="monospace" font-size="12" fill="#788096">Claridad</text>
+      <rect x="110" y="3" width="160" height="10" rx="5" fill="#1C2234" />
+      <rect x="110" y="3" width="152" height="10" rx="5" fill="#00E5FF" />
+      <text x="280" y="12" font-family="monospace" font-size="12" fill="#FFFFFF">95%</text>
+
+      <!-- Dim 2 -->
+      <text x="0" y="36" font-family="monospace" font-size="12" fill="#788096">Especificidad</text>
+      <rect x="110" y="27" width="160" height="10" rx="5" fill="#1C2234" />
+      <rect x="110" y="27" width="157" height="10" rx="5" fill="#FF9E00" />
+      <text x="280" y="36" font-family="monospace" font-size="12" fill="#FFFFFF">98%</text>
+
+      <!-- Dim 3 -->
+      <text x="0" y="60" font-family="monospace" font-size="12" fill="#788096">Seguridad XML</text>
+      <rect x="110" y="51" width="160" height="10" rx="5" fill="#1C2234" />
+      <rect x="110" y="51" width="160" height="10" rx="5" fill="#C73E2D" />
+      <text x="280" y="60" font-family="monospace" font-size="12" fill="#FFFFFF">100%</text>
+
+      <!-- Dim 4 -->
+      <text x="0" y="84" font-family="monospace" font-size="12" fill="#788096">Robustez</text>
+      <rect x="110" y="75" width="160" height="10" rx="5" fill="#1C2234" />
+      <rect x="110" y="75" width="150" height="10" rx="5" fill="#00E5FF" />
+      <text x="280" y="84" font-family="monospace" font-size="12" fill="#FFFFFF">94%</text>
+    </g>
+  </g>
+</svg>

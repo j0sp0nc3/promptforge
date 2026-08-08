@@ -30,8 +30,8 @@ const I18n = (() => {
     // ========================================================================
     es: {
       meta: {
-        title: 'Promptometer — Analizador de Prompts Avanzado',
-        description: 'Analiza, evalúa y mejora tus prompts con scoring multidimensional, detección de anti-patrones y sugerencias inteligentes.',
+        title: 'Promptometer — Evaluador de Prompts y Motor de Scoring Multidimensional',
+        description: 'Analiza, evalúa y mejora tus prompts para LLMs con scoring multidimensional (8D), detección de 34 anti-patrones, reescritura automática XML y laboratorio de seguridad adversarial.',
       },
 
       // ── Navigation ──────────────────────────────────────────────────────
@@ -918,8 +918,8 @@ const I18n = (() => {
     // ========================================================================
     en: {
       meta: {
-        title: 'Promptometer — Advanced Prompt Analyzer',
-        description: 'Analyze, evaluate and improve your prompts with multidimensional scoring, anti-pattern detection and smart suggestions.',
+        title: 'Promptometer — Multidimensional Prompt Engineering Evaluator & Optimizer',
+        description: 'Analyze, evaluate and optimize LLM prompts with 8-dimension scoring, 34 anti-pattern detections, automated XML prompt rewriting, and adversarial security testing.',
       },
 
       nav: {
@@ -1827,6 +1827,18 @@ const I18n = (() => {
     scope.querySelectorAll('[data-i18n-aria]').forEach(el => {
       el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria')));
     });
+
+    // Sync page title, html lang attribute, and meta description
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = _lang;
+      const metaTitle = t('meta.title');
+      if (metaTitle && metaTitle !== 'meta.title') document.title = metaTitle;
+      const metaDescEl = document.getElementById('meta-description');
+      const metaDescVal = t('meta.description');
+      if (metaDescEl && metaDescVal && metaDescVal !== 'meta.description') {
+        metaDescEl.setAttribute('content', metaDescVal);
+      }
+    }
   }
 
   // ── Private helpers ────────────────────────────────────────────────────

@@ -5,10 +5,48 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#F7F3EC">
-  <title>PromptForge — Analizador de Prompts Avanzado</title>
+  <title>Promptometer — Evaluador de Prompts y Motor de Scoring Multidimensional</title>
 
   <meta name="description" id="meta-description"
-    content="Analiza, evalúa y mejora tus prompts con scoring multidimensional, detección de anti-patrones y sugerencias inteligentes.">
+    content="Analiza, evalúa y mejora tus prompts para LLMs con scoring multidimensional (8D), detección de 34 anti-patrones, reescritura automática XML y laboratorio de seguridad adversarial.">
+  <meta name="keywords"
+    content="Promptometer, Prompt Engineering, Prompt Evaluator, LLM Prompt Scoring, Prompt Optimization, OpenAI, Anthropic, Claude, ChatGPT, Gemini, System Prompts, ReAct, CoT, RAG, Prompt Injection Security">
+  <meta name="author" content="Jose Ponce (@j0sp0nc3)">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://promptometer.tech/">
+
+  <!-- AI Machine-Readable Spec (Jeremy Howard / Answer.ai standard) -->
+  <link rel="author" type="text/plain" href="llms.txt">
+  <link rel="sitemap" type="application/xml" href="sitemap.xml">
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Open Graph / Facebook / LinkedIn / Slack -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://promptometer.tech/">
+  <meta property="og:site_name" content="Promptometer">
+  <meta property="og:title" content="Promptometer — Evaluador de Prompts y Motor de Scoring Multidimensional">
+  <meta property="og:description"
+    content="Evalúa y optimiza prompts para LLMs con scoring en 8 dimensiones, 34 anti-patrones, reescritor automático XML y laboratorio de seguridad.">
+  <meta property="og:image" content="https://promptometer.tech/og-image.svg">
+  <meta property="og:image:type" content="image/svg+xml">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Promptometer — Multidimensional Prompt Engineering Evaluator">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:locale:alternate" content="en_US">
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@j0sp0nc3">
+  <meta name="twitter:creator" content="@j0sp0nc3">
+  <meta name="twitter:title" content="Promptometer — Evaluador de Prompts & Scoring 8D">
+  <meta name="twitter:description"
+    content="Optimiza tus prompts para LLMs con scoring multidimensional, anti-patrones, reescritura XML y seguridad adversarial.">
+  <meta name="twitter:image" content="https://promptometer.tech/og-image.svg">
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -26,7 +64,86 @@
 
   <!-- Styles -->
   <link rel="stylesheet" href="css/index.css">
+
+  <!-- JSON-LD Structured Data for Search Engines & AI Crawlers (Schema.org) -->
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Promptometer",
+      "alternateName": ["Promptometer Core", "Promptometer Evaluator"],
+      "url": "https://promptometer.tech/",
+      "logo": "https://promptometer.tech/favicon.svg",
+      "image": "https://promptometer.tech/og-image.svg",
+      "description": "Open-source multidimensional prompt evaluation and optimization system for Large Language Models (LLMs) featuring 8-dimension scoring, 34 anti-pattern detections, automated XML prompt rewriting, adversarial security lab, and npm package integration.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript",
+      "softwareVersion": "1.0.0",
+      "license": "https://opensource.org/licenses/MIT",
+      "author": {
+        "@type": "Person",
+        "name": "Jose Ponce",
+        "alternateName": "j0sp0nc3",
+        "url": "https://github.com/j0sp0nc3",
+        "sameAs": [
+          "https://www.linkedin.com/in/josponce",
+          "https://x.com/j0sp0nc3"
+        ]
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareSourceCode",
+      "name": "promptometer-core",
+      "programmingLanguage": "JavaScript",
+      "codeRepository": "https://github.com/j0sp0nc3/promptometer",
+      "targetProduct": {
+        "@type": "SoftwareApplication",
+        "name": "Promptometer Web",
+        "url": "https://promptometer.tech"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Qué es Promptometer y cómo evalúa los prompts de IA?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Promptometer es un motor de evaluación de prompts que asigna una puntuación de 0 a 100 evaluando 8 dimensiones clave: Claridad, Especificidad, Contexto, Rol/Personalidad, Formato de Salida, Restricciones y Seguridad, Robustez, y Cadena de Pensamiento (CoT)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Cómo instalar y usar el paquete npm de Promptometer?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Puedes instalar el paquete ejecutable ejecutando 'npm install promptometer-core' e importar PromptometerCore en tu proyecto JavaScript/Node.js para analizar y reescribir prompts programáticamente."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué dimensiones de scoring analiza Promptometer?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Evalúa 8 dimensiones principales: Claridad, Especificidad, Contexto, Rol/Persona, Formato de Salida, Restricciones y Seguridad, Robustez y Cadena de Pensamiento (CoT/ReAct)."
+          }
+        }
+      ]
+    }
+  ]
+  </script>
 </head>
+
 
 <body>
   <!-- Toast container -->

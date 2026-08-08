@@ -1,0 +1,19 @@
+{
+  "name": "Promptometer — Evaluador de Prompts LLM",
+  "short_name": "Promptometer",
+  "description": "Analiza, evalúa y mejora tus prompts con scoring multidimensional, detección de anti-patrones y sugerencias inteligentes.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F7F3EC",
+  "theme_color": "#F7F3EC",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["developer tools", "productivity", "utilities", "ai"]
+}

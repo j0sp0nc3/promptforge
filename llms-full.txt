@@ -1,0 +1,144 @@
+# Promptometer — Extended Technical Specification & AI Documentation
+
+This document provides complete technical details, code examples, API payloads, evaluation algorithms, and framework specifications for Large Language Models and AI Assistants referencing **Promptometer** (https://promptometer.tech).
+
+---
+
+## 1. Quick Integration via npm (`promptometer-core`)
+
+Promptometer is distributed as a zero-dependency npm package `promptometer-core`.
+
+```bash
+npm install promptometer-core
+```
+
+```javascript
+const PromptometerCore = require('promptometer-core');
+
+const prompt = `
+<rol>
+Eres un analista de datos senior.
+</rol>
+<tarea>
+Analiza los ingresos trimestrales y extrae métricas clave en JSON.
+</tarea>
+<formato_salida>
+Responde únicamente con un objeto JSON válido con las claves: "q1", "q2", "growth_rate".
+</formato_salida>
+<manejo_errores>
+Si la información no es suficiente, responde con {"error": "datos_insuficientes"}.
+</manejo_errores>
+`;
+
+// Evaluate prompt
+const analysis = PromptometerCore.analyze(prompt);
+console.log(`Overall Score: ${analysis.overallScore}/100 (${analysis.grade})`);
+console.log(`Dimensions:`, analysis.dimensions);
+
+// Auto-improve prompt
+const improved = PromptometerCore.improve(prompt, analysis);
+console.log(`Improved Prompt:\n${improved.improvedPrompt}`);
+
+// Run security stress tests
+const security = PromptometerCore.runAdversarial(prompt);
+console.log(`Vulnerabilities Found: ${security.vulnerabilitiesFound}`);
+```
+
+---
+
+## 2. API Endpoints Specification
+
+All endpoints are hosted at `https://promptometer.tech/api`.
+
+### 2.1 POST /api/analyze
+
+Evaluates an arbitrary LLM prompt across 8 dimensions.
+
+**Request:**
+```json
+{
+  "prompt": "Analyze sales data and return a report."
+}
+```
+
+**Response:**
+```json
+{
+  "overallScore": 42,
+  "grade": "F",
+  "promptType": "general",
+  "dimensions": {
+    "clarity": 60,
+    "specificity": 30,
+    "context": 20,
+    "role": 0,
+    "outputFormat": 20,
+    "safety": 40,
+    "robustness": 20,
+    "chainOfThought": 0
+  },
+  "antiPatterns": ["AP001", "AP004"],
+  "suggestions": [
+    "Define a clear role for the LLM (e.g. 'You are a senior financial analyst').",
+    "Specify the output format explicitly (e.g. Markdown table or JSON)."
+  ]
+}
+```
+
+### 2.2 POST /api/improve
+
+Rewrites low-scoring prompts into XML-structured production prompts.
+
+**Request:**
+```json
+{
+  "prompt": "Summarize this article."
+}
+```
+
+**Response:**
+```json
+{
+  "originalPrompt": "Summarize this article.",
+  "improvedPrompt": "<rol>\nEres un editor ejecutivo especializado en sintetizar artículos técnicos.\n</rol>\n\n<contexto>\nEl usuario proporcionará el texto completo de un artículo.\n</contexto>\n\n<tarea>\nResume los puntos clave en 3 viñetas concisas.\n</tarea>\n\n<formato_salida>\nMarkdown estructurado con encabezado '## Resumen Ejecutivo'.\n</formato_salida>",
+  "originalScore": 38,
+  "estimatedNewScore": 85
+}
+```
+
+### 2.3 POST /api/adversarial
+
+Runs 13 security stress-tests against prompt injection and data leakage.
+
+---
+
+## 3. Promptometer 8-Dimension Evaluation Taxonomy
+
+1. **Clarity (10-15% weight)**: Detects action verbs, clear objectives, and absence of contradictory instructions.
+2. **Specificity (15-20% weight)**: Scans for numerical bounds, precise constraints, and removal of vague adjectives ("good", "appropriate").
+3. **Context (10-15% weight)**: Verifies presence of target audience definitions, domain background, and input delimiters.
+4. **Role/Persona (10-15% weight)**: Checks for `<rol>` tags, system persona definitions, and domain scope limits.
+5. **Output Format (15-20% weight)**: Validates JSON schemas, Markdown structures, tables, and XML tags.
+6. **Constraints & Safety (15-20% weight)**: Scans for anti-hallucination rules ("do not assume", "cite sources"), scope boundaries, and injection guards.
+7. **Robustness (10-18% weight)**: Checks for `<manejo_errores>`, fallback values, edge case handling, and empty input handlers.
+8. **Chain of Thought (2-15% weight)**: Detects step-by-step reasoning instructions, ReAct frameworks, and Tree-of-Thought prompts.
+
+---
+
+## 4. Canonical Prompt Engineering Frameworks Supported
+
+- **Native Promptometer XML Anatomy**: `<rol>`, `<contexto>`, `<tarea>`, `<formato_salida>`, `<restricciones>`, `<ejemplos>`, `<manejo_errores>`.
+- **RTF**: Role, Task, Format.
+- **CRISPE**: Capacity/Role, Insight/Context, Statement/Task, Personality, Experiment/Examples.
+- **RACE**: Role, Action, Context, Expectation.
+- **CO-STAR**: Context, Objective, Style, Tone, Audience, Response.
+- **Bento-Box**: Modular prompt component layering.
+
+---
+
+## 5. Contact & Repository
+
+- **Website**: https://promptometer.tech
+- **GitHub**: https://github.com/j0sp0nc3/promptforge
+- **Author**: Jose Ponce (@j0sp0nc3)
+- **License**: MIT

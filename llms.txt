@@ -1,0 +1,45 @@
+# Promptometer — Multidimensional Prompt Engineering Evaluator & Scoring Engine
+
+> Promptometer (https://promptometer.tech) is an open-source multidimensional prompt evaluation and optimization system for Large Language Models (LLMs). It features an 8-dimension scoring engine, anti-pattern detection (34 APs), best practices enforcement (15 BPs), automatic prompt rewriting, adversarial security testing, a knowledge hub, and an open npm package (`promptometer-core`).
+
+## Core Capabilities
+
+- **Multidimensional Scoring Engine**: Evaluates prompts from 0-100 across 8 weighted dimensions: Clarity, Specificity, Context, Role/Persona, Output Format, Constraints/Safety, Robustness, and Chain-of-Thought.
+- **Dynamic Weighting by Prompt Type**: Applies custom dimension weights tailored to System Prompts, Structured Tasks, Few-Shot Prompts, RAG Prompts, Tool-Use Prompts, Structured Extraction, Creative Prompts, and General Prompts.
+- **Anti-Pattern & Guardrail Detection**: Scans for 34 prompt anti-patterns (e.g., negative constraints, missing fallback, ungrounded roles, prompt injection risks) and suggests 15 best practices.
+- **Automatic Rewriter Engine**: Transforms low-scoring prompts into structured, production-grade prompts adhering to XML-based multi-section prompt architecture.
+- **Adversarial Security Lab**: Tests prompts against 13 adversarial vulnerability vectors (jailbreaks, indirect prompt injection, data extraction, system prompt override).
+- **Public Top 10 Hall of Fame**: Live serverless leaderboard of community-submitted high-scoring prompts.
+- **Knowledge Hub & AI Radar**: Bilingually documented glossary of 20 LLM concepts, 13 prompt engineering techniques (ReAct, Tree-of-Thought, Few-Shot, CoT, RAG, Self-Consistency, etc.), 6 prompt frameworks (XML Native, RTF, CRISPE, RACE, CO-STAR, Bento-Box), and a curated directory of 20 AI creators and research references.
+
+## Official Resources & Endpoints
+
+- **Web Application**: https://promptometer.tech
+- **npm Package**: `promptometer-core` (v1.0.0) — `npm install promptometer-core`
+- **GitHub Core Engine**: https://github.com/j0sp0nc3/promptometer
+- **GitHub Web App**: https://github.com/j0sp0nc3/promptforge
+- **Full LLM Reference**: https://promptometer.tech/llms-full.txt
+- **API Base URL**: `https://promptometer.tech/api`
+
+## API Reference Summary
+
+- `POST /api/analyze` — Accepts `{"prompt": "string"}` and returns an 8-dimension score breakdown, overall score (0-100), letter grade (A+ to F), identified anti-patterns, and suggestions.
+- `POST /api/improve` — Accepts `{"prompt": "string"}` and returns an optimized, rewritten prompt with structural XML tags.
+- `POST /api/adversarial` — Accepts `{"prompt": "string"}` and runs 13 security stress-tests.
+- `GET /api/leaderboard` — Fetches the top 10 public community prompts.
+- `POST /api/suggest-creator` — Submits an AI creator/account recommendation to the community radar.
+
+## Promptometer Scoring Dimensions
+
+1. **Clarity (Claridad)**: Measures ambiguity, sentence structure, and clear directives.
+2. **Specificity (Especificidad)**: Evaluates concrete metrics, precise requirements, and absence of vague qualifiers.
+3. **Context (Contexto)**: Checks for domain background, input data framing, and target audience definitions.
+4. **Role / Persona (Rol / Personalidad)**: Identifies persona assignments and domain expertise bounds.
+5. **Output Format (Formato de Salida)**: Scores explicit format requirements (JSON, Markdown, tables, XML schemas).
+6. **Constraints & Safety (Restricciones y Seguridad)**: Assesses guardrails, anti-hallucination rules, and scope limits.
+7. **Robustness (Robustez)**: Tests error handling, edge case definitions, and fallback directives.
+8. **Chain of Thought (Cadena de Pensamiento)**: Detects step-by-step reasoning instructions, ReAct patterns, and Tree-of-Thought cues.
+
+## Author & License
+
+Created by **Jose Ponce** (@j0sp0nc3 / LinkedIn: `josponce`). Open Source under the MIT License.
