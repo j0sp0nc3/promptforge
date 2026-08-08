@@ -165,11 +165,20 @@ promptquill/                    ← Monorepo del Motor Core (npm)
 
 ## 🔄 Última Actualización
 
-- **Fecha:** 2026-08-07
-- **Último commit promptforge:** `50f6c6d` (fix(analyzer): add extraction prompt type; expand signals; top-1 66→74)
-- **Último commit promptometer:** `5662a93` (fix(core): sync signal parity — extraction type, errorHandling/antiHallucination/scopeLimit)
-- **Sesión con:** Antigravity AI / Claude Sonnet — **Fix Scoring Motor + 20 Creadores + Push a producción COMPLETO**
-- **Estado:** 22/22 tests en PASS. Paridad ES/EN y JS/Python verificadas. Desplegado en Vercel.
+- **Fecha:** 2026-08-08
+- **Último commit promptforge:** pendiente (auditoría de seguridad + fix XSS + SECURITY.md)
+- **Último commit promptometer:** `5662a93` (fix(core): sync signal parity)
+- **Sesión con:** ZCode (GLM-5.2) — **Auditoría de seguridad + fix promptType.extraction**
+- **Estado:** 22/22 tests en PASS. Paridad ES/EN verificada. Desplegado en Vercel.
+
+> 📌 **AUDITORÍA DE SEGURIDAD (esta sesión):**
+> - Penetration testing real contra el API en producción
+> - **VULN-1 (corregida)**: XSS almacenado en title/author/name/handle del
+>   leaderboard y suggest-creator → fix con `_sanitizeText()` que strippa HTML
+>   y neutraliza comillas antes de almacenar
+> - **VULN-2 (corregida)**: `promptType.extraction` faltaba en i18n → añadida ES/EN
+> - Documento `SECURITY.md` creado con auditoría completa de 6 capas de defensa
+> - Verificado: auth 401, CORS, rate limit, payload limit, moderación de contenido
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
 > - **Nuevo Tema Novedoso Cosmic Event Horizon**: Estética visual galáctica de alta precisión de instrumentos astrofísicos y agujero negro como tema predeterminado.

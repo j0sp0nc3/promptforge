@@ -110,6 +110,19 @@ function validateApiKey(req) {
 
 // ── Leaderboard entry (de)serialization for Redis hashes ─────
 // Redis HSET stores flat string fields; we serialize complex fields as JSON.
+
+// Strip HTML tags and limit length from user-supplied text fields (title,
+// author, name, handle) to prevent stored XSS. The client also escapes via
+// escapeHtml, but defense-in-depth: never trust input, sanitize at storage.
+function _sanitizeText(raw, maxLen) {
+  if (!raw) return '';
+  return String(raw)
+    .replace(/<[^>]*>/g, '')        // strip all HTML tags
+    .replace(/"/g, '&quot;')        // neutralize attribute breakout
+    .replace(/'/g, '&#x27;')
+    .trim()
+    .slice(0, maxLen || 200);
+}
 function _serializeEntry(entry) {
   return [
     'id', String(entry.id),
@@ -360,8 +373,9 @@ module.exports = (req, res) => {
 
 async function _handleLeaderboardSubmit(req, res, payload, prompt) {
   const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '127.0.0.1';
-  const title = payload.title || 'Prompt de Comunidad';
-  const author = payload.author || 'Anónimo';
+  // Sanitize user-supplied fields (defense-in-depth against stored XSS)
+  const title = _sanitizeText(payload.title, 200) || 'Prompt de Comunidad';
+  const author = _sanitizeText(payload.author, 100) || 'Anónimo';
   const analysis = PromptometerCore.analyze(prompt);
 
   // 1. Run Content Moderation (Profanity, Injection, Malicious Code, Anti-spam)
@@ -454,9 +468,9 @@ async function _handleSuggestCreator(req, res, payload) {
   const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '127.0.0.1';
 
   // ── Validate required fields ────────────────────────────────────────
-  const name   = String(payload.name   || '').trim().slice(0, 100);
-  const handle = String(payload.handle || '').trim().slice(0, 200);
-  const reason = String(payload.reason || '').trim().slice(0, 500);
+  const name   = _sanitizeText(payload.name,   100);
+  const handle = _sanitizeText(payload.handle, 200);
+  const reason = _sanitizeText(payload.reason, 500);
 
   if (!name || !handle) {
     res.writeHead(400, { 'Content-Type': 'application/json' });
