@@ -261,7 +261,8 @@ module.exports = (req, res) => {
         analyze: 'POST /api/analyze',
         improve: 'POST /api/improve',
         adversarial: 'POST /api/adversarial',
-        leaderboard: 'GET & POST /api/leaderboard'
+        leaderboard: 'GET & POST /api/leaderboard',
+        suggestCreator: 'POST /api/suggest-creator'
       }
     }));
   }
@@ -306,6 +307,12 @@ module.exports = (req, res) => {
           }
           // Defer to async handler (moderation + optional Upstash persistence)
           _handleLeaderboardSubmit(req, res, payload, prompt);
+          return;
+        }
+
+        // ── POST /api/suggest-creator ──────────────────────────
+        if (url.includes('suggest-creator')) {
+          _handleSuggestCreator(req, res, payload);
           return;
         }
 
@@ -428,4 +435,98 @@ async function _handleLeaderboardSubmit(req, res, payload, prompt) {
     entry: newEntry,
     top10: globalLeaderboard
   }));
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// SUGGEST CREATOR HANDLER
+// Stores community creator suggestions in Upstash Redis.
+// Each IP is limited to 5 suggestions per 24 h (Redis TTL key).
+// Suggestions are stored as hashes under suggest:entry:{id}
+// and the IDs are pushed to the list suggest:list (capped at 500).
+// Falls back to a local in-memory log when Upstash is absent.
+// ────────────────────────────────────────────────────────────────────────────
+
+const SUGGEST_RATE_LIMIT   = 5;    // max suggestions per IP per day
+const SUGGEST_MAX_STORED   = 500;  // cap total suggestions in Redis list
+const _inMemorySuggestions = [];   // fallback when no Upstash
+
+async function _handleSuggestCreator(req, res, payload) {
+  const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '127.0.0.1';
+
+  // ── Validate required fields ────────────────────────────────────────
+  const name   = String(payload.name   || '').trim().slice(0, 100);
+  const handle = String(payload.handle || '').trim().slice(0, 200);
+  const reason = String(payload.reason || '').trim().slice(0, 500);
+
+  if (!name || !handle) {
+    res.writeHead(400, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({ error: 'El nombre y el handle son obligatorios.' }));
+  }
+
+  // ── Basic content moderation (profanity / injection only) ───────────
+  const modResult = await Moderation.check({
+    text: `${name} ${handle} ${reason}`,
+    score: 100,  // dummy — we only care about profanity/injection
+    ip: clientIp,
+    redis: null, // skip Redis anti-spam; we have our own rate limit below
+  });
+  if (!modResult.allowed) {
+    res.writeHead(400, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({
+      error: modResult.detail || 'La sugerencia fue rechazada por la moderación de contenido.',
+      reason: modResult.reason,
+    }));
+  }
+
+  const id    = 'sug-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7);
+  const entry = { id, name, handle, reason, ip: clientIp, date: new Date().toISOString() };
+
+  // ── Upstash path ────────────────────────────────────────────────────
+  if (HAS_UPSTASH) {
+    try {
+      // Per-IP daily rate limit (key expires after 24 h)
+      const rateLimitKey   = `suggest:rate:${clientIp}`;
+      const currentCount   = parseInt(await upstash('GET', rateLimitKey) || '0', 10);
+      if (currentCount >= SUGGEST_RATE_LIMIT) {
+        res.writeHead(429, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({
+          error: 'Has alcanzado el límite de 5 sugerencias por día. Intenta mañana.',
+        }));
+      }
+
+      // Increment or initialise counter with TTL
+      if (currentCount === 0) {
+        await upstash('SETEX', rateLimitKey, 86400, '1');
+      } else {
+        await upstash('INCR', rateLimitKey);
+      }
+
+      // Store suggestion as a Redis hash
+      await upstash('HSET', 'suggest:entry:' + id,
+        'id',     id,
+        'name',   name,
+        'handle', handle,
+        'reason', reason,
+        'date',   entry.date,
+      );
+
+      // Push ID to list and cap at SUGGEST_MAX_STORED
+      await upstash('LPUSH', 'suggest:list', id);
+      await upstash('LTRIM', 'suggest:list', 0, SUGGEST_MAX_STORED - 1);
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ success: true, id }));
+    } catch (e) {
+      // Fall through to in-memory fallback on Redis error
+    }
+  }
+
+  // ── In-memory fallback (no Upstash / Redis error) ───────────────────
+  _inMemorySuggestions.unshift(entry);
+  if (_inMemorySuggestions.length > SUGGEST_MAX_STORED) {
+    _inMemorySuggestions.length = SUGGEST_MAX_STORED;
+  }
+
+  res.writeHead(200, { 'Content-Type': 'application/json' });
+  return res.end(JSON.stringify({ success: true, id, stored: 'memory' }));
 }

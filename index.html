@@ -641,7 +641,44 @@
     </div>
   </footer>
 
+  <!-- ── Suggest Creator Modal ──────────────────────────────────────── -->
+  <div id="modal-suggest-creator" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="suggest-creator-modal-title">
+    <div class="modal-panel" style="max-width:480px">
+      <div class="modal-header">
+        <h3 class="modal-title" id="suggest-creator-modal-title" data-i18n="radar.modalTitle">Sugerir Creador / Cuenta AI</h3>
+        <button class="modal-close-btn" id="btn-close-suggest-modal" aria-label="Cerrar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <p class="modal-desc" data-i18n="radar.modalDesc">Propón un perfil de redes sociales o canal técnico enfocado en Prompt Engineering o Gen AI para la comunidad.</p>
+      <div class="modal-body">
+        <label class="modal-label" for="suggest-creator-name" data-i18n="radar.labelName">Nombre / Organización</label>
+        <input class="modal-input" id="suggest-creator-name" type="text" maxlength="100"
+               data-i18n-placeholder="radar.placeholderName" placeholder="Ej. Andrej Karpathy" autocomplete="off">
+
+        <label class="modal-label" for="suggest-creator-handle" data-i18n="radar.labelHandle">Handle / Enlace a Red Social</label>
+        <input class="modal-input" id="suggest-creator-handle" type="text" maxlength="200"
+               data-i18n-placeholder="radar.placeholderHandle" placeholder="Ej. @karpathy o https://x.com/karpathy" autocomplete="off">
+
+        <label class="modal-label" for="suggest-creator-reason" data-i18n="radar.labelReason">¿Por qué recomendarlo? (opcional)</label>
+        <textarea class="modal-input modal-textarea" id="suggest-creator-reason" rows="3" maxlength="500"
+                  data-i18n-placeholder="radar.placeholderReason" placeholder="Ej. Comparte guías profundas de arquitectura de LLMs."></textarea>
+
+        <!-- Status message area -->
+        <div id="suggest-creator-status" class="suggest-status hidden"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="btn-cancel-suggest-modal" data-i18n="leaderboard.cancel">Cancelar</button>
+        <button class="btn btn-primary" id="btn-confirm-suggest-creator">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          <span data-i18n="radar.confirmSuggest">Enviar Sugerencia</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
+
   <script src="js/i18n.js"></script>
   <script src="js/signals.js"></script>
   <script src="js/patterns.js"></script>

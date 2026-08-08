@@ -1435,9 +1435,112 @@ body.theme-editorial ::-webkit-scrollbar-thumb { background: #C7BBA3; border-rad
   background: var(--bg-paper);
 }
 
+
+/* ── Modal aliases used by suggest-creator & leaderboard modals ───── */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--bg-modal-overlay, rgba(4, 5, 10, 0.72));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--space-md);
+  backdrop-filter: blur(3px);
+}
+.modal-overlay.hidden { display: none; }
+
+.modal-panel {
+  background: var(--bg-paper);
+  border: var(--rule);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 480px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: modalFadeIn 0.2s ease-out;
+}
+.modal-desc {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  margin: 0;
+  padding: 0 var(--space-lg) var(--space-sm);
+}
+.modal-close-btn {
+  background: none;
+  border: none;
+  color: var(--ink-faint);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  border-radius: var(--radius-sm);
+  transition: color 0.15s, background 0.15s;
+}
+.modal-close-btn:hover { color: var(--accent); background: var(--bg-sunken); }
+.modal-label {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 4px;
+  display: block;
+}
+.modal-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 12px;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  background: var(--bg-paper);
+  border: var(--rule);
+  border-radius: var(--radius-sm);
+  outline: none;
+  color: var(--ink);
+  transition: border-color 0.15s;
+}
+.modal-input:focus { border-color: var(--accent); }
+.modal-textarea {
+  resize: vertical;
+  min-height: 72px;
+  line-height: 1.5;
+}
+.modal-actions {
+  padding: var(--space-md) var(--space-lg);
+  border-top: var(--rule);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  background: var(--bg-paper);
+}
+
+/* Suggest creator — inline status message */
+.suggest-status {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  margin-top: 2px;
+}
+.suggest-status.hidden { display: none; }
+.suggest-status--error {
+  background: rgba(199, 62, 45, 0.08);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+}
+.suggest-status--success {
+  background: rgba(52, 168, 83, 0.08);
+  border: 1px solid #34a853;
+  color: #34a853;
+}
+
 /* ============================================================
    RESPONSIVE DESIGN (TABLETS & MOBILE PHONES)
    ============================================================ */
+
 @media (max-width: 850px) {
   :root {
     --header-height: 96px;

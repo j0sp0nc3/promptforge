@@ -1060,25 +1060,68 @@ const App = (() => {
     if (modal) modal.classList.add('hidden');
   }
 
-  function submitCreatorSuggestion() {
-    const nameInput = document.getElementById('suggest-creator-name');
+  async function submitCreatorSuggestion() {
+    const nameInput   = document.getElementById('suggest-creator-name');
     const handleInput = document.getElementById('suggest-creator-handle');
     const reasonInput = document.getElementById('suggest-creator-reason');
+    const btnConfirm  = document.getElementById('btn-confirm-suggest-creator');
+    const statusEl    = document.getElementById('suggest-creator-status');
 
-    const name = nameInput ? nameInput.value.trim() : '';
+    const name   = nameInput   ? nameInput.value.trim()   : '';
     const handle = handleInput ? handleInput.value.trim() : '';
+    const reason = reasonInput ? reasonInput.value.trim() : '';
 
     if (!name || !handle) {
-      showToast(t('leaderboard.noPromptToSubmit'), 'warning');
+      if (statusEl) {
+        statusEl.textContent = t('radar.validationRequired') || 'Por favor completa el nombre y el handle.';
+        statusEl.className = 'suggest-status suggest-status--error';
+      }
       return;
     }
 
-    closeSuggestCreatorModal();
-    if (nameInput) nameInput.value = '';
-    if (handleInput) handleInput.value = '';
-    if (reasonInput) reasonInput.value = '';
+    // Loading state
+    if (btnConfirm) {
+      btnConfirm.disabled = true;
+      btnConfirm.style.opacity = '0.6';
+    }
+    if (statusEl) {
+      statusEl.textContent = '';
+      statusEl.className = 'suggest-status hidden';
+    }
 
-    showToast(t('radar.suggestSuccess'), 'success');
+    try {
+      const res = await fetch('/api/suggest-creator', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, handle, reason }),
+      });
+
+      if (res.ok) {
+        // Success — clear form and close
+        if (nameInput)   nameInput.value   = '';
+        if (handleInput) handleInput.value = '';
+        if (reasonInput) reasonInput.value = '';
+        closeSuggestCreatorModal();
+        showToast(t('radar.suggestSuccess'), 'success');
+      } else {
+        const data = await res.json().catch(() => ({}));
+        const msg = data.error || `Error ${res.status}`;
+        if (statusEl) {
+          statusEl.textContent = msg;
+          statusEl.className = 'suggest-status suggest-status--error';
+        }
+      }
+    } catch (err) {
+      if (statusEl) {
+        statusEl.textContent = 'No se pudo conectar. Intenta de nuevo.';
+        statusEl.className = 'suggest-status suggest-status--error';
+      }
+    } finally {
+      if (btnConfirm) {
+        btnConfirm.disabled = false;
+        btnConfirm.style.opacity = '';
+      }
+    }
   }
 
   function renderReferences() {
