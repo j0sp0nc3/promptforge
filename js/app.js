@@ -280,6 +280,19 @@ const App = (() => {
 
     const { analysis, adversarial, improved } = currentAnalysis;
 
+    // Dual-card score badges
+    const unoptBadge = document.getElementById('unoptimized-score-badge');
+    if (unoptBadge) {
+      unoptBadge.innerHTML = `${analysis.overallScore}<span>/100</span>`;
+      unoptBadge.className = `card-score-badge ${analysis.overallScore >= 70 ? 'badge-emerald' : 'badge-red'}`;
+    }
+    const calibBadge = document.getElementById('calibrated-score-badge');
+    if (calibBadge && improved) {
+      const newScore = Math.min(99, analysis.overallScore + (improved.scoreImprovement || 25));
+      calibBadge.innerHTML = `${newScore}<span>/100</span>`;
+      calibBadge.className = 'card-score-badge badge-emerald';
+    }
+
     // Animate score
     animateScore(analysis.overallScore, analysis.grade);
 
@@ -492,111 +505,143 @@ const App = (() => {
     const badge = document.getElementById('improvement-badge');
     badge.innerHTML = t('improvement.estimated', { n: improved.scoreImprovement });
 
-    // 1. Render Constellation Graph SVG
+    // 1. Render Grand 8D Orbital Constellation Stage SVG
     if (currentAnalysis && currentAnalysis.analysis) {
-      renderConstellationSVG(currentAnalysis.analysis.dimensions);
+      renderOrbitalConstellationSVG(currentAnalysis.analysis.dimensions, currentAnalysis.analysis.overallScore);
+      renderEvaluationDimensionCards(currentAnalysis.analysis.dimensions);
     }
 
     // 2. Render Color-Coded XML Highlighted Prompt
     renderHighlightedPrompt(improved.improvedPrompt);
 
-    // 3. Setup Action Chips
+    // 3. Setup Action Chips & Copy Handlers
     setupActionChips(improved.improvedPrompt);
 
-    // FASE 7: Top 5 Impact Issues (Before / After Resolution)
-    const topImpactEl = document.getElementById('top-impact-container');
-    if (topImpactEl && currentAnalysis && currentAnalysis.analysis.suggestions) {
-      const topSuggestions = currentAnalysis.analysis.suggestions.slice(0, 5);
-      if (topSuggestions.length > 0) {
-        topImpactEl.innerHTML = `
-          <div style="margin-bottom: 1rem; padding: 12px; background: rgba(255, 183, 3, 0.05); border: 1px solid rgba(255, 183, 3, 0.15); border-radius: var(--radius-md);">
-            <h4 style="color: var(--accent-amber); font-size: 0.85rem; margin-bottom: 8px;">⚡ Resolución de Problemas Prioritarios (Antes vs Después)</h4>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              ${topSuggestions.map((s, idx) => `
-                <div style="display: flex; align-items: flex-start; justify-content: space-between; font-size: 0.8rem; padding: 6px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.04);">
-                  <div style="flex: 1;">
-                    <span style="color: var(--severity-high); font-weight: 700;">Antes:</span> ${escapeHtml(s.description || s.title)}
-                  </div>
-                  <div style="flex: 1; text-align: right; color: var(--accent-emerald); font-weight: 600;">
-                    ✓ Resuelto mediante estructura XML
-                  </div>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        `;
-      } else {
-        topImpactEl.innerHTML = '';
-      }
-    }
-
     const changesList = document.getElementById('changes-list');
-    const typeLabel = (type) => t(`changes.${type === 'added' ? 'added' : type === 'modified' ? 'modified' : 'restructured'}`);
-    changesList.innerHTML = improved.changes.map(c => `
-      <div class="change-item change-${c.type}">
-        <span class="change-type">${escapeHtml(typeLabel(c.type))}</span>
-        <span class="change-desc">${escapeHtml(c.description)}</span>
-      </div>
-    `).join('');
+    if (changesList && improved.changes) {
+      const typeLabel = (type) => t(`changes.${type === 'added' ? 'added' : type === 'modified' ? 'modified' : 'restructured'}`);
+      changesList.innerHTML = improved.changes.map(c => `
+        <div class="change-item change-${c.type}">
+          <span class="change-type">${escapeHtml(typeLabel(c.type))}</span>
+          <span class="change-desc">${escapeHtml(c.description)}</span>
+        </div>
+      `).join('');
+    }
 
     // Button handlers
-    document.getElementById('btn-apply-improvement').onclick = () => {
-      document.getElementById('prompt-input').value = improved.improvedPrompt;
-      updateEditorStats();
-      switchView('analyzer');
-      showToast(t('toast.improvementApplied'), 'success');
-    };
+    const btnApply = document.getElementById('btn-apply-improvement');
+    if (btnApply) {
+      btnApply.onclick = () => {
+        document.getElementById('prompt-input').value = improved.improvedPrompt;
+        updateEditorStats();
+        switchView('analyzer');
+        showToast(t('toast.improvementApplied'), 'success');
+      };
+    }
 
-    document.getElementById('btn-copy-improvement').onclick = () => {
-      ExportUtil.toClipboard(improved.improvedPrompt);
-    };
+    const btnCopy = document.getElementById('btn-copy-improvement');
+    if (btnCopy) {
+      btnCopy.onclick = () => {
+        ExportUtil.toClipboard(improved.improvedPrompt);
+      };
+    }
   }
 
-  // ── Abstract Constellation SVG Renderer ─────────────────────
-  function renderConstellationSVG(dimensions) {
-    const svg = document.getElementById('constellation-svg');
+  // ── Grand 8D Orbital Constellation SVG Stage Renderer ───────
+  function renderOrbitalConstellationSVG(dimensions, overallScore) {
+    const svg = document.getElementById('orbital-constellation-svg');
     if (!svg) return;
 
+    const centerX = 400;
+    const centerY = 225;
+    const orbits = [110, 160, 200];
+
     const dimList = [
-      { key: 'clarity',        label: 'Claridad',    color: '#00e5ff', x: 40,  y: 40 },
-      { key: 'specificity',    label: 'Especificidad',color: '#a78bfa', x: 100, y: 80 },
-      { key: 'structure',      label: 'Estructura',  color: '#fbbf24', x: 170, y: 30 },
-      { key: 'robustness',     label: 'Robustez',    color: '#34d399', x: 230, y: 85 },
-      { key: 'context',        label: 'Contexto',     color: '#f472b6', x: 300, y: 35 },
-      { key: 'outputFormat',   label: 'Formato',     color: '#38bdf8', x: 370, y: 80 },
-      { key: 'chainOfThought', label: 'CoT',         color: '#f97316', x: 430, y: 40 },
-      { key: 'safety',         label: 'Seguridad',   color: '#f87171', x: 470, y: 90 },
+      { key: 'clarity',        label: 'Clarity',     color: '#00e5ff', angle: 270, orbitIdx: 1 },
+      { key: 'role',           label: 'Role',        color: '#fbbf24', angle: 30,  orbitIdx: 1 },
+      { key: 'outputFormat',   label: 'Output',      color: '#38bdf8', angle: 90,  orbitIdx: 1 },
+      { key: 'constraints',    label: 'Constraints', color: '#a78bfa', angle: 150, orbitIdx: 1 },
+      { key: 'context',        label: 'Context',     color: '#f472b6', angle: 210, orbitIdx: 1 },
+      { key: 'chainOfThought', label: 'CoT',         color: '#f97316', angle: 330, orbitIdx: 2 },
+      { key: 'safety',         label: 'Safety',      color: '#f87171', angle: 120, orbitIdx: 2 },
+      { key: 'robustness',     label: 'Robustness',  color: '#34d399', angle: 240, orbitIdx: 2 },
     ];
 
-    let linesHTML = '';
-    for (let i = 0; i < dimList.length - 1; i++) {
-      const p1 = dimList[i];
-      const p2 = dimList[i + 1];
-      linesHTML += `<line class="constellation-line" x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}" />`;
-    }
-    // Connect first and middle / last for a starry constellation web
-    linesHTML += `<line class="constellation-line" x1="${dimList[0].x}" y1="${dimList[0].y}" x2="${dimList[2].x}" y2="${dimList[2].y}" />`;
-    linesHTML += `<line class="constellation-line" x1="${dimList[2].x}" y1="${dimList[2].y}" x2="${dimList[4].x}" y2="${dimList[4].y}" />`;
-    linesHTML += `<line class="constellation-line" x1="${dimList[4].x}" y1="${dimList[4].y}" x2="${dimList[6].x}" y2="${dimList[6].y}" />`;
+    let orbitsHTML = '';
+    orbits.forEach(r => {
+      orbitsHTML += `<circle cx="${centerX}" cy="${centerY}" r="${r}" fill="none" stroke="rgba(255, 255, 255, 0.06)" stroke-width="1.5" stroke-dasharray="4 6" />`;
+    });
 
+    let raysHTML = '';
     let nodesHTML = '';
+
     dimList.forEach(d => {
-      const dimData = dimensions[d.key] || { score: 50 };
-      const score = dimData.score || 50;
-      const radius = 4 + (score / 100) * 5;
+      const dimData = (dimensions && dimensions[d.key]) ? dimensions[d.key] : { score: 75 };
+      const scoreVal = (dimData.score !== undefined) ? dimData.score : 75;
+      const rad = (d.angle * Math.PI) / 180;
+      const dist = orbits[d.orbitIdx - 1];
+      const nx = centerX + dist * Math.cos(rad);
+      const ny = centerY + dist * Math.sin(rad);
+
+      // Ray from center score box to node
+      raysHTML += `<line x1="${centerX}" y1="${centerY}" x2="${nx}" y2="${ny}" stroke="${d.color}" stroke-width="1.2" opacity="0.45" />`;
+
+      // Diamond node
+      const s = 14;
+      const points = `${nx},${ny - s} ${nx + s},${ny} ${nx},${ny + s} ${nx - s},${ny}`;
+
       nodesHTML += `
-        <g class="constellation-node-group" title="${escapeHtml(d.label)}: ${score}/100">
-          <circle cx="${d.x}" cy="${d.y}" r="${radius + 3}" fill="${d.color}" opacity="0.25" />
-          <circle class="constellation-node" cx="${d.x}" cy="${d.y}" r="${radius}" fill="${d.color}" />
-          <text class="constellation-node-label" x="${d.x}" y="${d.y + radius + 10}">${escapeHtml(d.label)}</text>
+        <g class="orbital-node-group" style="cursor:pointer" title="${escapeHtml(d.label)}: ${scoreVal}/100">
+          <polygon points="${points}" fill="${d.color}" opacity="0.25" />
+          <polygon points="${points}" fill="none" stroke="${d.color}" stroke-width="2" />
+          <circle cx="${nx}" cy="${ny}" r="4" fill="${d.color}" />
+          <text x="${nx}" y="${ny - s - 8}" text-anchor="middle" fill="#F0F4F8" font-family="var(--font-sans)" font-size="11" font-weight="600">${escapeHtml(d.label)}</text>
+          <text x="${nx}" y="${ny + s + 14}" text-anchor="middle" fill="${d.color}" font-family="var(--font-mono)" font-size="12" font-weight="700">${(scoreVal / 10).toFixed(1)}</text>
         </g>
       `;
     });
 
-    svg.innerHTML = linesHTML + nodesHTML;
+    svg.innerHTML = orbitsHTML + raysHTML + nodesHTML;
+
+    // Update central score box numbers
+    const scoreNumEl = document.getElementById('score-number');
+    if (scoreNumEl && overallScore !== undefined) {
+      scoreNumEl.textContent = overallScore;
+    }
+  }
+
+  // ── Horizontal Evaluation Dimension Cards Renderer ────────
+  function renderEvaluationDimensionCards(dimensions) {
+    const container = document.getElementById('evaluation-dimensions-row');
+    if (!container || !dimensions) return;
+
+    const dimList = [
+      { key: 'clarity',        label: 'Clarity',     color: '#00e5ff' },
+      { key: 'context',        label: 'Context',     color: '#f472b6' },
+      { key: 'role',           label: 'Role',        color: '#fbbf24' },
+      { key: 'constraints',    label: 'Constraints', color: '#a78bfa' },
+      { key: 'outputFormat',   label: 'Output',      color: '#38bdf8' },
+      { key: 'chainOfThought', label: 'CoT',         color: '#f97316' },
+      { key: 'safety',         label: 'Safety',      color: '#f87171' },
+      { key: 'robustness',     label: 'Robustness',  color: '#34d399' },
+    ];
+
+    container.innerHTML = dimList.map(d => {
+      const dimData = dimensions[d.key] || { score: 75 };
+      const scoreVal = (dimData.score !== undefined) ? dimData.score : 75;
+      const scoreDec = (scoreVal / 10).toFixed(1);
+
+      return `
+        <div class="eval-dim-card" style="border-top: 2px solid ${d.color}; box-shadow: 0 4px 16px ${d.color}15;">
+          <div class="eval-dim-name">${escapeHtml(d.label)}</div>
+          <div class="eval-dim-score" style="color: ${d.color}">${scoreDec}</div>
+        </div>
+      `;
+    }).join('');
   }
 
   // ── Color-Coded XML Highlighted Prompt Renderer ────────────
+
   function renderHighlightedPrompt(promptText) {
     const container = document.getElementById('improved-prompt-highlighted');
     if (!container) return;

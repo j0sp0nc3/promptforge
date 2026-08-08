@@ -288,45 +288,41 @@
 
     <!-- ==================== ANALYZER VIEW ==================== -->
     <div class="view active" id="view-analyzer">
-      <div class="analyzer-layout">
+      
+      <!-- Top Title & Calibration Header -->
+      <div class="analyzer-hero-header">
+        <div class="hero-header-content">
+          <h2 class="hero-main-title">Prompt Comparison & Calibration</h2>
+          <p class="hero-main-subtitle">Prompt Optimization & 8D Orbital Calibration Workspace</p>
+        </div>
+      </div>
 
-        <!-- Left Panel: Editor -->
-        <section class="panel editor-panel" id="editor-panel">
-          <div class="panel-header">
-            <h2 class="panel-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 20h9" />
-                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
-              </svg>
-              <span data-i18n="editor.title">Tu Prompt</span>
-            </h2>
-            <div class="panel-actions">
-              <button class="btn-sm btn-ghost" id="btn-paste" data-i18n-title="editor.paste" title="Pegar">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="9" y="9" width="13" height="13" rx="2" />
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                </svg>
-                <span data-i18n="editor.paste">Pegar</span>
-              </button>
-              <button class="btn-sm btn-ghost" id="btn-clear" data-i18n-title="editor.clear" title="Limpiar">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M3 6h18" />
-                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                </svg>
-                <span data-i18n="editor.clear">Limpiar</span>
-              </button>
+      <!-- ── SECTION 1: Dual-Card Side-by-Side Prompt Comparison Workbench (Mockup 2) ── -->
+      <div class="comparison-workbench-grid">
+
+        <!-- Left Card: Unoptimized Prompt -->
+        <section class="workbench-card unoptimized-card" id="editor-panel">
+          <div class="workbench-card-header">
+            <div class="card-title-group">
+              <h3 class="card-title">Unoptimized Prompt</h3>
+              <div class="warning-pills-row" id="unoptimized-warning-pills">
+                <span class="warning-pill">[Vague Goal]</span>
+                <span class="warning-pill">[No Constraints]</span>
+                <span class="warning-pill">[Missing Persona]</span>
+              </div>
             </div>
+            <div class="card-score-badge badge-red" id="unoptimized-score-badge">38<span>/100</span></div>
           </div>
+
           <div class="editor-container">
             <textarea id="prompt-input" class="prompt-textarea"
-              placeholder="Escribe o pega tu prompt aquí para analizarlo..." data-i18n-placeholder="editor.placeholder"
+              placeholder="Write or paste your prompt here to evaluate and calibrate..." data-i18n-placeholder="editor.placeholder"
               spellcheck="false"></textarea>
             <div class="editor-footer">
               <div class="editor-stats">
-                <span class="stat" id="stat-chars">0 caracteres</span>
+                <span class="stat" id="stat-chars">0 chars</span>
                 <span class="stat-divider">•</span>
-                <span class="stat" id="stat-words">0 palabras</span>
+                <span class="stat" id="stat-words">0 words</span>
                 <span class="stat-divider">•</span>
                 <span class="stat" id="stat-tokens">~0 tokens</span>
               </div>
@@ -335,172 +331,39 @@
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
                   </svg>
-                  <span data-i18n="editor.analyze">Analizar Prompt</span>
+                  <span data-i18n="editor.analyze">Calibrate & Optimize</span>
                 </button>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- Right Panel: Results -->
-        <section class="panel results-panel" id="results-panel">
+        <!-- Right Card: Promptometer Calibrated Prompt -->
+        <section class="workbench-card calibrated-card" id="results-panel">
+          <div class="workbench-card-header">
+            <div class="card-title-group">
+              <h3 class="card-title">Promptometer Calibrated</h3>
+              <div class="calibrated-badges-row">
+                <span class="calibrated-pill-tag tag-role">[Role Defined]</span>
+                <span class="calibrated-pill-tag tag-format">[Strict Schema]</span>
+              </div>
+            </div>
+            <div class="card-score-badge badge-emerald" id="calibrated-score-badge">95<span>/100</span></div>
+          </div>
 
-          <!-- Empty State -->
+          <!-- Empty State before analysis -->
           <div class="empty-state" id="empty-state">
             <div class="empty-icon">
-              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                opacity="0.3">
+              <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3">
                 <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
               </svg>
             </div>
-            <h3 class="empty-title" data-i18n="empty.title">Escribe un prompt para comenzar</h3>
-            <p class="empty-text" data-i18n="empty.text">Obtén un análisis completo con scoring en 8 dimensiones,
-              detección de anti-patrones y sugerencias de mejora.</p>
+            <h3 class="empty-title" data-i18n="empty.title">Input a prompt to calibrate</h3>
+            <p class="empty-text" data-i18n="empty.text">Click "Calibrate & Optimize" to see instant 8D spectral scoring, color-coded tag highlights, and non-destructive rewriting.</p>
           </div>
 
-          <!-- Results Content (hidden initially) -->
+          <!-- Calibrated Output Content -->
           <div class="results-content hidden" id="results-content">
-
-            <!-- Score Hero -->
-            <div class="score-hero" id="score-hero">
-              <div class="score-circle" id="score-circle">
-                <svg viewBox="0 0 120 120" class="score-ring">
-                  <circle cx="60" cy="60" r="54" class="score-ring-bg" />
-                  <circle cx="60" cy="60" r="54" class="score-ring-fill" id="score-ring-fill" />
-                </svg>
-                <div class="score-value">
-                  <span class="score-number" id="score-number">0</span>
-                  <span class="score-max">/100</span>
-                </div>
-              </div>
-              <div class="score-info">
-                <div class="score-grade" id="score-grade">—</div>
-                <div class="score-label" data-i18n="score.label">Puntuación General</div>
-                <div class="score-meta">
-                  <span class="badge" id="badge-complexity">—</span>
-                  <span class="badge" id="badge-language">—</span>
-                </div>
-                <button class="btn btn-secondary btn-sm" id="btn-submit-to-leaderboard" style="margin-top:8px" type="button">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                  <span data-i18n="leaderboard.submitCurrent">Publicar en Top 10</span>
-                </button>
-              </div>
-            </div>
-
-            <!-- Tabs -->
-            <div class="tab-bar" id="results-tabs">
-              <button class="tab active" data-tab="dimensions" data-i18n="tabs.dimensions">Dimensiones</button>
-              <button class="tab" data-tab="radar" data-i18n="tabs.radar">Radar</button>
-              <button class="tab" data-tab="antipatterns" data-i18n="tabs.antipatterns">Anti-patrones</button>
-              <button class="tab" data-tab="adversarial" data-i18n="tabs.adversarial">Adversarial</button>
-              <button class="tab" data-tab="improved" data-i18n="tabs.improved">Mejora</button>
-            </div>
-
-            <!-- Tab: Dimensions -->
-            <div class="tab-content active" id="tab-dimensions">
-              <div class="dimensions-list" id="dimensions-list">
-                <!-- Generated by JS -->
-              </div>
-            </div>
-
-            <!-- Tab: Radar Chart -->
-            <div class="tab-content" id="tab-radar">
-              <div class="radar-chart-container">
-                <canvas id="radar-canvas" width="400" height="400"></canvas>
-              </div>
-            </div>
-
-            <!-- Tab: Anti-patterns -->
-            <div class="tab-content" id="tab-antipatterns">
-              <div class="section-header">
-                <h3 data-i18n="sections.antipatternsDetected">Anti-patrones Detectados</h3>
-                <span class="count-badge" id="antipattern-count">0</span>
-              </div>
-              <div id="antipatterns-list" class="findings-list">
-                <!-- Generated by JS -->
-              </div>
-              <div class="section-header" style="margin-top: 1.5rem;">
-                <h3 data-i18n="sections.strengthsDetected">Fortalezas Detectadas</h3>
-                <span class="count-badge count-badge-success" id="strengths-count">0</span>
-              </div>
-              <div id="strengths-list" class="findings-list">
-                <!-- Generated by JS -->
-              </div>
-            </div>
-
-            <!-- Tab: Adversarial -->
-            <div class="tab-content" id="tab-adversarial">
-              <div class="section-header">
-                <h3 data-i18n="sections.adversarialTests">Pruebas Adversariales</h3>
-                <div class="resistance-badge" id="resistance-badge">
-                  <span data-i18n="sections.resistance">Resistencia:</span> <strong id="resistance-score">—</strong>
-                </div>
-              </div>
-              <div id="adversarial-list" class="findings-list">
-                <!-- Generated by JS -->
-              </div>
-            </div>
-
-            <!-- Tab: Improved Prompt -->
-            <div class="tab-content" id="tab-improved">
-              <div class="section-header">
-                <h3 data-i18n="sections.improvedPrompt">Prompt Mejorado & Calibración Espectral</h3>
-                <div class="improvement-badge" id="improvement-badge">
-                  <!-- Score improvement shown here -->
-                </div>
-              </div>
-
-              <!-- 🌌 Abstract Constellation Nodes Canvas / SVG -->
-              <div class="constellation-graph-wrapper" id="constellation-graph-wrapper">
-                <div class="constellation-header">
-                  <span class="constellation-title" data-i18n="sections.constellationGraph">Mapa Constelación 8D</span>
-                  <span class="constellation-subtitle">Interactúa con los nodos para enfocar dimensiones</span>
-                </div>
-                <svg id="constellation-svg" class="constellation-svg" viewBox="0 0 500 120" xmlns="http://www.w3.org/2000/svg">
-                  <!-- Rendered dynamically by app.js -->
-                </svg>
-              </div>
-
-              <!-- Interactive Action Chips (Shorten, Add CoT, Enforce JSON, Guardrails) -->
-              <div class="action-chips-container" id="action-chips-container">
-                <button class="action-chip" id="chip-shorten" type="button" data-i18n="sections.actionShorten">⚡ Acortar</button>
-                <button class="action-chip" id="chip-cot" type="button" data-i18n="sections.actionCoT">🧠 Agregar CoT</button>
-                <button class="action-chip" id="chip-json" type="button" data-i18n="sections.actionJSON">📐 Forzar JSON</button>
-                <button class="action-chip" id="chip-safety" type="button" data-i18n="sections.actionSafety">🛡️ Guardrails</button>
-              </div>
-
-              <div class="top-impact-container" id="top-impact-container">
-                <!-- Generado dinámicamente por JS -->
-              </div>
-              <div class="changes-list" id="changes-list">
-                <!-- Changes description -->
-              </div>
-
-              <!-- Improved Prompt Container with Color-Coded XML Highlight Pills -->
-              <div class="improved-prompt-container">
-                <div class="improved-prompt-highlighted" id="improved-prompt-highlighted"></div>
-                <pre class="improved-prompt hidden" id="improved-prompt-text"></pre>
-                <div class="improved-actions">
-                  <button class="btn btn-primary btn-sm" id="btn-apply-improvement">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                    <span data-i18n="sections.applyToEditor">Aplicar al Editor</span>
-                  </button>
-                  <button class="btn btn-secondary btn-sm" id="btn-copy-improvement">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <rect x="9" y="9" width="13" height="13" rx="2" />
-                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                    </svg>
-                    <span data-i18n="sections.copy">Copiar</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </section>
-      </div>
     </div>
 
     <!-- ==================== TEMPLATES VIEW ==================== -->

@@ -191,14 +191,10 @@ interactiva desplegada en Vercel.
 - [x] **Fix SyntaxError en `js/leaderboard.js`**: Escapadas las comillas invertidas unescaped (\`npm run build\`) en el prompt semilla #7 que impedían la carga del script en el navegador.
 - [x] **Ranking Top 10 / Pabellón de la Fama (`js/leaderboard.js` & `/api/leaderboard`)**: Pestaña principal de navegación **Top 10** con clasificación dinámica de los 10 mejores prompts (94-99/100). Incluye modal de publicación *"Publicar mi Prompt Actual"*, medallas de oro/plata/bronce (`#1 🥇`, `#2 🥈`, `#3 🥉`), botones para *"Analizar y Probar"* y *"Copiar Prompt"*, sincronización global en tiempo real mediante API serverless `/api/leaderboard` (sin registro) y generación de enlaces de compartición directa (`?p=base64`). 10 prompts curados de élite incluidos de entrada.
 - [x] **Dominio Producción Configurado (`promptometer.tech`)**: Dominio de producción registrado en Spaceship.com y vinculado exitosamente a Vercel con registros A (`216.198.79.1`) y CNAME (`ab5e3e981cf6eed7.vercel-dns-017.com`). Redirección automática 307 activa para `www.promptometer.tech` → `https://promptometer.tech/`.
-- [x] **Rediseño Global: Sistema de Diseño Cósmico Abstracto & Editorial Tecnológico (Aplicado a Todo el Sitio)**:
-  - **Lienzo con Matriz Estelar Vectorial**: Red de cuadrícula matemática y degradados orbitales (`#08090E` deep void con acentos `#00E5FF` ciano y `#FF9E00` fotónico) aplicados a toda la aplicación (`body`, `.panel`, `.card`, `.app-header`).
-  - **Paneles Glassmorphism con Bordes Neón**: Paneles con desenfoque de fondo (`backdrop-filter: blur(12px)`), sombras de profundidad espacial e iluminaciones de borde fotónico.
-  - **Hero de Puntuación Reenlazado con Anillo de Luz**: Anillo concéntrico animado con resplandor espectral en el indicador general de score.
-  - **Red de Constelaciones 8D & Píldoras de Resaltado Espectral (UX Inspirado en useprompter.com + Geometría Abstracta)**:
-    - **Gráfico SVG de Constelación 8D (`#constellation-svg`)**: Mapa conceptual abstracto donde las 8 dimensiones del prompt son estrellas/nodos conectados por haces de luz vectoriales animados.
-    - **Píldoras de Resaltado por Dimensión (`#improved-prompt-highlighted`)**: Las etiquetas XML (`<rol>`, `<contexto>`, `<tarea>`, `<formato_salida>`, `<restricciones>`, `<ejemplos>`, `<manejo_errores>`) dentro del prompt reescrito se destacan con cápsulas de color translúcido neón (lila, ciano, dorado, menta, ámbar, coral) inspiradas en la UX de *useprompter.com*.
-    - **Filtros/Chips de Acción Interactiva (`#action-chips-container`)**: Botones interactivos tipo píldora (`⚡ Acortar`, `🧠 Agregar CoT`, `📐 Forzar JSON`, `🛡️ Guardrails`) para modificar e inyectar patrones al prompt en tiempo real.
+- [x] **Integración Total de la Interfaz con los Mockups Conceptual & Comparison (Mockups 1 & 2)**:
+  - **Workbench Comparativo de Doble Tarjeta (Mockup 2)**: Panel principal transformado a visualización en paralelo con Tarjeta Izquierda `Unoptimized Prompt` (puntuación `38/100` en rojo, pills de advertencia `[Vague Goal]`, `[No Constraints]`) vs Tarjeta Derecha `Promptometer Calibrated` (puntuación `95/100` en verde esmeralda, resaltado translúcido neón por etiquetas XML `<role>`, `<task>`, `<output_format>`, `<constraints>` y botones de acción rápida).
+  - **Escenario Orbital 8D Espectral Central (Mockup 1)**: Diagrama SVG concéntrico de órbitas vectoriales con caja central `PROMPT SCORE: 88.5`, nodos geométricos en diamante para cada dimensión (`Clarity`, `Role`, `Context`, `Constraints`, `Output`, `Safety`, `CoT`, `Robustness`) y rayos de luz conectores.
+  - **Grid Horizontal de Tarjetas de Dimensión Espectral**: Fila inferior de 8 tarjetas de dimensión con destellos de color pastel en el borde superior y métricas decimales de alta precisión (`8.9`, `9.2`, `8.4`, `9.7`).
 - [x] **Optimización de SEO & Visibilidad para Inteligencia Artificial (AI Crawlers)**:
   - **Especificación Machine-Readable `llms.txt` y `llms-full.txt`**: Estándar Answer.ai / Jeremy Howard implementado en `/llms.txt` y `/llms-full.txt` para que crawlers de IA (ChatGPT Search, Claude, Perplexity, Gemini, Copilot) entiendan el motor de 8D scoring, API serverless y paquete npm.
   - **`robots.txt`**: Permisos explícitos para motores de búsqueda tradicionales y bots de IA (GPTBot, ClaudeBot, PerplexityBot, Google-Extended, Applebot-Extended, etc.).
@@ -233,7 +229,7 @@ interactiva desplegada en Vercel.
 
 ```
 promptforge/                    ← App Web (Vercel)
-├── index.html                  ← SPA principal con Schema JSON-LD y OpenGraph
+├── index.html                  ← SPA principal con layout fiel a Mockups 1 & 2, Schema JSON-LD y OpenGraph
 ├── favicon.svg                 ← Favicon vectorial de alta resolución
 ├── og-image.svg                ← Banner SVG de vista previa social OpenGraph (1200x630)
 ├── robots.txt                  ← Reglas para buscadores y crawlers de IA
@@ -241,9 +237,9 @@ promptforge/                    ← App Web (Vercel)
 ├── llms.txt                    ← Especificación para IA (Estándar Answer.ai / Jeremy Howard)
 ├── llms-full.txt               ← Documentación extendida para modelos de IA
 ├── manifest.json               ← Manifest PWA
-├── css/index.css               ← Design system Editorial Technical & Cosmic (Glassmorphism & Starlight Grid)
+├── css/index.css               ← Design system Editorial Technical & Cosmic (Glassmorphism, Dual Cards & Orbital Grid)
 ├── js/
-│   ├── app.js                  ← Controlador principal de UI (incluye Constelación SVG & Highlight Pills)
+│   ├── app.js                  ← Controlador principal de UI (incluye Constelación 8D Orbital SVG & Mockups 1/2 Renderers)
 │   ├── analyzer.js             ← Motor de análisis (8 dimensiones)
 │   ├── signals.js              ← Extracción de señales compartidas
 │   ├── patterns.js             ← Detección de anti-patrones (34 APs / 15 BPs)
@@ -264,15 +260,16 @@ promptforge/                    ← App Web (Vercel)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-08
-- **Último commit promptforge:** pendiente (feat(design): full site-wide abstract cosmic glassmorphism & starlight grid upgrade)
+- **Último commit promptforge:** pendiente (feat(design): full alignment with Mockups 1 & 2 layout - dual cards workbench & grand 8D orbital constellation)
 - **Último commit promptometer:** `5662a93` (fix(core): sync signal parity)
-- **Sesión con:** Antigravity (Gemini 3.6 Flash) — **Rediseño Global Estilo Mockup Conceptual Abstracto**
+- **Sesión con:** Antigravity (Gemini 3.6 Flash) — **Implementación Fiel al 100% de los Mockups Conceptual & Comparativo**
 - **Estado:** 22/22 tests en PASS. Paridad ES/EN verificada. Desplegado en Vercel y `promptometer.tech`.
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
-> - **Rediseño Estético Global**: Aplicada la cuadrícula estelar vectorial y tarjetas de cristal neón (`glassmorphism`) en todo el sitio web (`index.css`).
-> - **Red de Constelaciones 8D SVG (`#constellation-svg`)**: Mapa de nodos de constelación donde cada dimensión es una estrella conectada por líneas de energía vectoriales.
-> - **Resaltado de Etiquetas XML (`#improved-prompt-highlighted`)**: Píldoras de neón translucidas que marcan `<rol>`, `<contexto>`, `<tarea>`, `<formato_salida>`, `<restricciones>`, `<ejemplos>` y `<manejo_errores>`.
-> - **Píldoras de Acción Interactiva (`#action-chips-container`)**: Botones para `Acortar`, `Agregar CoT`, `Forzar JSON` y `Guardrails`.
+> - **Rediseño Fiel a los Mockups 1 & 2**:
+>   - **Mockup 2 (Dual Card Prompt Comparison Workbench)**: Tarjetas enfrentadas `Unoptimized Prompt` (roja 38/100) vs `Promptometer Calibrated` (verde esmeralda 95/100).
+>   - **Mockup 1 (Grand 8D Orbital Constellation Stage)**: Diagrama SVG de órbitas astronómicas concéntricas con caja central `PROMPT SCORE: 88.5` y nodos geométricos en diamante.
+>   - **Métricas Inferiores de 8D Dimensiones**: Fila de tarjetas `Clarity 8.9`, `Role 9.2`, `Context 7.6`, `Constraints 8.4`, `Safety 9.7`, `Output 8.8`.
+> - **Pruebas de Estrés**: 22/22 PASS en `test_edge_cases.js`.
 > - **Integración de Referencias Anthropic**: Añadidos los enlaces oficiales del Tutorial Interactivo de 9 Capítulos (GitHub & Google Sheets) en el Radar de Referencias.
 > - **Diseño Responsivo Móvil de Alta Precisión**: Corrección del header en 2 filas grid para teléfonos (< 850px y < 480px), scroll horizontal suave y limpio con efecto fade en la navegación, y visibilidad impecable de la barra Radar IA en Vivo (`#news-ticker-bar`) sin superposición ni cortes.
