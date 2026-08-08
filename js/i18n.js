@@ -56,6 +56,7 @@ const I18n = (() => {
         creative: 'Creativo',
         rag: 'RAG (recuperación)',
         'tool-use': 'Uso de herramientas',
+        extraction: 'Extracción estructurada',
         general: 'General',
       },
 
@@ -941,6 +942,7 @@ const I18n = (() => {
         creative: 'Creative',
         rag: 'RAG (retrieval)',
         'tool-use': 'Tool use',
+        extraction: 'Structured extraction',
         general: 'General',
       },
 

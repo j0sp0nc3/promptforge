@@ -92,7 +92,7 @@ interactiva desplegada en Vercel.
 - [x] **Fase 3**: Frameworks (RTF, CRISPE, RACE, anatomía XML nativa) ✅
 - [x] **Fase 4**: Biblioteca unificada (ya implementada en Fase 0) ✅
 - [x] **Fase 5**: Fix 18 claves i18n rotas (promptType.*, técnicas modernas, safety) ✅
-- [x] **Biblioteca con detalle expandible**: los anti-patrones (35), buenas prácticas (15) y tests adversariales (13) ahora son acordeones `<details>` expandibles que muestran descripción, dimensión y sugerencia (todo desde i18n existente, sin duplicar contenido).
+- [x] **Biblioteca con detalle expandible**: los anti-patrones (34), buenas prácticas (15) y tests adversariales (13) ahora son acordeones `<details>` expandibles que muestran descripción, dimensión y sugerencia (todo desde i18n existente, sin duplicar contenido).
 
 > ✅ **HUB DE CONOCIMIENTO COMPLETO.** 30 entradas nuevas (20 glosario + 6 técnicas + 4 frameworks),
 > bilingües ES/EN, + biblioteca unificada de los 12 templates + 34 anti-patrones + 15 best-practices
@@ -142,7 +142,7 @@ promptforge/                    ← App Web (Vercel)
 │   ├── app.js                  ← Controlador principal de UI
 │   ├── analyzer.js             ← Motor de análisis (8 dimensiones)
 │   ├── signals.js              ← Extracción de señales compartidas
-│   ├── patterns.js             ← Detección de anti-patrones (35 APs / 15 BPs)
+│   ├── patterns.js             ← Detección de anti-patrones (34 APs / 15 BPs)
 │   ├── i18n.js                 ← Diccionarios ES/EN
 │   ├── knowledge.js            ← Hub de conocimiento (20 términos, 13 técnicas, 6 frameworks, 13 refs, 20 creadores)
 │   ├── leaderboard.js          ← Módulo de ranking Top 10 y persistencia
