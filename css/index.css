@@ -267,6 +267,11 @@ body.theme-editorial .panel {
 }
 .panel-title {
   display: flex; align-items: center; gap: var(--space-sm);
+  font-family: var(--font-serif); font-size: 1.1rem; font-weight: 600;
+  color: var(--ink);
+}
+.panel-actions { display: flex; gap: var(--space-sm); }
+
 /* ============================================================
    MOCKUP 1 & 2: HERO HEADER & DUAL-CARD COMPARISON WORKBENCH
    ============================================================ */
