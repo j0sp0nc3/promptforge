@@ -1538,6 +1538,179 @@ body.theme-editorial ::-webkit-scrollbar-thumb { background: #C7BBA3; border-rad
 }
 
 /* ============================================================
+   ABSTRACT CONSTELLATION GRAPH & CONCEPTUAL HIGHLIGHTING
+   ============================================================ */
+.constellation-graph-wrapper {
+  background: var(--bg-sunken, rgba(16, 20, 32, 0.6));
+  border: var(--rule);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  margin-bottom: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.constellation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.constellation-title {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent, #FF9E00);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.constellation-subtitle {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+}
+
+.constellation-svg {
+  width: 100%;
+  height: 100px;
+  display: block;
+}
+
+.constellation-line {
+  stroke: var(--accent, #FF9E00);
+  stroke-opacity: 0.25;
+  stroke-width: 1.2;
+  stroke-dasharray: 4;
+  animation: constellationPulse 3s infinite ease-in-out;
+}
+
+@keyframes constellationPulse {
+  0%, 100% { stroke-opacity: 0.2; }
+  50% { stroke-opacity: 0.5; }
+}
+
+.constellation-node {
+  cursor: pointer;
+  transition: transform 0.2s ease, fill 0.2s ease;
+}
+
+.constellation-node:hover {
+  transform: scale(1.25);
+}
+
+.constellation-node-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  fill: var(--ink-soft);
+  text-anchor: middle;
+  pointer-events: none;
+}
+
+/* ── Interactive Action Chips ────────────────────────────── */
+.action-chips-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 1.2rem;
+}
+
+.action-chip {
+  background: var(--bg-paper);
+  border: var(--rule);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.action-chip:hover {
+  border-color: var(--accent, #FF9E00);
+  color: var(--accent, #FF9E00);
+  transform: translateY(-1px);
+}
+
+.action-chip:active {
+  transform: translateY(0);
+}
+
+/* ── Color-Coded XML Tag Highlight Pills ──────────────────── */
+.improved-prompt-highlighted {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: var(--bg-paper);
+  border: var(--rule);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  color: var(--ink);
+  max-height: 480px;
+  overflow-y: auto;
+}
+
+.xml-tag-pill {
+  display: inline;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  margin: 0 2px;
+}
+
+.xml-tag-role {
+  background: rgba(124, 58, 237, 0.15);
+  color: #a78bfa;
+  border: 1px solid rgba(124, 58, 237, 0.3);
+}
+
+.xml-tag-context {
+  background: rgba(0, 229, 255, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(0, 229, 255, 0.3);
+}
+
+.xml-tag-task {
+  background: rgba(255, 158, 0, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(255, 158, 0, 0.3);
+}
+
+.xml-tag-format {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.xml-tag-constraints {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f6ad55;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.xml-tag-examples {
+  background: rgba(236, 72, 153, 0.15);
+  color: #f472b6;
+  border: 1px solid rgba(236, 72, 153, 0.3);
+}
+
+.xml-tag-error {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+
+/* ============================================================
    RESPONSIVE DESIGN (TABLETS & MOBILE PHONES)
    ============================================================ */
 

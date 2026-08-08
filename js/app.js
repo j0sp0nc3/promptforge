@@ -492,6 +492,17 @@ const App = (() => {
     const badge = document.getElementById('improvement-badge');
     badge.innerHTML = t('improvement.estimated', { n: improved.scoreImprovement });
 
+    // 1. Render Constellation Graph SVG
+    if (currentAnalysis && currentAnalysis.analysis) {
+      renderConstellationSVG(currentAnalysis.analysis.dimensions);
+    }
+
+    // 2. Render Color-Coded XML Highlighted Prompt
+    renderHighlightedPrompt(improved.improvedPrompt);
+
+    // 3. Setup Action Chips
+    setupActionChips(improved.improvedPrompt);
+
     // FASE 7: Top 5 Impact Issues (Before / After Resolution)
     const topImpactEl = document.getElementById('top-impact-container');
     if (topImpactEl && currentAnalysis && currentAnalysis.analysis.suggestions) {
@@ -539,6 +550,157 @@ const App = (() => {
     document.getElementById('btn-copy-improvement').onclick = () => {
       ExportUtil.toClipboard(improved.improvedPrompt);
     };
+  }
+
+  // ── Abstract Constellation SVG Renderer ─────────────────────
+  function renderConstellationSVG(dimensions) {
+    const svg = document.getElementById('constellation-svg');
+    if (!svg) return;
+
+    const dimList = [
+      { key: 'clarity',        label: 'Claridad',    color: '#00e5ff', x: 40,  y: 40 },
+      { key: 'specificity',    label: 'Especificidad',color: '#a78bfa', x: 100, y: 80 },
+      { key: 'structure',      label: 'Estructura',  color: '#fbbf24', x: 170, y: 30 },
+      { key: 'robustness',     label: 'Robustez',    color: '#34d399', x: 230, y: 85 },
+      { key: 'context',        label: 'Contexto',     color: '#f472b6', x: 300, y: 35 },
+      { key: 'outputFormat',   label: 'Formato',     color: '#38bdf8', x: 370, y: 80 },
+      { key: 'chainOfThought', label: 'CoT',         color: '#f97316', x: 430, y: 40 },
+      { key: 'safety',         label: 'Seguridad',   color: '#f87171', x: 470, y: 90 },
+    ];
+
+    let linesHTML = '';
+    for (let i = 0; i < dimList.length - 1; i++) {
+      const p1 = dimList[i];
+      const p2 = dimList[i + 1];
+      linesHTML += `<line class="constellation-line" x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}" />`;
+    }
+    // Connect first and middle / last for a starry constellation web
+    linesHTML += `<line class="constellation-line" x1="${dimList[0].x}" y1="${dimList[0].y}" x2="${dimList[2].x}" y2="${dimList[2].y}" />`;
+    linesHTML += `<line class="constellation-line" x1="${dimList[2].x}" y1="${dimList[2].y}" x2="${dimList[4].x}" y2="${dimList[4].y}" />`;
+    linesHTML += `<line class="constellation-line" x1="${dimList[4].x}" y1="${dimList[4].y}" x2="${dimList[6].x}" y2="${dimList[6].y}" />`;
+
+    let nodesHTML = '';
+    dimList.forEach(d => {
+      const dimData = dimensions[d.key] || { score: 50 };
+      const score = dimData.score || 50;
+      const radius = 4 + (score / 100) * 5;
+      nodesHTML += `
+        <g class="constellation-node-group" title="${escapeHtml(d.label)}: ${score}/100">
+          <circle cx="${d.x}" cy="${d.y}" r="${radius + 3}" fill="${d.color}" opacity="0.25" />
+          <circle class="constellation-node" cx="${d.x}" cy="${d.y}" r="${radius}" fill="${d.color}" />
+          <text class="constellation-node-label" x="${d.x}" y="${d.y + radius + 10}">${escapeHtml(d.label)}</text>
+        </g>
+      `;
+    });
+
+    svg.innerHTML = linesHTML + nodesHTML;
+  }
+
+  // ── Color-Coded XML Highlighted Prompt Renderer ────────────
+  function renderHighlightedPrompt(promptText) {
+    const container = document.getElementById('improved-prompt-highlighted');
+    if (!container) return;
+
+    if (!promptText) {
+      container.innerHTML = '';
+      return;
+    }
+
+    const tagClassMap = {
+      rol: 'xml-tag-role',
+      role: 'xml-tag-role',
+      contexto: 'xml-tag-context',
+      context: 'xml-tag-context',
+      tarea: 'xml-tag-task',
+      task: 'xml-tag-task',
+      formato_salida: 'xml-tag-format',
+      output_format: 'xml-tag-format',
+      restricciones: 'xml-tag-constraints',
+      constraints: 'xml-tag-constraints',
+      ejemplos: 'xml-tag-examples',
+      examples: 'xml-tag-examples',
+      manejo_errores: 'xml-tag-error',
+      error_handling: 'xml-tag-error',
+      pensamiento: 'xml-tag-task',
+      reasoning: 'xml-tag-task'
+    };
+
+    let escaped = escapeHtml(promptText);
+
+    // Replace <tag>...</tag> opening and closing tags with highlighted pills
+    escaped = escaped.replace(/&lt;(\/?[a-z_]+)&gt;/gi, (match, tagContent) => {
+      const isClosing = tagContent.startsWith('/');
+      const rawTag = isClosing ? tagContent.slice(1).toLowerCase() : tagContent.toLowerCase();
+      const cssClass = tagClassMap[rawTag] || 'xml-tag-format';
+      return `<span class="xml-tag-pill ${cssClass}">&lt;${tagContent}&gt;</span>`;
+    });
+
+    container.innerHTML = escaped;
+  }
+
+  // ── Action Chips Event Handlers ─────────────────────────────
+  function setupActionChips(currentPromptText) {
+    const btnShorten = document.getElementById('chip-shorten');
+    const btnCoT     = document.getElementById('chip-cot');
+    const btnJSON    = document.getElementById('chip-json');
+    const btnSafety  = document.getElementById('chip-safety');
+
+    if (btnShorten) {
+      btnShorten.onclick = () => {
+        let p = currentPromptText
+          .replace(/\b(por favor|de la mejor manera posible|sé conciso y|de forma amable)\b/gi, '')
+          .replace(/\n{3,}/g, '\n\n')
+          .trim();
+        p += '\n\n<restricciones>\n- Sé conciso y directo.\n</restricciones>';
+        updateImprovedView(p);
+        showToast(t('toast.improvementApplied'), 'success');
+      };
+    }
+
+    if (btnCoT) {
+      btnCoT.onclick = () => {
+        let p = currentPromptText;
+        if (!p.includes('<pensamiento>')) {
+          p += '\n\n<pensamiento>\nAnaliza la solicitud paso a paso antes de responder.\nThought: [Razonamiento inicial]\nAction: [Respuesta final]\n</pensamiento>';
+        }
+        updateImprovedView(p);
+        showToast(t('toast.improvementApplied'), 'success');
+      };
+    }
+
+    if (btnJSON) {
+      btnJSON.onclick = () => {
+        let p = currentPromptText;
+        if (!p.includes('<formato_salida>')) {
+          p += '\n\n<formato_salida>\nResponde únicamente con un objeto JSON válido sin texto fuera del bloque.\n</formato_salida>';
+        } else {
+          p = p.replace(/<formato_salida>[\s\S]*?<\/formato_salida>/gi, '<formato_salida>\nResponde únicamente con un objeto JSON válido con esquema estricto.\n</formato_salida>');
+        }
+        updateImprovedView(p);
+        showToast(t('toast.improvementApplied'), 'success');
+      };
+    }
+
+    if (btnSafety) {
+      btnSafety.onclick = () => {
+        let p = currentPromptText;
+        if (!p.includes('<restricciones>')) {
+          p += '\n\n<restricciones>\n- Cita únicamente datos del texto original.\n- Si no estás seguro de un dato, di explícitamente "No sé". No inventes información.\n</restricciones>';
+        } else {
+          p = p.replace('</restricciones>', '- Cita únicamente datos del texto original.\n- Si no estás seguro, di "No sé".\n</restricciones>');
+        }
+        updateImprovedView(p);
+        showToast(t('toast.improvementApplied'), 'success');
+      };
+    }
+  }
+
+  function updateImprovedView(newPromptText) {
+    document.getElementById('improved-prompt-text').textContent = newPromptText;
+    renderHighlightedPrompt(newPromptText);
+    if (currentAnalysis && currentAnalysis.improved) {
+      currentAnalysis.improved.improvedPrompt = newPromptText;
+    }
   }
 
   function showEmptyState() {

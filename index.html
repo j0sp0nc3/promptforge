@@ -444,19 +444,42 @@
             <!-- Tab: Improved Prompt -->
             <div class="tab-content" id="tab-improved">
               <div class="section-header">
-                <h3 data-i18n="sections.improvedPrompt">Prompt Mejorado</h3>
+                <h3 data-i18n="sections.improvedPrompt">Prompt Mejorado & Calibración Espectral</h3>
                 <div class="improvement-badge" id="improvement-badge">
                   <!-- Score improvement shown here -->
                 </div>
               </div>
+
+              <!-- 🌌 Abstract Constellation Nodes Canvas / SVG -->
+              <div class="constellation-graph-wrapper" id="constellation-graph-wrapper">
+                <div class="constellation-header">
+                  <span class="constellation-title" data-i18n="sections.constellationGraph">Mapa Constelación 8D</span>
+                  <span class="constellation-subtitle">Interactúa con los nodos para enfocar dimensiones</span>
+                </div>
+                <svg id="constellation-svg" class="constellation-svg" viewBox="0 0 500 120" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Rendered dynamically by app.js -->
+                </svg>
+              </div>
+
+              <!-- Interactive Action Chips (Shorten, Add CoT, Enforce JSON, Guardrails) -->
+              <div class="action-chips-container" id="action-chips-container">
+                <button class="action-chip" id="chip-shorten" type="button" data-i18n="sections.actionShorten">⚡ Acortar</button>
+                <button class="action-chip" id="chip-cot" type="button" data-i18n="sections.actionCoT">🧠 Agregar CoT</button>
+                <button class="action-chip" id="chip-json" type="button" data-i18n="sections.actionJSON">📐 Forzar JSON</button>
+                <button class="action-chip" id="chip-safety" type="button" data-i18n="sections.actionSafety">🛡️ Guardrails</button>
+              </div>
+
               <div class="top-impact-container" id="top-impact-container">
                 <!-- Generado dinámicamente por JS -->
               </div>
               <div class="changes-list" id="changes-list">
                 <!-- Changes description -->
               </div>
+
+              <!-- Improved Prompt Container with Color-Coded XML Highlight Pills -->
               <div class="improved-prompt-container">
-                <pre class="improved-prompt" id="improved-prompt-text"></pre>
+                <div class="improved-prompt-highlighted" id="improved-prompt-highlighted"></div>
+                <pre class="improved-prompt hidden" id="improved-prompt-text"></pre>
                 <div class="improved-actions">
                   <button class="btn btn-primary btn-sm" id="btn-apply-improvement">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

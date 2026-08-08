@@ -34,6 +34,8 @@
 Promptometer is a complete professional workspace and engine to **evaluate, benchmark, learn, and optimize prompts for LLMs**. It provides:
 
 - **Multidimensional Score (0–100)** with letter grades (A to F) across **8 dimensions**.
+- **8D Constellation Node Graph**: Interactive SVG star constellation map representing the 8 prompt evaluation dimensions as interconnected vector nodes.
+- **Color-Coded XML Highlight Pills & Action Chips**: Translucent neon tag highlighting for `<rol>`, `<contexto>`, `<tarea>`, `<formato_salida>`, `<restricciones>`, `<ejemplos>`, and `<manejo_errores>` with 1-click transformation action chips (`⚡ Shorten`, `🧠 Add CoT`, `📐 Enforce JSON`, `🛡️ Guardrails`).
 - **Anti-Pattern Catalog** (34 anti-patterns) & **Best Practices** (15 strengths) with expandable `<details>` accordions.
 - **Adversarial Security Suite** (13 security tests: jailbreak resistance, prompt exfiltration, hallucination mitigation, etc.).
 - **Interactive Knowledge Hub** with a 20-term bilingual glossary, 13 prompting techniques (including CoVe, SoT, Hi-CoT), 6 structural frameworks (including CO-STAR and Bento-Box), 11 curated research references, and full-text real-time search.
