@@ -191,10 +191,14 @@ interactiva desplegada en Vercel.
 - [x] **Fix SyntaxError en `js/leaderboard.js`**: Escapadas las comillas invertidas unescaped (\`npm run build\`) en el prompt semilla #7 que impedían la carga del script en el navegador.
 - [x] **Ranking Top 10 / Pabellón de la Fama (`js/leaderboard.js` & `/api/leaderboard`)**: Pestaña principal de navegación **Top 10** con clasificación dinámica de los 10 mejores prompts (94-99/100). Incluye modal de publicación *"Publicar mi Prompt Actual"*, medallas de oro/plata/bronce (`#1 🥇`, `#2 🥈`, `#3 🥉`), botones para *"Analizar y Probar"* y *"Copiar Prompt"*, sincronización global en tiempo real mediante API serverless `/api/leaderboard` (sin registro) y generación de enlaces de compartición directa (`?p=base64`). 10 prompts curados de élite incluidos de entrada.
 - [x] **Dominio Producción Configurado (`promptometer.tech`)**: Dominio de producción registrado en Spaceship.com y vinculado exitosamente a Vercel con registros A (`216.198.79.1`) y CNAME (`ab5e3e981cf6eed7.vercel-dns-017.com`). Redirección automática 307 activa para `www.promptometer.tech` → `https://promptometer.tech/`.
-- [x] **Red de Constelaciones 8D & Píldoras de Resaltado Espectral (UX Inspirado en useprompter.com + Geometría Abstracta)**:
-  - **Gráfico SVG de Constelación 8D (`#constellation-svg`)**: Mapa conceptual abstracto donde las 8 dimensiones del prompt son estrellas/nodos conectados por haces de luz vectoriales animados.
-  - **Píldoras de Resaltado por Dimensión (`#improved-prompt-highlighted`)**: Las etiquetas XML (`<rol>`, `<contexto>`, `<tarea>`, `<formato_salida>`, `<restricciones>`, `<ejemplos>`, `<manejo_errores>`) dentro del prompt reescrito se destacan con cápsulas de color translúcido neón (lila, ciano, dorado, menta, ámbar, coral) inspiradas en la UX de *useprompter.com*.
-  - **Filtros/Chips de Acción Interactiva (`#action-chips-container`)**: Botones interactivos tipo píldora (`⚡ Acortar`, `🧠 Agregar CoT`, `📐 Forzar JSON`, `🛡️ Guardrails`) para modificar e inyectar patrones al prompt en tiempo real.
+- [x] **Rediseño Global: Sistema de Diseño Cósmico Abstracto & Editorial Tecnológico (Aplicado a Todo el Sitio)**:
+  - **Lienzo con Matriz Estelar Vectorial**: Red de cuadrícula matemática y degradados orbitales (`#08090E` deep void con acentos `#00E5FF` ciano y `#FF9E00` fotónico) aplicados a toda la aplicación (`body`, `.panel`, `.card`, `.app-header`).
+  - **Paneles Glassmorphism con Bordes Neón**: Paneles con desenfoque de fondo (`backdrop-filter: blur(12px)`), sombras de profundidad espacial e iluminaciones de borde fotónico.
+  - **Hero de Puntuación Reenlazado con Anillo de Luz**: Anillo concéntrico animado con resplandor espectral en el indicador general de score.
+  - **Red de Constelaciones 8D & Píldoras de Resaltado Espectral (UX Inspirado en useprompter.com + Geometría Abstracta)**:
+    - **Gráfico SVG de Constelación 8D (`#constellation-svg`)**: Mapa conceptual abstracto donde las 8 dimensiones del prompt son estrellas/nodos conectados por haces de luz vectoriales animados.
+    - **Píldoras de Resaltado por Dimensión (`#improved-prompt-highlighted`)**: Las etiquetas XML (`<rol>`, `<contexto>`, `<tarea>`, `<formato_salida>`, `<restricciones>`, `<ejemplos>`, `<manejo_errores>`) dentro del prompt reescrito se destacan con cápsulas de color translúcido neón (lila, ciano, dorado, menta, ámbar, coral) inspiradas en la UX de *useprompter.com*.
+    - **Filtros/Chips de Acción Interactiva (`#action-chips-container`)**: Botones interactivos tipo píldora (`⚡ Acortar`, `🧠 Agregar CoT`, `📐 Forzar JSON`, `🛡️ Guardrails`) para modificar e inyectar patrones al prompt en tiempo real.
 - [x] **Optimización de SEO & Visibilidad para Inteligencia Artificial (AI Crawlers)**:
   - **Especificación Machine-Readable `llms.txt` y `llms-full.txt`**: Estándar Answer.ai / Jeremy Howard implementado en `/llms.txt` y `/llms-full.txt` para que crawlers de IA (ChatGPT Search, Claude, Perplexity, Gemini, Copilot) entiendan el motor de 8D scoring, API serverless y paquete npm.
   - **`robots.txt`**: Permisos explícitos para motores de búsqueda tradicionales y bots de IA (GPTBot, ClaudeBot, PerplexityBot, Google-Extended, Applebot-Extended, etc.).
@@ -237,7 +241,7 @@ promptforge/                    ← App Web (Vercel)
 ├── llms.txt                    ← Especificación para IA (Estándar Answer.ai / Jeremy Howard)
 ├── llms-full.txt               ← Documentación extendida para modelos de IA
 ├── manifest.json               ← Manifest PWA
-├── css/index.css               ← Design system Editorial Technical & Cosmic
+├── css/index.css               ← Design system Editorial Technical & Cosmic (Glassmorphism & Starlight Grid)
 ├── js/
 │   ├── app.js                  ← Controlador principal de UI (incluye Constelación SVG & Highlight Pills)
 │   ├── analyzer.js             ← Motor de análisis (8 dimensiones)
@@ -260,12 +264,13 @@ promptforge/                    ← App Web (Vercel)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-08
-- **Último commit promptforge:** pendiente (feat(ui): 8D Constellation Map, color-coded XML highlight pills & action chips)
+- **Último commit promptforge:** pendiente (feat(design): full site-wide abstract cosmic glassmorphism & starlight grid upgrade)
 - **Último commit promptometer:** `5662a93` (fix(core): sync signal parity)
-- **Sesión con:** Antigravity (Gemini 3.6 Flash) — **Red de Constelaciones 8D + Resaltado de Dimensiones (Inspirado en useprompter.com)**
+- **Sesión con:** Antigravity (Gemini 3.6 Flash) — **Rediseño Global Estilo Mockup Conceptual Abstracto**
 - **Estado:** 22/22 tests en PASS. Paridad ES/EN verificada. Desplegado en Vercel y `promptometer.tech`.
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
+> - **Rediseño Estético Global**: Aplicada la cuadrícula estelar vectorial y tarjetas de cristal neón (`glassmorphism`) en todo el sitio web (`index.css`).
 > - **Red de Constelaciones 8D SVG (`#constellation-svg`)**: Mapa de nodos de constelación donde cada dimensión es una estrella conectada por líneas de energía vectoriales.
 > - **Resaltado de Etiquetas XML (`#improved-prompt-highlighted`)**: Píldoras de neón translucidas que marcan `<rol>`, `<contexto>`, `<tarea>`, `<formato_salida>`, `<restricciones>`, `<ejemplos>` y `<manejo_errores>`.
 > - **Píldoras de Acción Interactiva (`#action-chips-container`)**: Botones para `Acortar`, `Agregar CoT`, `Forzar JSON` y `Guardrails`.
