@@ -196,22 +196,26 @@ const App = (() => {
 
     btnAnalyze.addEventListener('click', runAnalysis);
 
-    btnClear.addEventListener('click', () => {
-      textarea.value = '';
-      updateEditorStats();
-      showEmptyState();
-    });
-
-    btnPaste.addEventListener('click', async () => {
-      try {
-        const text = await navigator.clipboard.readText();
-        textarea.value = text;
+    if (btnClear) {
+      btnClear.addEventListener('click', () => {
+        textarea.value = '';
         updateEditorStats();
-        textarea.focus();
-      } catch {
-        showToast(t('toast.pasteError'), 'error');
-      }
-    });
+        showEmptyState();
+      });
+    }
+
+    if (btnPaste) {
+      btnPaste.addEventListener('click', async () => {
+        try {
+          const text = await navigator.clipboard.readText();
+          textarea.value = text;
+          updateEditorStats();
+          textarea.focus();
+        } catch {
+          showToast(t('toast.pasteError'), 'error');
+        }
+      });
+    }
   }
 
   function updateEditorStats() {
@@ -335,7 +339,9 @@ const App = (() => {
     const ringFill = document.getElementById('score-ring-fill');
     const circumference = 2 * Math.PI * 54;
 
-    ringFill.style.strokeDasharray = circumference;
+    if (ringFill) {
+      ringFill.style.strokeDasharray = circumference;
+    }
 
     let current = 0;
     const duration = 1200;
@@ -347,17 +353,17 @@ const App = (() => {
       const eased = 1 - Math.pow(1 - progress, 3);
       current = Math.round(eased * targetScore);
 
-      numberEl.textContent = current;
-      const offset = circumference - (current / 100) * circumference;
-      ringFill.style.strokeDashoffset = offset;
-
-      // Color based on score
-      const hue = (current / 100) * 120;
-      ringFill.style.stroke = `hsl(${hue}, 80%, 55%)`;
+      if (numberEl) numberEl.textContent = current;
+      if (ringFill) {
+        const offset = circumference - (current / 100) * circumference;
+        ringFill.style.strokeDashoffset = offset;
+        const hue = (current / 100) * 120;
+        ringFill.style.stroke = `hsl(${hue}, 80%, 55%)`;
+      }
 
       if (progress < 1) {
         requestAnimationFrame(update);
-      } else {
+      } else if (gradeEl) {
         gradeEl.textContent = grade;
         gradeEl.className = `score-grade grade-${grade.replace('+', 'plus').replace('-', 'minus')}`;
       }
