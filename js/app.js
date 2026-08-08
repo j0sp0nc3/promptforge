@@ -300,17 +300,21 @@ const App = (() => {
     // Animate score
     animateScore(analysis.overallScore, analysis.grade);
 
-    // Badges
+    // Badges (optional elements depending on view layout)
     const complexityKey = analysis.complexity; // 'basic' | 'intermediate' | 'advanced'
     const complexityBadge = document.getElementById('badge-complexity');
-    complexityBadge.textContent = t(`complexity.${complexityKey}`);
-    complexityBadge.className = `badge badge-${complexityKey === 'advanced' ? 'success' : complexityKey === 'intermediate' ? 'warning' : 'info'}`;
+    if (complexityBadge) {
+      complexityBadge.textContent = t(`complexity.${complexityKey}`);
+      complexityBadge.className = `badge badge-${complexityKey === 'advanced' ? 'success' : complexityKey === 'intermediate' ? 'warning' : 'info'}`;
+    }
 
     const langBadge = document.getElementById('badge-language');
-    langBadge.textContent = analysis.language === 'es' ? t('language.es')
-                          : analysis.language === 'en' ? t('language.en')
-                          : t('language.mixed');
-    langBadge.className = 'badge badge-info';
+    if (langBadge) {
+      langBadge.textContent = analysis.language === 'es' ? t('language.es')
+                            : analysis.language === 'en' ? t('language.en')
+                            : t('language.mixed');
+      langBadge.className = 'badge badge-info';
+    }
 
     // Dimensions
     renderDimensions(analysis.dimensions);
@@ -762,7 +766,10 @@ const App = (() => {
 
   // ── Tabs ────────────────────────────────────────────────
   function setupTabs() {
-    document.getElementById('results-tabs').addEventListener('click', (e) => {
+    const tabsBar = document.getElementById('results-tabs');
+    if (!tabsBar) return;
+
+    tabsBar.addEventListener('click', (e) => {
       const tab = e.target.closest('.tab');
       if (!tab) return;
       switchTab(tab.dataset.tab);
@@ -770,10 +777,15 @@ const App = (() => {
   }
 
   function switchTab(tabName) {
-    document.querySelectorAll('#results-tabs .tab').forEach(tEl => tEl.classList.remove('active'));
-    document.querySelector(`#results-tabs .tab[data-tab="${tabName}"]`).classList.add('active');
+    const tabsBar = document.getElementById('results-tabs');
+    if (tabsBar) {
+      tabsBar.querySelectorAll('.tab').forEach(tEl => tEl.classList.remove('active'));
+      const activeTab = tabsBar.querySelector(`.tab[data-tab="${tabName}"]`);
+      if (activeTab) activeTab.classList.add('active');
+    }
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    document.getElementById(`tab-${tabName}`).classList.add('active');
+    const targetContent = document.getElementById(`tab-${tabName}`);
+    if (targetContent) targetContent.classList.add('active');
 
     if (tabName === 'radar' && currentAnalysis) {
       if (typeof Charts !== 'undefined') {
