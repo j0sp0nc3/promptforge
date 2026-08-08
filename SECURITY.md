@@ -222,6 +222,6 @@ curl -sL -X POST \
 ## 🚨 Reportar vulnerabilidades
 
 Si encuentras una vulnerabilidad, **no abras un issue público**.
-Envía un email privado a: `beroiza79@gmail.com` con los detalles.
+Envía un email privado a: `promptometer@gmail.com` con los detalles.
 
 Tiempo de respuesta objetivo: 48 horas.

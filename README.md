@@ -244,5 +244,6 @@ Developed with ❤️ by **Jose Ponce** ([j0sp0nc3](https://github.com/j0sp0nc3)
 
 - **GitHub:** [https://github.com/j0sp0nc3](https://github.com/j0sp0nc3)
 - **LinkedIn:** [https://www.linkedin.com/in/josponce](https://www.linkedin.com/in/josponce)
+- **Email:** [promptometer@gmail.com](mailto:promptometer@gmail.com) — casilla oficial para consultas, sugerencias, reportes de seguridad y cualquier tema relacionado con el proyecto.
 
 Distributed under the **MIT License**. Copyright (c) 2026.

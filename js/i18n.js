@@ -909,6 +909,7 @@ const I18n = (() => {
         engine: 'Motor',
         linkedin: 'Perfil de LinkedIn',
         x: 'Perfil de X (Twitter)',
+        contact: 'Contacto (promptometer@gmail.com)',
       },
     },
 
@@ -1765,6 +1766,7 @@ const I18n = (() => {
         engine: 'Engine',
         linkedin: 'LinkedIn profile',
         x: 'X (Twitter) profile',
+        contact: 'Contact (promptometer@gmail.com)',
       },
     },
   };
