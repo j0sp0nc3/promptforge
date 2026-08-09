@@ -377,6 +377,7 @@ const App = (() => {
 
   function renderDimensions(dimensions) {
     const container = document.getElementById('dimensions-list');
+    if (!container) return;
     const dimConfig = {
       clarity:        { icon: '🎯', name: t('dimensions.clarity'),        color: '#00d4ff' },
       specificity:    { icon: '📐', name: t('dimensions.specificity'),    color: '#7c3aed' },
@@ -437,6 +438,7 @@ const App = (() => {
   }
 
   function renderRadar(dimensions) {
+    if (!Charts.radarChart) return;
     const scores = {
       clarity: dimensions.clarity.score,
       specificity: dimensions.specificity.score,

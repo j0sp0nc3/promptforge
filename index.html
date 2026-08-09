@@ -364,6 +364,61 @@
 
           <!-- Calibrated Output Content -->
           <div class="results-content hidden" id="results-content">
+            <div class="improved-prompt-container">
+              <div class="improved-prompt-highlighted" id="improved-prompt-highlighted"></div>
+              <pre class="improved-prompt-text hidden" id="improved-prompt-text"></pre>
+            </div>
+
+            <!-- Action Chips Bar -->
+            <div class="calibrated-actions-row">
+              <div class="action-chips-group">
+                <button class="action-chip" id="chip-shorten">⚡ Shorten</button>
+                <button class="action-chip" id="chip-cot">🧠 Add CoT</button>
+                <button class="action-chip" id="chip-json">📐 Enforce JSON</button>
+                <button class="action-chip" id="chip-safety">🛡️ Guardrails</button>
+              </div>
+              <div class="primary-actions-group">
+                <span class="improvement-badge" id="improvement-badge">+25 pts</span>
+                <button class="btn btn-secondary btn-sm" id="btn-copy-improvement">📋 Copy</button>
+                <button class="btn btn-primary btn-sm" id="btn-apply-improvement">✨ Apply</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ── SECTION 2: Grand 8D Orbital Constellation Stage (Mockup 1) ── -->
+      <section class="orbital-constellation-section" id="orbital-constellation-section">
+        <div class="constellation-header-bar">
+          <h3 class="constellation-title">8D PROMPT EVALUATION CONSTELLATION</h3>
+          <span class="constellation-subtitle">Real-time Spectral Resonance Mapping</span>
+        </div>
+
+        <div class="orbital-constellation-container">
+          <svg id="orbital-constellation-svg" viewBox="0 0 800 450" width="100%" height="100%"></svg>
+          <div class="central-score-box">
+            <span class="central-score-title">PROMPT SCORE</span>
+            <div class="central-score-value" id="score-number">88.5</div>
+            <span class="central-score-grade" id="score-grade">A+ EXCELLENT</span>
+          </div>
+        </div>
+
+        <!-- Bottom Row: 8 Dimension Evaluation Cards -->
+        <div class="evaluation-dimensions-row" id="evaluation-dimensions-row">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Hidden Legacy Containers for Engine Parity -->
+        <div id="dimensions-list" style="display:none"></div>
+        <div id="antipatterns-list" style="display:none"></div>
+        <div id="strengths-list" style="display:none"></div>
+        <span id="antipattern-count" style="display:none">0</span>
+        <span id="strengths-count" style="display:none">0</span>
+        <div id="adversarial-list" style="display:none"></div>
+        <span id="resistance-score" style="display:none">0</span>
+        <div id="changes-list" style="display:none"></div>
+      </section>
+
     </div>
 
     <!-- ==================== TEMPLATES VIEW ==================== -->
