@@ -1395,7 +1395,8 @@ const App = (() => {
     }
 
     try {
-      const res = await fetch('/api/suggest-creator', {
+      const _apiBase = (window.ApiConfig) ? window.ApiConfig.API_BASE : '';
+      const res = await fetch(_apiBase + '/api/suggest-creator', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, handle, reason }),

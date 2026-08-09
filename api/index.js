@@ -54,12 +54,31 @@ const ALLOWED_ORIGINS = [
   'https://promptometer.vercel.app',
   'https://promptometer.tech',
   'https://www.promptometer.tech',
-  'https://promptometer.is-a.dev',
+  'https://api.promptometer.tech',
   'http://localhost:3000',
   'http://127.0.0.1:3000',
   'http://localhost:8000',
   'http://127.0.0.1:8000'
 ];
+
+// Hosts permitted to serve the API. In production the API lives on its
+// dedicated subdomain (api.promptometer.tech, DNS-only / gray cloud). Dev
+// and *.vercel.app previews are allowed too. Any other host (e.g. calling
+// www.promptometer.tech/api/*) receives 403, enforcing physical separation.
+const ALLOWED_API_HOSTS = [
+  'api.promptometer.tech',
+  'promptometer.tech',
+  'www.promptometer.tech',
+  'promptforge-beta-ten.vercel.app',
+  'promptometer.vercel.app',
+  'localhost',
+  '127.0.0.1',
+];
+
+function isApiHostAllowed(host) {
+  if (!host) return true; // local dev / direct serverless calls may omit host
+  return ALLOWED_API_HOSTS.some(allowed => host === allowed || host.endsWith('.' + allowed));
+}
 
 const MAX_PAYLOAD_BYTES = 100 * 1024; // 100 KB limit
 const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
@@ -186,6 +205,17 @@ let globalLeaderboard = [
 module.exports = (req, res) => {
   const origin = req.headers.origin || '';
   const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '127.0.0.1';
+  const host = req.headers.host || '';
+
+  // 0. Host check — enforce physical separation: API only answers on its
+  // dedicated subdomain (or dev/preview hosts). Calls to www.promptometer.tech/api/*
+  // are rejected with 403 so the API cannot be consumed from the web host.
+  if (!isApiHostAllowed(host)) {
+    res.writeHead(403, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({
+      error: 'Este host no está autorizado para servir el API. Usa https://api.promptometer.tech',
+    }));
+  }
 
   // 1. Security Headers
   res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -209,11 +239,10 @@ module.exports = (req, res) => {
 
   // 2. Authentication Check (API Key OR Authorized Front-End Origin / Same-Origin / Public Leaderboard)
   const referer = req.headers.referer || '';
-  const host = req.headers.host || '';
   const url = req.url || '';
 
   const isLeaderboard = url.includes('leaderboard');
-  const isSameOriginHost = host && (host.includes('promptforge-beta-ten.vercel.app') || host.includes('promptometer.is-a.dev') || host.includes('promptometer.tech') || host.includes('localhost') || host.includes('127.0.0.1'));
+  const isSameOriginHost = host && (host.includes('promptforge-beta-ten.vercel.app') || host.includes('promptometer.vercel.app') || host.includes('promptometer.tech') || host.includes('localhost') || host.includes('127.0.0.1'));
   const isAllowedReferer = referer && ALLOWED_ORIGINS.some(allowed => referer.startsWith(allowed));
   const isAllowedOrigin = origin && isOriginAllowed(origin);
 

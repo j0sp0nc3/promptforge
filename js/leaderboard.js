@@ -583,7 +583,8 @@ Si la reseña está en un idioma no soportado o indescifrable, marca polaridad_g
 
   async function fetchGlobalTop10() {
     try {
-      const res = await fetch('/api/leaderboard');
+      const base = (typeof window !== 'undefined' && window.ApiConfig) ? window.ApiConfig.API_BASE : '';
+      const res = await fetch(base + '/api/leaderboard');
       if (res.ok) {
         const globalList = await res.json();
         if (Array.isArray(globalList) && globalList.length > 0) {
@@ -622,7 +623,8 @@ Si la reseña está en un idioma no soportado o indescifrable, marca polaridad_g
     };
 
     // Fire & forget sync to zero-login serverless API endpoint
-    fetch('/api/leaderboard', {
+    const _base = (typeof window !== 'undefined' && window.ApiConfig) ? window.ApiConfig.API_BASE : '';
+    fetch(_base + '/api/leaderboard', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
