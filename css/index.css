@@ -221,6 +221,15 @@ body.theme-editorial .central-score-title {
 body.theme-editorial .central-score-value {
   color: #1A1612 !important;
 }
+
+/* Constellation SVG Node Label Theme Overrides */
+.orbital-node-label {
+  fill: #F0F4F8;
+  transition: fill var(--transition-normal);
+}
+body.theme-editorial .orbital-node-label {
+  fill: #1A1612 !important;
+}
 body.theme-editorial .eval-dim-card {
   background: #EFE9DD;
   border: 1px solid #D9D2C4;

@@ -127,6 +127,10 @@ const App = (() => {
           Charts.renderRadar('chart-radar', currentAnalysis.scores);
         }
       }
+
+      if (currentAnalysis) {
+        renderOrbitalConstellationSVG(currentAnalysis.analysis.dimensions, currentAnalysis.analysis.overallScore);
+      }
     });
   }
 
@@ -623,8 +627,8 @@ const App = (() => {
           <polygon points="${points}" fill="${d.color}" opacity="0.25" />
           <polygon points="${points}" fill="none" stroke="${d.color}" stroke-width="2" />
           <circle cx="${nx}" cy="${ny}" r="4" fill="${d.color}" />
-          <text x="${nx}" y="${ny - s - 8}" text-anchor="middle" fill="${labelColor}" font-family="var(--font-sans)" font-size="11" font-weight="600">${escapeHtml(d.label)}</text>
-          <text x="${nx}" y="${ny + s + 14}" text-anchor="middle" fill="${d.color}" font-family="var(--font-mono)" font-size="12" font-weight="700">${(scoreVal / 10).toFixed(1)}</text>
+          <text x="${nx}" y="${ny - s - 8}" class="orbital-node-label" text-anchor="middle" fill="${labelColor}" font-family="var(--font-sans)" font-size="11" font-weight="600">${escapeHtml(d.label)}</text>
+          <text x="${nx}" y="${ny + s + 14}" class="orbital-node-score" text-anchor="middle" fill="${d.color}" font-family="var(--font-mono)" font-size="12" font-weight="700">${(scoreVal / 10).toFixed(1)}</text>
         </g>
       `;
     });
