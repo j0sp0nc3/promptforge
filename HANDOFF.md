@@ -260,21 +260,18 @@ promptforge/                    ← App Web (Vercel)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-09
-- **Último commit promptforge:** `395c404` (style(ui): harmonize buttons, cards & theme switcher styles for Modo Luna 🌙 and Modo Black Hole 🕳️)
+- **Último commit promptforge:** pendiente (fix(ui): dynamic score badge placeholders & complete styling for language switcher ES/EN)
 - **Último commit promptometer:** `5662a93` (fix(core): sync signal parity)
-- **Sesión con:** Antigravity (Gemini 3.6 Flash) — **Renombrado de Temas Visuales a Modo Luna 🌙 y Modo Black Hole 🕳️**
+- **Sesión con:** Antigravity (Gemini 3.6 Flash) — **Estilos del Selector de Idioma (ES/EN) y Badges de Score Dinámicos `--/100`**
 - **Estado:** 22/22 tests en PASS. Paridad ES/EN verificada. Desplegado y funcionando al 100% en Vercel y `https://promptometer.tech/`.
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
+> - **Aclaración y Ajuste de Badges de Scoring (`--/100`)**: Se reemplazaron los números estáticos confundidores (`38/100` y `95/100`) en estado inicial por placeholders neutros `--/100` que se actualizan dinámicamente solo tras ejecutar el análisis del prompt ingresado por el usuario.
+> - **Estilizado Completo del Selector de Idioma (`.lang-switcher`)**: Se implementaron reglas CSS integradas para el grupo de botones `ES / EN` con cápsula redondeada, transparencias de cristal en **Modo Black Hole 🕳️** y acabado crema/vermellón en **Modo Luna 🌙**.
 > - **Temas Visuales Rebrand**: Modo Editorial → **Modo Luna 🌙** / Modo Cósmico → **Modo Black Hole 🕳️** en i18n (ES/EN), UI del botón de navegación y `app.js`.
 > - **Rediseño Fiel a los Mockups 1 & 2**:
->   - **Mockup 2 (Dual Card Prompt Comparison Workbench)**: Tarjetas enfrentadas `Unoptimized Prompt` (roja 38/100, botones Pegar/Limpiar, pills de advertencia) vs `Promptometer Calibrated` (verde esmeralda 95/100, pills de etiquetas XML color-coded y chips interactivos `⚡ Shorten`, `🧠 Add CoT`, `📐 Enforce JSON`, `🛡️ Guardrails`, `📋 Copy`, `✨ Apply`).
+>   - **Mockup 2 (Dual Card Prompt Comparison Workbench)**: Tarjetas enfrentadas `Unoptimized Prompt` (roja, botones Pegar/Limpiar, pills de advertencia) vs `Promptometer Calibrated` (verde esmeralda, pills de etiquetas XML color-coded y chips interactivos `⚡ Shorten`, `🧠 Add CoT`, `📐 Enforce JSON`, `🛡️ Guardrails`, `📋 Copy`, `✨ Apply`).
 >   - **Mockup 1 (Grand 8D Orbital Constellation Stage)**: Diagrama SVG de órbitas astronómicas concéntricas con caja central `PROMPT SCORE: 88.5` y nodos geométricos en diamante.
 >   - **Fila Inferior de 8D Dimensiones**: Tarjetas con badges decimales (`Clarity 8.9`, `Role 9.2`, `Context 7.6`, `Constraints 8.4`, `Safety 9.7`, `Output 8.8`).
-> - **Restauración Total de Funcionalidades & 5 Pestañas Interactivas**:
->   - Pestaña `Dimensiones`: Lista interactiva desplegable de hallazgos y sugerencias por cada dimensión.
->   - Pestaña `Radar`: Gráfico de radar 8D interactivo en canvas HTML5.
->   - Pestaña `Anti-patrones`: Detección completa de anti-patrones y fortalezas con contadores.
->   - Pestaña `Adversarial`: Suite de pruebas adversariales de seguridad y puntuación de resistencia.
->   - Pestaña `Mejora`: Desglose de modificaciones, impacto y botón de publicación en Top 10 Leaderboard.
+> - **Restauración Total de Funcionalidades & 5 Pestañas Interactivas**: Dimensiones, Radar, Anti-patrones, Adversarial y Mejora.
 > - **Pruebas de Estrés**: 22/22 PASS en `test_edge_cases.js`.

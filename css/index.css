@@ -204,14 +204,32 @@ body.theme-editorial .orbital-constellation-section {
   border: 1px solid #D9D2C4;
   box-shadow: 0 4px 20px rgba(26, 22, 18, 0.06);
 }
+body.theme-editorial .constellation-title {
+  color: #1A1612 !important;
+}
+body.theme-editorial .constellation-subtitle {
+  color: #4A4239 !important;
+}
 body.theme-editorial .central-score-box {
   background: #EFE9DD;
   border: 2px solid #C73E2D;
   box-shadow: 0 4px 20px rgba(199, 62, 45, 0.12);
 }
+body.theme-editorial .central-score-title {
+  color: #8B8275 !important;
+}
+body.theme-editorial .central-score-value {
+  color: #1A1612 !important;
+}
 body.theme-editorial .eval-dim-card {
   background: #EFE9DD;
   border: 1px solid #D9D2C4;
+}
+body.theme-editorial .eval-dim-name {
+  color: #4A4239 !important;
+}
+body.theme-editorial .eval-dim-score {
+  color: #1A1612 !important;
 }
 
 body.theme-editorial .improved-prompt-highlighted {
@@ -502,6 +520,66 @@ body.theme-editorial .panel {
   background: rgba(16, 185, 129, 0.15);
   color: #34d399;
   border: 1px solid rgba(16, 185, 129, 0.3);
+}
+.badge-neutral {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--ink-faint, #94a3b8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* ── Language Switcher Button Group ────────────────────────────── */
+.lang-switcher {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-pill, 9999px);
+  gap: 2px;
+  backdrop-filter: blur(8px);
+}
+
+.lang-btn {
+  background: transparent;
+  border: none;
+  color: var(--ink-faint, #94a3b8);
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill, 9999px);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.lang-btn:hover {
+  color: var(--ink, #F0F4F8);
+}
+
+.lang-btn.active {
+  background: var(--accent, #00e5ff);
+  color: #000000;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+}
+
+/* Modo Luna 🌙 Language Switcher Overrides */
+body.theme-editorial .lang-switcher {
+  background: #EFE9DD;
+  border: 1px solid #D9D2C4;
+}
+
+body.theme-editorial .lang-btn {
+  color: #8B8275;
+}
+
+body.theme-editorial .lang-btn:hover {
+  color: #1A1612;
+}
+
+body.theme-editorial .lang-btn.active {
+  background: #C73E2D;
+  color: #FFFFFF;
+  box-shadow: 0 1px 4px rgba(199, 62, 45, 0.25);
 }
 
 /* ============================================================

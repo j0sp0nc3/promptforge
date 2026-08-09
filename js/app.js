@@ -579,9 +579,13 @@ const App = (() => {
       { key: 'robustness',     label: 'Robustness',  color: '#34d399', angle: 240, orbitIdx: 2 },
     ];
 
+    const isEditorial = document.body.classList.contains('theme-editorial');
+    const labelColor = isEditorial ? '#1A1612' : '#F0F4F8';
+    const orbitStroke = isEditorial ? 'rgba(26, 22, 18, 0.15)' : 'rgba(255, 255, 255, 0.08)';
+
     let orbitsHTML = '';
     orbits.forEach(r => {
-      orbitsHTML += `<circle cx="${centerX}" cy="${centerY}" r="${r}" fill="none" stroke="rgba(255, 255, 255, 0.06)" stroke-width="1.5" stroke-dasharray="4 6" />`;
+      orbitsHTML += `<circle cx="${centerX}" cy="${centerY}" r="${r}" fill="none" stroke="${orbitStroke}" stroke-width="1.5" stroke-dasharray="4 6" />`;
     });
 
     let raysHTML = '';
@@ -607,7 +611,7 @@ const App = (() => {
           <polygon points="${points}" fill="${d.color}" opacity="0.25" />
           <polygon points="${points}" fill="none" stroke="${d.color}" stroke-width="2" />
           <circle cx="${nx}" cy="${ny}" r="4" fill="${d.color}" />
-          <text x="${nx}" y="${ny - s - 8}" text-anchor="middle" fill="#F0F4F8" font-family="var(--font-sans)" font-size="11" font-weight="600">${escapeHtml(d.label)}</text>
+          <text x="${nx}" y="${ny - s - 8}" text-anchor="middle" fill="${labelColor}" font-family="var(--font-sans)" font-size="11" font-weight="600">${escapeHtml(d.label)}</text>
           <text x="${nx}" y="${ny + s + 14}" text-anchor="middle" fill="${d.color}" font-family="var(--font-mono)" font-size="12" font-weight="700">${(scoreVal / 10).toFixed(1)}</text>
         </g>
       `;
@@ -764,6 +768,17 @@ const App = (() => {
     currentAnalysis = null;
     document.getElementById('empty-state').classList.remove('hidden');
     document.getElementById('results-content').classList.add('hidden');
+
+    const unoptBadge = document.getElementById('unoptimized-score-badge');
+    if (unoptBadge) {
+      unoptBadge.innerHTML = `--<span>/100</span>`;
+      unoptBadge.className = 'card-score-badge badge-neutral';
+    }
+    const calibBadge = document.getElementById('calibrated-score-badge');
+    if (calibBadge) {
+      calibBadge.innerHTML = `--<span>/100</span>`;
+      calibBadge.className = 'card-score-badge badge-neutral';
+    }
   }
 
   // ── Tabs ────────────────────────────────────────────────
