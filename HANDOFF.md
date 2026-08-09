@@ -259,17 +259,22 @@ promptforge/                    ← App Web (Vercel)
 
 ## 🔄 Última Actualización
 
-- **Fecha:** 2026-08-08
-- **Último commit promptforge:** pendiente (feat(design): full alignment with Mockups 1 & 2 layout - dual cards workbench & grand 8D orbital constellation)
+- **Fecha:** 2026-08-09
+- **Último commit promptforge:** `2a3a370` (fix(html): restore paste/clear header buttons and full interactive analysis tabs section)
 - **Último commit promptometer:** `5662a93` (fix(core): sync signal parity)
-- **Sesión con:** Antigravity (Gemini 3.6 Flash) — **Implementación Fiel al 100% de los Mockups Conceptual & Comparativo**
-- **Estado:** 22/22 tests en PASS. Paridad ES/EN verificada. Desplegado en Vercel y `promptometer.tech`.
+- **Sesión con:** Antigravity (Gemini 3.6 Flash) — **Restauración al 100% de Funcionalidades, Pestañas de Análisis e Integración de Mockups 1 & 2**
+- **Estado:** 22/22 tests en PASS. Paridad ES/EN verificada. Desplegado y funcionando al 100% en Vercel y `https://promptometer.tech/`.
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
 > - **Rediseño Fiel a los Mockups 1 & 2**:
->   - **Mockup 2 (Dual Card Prompt Comparison Workbench)**: Tarjetas enfrentadas `Unoptimized Prompt` (roja 38/100) vs `Promptometer Calibrated` (verde esmeralda 95/100).
+>   - **Mockup 2 (Dual Card Prompt Comparison Workbench)**: Tarjetas enfrentadas `Unoptimized Prompt` (roja 38/100, botones Pegar/Limpiar, pills de advertencia) vs `Promptometer Calibrated` (verde esmeralda 95/100, pills de etiquetas XML color-coded y chips interactivos `⚡ Shorten`, `🧠 Add CoT`, `📐 Enforce JSON`, `🛡️ Guardrails`, `📋 Copy`, `✨ Apply`).
 >   - **Mockup 1 (Grand 8D Orbital Constellation Stage)**: Diagrama SVG de órbitas astronómicas concéntricas con caja central `PROMPT SCORE: 88.5` y nodos geométricos en diamante.
->   - **Métricas Inferiores de 8D Dimensiones**: Fila de tarjetas `Clarity 8.9`, `Role 9.2`, `Context 7.6`, `Constraints 8.4`, `Safety 9.7`, `Output 8.8`.
+>   - **Fila Inferior de 8D Dimensiones**: Tarjetas con badges decimales (`Clarity 8.9`, `Role 9.2`, `Context 7.6`, `Constraints 8.4`, `Safety 9.7`, `Output 8.8`).
+> - **Restauración Total de Funcionalidades & 5 Pestañas Interactivas**:
+>   - Pestaña `Dimensiones`: Lista interactiva desplegable de hallazgos y sugerencias por cada dimensión.
+>   - Pestaña `Radar`: Gráfico de radar 8D interactivo en canvas HTML5.
+>   - Pestaña `Anti-patrones`: Detección completa de anti-patrones y fortalezas con contadores.
+>   - Pestaña `Adversarial`: Suite de pruebas adversariales de seguridad y puntuación de resistencia.
+>   - Pestaña `Mejora`: Desglose de modificaciones, impacto y botón de publicación en Top 10 Leaderboard.
 > - **Pruebas de Estrés**: 22/22 PASS en `test_edge_cases.js`.
 > - **Integración de Referencias Anthropic**: Añadidos los enlaces oficiales del Tutorial Interactivo de 9 Capítulos (GitHub & Google Sheets) en el Radar de Referencias.
-> - **Diseño Responsivo Móvil de Alta Precisión**: Corrección del header en 2 filas grid para teléfonos (< 850px y < 480px), scroll horizontal suave y limpio con efecto fade en la navegación, y visibilidad impecable de la barra Radar IA en Vivo (`#news-ticker-bar`) sin superposición ni cortes.
