@@ -10,6 +10,9 @@ and design decisions that MUST be respected.
 - The npm package is `promptometer-core`.
 - The web app repo is `promptforge` (deployment name only).
 
+## Git Workflow
+- Active development branch is `dev`. All code changes and commits must be pushed to `origin dev`.
+
 ## Design System: Editorial Technical
 - Background: Cream Paper `#F7F3EC`
 - Accent: Vermilion `#C73E2D`
