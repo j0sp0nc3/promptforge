@@ -332,6 +332,22 @@
           </div>
 
           <div class="editor-container">
+            <div class="objective-selector-bar">
+              <label for="prompt-objective-select" class="objective-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
+                </svg>
+                <span data-i18n="objectives.label">Objetivo del Prompt</span>:
+              </label>
+              <select id="prompt-objective-select" class="objective-select">
+                <option value="general" data-i18n="objectives.general">🎯 General / Conversacional</option>
+                <option value="coding" data-i18n="objectives.coding">💻 Generación de Código & Repos</option>
+                <option value="reasoning" data-i18n="objectives.reasoning">🧠 Análisis & Razonamiento (CoT)</option>
+                <option value="json_schema" data-i18n="objectives.json_schema">📐 Datos & Esquema JSON Estructurado</option>
+                <option value="safety_rag" data-i18n="objectives.safety_rag">🛡️ Seguridad & Contexto RAG</option>
+                <option value="creative" data-i18n="objectives.creative">✍️ Redacción Creativa & Copywriting</option>
+              </select>
+            </div>
             <textarea id="prompt-input" class="prompt-textarea"
               placeholder="Write or paste your prompt here to evaluate and calibrate..." data-i18n-placeholder="editor.placeholder"
               spellcheck="false"></textarea>
@@ -361,6 +377,7 @@
             <div class="card-title-group">
               <h3 class="card-title">Promptometer Calibrated</h3>
               <div class="calibrated-badges-row">
+                <span class="calibrated-pill-tag tag-objective" id="calibrated-objective-pill">[Goal: General]</span>
                 <span class="calibrated-pill-tag tag-role">[Role Defined]</span>
                 <span class="calibrated-pill-tag tag-format">[Strict Schema]</span>
               </div>

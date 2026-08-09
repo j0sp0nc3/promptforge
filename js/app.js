@@ -237,6 +237,8 @@ const App = (() => {
       return;
     }
 
+    const objective = document.getElementById('prompt-objective-select')?.value || 'general';
+
     // Show loading state
     const btn = document.getElementById('btn-analyze');
     btn.disabled = true;
@@ -246,16 +248,16 @@ const App = (() => {
     setTimeout(() => {
       try {
         // 1. Core analysis
-        const analysis = Analyzer.analyze(prompt);
+        const analysis = Analyzer.analyze(prompt, { objective });
 
         // 2. Adversarial tests
         const adversarial = Adversarial.runTests(prompt);
 
         // 3. Generate improved version
-        const improved = Rewriter.improve(prompt, analysis);
+        const improved = Rewriter.improve(prompt, analysis, { objective });
 
         // 4. Store results
-        currentAnalysis = { prompt, analysis, adversarial, improved, timestamp: Date.now() };
+        currentAnalysis = { prompt, objective, analysis, adversarial, improved, timestamp: Date.now() };
 
         // 5. Save to history
         History.save(prompt, analysis);
@@ -282,7 +284,17 @@ const App = (() => {
     const content = document.getElementById('results-content');
     content.classList.remove('hidden');
 
-    const { analysis, adversarial, improved } = currentAnalysis;
+    const { analysis, adversarial, improved, objective } = currentAnalysis;
+
+    // Objective Pill Tag
+    const objPill = document.getElementById('calibrated-objective-pill');
+    if (objPill) {
+      const objKey = objective || 'general';
+      const objText = t(`objectives.${objKey}`) || objKey;
+      // Extract short name e.g. "General", "Código", "Análisis"
+      const shortName = objText.replace(/^[\p{Emoji}\s]+/u, '');
+      objPill.textContent = `[Goal: ${shortName}]`;
+    }
 
     // Dual-card score badges
     const unoptBadge = document.getElementById('unoptimized-score-badge');

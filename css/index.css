@@ -495,6 +495,66 @@ body.theme-editorial .panel {
   color: #38bdf8;
   border: 1px solid rgba(0, 229, 255, 0.3);
 }
+.tag-objective {
+  background: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.35);
+  font-weight: 700;
+}
+
+/* ── Objective Selector Bar ──────────────────────────────────────── */
+.objective-selector-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  margin-bottom: 10px;
+}
+.objective-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+.objective-select {
+  flex: 1;
+  background: rgba(12, 14, 23, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-sm);
+  padding: 4px 10px;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: var(--ink);
+  cursor: pointer;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+.objective-select:focus, .objective-select:hover {
+  border-color: var(--accent, #00e5ff);
+}
+
+/* Modo Luna 🌙 Objective Selector Overrides */
+body.theme-editorial .objective-selector-bar {
+  background: #EFE9DD;
+  border: 1px solid #D9D2C4;
+}
+body.theme-editorial .objective-select {
+  background: #FBF8F2;
+  border: 1px solid #D9D2C4;
+  color: #1A1612;
+}
+body.theme-editorial .tag-objective {
+  background: #FBEAE6;
+  color: #C73E2D;
+  border-color: rgba(199, 62, 45, 0.3);
+}
 
 .card-score-badge {
   font-family: var(--font-serif);

@@ -60,6 +60,17 @@ const I18n = (() => {
         general: 'General',
       },
 
+      // ── Prompt Target Objectives ───────────────────────────────────────
+      objectives: {
+        label: 'Objetivo del Prompt',
+        general: '🎯 General / Conversacional',
+        coding: '💻 Generación de Código & Repos',
+        reasoning: '🧠 Análisis & Razonamiento (CoT)',
+        json_schema: '📐 Datos & Esquema JSON Estructurado',
+        safety_rag: '🛡️ Seguridad & Contexto RAG',
+        creative: '✍️ Redacción Creativa & Copywriting',
+      },
+
       // ── Editor ──────────────────────────────────────────────────────────
       editor: {
         title: 'Tu Prompt',
@@ -872,9 +883,19 @@ const I18n = (() => {
         followBtn: 'Ver perfil',
         visitLink: 'Visitar recurso',
       },
-
-      ticker: {
+          ticker: {
         badge: '⚡ RADAR EN VIVO',
+      },
+
+      // ── Prompt Target Objectives ───────────────────────────────────────
+      objectives: {
+        label: 'Objetivo del Prompt',
+        general: '🎯 General / Conversacional',
+        coding: '💻 Generación de Código y Repos',
+        reasoning: '🧠 Análisis y Razonamiento (CoT)',
+        json_schema: '📐 JSON Estructurado y Esquemas',
+        safety_rag: '🛡️ Guardrails y Contexto RAG',
+        creative: '✍️ Escritura Creativa y Copywriting',
       },
 
       leaderboard: {
@@ -960,6 +981,17 @@ const I18n = (() => {
         'tool-use': 'Tool use',
         extraction: 'Structured extraction',
         general: 'General',
+      },
+
+      // ── Prompt Target Objectives ───────────────────────────────────────
+      objectives: {
+        label: 'Prompt Objective',
+        general: '🎯 General / Conversational',
+        coding: '💻 Code Generation & Repos',
+        reasoning: '🧠 Analysis & Reasoning (CoT)',
+        json_schema: '📐 Structured JSON & Data Schema',
+        safety_rag: '🛡️ Guardrails & RAG Context',
+        creative: '✍️ Creative Writing & Copywriting',
       },
 
       editor: {
