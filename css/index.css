@@ -433,6 +433,9 @@ body.theme-editorial .panel {
   gap: var(--space-xl);
   padding: var(--space-lg) var(--space-xl);
   align-items: stretch;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .workbench-card {
@@ -446,6 +449,16 @@ body.theme-editorial .panel {
   gap: var(--space-md);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
   transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+#editor-panel {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .unoptimized-card {
@@ -521,6 +534,9 @@ body.theme-editorial .panel {
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-sm);
   margin-bottom: 10px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 .objective-label {
   display: inline-flex;
@@ -531,9 +547,12 @@ body.theme-editorial .panel {
   font-weight: 600;
   color: var(--ink-soft);
   white-space: nowrap;
+  flex-shrink: 0;
 }
 .objective-select {
   flex: 1;
+  min-width: 0;
+  width: 100%;
   background: rgba(12, 14, 23, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: var(--radius-sm);
@@ -544,6 +563,7 @@ body.theme-editorial .panel {
   cursor: pointer;
   outline: none;
   transition: border-color var(--transition-fast);
+  text-overflow: ellipsis;
 }
 .objective-select:focus, .objective-select:hover {
   border-color: var(--accent, #00e5ff);
@@ -2418,12 +2438,27 @@ body.theme-editorial .score-ring-bg { stroke: #D9D2C4; }
   }
 }
 
+@media (max-width: 600px) {
+  .objective-selector-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+}
+
 @media (max-width: 480px) {
   :root {
     --header-height: 92px;
     --ticker-height: 34px;
     --space-lg: 16px;
     --space-xl: 16px;
+  }
+
+  .comparison-workbench-grid {
+    padding: var(--space-sm);
+  }
+  .workbench-card {
+    padding: var(--space-md);
   }
 
   .analyzer-layout, .templates-header, .history-header {
