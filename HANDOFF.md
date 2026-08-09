@@ -261,7 +261,7 @@ promptforge/                    ← App Web (Vercel)
 
 - **Fecha:** 2026-08-09
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
-- **Último commit promptforge:** `73dfd14` (fix(theme): dynamic SVG constellation node label color update and CSS overrides for Modo Luna 🌙)
+- **Último commit promptforge:** `1b18ef6` (fix(responsive): align orbital constellation container class name and use aspect-ratio for perfect central score box positioning on mobile)
 - **Último commit promptometer:** `5662a93` (fix(core): sync signal parity)
 - **Sesión con:** Antigravity (Gemini 3.6 Flash) — **Creación y Activación de Rama `dev`**
 - **Estado:** 22/22 tests en PASS. Paridad ES/EN verificada. Desplegado y funcionando al 100% en Vercel y `https://promptometer.tech/`.
