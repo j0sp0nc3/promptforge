@@ -135,13 +135,13 @@ const App = (() => {
     const label = document.getElementById('theme-label');
     const isEditorial = document.body.classList.contains('theme-editorial');
     if (isEditorial) {
-      if (icon) icon.textContent = '📜';
+      if (icon) icon.textContent = '🌙';
       if (label) {
         label.setAttribute('data-i18n', 'nav.themeEditorial');
         label.textContent = t('nav.themeEditorial');
       }
     } else {
-      if (icon) icon.textContent = '🌌';
+      if (icon) icon.textContent = '🕳️';
       if (label) {
         label.setAttribute('data-i18n', 'nav.themeCosmic');
         label.textContent = t('nav.themeCosmic');

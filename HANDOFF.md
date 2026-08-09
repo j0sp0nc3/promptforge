@@ -260,12 +260,13 @@ promptforge/                    ← App Web (Vercel)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-09
-- **Último commit promptforge:** `2a3a370` (fix(html): restore paste/clear header buttons and full interactive analysis tabs section)
+- **Último commit promptforge:** pendiente (feat(ui): rebrand visual themes to Modo Luna 🌙 and Modo Black Hole 🕳️)
 - **Último commit promptometer:** `5662a93` (fix(core): sync signal parity)
-- **Sesión con:** Antigravity (Gemini 3.6 Flash) — **Restauración al 100% de Funcionalidades, Pestañas de Análisis e Integración de Mockups 1 & 2**
+- **Sesión con:** Antigravity (Gemini 3.6 Flash) — **Renombrado de Temas Visuales a Modo Luna 🌙 y Modo Black Hole 🕳️**
 - **Estado:** 22/22 tests en PASS. Paridad ES/EN verificada. Desplegado y funcionando al 100% en Vercel y `https://promptometer.tech/`.
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
+> - **Temas Visuales Rebrand**: Modo Editorial → **Modo Luna 🌙** / Modo Cósmico → **Modo Black Hole 🕳️** en i18n (ES/EN), UI del botón de navegación y `app.js`.
 > - **Rediseño Fiel a los Mockups 1 & 2**:
 >   - **Mockup 2 (Dual Card Prompt Comparison Workbench)**: Tarjetas enfrentadas `Unoptimized Prompt` (roja 38/100, botones Pegar/Limpiar, pills de advertencia) vs `Promptometer Calibrated` (verde esmeralda 95/100, pills de etiquetas XML color-coded y chips interactivos `⚡ Shorten`, `🧠 Add CoT`, `📐 Enforce JSON`, `🛡️ Guardrails`, `📋 Copy`, `✨ Apply`).
 >   - **Mockup 1 (Grand 8D Orbital Constellation Stage)**: Diagrama SVG de órbitas astronómicas concéntricas con caja central `PROMPT SCORE: 88.5` y nodos geométricos en diamante.
@@ -277,4 +278,3 @@ promptforge/                    ← App Web (Vercel)
 >   - Pestaña `Adversarial`: Suite de pruebas adversariales de seguridad y puntuación de resistencia.
 >   - Pestaña `Mejora`: Desglose de modificaciones, impacto y botón de publicación en Top 10 Leaderboard.
 > - **Pruebas de Estrés**: 22/22 PASS en `test_edge_cases.js`.
-> - **Integración de Referencias Anthropic**: Añadidos los enlaces oficiales del Tutorial Interactivo de 9 Capítulos (GitHub & Google Sheets) en el Radar de Referencias.
