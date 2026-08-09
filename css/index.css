@@ -700,6 +700,7 @@ body.theme-editorial .lang-btn.active {
   position: relative;
   width: 100%;
   max-width: 800px;
+  min-height: 360px;
   margin: 0 auto;
   aspect-ratio: 800 / 450;
   display: flex;
@@ -717,8 +718,8 @@ body.theme-editorial .lang-btn.active {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: clamp(110px, 26%, 190px);
-  height: clamp(110px, 26%, 190px);
+  width: clamp(110px, 25%, 180px);
+  height: clamp(110px, 25%, 180px);
   background: rgba(17, 20, 32, 0.95);
   border: 1px solid rgba(255, 158, 0, 0.4);
   border-radius: var(--radius-lg);
@@ -1631,6 +1632,29 @@ body.theme-editorial .score-ring-bg { stroke: #D9D2C4; }
   }
   .tab-bar#results-tabs::-webkit-scrollbar {
     display: none;
+  }
+
+  .orbital-constellation-container,
+  .orbital-constellation-stage {
+    min-height: 300px;
+  }
+
+  .central-score-box {
+    width: 110px;
+    height: 110px;
+    padding: 6px;
+  }
+  .central-score-title {
+    font-size: 0.55rem;
+  }
+  .central-score-value {
+    font-size: 1.8rem;
+  }
+  .central-score-grade {
+    font-size: 0.68rem;
+  }
+  .evaluation-dimensions-row {
+    margin-top: 1.5rem;
   }
 }
 /* ── Learn Hub (Knowledge) ───────────────────────────────── */
