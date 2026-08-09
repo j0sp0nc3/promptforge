@@ -260,7 +260,7 @@ promptforge/                    ← App Web (Vercel)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-09
-- **Último commit promptforge:** `cf48cc4` (feat(ui): rebrand themes to Modo Luna 🌙 and Modo Black Hole 🕳️ across i18n, app.js, index.html & HANDOFF.md)
+- **Último commit promptforge:** `395c404` (style(ui): harmonize buttons, cards & theme switcher styles for Modo Luna 🌙 and Modo Black Hole 🕳️)
 - **Último commit promptometer:** `5662a93` (fix(core): sync signal parity)
 - **Sesión con:** Antigravity (Gemini 3.6 Flash) — **Renombrado de Temas Visuales a Modo Luna 🌙 y Modo Black Hole 🕳️**
 - **Estado:** 22/22 tests en PASS. Paridad ES/EN verificada. Desplegado y funcionando al 100% en Vercel y `https://promptometer.tech/`.
