@@ -267,7 +267,7 @@ promptforge/                    ← App Web (Vercel)
 - **Fecha:** 2026-08-09
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
 - **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
-- **Último commit promptforge:** pendiente (documentación de ambientes dev/main)
+- **Último commit promptforge:** `a4e229c` (documentación de ambientes dev/main)
 - **Último commit promptometer:** `5662a93` (fix(core): sync signal parity)
 - **Sesión con:** ZCode (GLM-5.2) — **Documentación de ambientes + auditoría de estado**
 - **Estado:** 22/22 tests en PASS. Paridad ES/EN verificada. Ambos ambientes desplegados y funcionando.
