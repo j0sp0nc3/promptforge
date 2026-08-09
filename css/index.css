@@ -141,6 +141,113 @@ body.theme-editorial {
   background-image: none;
 }
 
+/* ── Theme Switcher Button (Black Hole vs Moon Mode) ─────────────── */
+.theme-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--radius-pill, 9999px);
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #F0F4F8;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  backdrop-filter: blur(8px);
+  white-space: nowrap;
+}
+.theme-toggle-btn:hover {
+  background: rgba(0, 229, 255, 0.12);
+  border-color: rgba(0, 229, 255, 0.4);
+  color: #00e5ff;
+  box-shadow: 0 0 16px rgba(0, 229, 255, 0.2);
+}
+
+/* Modo Luna 🌙 (Editorial Paper Theme) Overrides */
+body.theme-editorial .theme-toggle-btn {
+  background: #EFE9DD;
+  border: 1px solid #D9D2C4;
+  color: #1A1612;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+body.theme-editorial .theme-toggle-btn:hover {
+  background: #FBEAE6;
+  border-color: #C73E2D;
+  color: #C73E2D;
+  box-shadow: 0 2px 8px rgba(199, 62, 45, 0.15);
+}
+
+body.theme-editorial .workbench-card {
+  background: #FBF8F2;
+  border: 1px solid #D9D2C4;
+  box-shadow: 0 4px 16px rgba(26, 22, 18, 0.05);
+}
+body.theme-editorial .unoptimized-card {
+  border-color: rgba(199, 62, 45, 0.3);
+}
+body.theme-editorial .unoptimized-card:hover {
+  border-color: rgba(199, 62, 45, 0.6);
+}
+body.theme-editorial .calibrated-card {
+  border-color: rgba(58, 95, 127, 0.3);
+  box-shadow: 0 4px 16px rgba(58, 95, 127, 0.08);
+}
+body.theme-editorial .calibrated-card:hover {
+  border-color: rgba(58, 95, 127, 0.6);
+}
+
+body.theme-editorial .orbital-constellation-section {
+  background: #FBF8F2;
+  border: 1px solid #D9D2C4;
+  box-shadow: 0 4px 20px rgba(26, 22, 18, 0.06);
+}
+body.theme-editorial .central-score-box {
+  background: #EFE9DD;
+  border: 2px solid #C73E2D;
+  box-shadow: 0 4px 20px rgba(199, 62, 45, 0.12);
+}
+body.theme-editorial .eval-dim-card {
+  background: #EFE9DD;
+  border: 1px solid #D9D2C4;
+}
+
+body.theme-editorial .improved-prompt-highlighted {
+  background: #EFE9DD;
+  border: 1px solid #D9D2C4;
+  color: #1A1612;
+}
+body.theme-editorial .action-chip {
+  background: #EFE9DD;
+  border: 1px solid #D9D2C4;
+  color: #1A1612;
+}
+body.theme-editorial .action-chip:hover {
+  border-color: #C73E2D;
+  color: #C73E2D;
+  background: #FBEAE6;
+}
+
+body.theme-editorial .tab-bar {
+  border-bottom: 1px solid #D9D2C4;
+}
+body.theme-editorial .tab {
+  color: #8B8275;
+}
+body.theme-editorial .tab:hover {
+  color: #1A1612;
+}
+body.theme-editorial .tab.active {
+  color: #C73E2D;
+  border-bottom: 2px solid #C73E2D;
+}
+body.theme-editorial .score-hero {
+  background: #FBF8F2 !important;
+  border: 1px solid #D9D2C4 !important;
+}
+
 /* ── Typography scale ──────────────────────────────────────────── */
 h1, h2, .serif { font-family: var(--font-serif); letter-spacing: -0.015em; }
 h3, h4 { font-family: var(--font-sans); }
