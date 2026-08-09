@@ -429,7 +429,7 @@ body.theme-editorial .panel {
 
 .comparison-workbench-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: 1fr;
   gap: var(--space-xl);
   padding: var(--space-lg) var(--space-xl);
   align-items: stretch;
@@ -2399,9 +2399,9 @@ body.theme-editorial .score-ring-bg { stroke: #D9D2C4; }
   .footer-links {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+    gap: 10px;
     width: 100%;
-    max-width: 360px;
+    max-width: 100%;
     margin: 0 auto;
     justify-content: center;
   }
@@ -2412,6 +2412,9 @@ body.theme-editorial .score-ring-bg { stroke: #D9D2C4; }
     padding: 8px 12px;
     border-radius: var(--radius-sm);
     font-size: 0.8rem;
+  }
+  .footer-link:last-child {
+    grid-column: 1 / -1;
   }
 }
 

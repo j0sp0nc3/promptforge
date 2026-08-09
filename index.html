@@ -371,51 +371,6 @@
           </div>
         </section>
 
-        <!-- Right Card: Promptometer Calibrated Prompt -->
-        <section class="workbench-card calibrated-card" id="results-panel">
-          <div class="workbench-card-header">
-            <div class="card-title-group">
-              <h3 class="card-title">Promptometer Calibrated</h3>
-              <div class="calibrated-badges-row">
-                <span class="calibrated-pill-tag tag-objective" id="calibrated-objective-pill">[Goal: General]</span>
-                <span class="calibrated-pill-tag tag-role">[Role Defined]</span>
-                <span class="calibrated-pill-tag tag-format">[Strict Schema]</span>
-              </div>
-            </div>
-            <div class="card-score-badge badge-neutral" id="calibrated-score-badge">--<span>/100</span></div>
-          </div>
-
-          <!-- Empty State before analysis -->
-          <div class="empty-state" id="empty-state">
-            <div class="empty-icon">
-              <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3">
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-              </svg>
-            </div>
-            <h3 class="empty-title" data-i18n="empty.title">Input a prompt to calibrate</h3>
-            <p class="empty-text" data-i18n="empty.text">Click "Calibrate & Optimize" to see instant 8D spectral scoring, color-coded tag highlights, and non-destructive rewriting.</p>
-          </div>
-
-          <!-- Calibrated Output Content -->
-          <div class="results-content hidden" id="results-content">
-            <div class="improved-prompt-container">
-              <div class="improved-prompt-highlighted" id="improved-prompt-highlighted"></div>
-              <pre class="improved-prompt-text hidden" id="improved-prompt-text"></pre>
-            </div>
-
-            <!-- Action Chips Bar -->
-            <div class="calibrated-actions-row">
-              <div class="action-chips-group">
-                <button class="action-chip" id="chip-shorten">⚡ Shorten</button>
-                <button class="action-chip" id="chip-cot">🧠 Add CoT</button>
-                <button class="action-chip" id="chip-json">📐 Enforce JSON</button>
-                <button class="action-chip" id="chip-safety">🛡️ Guardrails</button>
-              </div>
-              <div class="primary-actions-group">
-                <span class="improvement-badge" id="improvement-badge">+25 pts</span>
-                <button class="btn btn-secondary btn-sm" id="btn-copy-improvement">📋 Copy</button>
-                <button class="btn btn-primary btn-sm" id="btn-apply-improvement">✨ Apply</button>
-              </div>
             </div>
           </div>
         </section>
@@ -492,8 +447,56 @@
           <div id="adversarial-list" class="findings-list"></div>
         </div>
 
-        <!-- Tab: Improved Breakdown & Changes -->
+        <!-- Tab: Improved Breakdown & Calibrated Output -->
         <div class="tab-content" id="tab-improved">
+          <section class="workbench-card calibrated-card" id="results-panel" style="margin-bottom: 1.5rem;">
+            <div class="workbench-card-header">
+              <div class="card-title-group">
+                <h3 class="card-title">Promptometer Calibrated ✨</h3>
+                <div class="calibrated-badges-row">
+                  <span class="calibrated-pill-tag tag-objective" id="calibrated-objective-pill">[Goal: General]</span>
+                  <span class="calibrated-pill-tag tag-role">[Role Defined]</span>
+                  <span class="calibrated-pill-tag tag-format">[Strict Schema]</span>
+                </div>
+              </div>
+              <div class="card-score-badge badge-neutral" id="calibrated-score-badge">--<span>/100</span></div>
+            </div>
+
+            <!-- Empty State before analysis -->
+            <div class="empty-state" id="empty-state">
+              <div class="empty-icon">
+                <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                </svg>
+              </div>
+              <h3 class="empty-title" data-i18n="empty.title">Input a prompt to calibrate</h3>
+              <p class="empty-text" data-i18n="empty.text">Click "Calibrate & Optimize" to see instant 8D spectral scoring, color-coded tag highlights, and non-destructive rewriting.</p>
+            </div>
+
+            <!-- Calibrated Output Content -->
+            <div class="results-content hidden" id="results-content">
+              <div class="improved-prompt-container">
+                <div class="improved-prompt-highlighted" id="improved-prompt-highlighted"></div>
+                <pre class="improved-prompt-text hidden" id="improved-prompt-text"></pre>
+              </div>
+
+              <!-- Action Chips Bar -->
+              <div class="calibrated-actions-row">
+                <div class="action-chips-group">
+                  <button class="action-chip" id="chip-shorten">⚡ Shorten</button>
+                  <button class="action-chip" id="chip-cot">🧠 Add CoT</button>
+                  <button class="action-chip" id="chip-json">📐 Enforce JSON</button>
+                  <button class="action-chip" id="chip-safety">🛡️ Guardrails</button>
+                </div>
+                <div class="primary-actions-group">
+                  <span class="improvement-badge" id="improvement-badge">+25 pts</span>
+                  <button class="btn btn-secondary btn-sm" id="btn-copy-improvement">📋 Copy</button>
+                  <button class="btn btn-primary btn-sm" id="btn-apply-improvement">✨ Apply</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
           <div class="section-header">
             <h3 data-i18n="sections.improvedPrompt">Desglose de Cambios y Optimizaciones</h3>
           </div>
