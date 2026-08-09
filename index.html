@@ -311,7 +311,24 @@
                 <span class="warning-pill">[Missing Persona]</span>
               </div>
             </div>
-            <div class="card-score-badge badge-red" id="unoptimized-score-badge">38<span>/100</span></div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <button class="btn-sm btn-ghost" id="btn-paste" data-i18n-title="editor.paste" title="Pegar">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" />
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                </svg>
+                <span data-i18n="editor.paste">Pegar</span>
+              </button>
+              <button class="btn-sm btn-ghost" id="btn-clear" data-i18n-title="editor.clear" title="Limpiar">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18" />
+                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                </svg>
+                <span data-i18n="editor.clear">Limpiar</span>
+              </button>
+              <div class="card-score-badge badge-red" id="unoptimized-score-badge">38<span>/100</span></div>
+            </div>
           </div>
 
           <div class="editor-container">
@@ -407,16 +424,66 @@
         <div class="evaluation-dimensions-row" id="evaluation-dimensions-row">
           <!-- Populated by JS -->
         </div>
+      </section>
 
-        <!-- Hidden Legacy Containers for Engine Parity -->
-        <div id="dimensions-list" style="display:none"></div>
-        <div id="antipatterns-list" style="display:none"></div>
-        <div id="strengths-list" style="display:none"></div>
-        <span id="antipattern-count" style="display:none">0</span>
-        <span id="strengths-count" style="display:none">0</span>
-        <div id="adversarial-list" style="display:none"></div>
-        <span id="resistance-score" style="display:none">0</span>
-        <div id="changes-list" style="display:none"></div>
+      <!-- ── SECTION 3: Detailed 8D Analysis & Tabs (Dimensions, Radar, Anti-patterns, Adversarial, Improvement) ── -->
+      <section class="analysis-tabs-section" id="analysis-tabs-section" style="margin-top: var(--space-xl);">
+        
+        <!-- Navigation Tabs -->
+        <div class="tab-bar" id="results-tabs">
+          <button class="tab active" data-tab="dimensions" data-i18n="tabs.dimensions">Dimensiones</button>
+          <button class="tab" data-tab="radar" data-i18n="tabs.radar">Radar</button>
+          <button class="tab" data-tab="antipatterns" data-i18n="tabs.antipatterns">Anti-patrones</button>
+          <button class="tab" data-tab="adversarial" data-i18n="tabs.adversarial">Adversarial</button>
+          <button class="tab" data-tab="improved" data-i18n="tabs.improved">Mejora</button>
+        </div>
+
+        <!-- Tab: Dimensions Breakdown -->
+        <div class="tab-content active" id="tab-dimensions">
+          <div class="dimensions-list" id="dimensions-list"></div>
+        </div>
+
+        <!-- Tab: 8D Radar Canvas -->
+        <div class="tab-content" id="tab-radar">
+          <div class="radar-chart-container" style="display:flex; justify-content:center; padding:var(--space-lg);">
+            <canvas id="radar-canvas" width="400" height="400"></canvas>
+          </div>
+        </div>
+
+        <!-- Tab: Anti-patterns & Strengths -->
+        <div class="tab-content" id="tab-antipatterns">
+          <div class="section-header">
+            <h3 data-i18n="sections.antipatternsDetected">Anti-patrones Detectados</h3>
+            <span class="count-badge" id="antipattern-count">0</span>
+          </div>
+          <div id="antipatterns-list" class="findings-list"></div>
+          <div class="section-header" style="margin-top: 1.5rem;">
+            <h3 data-i18n="sections.strengthsDetected">Fortalezas Detectadas</h3>
+            <span class="count-badge count-badge-success" id="strengths-count">0</span>
+          </div>
+          <div id="strengths-list" class="findings-list"></div>
+        </div>
+
+        <!-- Tab: Adversarial Stress-Tests -->
+        <div class="tab-content" id="tab-adversarial">
+          <div class="section-header">
+            <h3 data-i18n="sections.adversarialTests">Pruebas Adversariales</h3>
+            <div class="resistance-badge" id="resistance-badge">
+              <span data-i18n="sections.resistance">Resistencia:</span> <strong id="resistance-score">—</strong>
+            </div>
+          </div>
+          <div id="adversarial-list" class="findings-list"></div>
+        </div>
+
+        <!-- Tab: Improved Breakdown & Changes -->
+        <div class="tab-content" id="tab-improved">
+          <div class="section-header">
+            <h3 data-i18n="sections.improvedPrompt">Desglose de Cambios y Optimizaciones</h3>
+          </div>
+          <div class="top-impact-container" id="top-impact-container"></div>
+          <div class="changes-list" id="changes-list"></div>
+        </div>
+
       </section>
 
     </div>
