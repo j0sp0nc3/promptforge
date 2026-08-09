@@ -269,7 +269,7 @@ promptforge/                    ← App Web (Vercel)
 - **Fecha:** 2026-08-09
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
 - **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
-- **Último commit promptforge:** `b335a48` (fix(responsive): fix editor-panel horizontal overflow by adding min-width: 0 and box-sizing)
+- **Último commit promptforge:** `c58170a` (fix(view): enclose orbital constellation inside view-analyzer and remove sticky offset from editor-panel)
 - **Estado:** 22/22 tests en PASS. Paridad ES/EN verificada. Ambos ambientes desplegados y funcionando.
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
