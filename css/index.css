@@ -2609,3 +2609,43 @@ body.theme-editorial .score-ring-bg { stroke: #D9D2C4; }
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
+
+/* ── Share Modal Styles ────────────────────────────────── */
+.share-url-input-group {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+.share-url-input-group .modal-input {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--ink);
+  flex: 1;
+}
+.social-share-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.social-share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: #FFFFFF !important;
+  cursor: pointer;
+  transition: transform var(--transition-fast), opacity var(--transition-fast);
+}
+.social-share-btn:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+.btn-x { background: #000000; border: 1px solid rgba(255,255,255,0.2); }
+.btn-wa { background: #25D366; }
+.btn-li { background: #0A66C2; }

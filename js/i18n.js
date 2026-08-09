@@ -207,6 +207,9 @@ const I18n = (() => {
         markdown: 'Exportar Markdown',
         clipboard: 'Copiar al portapapeles',
         share: 'Generar enlace compartible',
+        shareModalTitle: 'Compartir Prompt',
+        shareModalDesc: 'Usa este enlace directo para compartir tu prompt con cualquier colega o usuario.',
+        copyUrl: 'Copiar enlace',
       },
 
       // ── Toasts ──────────────────────────────────────────────────────────
@@ -1092,6 +1095,9 @@ const I18n = (() => {
         markdown: 'Export Markdown',
         clipboard: 'Copy to clipboard',
         share: 'Generate shareable link',
+        shareModalTitle: 'Share Prompt',
+        shareModalDesc: 'Use this direct link to share your prompt with any teammate or user.',
+        copyUrl: 'Copy link',
       },
 
       toast: {

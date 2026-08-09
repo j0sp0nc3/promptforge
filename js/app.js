@@ -835,27 +835,48 @@ const App = (() => {
     document.addEventListener('click', () => menu.classList.add('hidden'));
 
     document.getElementById('export-json').addEventListener('click', () => {
-      if (!currentAnalysis) return showToast(t('toast.noAnalysis'), 'warning');
-      const json = ExportUtil.toJSON(currentAnalysis.analysis, currentAnalysis.prompt);
+      const promptText = document.getElementById('prompt-input')?.value?.trim() || currentAnalysis?.prompt;
+      if (!promptText) return showToast(t('toast.writePrompt'), 'warning');
+      const analysisObj = currentAnalysis?.analysis || { prompt: promptText, overallScore: 0 };
+      const json = ExportUtil.toJSON(analysisObj, promptText);
       ExportUtil.downloadFile(json, 'promptometer-analysis.json', 'application/json');
     });
 
     document.getElementById('export-markdown').addEventListener('click', () => {
-      if (!currentAnalysis) return showToast(t('toast.noAnalysis'), 'warning');
-      const md = ExportUtil.toMarkdown(currentAnalysis.analysis, currentAnalysis.prompt);
+      const promptText = document.getElementById('prompt-input')?.value?.trim() || currentAnalysis?.prompt;
+      if (!promptText) return showToast(t('toast.writePrompt'), 'warning');
+      const analysisObj = currentAnalysis?.analysis || { prompt: promptText, overallScore: 0 };
+      const md = ExportUtil.toMarkdown(analysisObj, promptText);
       ExportUtil.downloadFile(md, 'promptometer-analysis.md', 'text/markdown');
     });
 
     document.getElementById('export-clipboard').addEventListener('click', () => {
-      if (!currentAnalysis) return showToast(t('toast.noAnalysis'), 'warning');
-      const md = ExportUtil.toMarkdown(currentAnalysis.analysis, currentAnalysis.prompt);
+      const promptText = document.getElementById('prompt-input')?.value?.trim() || currentAnalysis?.prompt;
+      if (!promptText) return showToast(t('toast.writePrompt'), 'warning');
+      const analysisObj = currentAnalysis?.analysis || { prompt: promptText, overallScore: 0 };
+      const md = ExportUtil.toMarkdown(analysisObj, promptText);
       ExportUtil.toClipboard(md);
     });
 
     document.getElementById('export-share').addEventListener('click', () => {
-      if (!currentAnalysis) return showToast(t('toast.noAnalysis'), 'warning');
-      const url = ExportUtil.generateShareURL(currentAnalysis.prompt);
+      const promptText = document.getElementById('prompt-input')?.value?.trim() || currentAnalysis?.prompt;
+      if (!promptText) return showToast(t('toast.writePrompt'), 'warning');
+      const url = ExportUtil.generateShareURL(promptText);
+      if (!url) return showToast(t('toast.analysisError'), 'error');
+      
       ExportUtil.toClipboard(url);
+      openShareModal(url, promptText);
+    });
+
+    // Share Modal Handlers
+    document.getElementById('btn-close-share-modal')?.addEventListener('click', closeShareModal);
+    document.getElementById('btn-close-share-modal-bottom')?.addEventListener('click', closeShareModal);
+    document.getElementById('btn-copy-share-url')?.addEventListener('click', () => {
+      const input = document.getElementById('share-url-input');
+      if (input && input.value) {
+        ExportUtil.toClipboard(input.value);
+        input.select();
+      }
     });
   }
 
@@ -1010,13 +1031,39 @@ const App = (() => {
     });
   }
 
-  // ── Share URL ──────────────────────────────────────────
+  // ── Share URL & Modal ──────────────────────────────────
+  function openShareModal(url, promptText) {
+    const modal = document.getElementById('modal-share-link');
+    const input = document.getElementById('share-url-input');
+    const shareX = document.getElementById('share-x');
+    const shareWa = document.getElementById('share-wa');
+    const shareLi = document.getElementById('share-li');
+
+    if (input) input.value = url;
+    const textSnippet = promptText.length > 80 ? promptText.slice(0, 80) + '...' : promptText;
+    const encodedMsg = encodeURIComponent(`Evalúa y optimiza tus prompts con Promptometer: ${textSnippet}\n${url}`);
+    
+    if (shareX) shareX.href = `https://twitter.com/intent/tweet?text=${encodedMsg}`;
+    if (shareWa) shareWa.href = `https://api.whatsapp.com/send?text=${encodedMsg}`;
+    if (shareLi) shareLi.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+
+    if (modal) {
+      modal.classList.remove('hidden');
+      setTimeout(() => input?.select(), 100);
+    }
+  }
+
+  function closeShareModal() {
+    document.getElementById('modal-share-link')?.classList.add('hidden');
+  }
+
   function checkShareURL() {
     const prompt = ExportUtil.parseShareURL();
     if (prompt) {
       document.getElementById('prompt-input').value = prompt;
       updateEditorStats();
       showToast(I18n.t('toast.shareLoaded'), 'info');
+      runAnalysis();
     }
   }
 
