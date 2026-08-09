@@ -695,43 +695,65 @@ body.theme-editorial .lang-btn.active {
   font-size: 0.78rem; color: var(--ink-faint);
 }
 
+.orbital-constellation-container,
 .orbital-constellation-stage {
   position: relative;
-  width: 100%; height: 450px;
-  display: flex; align-items: center; justify-content: center;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  aspect-ratio: 800 / 450;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .orbital-svg {
-  width: 100%; height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 .central-score-box {
   position: absolute;
-  top: 50%; left: 50%;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
-  width: 210px; height: 210px;
+  width: clamp(110px, 26%, 190px);
+  height: clamp(110px, 26%, 190px);
   background: rgba(17, 20, 32, 0.95);
   border: 1px solid rgba(255, 158, 0, 0.4);
   border-radius: var(--radius-lg);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  padding: 16px;
+  padding: clamp(6px, 1.5vw, 14px);
   box-shadow: 0 0 30px rgba(255, 158, 0, 0.25), inset 0 0 15px rgba(0, 229, 255, 0.1);
   z-index: 10;
+  pointer-events: none;
 }
-.central-score-label {
+.central-score-label,
+.central-score-title {
   font-family: var(--font-mono);
-  font-size: 0.68rem; letter-spacing: 0.15em; color: var(--ink-faint);
+  font-size: clamp(0.52rem, 1.2vw, 0.68rem);
+  letter-spacing: 0.15em;
+  color: var(--ink-faint);
   text-transform: uppercase;
 }
-.central-score-number {
+.central-score-number,
+.central-score-value {
   font-family: var(--font-serif);
-  font-size: 3.2rem; font-weight: 700; color: var(--ink); line-height: 1;
-  margin: 4px 0;
+  font-size: clamp(1.6rem, 4vw, 3rem);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+  margin: 2px 0;
 }
 .central-score-grade {
   font-family: var(--font-mono);
-  font-size: 0.78rem; font-weight: 700; color: #10b981;
+  font-size: clamp(0.62rem, 1.5vw, 0.78rem);
+  font-weight: 700;
+  color: #10b981;
 }
 .central-score-desc {
   font-size: 0.65rem; color: var(--ink-soft); margin-top: 4px; line-height: 1.2;
@@ -1582,20 +1604,6 @@ body.theme-editorial .score-ring-bg { stroke: #D9D2C4; }
   .orbital-constellation-section {
     margin: var(--space-md);
     padding: var(--space-md);
-  }
-
-  .orbital-constellation-stage {
-    height: 360px;
-  }
-
-  .central-score-box {
-    width: 170px;
-    height: 170px;
-    padding: 12px;
-  }
-
-  .central-score-number {
-    font-size: 2.5rem;
   }
 }
 
