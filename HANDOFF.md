@@ -260,7 +260,7 @@ promptforge/                    ← App Web (Vercel)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-09
-- **Último commit promptforge:** `f3206cb` (feat(export): add interactive Share Modal with auto-copy and social share buttons for Generate shareable link)
+- **Último commit promptforge:** `6af2f31` (feat(ui): add Prompt Objective Selector bar & Goal pill tag in Promptometer Calibrated card)
 - **Último commit promptometer:** `5662a93` (fix(core): sync signal parity)
 - **Sesión con:** Antigravity (Gemini 3.6 Flash) — **Estilos del Selector de Idioma (ES/EN) y Badges de Score Dinámicos `--/100`**
 - **Estado:** 22/22 tests en PASS. Paridad ES/EN verificada. Desplegado y funcionando al 100% en Vercel y `https://promptometer.tech/`.
