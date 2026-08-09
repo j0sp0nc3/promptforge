@@ -12,6 +12,12 @@ and design decisions that MUST be respected.
 
 ## Git Workflow
 - Active development branch is `dev`. All code changes and commits must be pushed to `origin dev`.
+- Production branch is `main`. Merge `dev` → `main` only when ready to release to production.
+
+## Deployment Environments
+- **Development (dev branch):** `https://promptometer.vercel.app/` — auto-deploys from every push to `dev`. Use this URL to preview changes before releasing.
+- **Production (main branch):** `https://promptometer.tech/` — auto-deploys from every push to `main`. This is the public, canonical URL shared with users.
+- Workflow: commit on `dev` → verify on `promptometer.vercel.app` → merge `dev` → `main` → live on `promptometer.tech`.
 
 ## Design System: Editorial Technical
 - Background: Cream Paper `#F7F3EC`
@@ -29,7 +35,7 @@ and design decisions that MUST be respected.
   - `packages/core/promptometer_core.py` (Python parity)
 
 ## Before EVERY Commit (not just at session end)
-- Run `node test_edge_cases.js` to verify 14/14 PASS.
+- Run `node test_edge_cases.js` to verify 22/22 PASS.
 - Update `HANDOFF.md`: move completed items to ✅, add new pending items, and update the "Última Actualización" section (date, latest commit hash, and session summary).
 - Update `README.md`: if any new techniques, frameworks, features, or files were added/modified, update global counts (e.g., number of techniques/frameworks) and the project file tree.
 - Include both `HANDOFF.md` and `README.md` in the commit whenever documentation counts or files change.

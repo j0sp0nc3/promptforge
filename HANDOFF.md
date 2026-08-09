@@ -20,11 +20,16 @@ interactiva desplegada en Vercel.
 | **Motor Core** | [j0sp0nc3/promptometer](https://github.com/j0sp0nc3/promptometer) | Motor de análisis (JS + Python), publicado en npm |
 | **App Web** | [j0sp0nc3/promptforge](https://github.com/j0sp0nc3/promptforge) | UI web con API serverless, desplegada en Vercel |
 
-### URLs en Producción
+### URLs y Ambientes de Despliegue
 
-- **Vercel:** https://promptforge-beta-ten.vercel.app/
+| Ambiente | Rama Git | URL | Propósito |
+|:---------|:---------|:----|:----------|
+| **Desarrollo** | `dev` | https://promptometer.vercel.app/ | Preview de cada push a dev |
+| **Producción** | `main` | https://promptometer.tech/ | URL pública canónica |
+
 - **npm:** https://www.npmjs.com/package/promptometer-core
-- **Dominio pendiente:** `promptometer.is-a.dev` (PR abierto en is-a-dev/register)
+- **Flujo:** commit en `dev` → verificar en `promptometer.vercel.app` → merge `dev`→`main` → live en `promptometer.tech`
+- **(Histórico):** `promptforge-beta-ten.vercel.app` fue el primer deployment; `promptometer.is-a.dev` quedó descartado al registrar `.tech`.
 
 ### Autor
 
@@ -251,7 +256,7 @@ promptforge/                    ← App Web (Vercel)
 ├── api/index.js                ← API serverless desplegada en Vercel (incluye /api/leaderboard y /api/suggest-creator)
 ├── server.js                   ← Servidor local de desarrollo
 ├── vercel.json                 ← Configuración de despliegue Vercel (rutas estáticas)
-├── test_edge_cases.js          ← Suite de 14 tests de estrés (PASS)
+├── test_edge_cases.js          ← Suite de 22 tests de estrés (PASS)
 └── package.json                ← Dependencia: promptometer-core@^1.0.0
 ```
 
@@ -261,10 +266,11 @@ promptforge/                    ← App Web (Vercel)
 
 - **Fecha:** 2026-08-09
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
-- **Último commit promptforge:** `1b18ef6` (fix(responsive): align orbital constellation container class name and use aspect-ratio for perfect central score box positioning on mobile)
+- **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
+- **Último commit promptforge:** pendiente (documentación de ambientes dev/main)
 - **Último commit promptometer:** `5662a93` (fix(core): sync signal parity)
-- **Sesión con:** Antigravity (Gemini 3.6 Flash) — **Creación y Activación de Rama `dev`**
-- **Estado:** 22/22 tests en PASS. Paridad ES/EN verificada. Desplegado y funcionando al 100% en Vercel y `https://promptometer.tech/`.
+- **Sesión con:** ZCode (GLM-5.2) — **Documentación de ambientes + auditoría de estado**
+- **Estado:** 22/22 tests en PASS. Paridad ES/EN verificada. Ambos ambientes desplegados y funcionando.
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
 > - **Aclaración y Ajuste de Badges de Scoring (`--/100`)**: Se reemplazaron los números estáticos confundidores (`38/100` y `95/100`) en estado inicial por placeholders neutros `--/100` que se actualizan dinámicamente solo tras ejecutar el análisis del prompt ingresado por el usuario.
