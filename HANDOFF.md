@@ -260,7 +260,7 @@ promptforge/                    ← App Web (Vercel)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-08-09
-- **Último commit promptforge:** `8cf64f9` (fix(ui): dynamic score badge placeholders, styled lang-switcher & Moon Mode text visibility for 8D constellation stage)
+- **Último commit promptforge:** `f1f1074` (fix(responsive): stack dual cards, actions bar & constellation stage cleanly on mobile and tablet viewports)
 - **Último commit promptometer:** `5662a93` (fix(core): sync signal parity)
 - **Sesión con:** Antigravity (Gemini 3.6 Flash) — **Estilos del Selector de Idioma (ES/EN) y Badges de Score Dinámicos `--/100`**
 - **Estado:** 22/22 tests en PASS. Paridad ES/EN verificada. Desplegado y funcionando al 100% en Vercel y `https://promptometer.tech/`.
