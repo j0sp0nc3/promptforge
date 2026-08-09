@@ -227,6 +227,7 @@ promptforge/                    # Web App Repo (Vercel deployment)
 │   ├── history.js              # Persistence & Evolution Charts
 │   ├── charts.js               # Chart.js Radar & Line Wrapper
 │   ├── export.js               # JSON, Markdown, Clipboard & URL Exporters
+│   ├── constellation3d.js      # 3D Solar System Constellation Engine (Three.js WebGL)
 │   └── app.js                  # Main UI Orchestrator
 ├── api/
 │   ├── index.js                # Secured Vercel Serverless API wrapper

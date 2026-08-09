@@ -270,15 +270,14 @@ promptforge/                    ← App Web (Vercel)
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
 - **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
 - **Último commit promptforge:** `c58170a` (fix(view): enclose orbital constellation inside view-analyzer and remove sticky offset from editor-panel)
-- **Estado:** 22/22 tests en PASS. Paridad ES/EN verificada. Ambos ambientes desplegados y funcionando.
+- **Estado:** 22/22 tests en PASS. Paridad ES/EN verificada. Prototipo 3D desarrollado y probado exclusivamente en local (`http://localhost:3001`).
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
-> - **Aclaración y Ajuste de Badges de Scoring (`--/100`)**: Se reemplazaron los números estáticos confundidores (`38/100` y `95/100`) en estado inicial por placeholders neutros `--/100` que se actualizan dinámicamente solo tras ejecutar el análisis del prompt ingresado por el usuario.
-> - **Estilizado Completo del Selector de Idioma (`.lang-switcher`)**: Se implementaron reglas CSS integradas para el grupo de botones `ES / EN` con cápsula redondeada, transparencias de cristal en **Modo Black Hole 🕳️** y acabado crema/vermellón en **Modo Luna 🌙**.
-> - **Temas Visuales Rebrand**: Modo Editorial → **Modo Luna 🌙** / Modo Cósmico → **Modo Black Hole 🕳️** en i18n (ES/EN), UI del botón de navegación y `app.js`.
-> - **Rediseño Fiel a los Mockups 1 & 2**:
->   - **Mockup 2 (Dual Card Prompt Comparison Workbench)**: Tarjetas enfrentadas `Unoptimized Prompt` (roja, botones Pegar/Limpiar, pills de advertencia) vs `Promptometer Calibrated` (verde esmeralda, pills de etiquetas XML color-coded y chips interactivos `⚡ Shorten`, `🧠 Add CoT`, `📐 Enforce JSON`, `🛡️ Guardrails`, `📋 Copy`, `✨ Apply`).
->   - **Mockup 1 (Grand 8D Orbital Constellation Stage)**: Diagrama SVG de órbitas astronómicas concéntricas con caja central `PROMPT SCORE: 88.5` y nodos geométricos en diamante.
->   - **Fila Inferior de 8D Dimensiones**: Tarjetas con badges decimales (`Clarity 8.9`, `Role 9.2`, `Context 7.6`, `Constraints 8.4`, `Safety 9.7`, `Output 8.8`).
-> - **Restauración Total de Funcionalidades & 5 Pestañas Interactivas**: Dimensiones, Radar, Anti-patrones, Adversarial y Mejora.
-> - **Pruebas de Estrés**: 22/22 PASS en `test_edge_cases.js`.
+> - **Sistema Solar 3D en Three.js para la Constelación 8D (`js/constellation3d.js`)**:
+>   - Se implementó un motor visual astronómico 3D con Three.js WebGL, Sol central emisor de luz, 8 órbitas astronómicas concéntricas en 3D y 8 cuerpos geométricos flotantes (icosaedro, octaedro, toros, etc.) representando las 8 dimensiones evaluadas.
+>   - Se integró `OrbitControls` y `Raycaster` para interacción suave al pasar el mouse (tooltips con nombre y puntaje decimal de cada planeta).
+>   - Se rediseñó el puntaje central (`PROMPT SCORE`) para flotar limpiamente en el centro del núcleo del Sol 3D, **eliminando cualquier caja o borde rectangular superpuesto**.
+>   - Soporte total para **Modo Black Hole 🕳️** (polvo estelar de partículas y tonos cian neón) y **Modo Luna 🌙** (estética de mapa astronómico antiguo en rojo vermellón y papel crema).
+> - **Aclaración y Ajuste de Badges de Scoring (`--/100`)**: Se reemplazaron los números estáticos por placeholders neutros `--/100` que se actualizan dinámicamente solo tras ejecutar el análisis.
+> - **Estilizado Completo del Selector de Idioma (`.lang-switcher`)**: Se implementaron reglas CSS integradas para el grupo de botones `ES / EN`.
+> - **Pruebas de Estrés**: 22/22 PASS en `test_edge_cases.js`. Todo probado exclusivamente en local (`http://localhost:3001`) sin hacer push.

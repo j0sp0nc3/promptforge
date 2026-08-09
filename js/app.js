@@ -28,6 +28,10 @@ const App = (() => {
     checkShareURL();
     updateEditorStats();
 
+    if (typeof Constellation3D !== 'undefined') {
+      Constellation3D.init('constellation-3d-canvas');
+    }
+
     // Re-render dynamic content when the language changes.
     document.addEventListener('langchange', onLangChange);
   }
@@ -130,6 +134,9 @@ const App = (() => {
 
       if (currentAnalysis) {
         renderOrbitalConstellationSVG(currentAnalysis.analysis.dimensions, currentAnalysis.analysis.overallScore);
+        if (typeof Constellation3D !== 'undefined' && Constellation3D.isInitialized()) {
+          Constellation3D.update(currentAnalysis.analysis, isEditorial ? 'luna' : 'blackhole');
+        }
       }
     });
   }
@@ -315,6 +322,12 @@ const App = (() => {
 
     // Animate score
     animateScore(analysis.overallScore, analysis.grade);
+
+    // Update 3D Solar System Constellation
+    if (typeof Constellation3D !== 'undefined' && Constellation3D.isInitialized()) {
+      const theme = document.body.classList.contains('theme-editorial') ? 'luna' : 'blackhole';
+      Constellation3D.update(analysis, theme);
+    }
 
     // Badges (optional elements depending on view layout)
     const complexityKey = analysis.complexity; // 'basic' | 'intermediate' | 'advanced'
