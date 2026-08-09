@@ -14,9 +14,9 @@ and design decisions that MUST be respected.
 - Active development branch is `dev`. All code changes and commits must be pushed to `origin dev`.
 - Production branch is `main`. Merge `dev` → `main` only when ready to release to production.
 
-## Deployment Environments
-- **Development (dev branch):** `https://promptometer.vercel.app/` — auto-deploys from every push to `dev`. Use this URL to preview changes before releasing.
-- **Production (main branch):** `https://promptometer.tech/` — auto-deploys from every push to `main`. This is the public, canonical URL shared with users.
+## Deployment Environments & API Separation
+- **Development (dev branch):** `https://promptometer.vercel.app/` — auto-deploys from every push to `dev`. Dev uses relative `/api/*` endpoints (same-origin, no separate subdomain or env variable needed).
+- **Production (main branch):** `https://promptometer.tech/` — auto-deploys from every push to `main`. In production ONLY, API calls route to `https://api.promptometer.tech/api/*` via `js/api-config.js` (requires DNS CNAME setup in Vercel/Cloudflare when releasing to main).
 - Workflow: commit on `dev` → verify on `promptometer.vercel.app` → merge `dev` → `main` → live on `promptometer.tech`.
 
 ## Design System: Editorial Technical
