@@ -30,6 +30,7 @@ interactiva desplegada en Vercel.
 
 - **Arquitectura API separada (EXCLUSIVO PRODUCCIÓN):** El subdominio `api.promptometer.tech` aplica **únicamente en Producción (`main`)**. En Desarrollo (`dev` / `localhost` / `promptometer.vercel.app`), las llamadas al API operan en mismo origen (`/api/*`), sin requerir subdominio ni variables adicionales. `js/api-config.js` detecta automáticamente el hostname (`promptometer.tech`) para apuntar a `https://api.promptometer.tech`, dejando la base vacía en `dev`.
 - **Setup Cloudflare/Vercel pendiente (para lanzamiento a producción):** Crear registro `api` CNAME → `cname.vercel-dns.com` en nube gris (DNS-only); añadir `api.promptometer.tech` en Vercel → Settings → Domains.
+- **Enrutamiento por Host en Producción:** Toda solicitud dirigida al host `api.promptometer.tech` (incluyendo la raíz `/`, `/docs`, `/api` y subrutas) enruta directamente a `/api/index.js` retornando respuestas JSON oficiales, manteniendo la Web UI (`index.html`) limpia en el dominio principal `promptometer.tech`.
 - **Flujo:** commit en `dev` → verificar en `promptometer.vercel.app` → merge `dev`→`main` → live en `promptometer.tech`
 - **(Histórico):** `promptforge-beta-ten.vercel.app` fue el primer deployment; `promptometer.is-a.dev` quedó descartado al registrar `.tech`.
 
