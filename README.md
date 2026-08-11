@@ -33,8 +33,8 @@
 
 Promptometer is a complete professional workspace and engine to **evaluate, benchmark, learn, and optimize prompts for LLMs**. It provides:
 
-- **Multidimensional Score (0–100)** with letter grades (A to F) across **8 dimensions**.
-- **8D Constellation Node Graph**: Interactive SVG star constellation map representing the 8 prompt evaluation dimensions as interconnected vector nodes.
+- **Multidimensional Score (0–100)** with letter grades (A to F) across **8 dimensions** and objective-driven scoring (`options.objective`: Code Generation, Reasoning, JSON Schema, Safety & RAG, Creative Writing).
+- **3D Solar System Constellation (Three.js WebGL)**: Real-time 3D orbital system with 2-phase protoplanetary disk accretion kinetics, signature 8D planet geometries, permanent floating 3D score badges, interactive planet hover pause (1.25x scale), 1-click smooth-scroll dimension navigation, and dual themes (Cosmic Black Hole 🕳️ & Editorial Moon Mode 🌙).
 - **Color-Coded XML Highlight Pills & Action Chips**: Translucent neon tag highlighting for `<rol>`, `<contexto>`, `<tarea>`, `<formato_salida>`, `<restricciones>`, `<ejemplos>`, and `<manejo_errores>` with 1-click transformation action chips (`⚡ Shorten`, `🧠 Add CoT`, `📐 Enforce JSON`, `🛡️ Guardrails`).
 - **Anti-Pattern Catalog** (34 anti-patterns) & **Best Practices** (15 strengths) with expandable `<details>` accordions.
 - **Adversarial Security Suite** (13 security tests: jailbreak resistance, prompt exfiltration, hallucination mitigation, etc.).

@@ -276,11 +276,11 @@ promptforge/                    ← App Web (Vercel)
 
 ## 🔄 Última Actualización
 
-- **Fecha:** 2026-08-09
+- **Fecha:** 2026-08-11
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
 - **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
-- **Último commit promptforge:** `4001965` (feat(3d): enhance Three.js 3D solar system with protoplanetary accretion, objective weights, permanent planet labels, and depth rendering fixes)
-- **Estado:** 22/22 tests en PASS. Paridad ES/EN verificada. Prototipo 3D con colores unificados y navegación interactiva desarrollado en local (`http://localhost:3001`).
+- **Último commit promptforge:** `f0c6774` (docs: document host-based API routing rule in HANDOFF.md)
+- **Estado:** 22/22 tests en PASS. Paridad ES/EN y enrutamiento directo por Host en Producción (`api.promptometer.tech`) verificados al 100%.
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
 - [x] **Hub de Conocimiento Fase 1 (Glosario)**: 20 términos bilingües ES/EN en `Knowledge.glossary` (token, temperature, top-p, context window, system/user/assistant, embedding, vector store, fine-tuning, hallucination, grounding, stop sequence, max tokens, function calling, prompt chaining, few-shot/zero-shot, CoT, prompt injection, LLM-as-judge, in-context learning, delimiters). 14 con cross-refs a items existentes (AP###, BP###, tpl-*, adv.*). 8 categorías.
@@ -471,11 +471,11 @@ promptforge/                    ← App Web (Vercel)
 
 ## 🔄 Última Actualización
 
-- **Fecha:** 2026-08-09
+- **Fecha:** 2026-08-11
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
 - **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
-- **Último commit promptforge:** `4001965` (feat(3d): enhance Three.js 3D solar system with protoplanetary accretion, objective weights, permanent planet labels, and depth rendering fixes)
-- **Estado:** 22/22 tests en PASS. Paridad ES/EN verificada. Prototipo 3D con colores unificados y navegación interactiva desarrollado en local (`http://localhost:3001`).
+- **Último commit promptforge:** `f0c6774` (docs: document host-based API routing rule in HANDOFF.md)
+- **Estado:** 22/22 tests en PASS. Paridad ES/EN y enrutamiento directo por Host en Producción (`api.promptometer.tech`) verificados al 100%.
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
 > - **Sistema Solar 3D en Three.js con Disco Protoplanetario (`js/constellation3d.js`)**:
