@@ -27,11 +27,12 @@ const Analyzer = {
    * @param {string} prompt - The prompt text to analyze.
    * @returns {object} Full analysis result.
    */
-  analyze(prompt) {
+  analyze(prompt, options = {}) {
     if (!prompt || typeof prompt !== 'string' || prompt.trim().length === 0) {
       return this._emptyResult();
     }
 
+    const objective = options.objective || 'general';
     const trimmed = prompt.trim();
     const lang = this._detectLanguage(trimmed);
     const wordCount = trimmed.split(/\s+/).filter(Boolean).length;
@@ -41,8 +42,9 @@ const Analyzer = {
     // Extract every signal ONCE so dimension scorers don't re-detect
     // (and don't double-count) the same cue.
     const signals = Signals.extract(trimmed, lang);
-    const promptType = Signals.inferType(trimmed, signals, wordCount);
-    const weights = Signals.weightsFor(promptType);
+    const inferredType = Signals.inferType(trimmed, signals, wordCount);
+    const promptType = (objective && objective !== 'general') ? objective : inferredType;
+    const weights = Signals.weightsFor(inferredType, objective);
 
     // Score each dimension using the shared signal map.
     const dimensions = {

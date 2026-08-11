@@ -211,9 +211,9 @@ body.theme-editorial .constellation-subtitle {
   color: #4A4239 !important;
 }
 body.theme-editorial .central-score-box {
-  background: #EFE9DD;
-  border: 2px solid #C73E2D;
-  box-shadow: 0 4px 20px rgba(199, 62, 45, 0.12);
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 body.theme-editorial .central-score-title {
   color: #8B8275 !important;
@@ -795,15 +795,36 @@ body.theme-editorial .central-score-value {
   font-weight: 700;
   color: #10b981;
 }
+/* Awaiting-evaluation state: dimmer, neutral color */
+#score-number[data-empty="true"],
+.central-score-box:has(#score-number:not(:not(:empty))) {
+  /* placeholder for future pseudo-state */
+}
+.central-score-grade.is-awaiting {
+  color: var(--ink-soft);
+  opacity: 0.7;
+  letter-spacing: 0.04em;
+}
 .central-score-desc {
   font-size: 0.65rem; color: var(--ink-soft); margin-top: 4px; line-height: 1.2;
 }
 
 .evaluation-dimensions-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-  gap: var(--space-md);
+  grid-template-columns: repeat(8, 1fr);
+  gap: var(--space-sm);
   margin-top: var(--space-xl);
+}
+
+@media (max-width: 992px) {
+  .evaluation-dimensions-row {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media (max-width: 576px) {
+  .evaluation-dimensions-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .eval-dim-card {
@@ -812,10 +833,12 @@ body.theme-editorial .central-score-value {
   border-radius: var(--radius-md);
   padding: 14px 12px;
   text-align: center;
-  transition: transform var(--transition-fast), border-color var(--transition-fast);
+  cursor: pointer;
+  transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 .eval-dim-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
+  filter: brightness(1.2);
 }
 .eval-dim-name {
   font-family: var(--font-sans);
@@ -825,6 +848,16 @@ body.theme-editorial .central-score-value {
   font-family: var(--font-serif);
   font-size: 1.8rem; font-weight: 700; color: var(--ink);
   margin-top: 2px;
+}
+
+.dimension-card.highlight-pulse {
+  animation: pulseDimHighlight 1.5s ease-in-out;
+}
+
+@keyframes pulseDimHighlight {
+  0% { transform: scale(1); box-shadow: 0 0 0 rgba(0, 229, 255, 0); }
+  30% { transform: scale(1.02); box-shadow: 0 0 25px var(--dim-color, #00e5ff); border-color: var(--dim-color, #00e5ff); }
+  100% { transform: scale(1); box-shadow: none; }
 }
 
 

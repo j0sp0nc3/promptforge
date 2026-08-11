@@ -100,6 +100,13 @@ const I18n = (() => {
         max: '/100',
       },
 
+      // ── Constellation 3D states ──────────────────────────────────────────
+      constellation: {
+        awaitingEvaluation: 'Esperando evaluación…',
+        analyzing: 'Analizando…',
+        protostarHint: 'Escribe un prompt para formar el sistema',
+      },
+
       // ── Result tabs ─────────────────────────────────────────────────────
       tabs: {
         dimensions: 'Dimensiones',
@@ -636,6 +643,8 @@ const I18n = (() => {
           noConstraintsSugg: 'Agrega restricciones cuantitativas: longitud, formato, número de ítems, etc.',
           creativeUnbounded: '"Sé creativo" sin restricciones deja demasiada libertad.',
           creativeSugg: 'Define parámetros para la creatividad: tono, estilo, límites temáticos.',
+          tooShort: 'El prompt es muy breve y podría carecer de información necesaria.',
+          expandSugg: 'Expande el prompt para incluir contexto, restricciones y el formato de salida deseado.',
         },
         structure: {
           xmlTags: 'Utiliza etiquetas XML para delimitar secciones del prompt.',
@@ -653,6 +662,8 @@ const I18n = (() => {
           multiTaskSugg: 'Numera cada tarea o subtarea: "1. Analiza... 2. Genera... 3. Compara..."',
           capsEmphasis: 'Se usa MAYÚSCULAS para énfasis en lugar de delimitadores apropiados.',
           capsSugg: 'Usa **negritas**, `backticks` o etiquetas XML en vez de MAYÚSCULAS para resaltar.',
+          tooShort: 'El prompt es demasiado breve para contener estructura alguna (sin secciones, listas o delimitadores).',
+          tooShortSugg: 'Organiza tu prompt en secciones con etiquetas XML (<tarea>, <contexto>) o listas numeradas.',
         },
         robustness: {
           errorHandling: 'Incluye instrucciones de manejo de errores o entradas inválidas.',
@@ -666,6 +677,8 @@ const I18n = (() => {
           noEdgeCasesSugg: 'Considera qué pasa con: entradas vacías, datos faltantes, valores extremos, formatos inesperados.',
           tooManyNegations: 'Exceso de negaciones puede hacer el prompt frágil ante variaciones.',
           negationsSugg: 'Convierte las instrucciones negativas en positivas para mayor robustez.',
+          tooShort: 'El prompt es demasiado breve para incluir manejo de errores, casos borde o validaciones.',
+          tooShortSugg: 'Añade instrucciones como "Si la entrada está vacía, responde N/A" o "Maneja el caso en que falten datos".',
         },
         context: {
           role: 'Define un rol o persona para el modelo.',
@@ -697,6 +710,8 @@ const I18n = (() => {
           noLengthSugg: 'Especifica la longitud: "máximo 200 palabras", "3 párrafos", "respuesta breve de 2-3 oraciones".',
           noLangSpec: 'Prompt en idiomas mixtos sin especificar idioma de respuesta.',
           noLangSpecSugg: 'Especifica el idioma de respuesta: "Responde en español" o "Answer in English".',
+          tooShort: 'No se especifica ningún formato de salida (JSON, tabla, lista) ni longitud esperada.',
+          tooShortSugg: 'Indica el formato: "Responde en JSON con las claves..." o "Devuelve una tabla markdown".',
         },
         chainOfThought: {
           explicitCoT: 'Solicita explícitamente razonamiento paso a paso (Chain of Thought).',
@@ -1017,6 +1032,13 @@ const I18n = (() => {
       score: {
         label: 'Overall Score',
         max: '/100',
+      },
+
+      // ── Constellation 3D states ──────────────────────────────────────────
+      constellation: {
+        awaitingEvaluation: 'Awaiting evaluation…',
+        analyzing: 'Analyzing…',
+        protostarHint: 'Write a prompt to form the system',
       },
 
       tabs: {
@@ -1535,6 +1557,8 @@ const I18n = (() => {
           noConstraintsSugg: 'Add quantitative constraints: length, format, number of items, etc.',
           creativeUnbounded: '"Be creative" without constraints leaves too much freedom.',
           creativeSugg: 'Define parameters for creativity: tone, style, topic boundaries.',
+          tooShort: 'The prompt is too short and may lack necessary information.',
+          expandSugg: 'Expand the prompt to include context, constraints and the desired output format.',
         },
         structure: {
           xmlTags: 'Uses XML tags to delimit sections of the prompt.',

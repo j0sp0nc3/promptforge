@@ -11,7 +11,7 @@ const Rewriter = {
    * @param {Object} analysis - Analysis result from the analyzer (scores, detected features, etc.)
    * @returns {{ improvedPrompt: string, changes: Array, scoreImprovement: number }}
    */
-  improve(prompt, analysis) {
+  improve(prompt, analysis, options = {}) {
     if (!prompt || typeof prompt !== 'string' || !prompt.trim()) {
       return {
         improvedPrompt: prompt || '',
@@ -19,6 +19,8 @@ const Rewriter = {
         scoreImprovement: 0
       };
     }
+
+    const objective = options?.objective || 'general';
 
     const changes = [];
     let working = prompt.trim();

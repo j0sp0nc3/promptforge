@@ -207,8 +207,16 @@ const Signals = {
     'extraction': { clarity: 0.12, specificity: 0.14, structure: 0.18, robustness: 0.18, context: 0.08, outputFormat: 0.20, chainOfThought: 0.02, safety: 0.08 },
   },
 
-  weightsFor(type) {
-    return this._weightsTable[type] || this._weightsTable.general;
+  weightsFor(type, objective) {
+    const objectiveMap = {
+      coding: 'tool-use',
+      reasoning: 'task',
+      json_schema: 'extraction',
+      safety_rag: 'rag',
+      creative: 'creative',
+    };
+    const target = (objective && objectiveMap[objective]) ? objectiveMap[objective] : type;
+    return this._weightsTable[target] || this._weightsTable[type] || this._weightsTable.general;
   },
 
   /**

@@ -30,6 +30,7 @@ const App = (() => {
 
     if (typeof Constellation3D !== 'undefined') {
       Constellation3D.init('constellation-3d-canvas');
+      Constellation3D.onPlanetClick(key => navigateToDimensionDetail(key));
     }
 
     // Re-render dynamic content when the language changes.
@@ -127,8 +128,8 @@ const App = (() => {
       if (typeof Charts !== 'undefined') {
         Charts.destroy();
         if (currentAnalysis) {
-          Charts.initRadar('chart-radar');
-          Charts.renderRadar('chart-radar', currentAnalysis.scores);
+          Charts.initRadar('radar-canvas');
+          renderRadar(currentAnalysis.analysis.dimensions);
         }
       }
 
@@ -323,11 +324,21 @@ const App = (() => {
     // Animate score
     animateScore(analysis.overallScore, analysis.grade);
 
-    // Update 3D Solar System Constellation
-    if (typeof Constellation3D !== 'undefined' && Constellation3D.isInitialized()) {
-      const theme = document.body.classList.contains('theme-editorial') ? 'luna' : 'blackhole';
-      Constellation3D.update(analysis, theme);
+    // Scroll to the 3D constellation so the user watches the protoplanetary →
+    // solar system transition unfold. The Constellation3D.update() call (which
+    // triggers the transition) is deferred ~600ms so the smooth-scroll finishes
+    // first and the user has their eyes on the stage when it ignites.
+    const constellationSection = document.getElementById('orbital-constellation-section');
+    if (constellationSection) {
+      constellationSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
+
+    setTimeout(() => {
+      if (typeof Constellation3D !== 'undefined' && Constellation3D.isInitialized()) {
+        const theme = document.body.classList.contains('theme-editorial') ? 'luna' : 'blackhole';
+        Constellation3D.update(analysis, theme);
+      }
+    }, 600);
 
     // Badges (optional elements depending on view layout)
     const complexityKey = analysis.complexity; // 'basic' | 'intermediate' | 'advanced'
@@ -408,12 +419,12 @@ const App = (() => {
     const container = document.getElementById('dimensions-list');
     if (!container) return;
     const dimConfig = {
-      clarity:        { icon: '🎯', name: t('dimensions.clarity'),        color: '#00d4ff' },
+      clarity:        { icon: '🎯', name: t('dimensions.clarity'),        color: '#00e5ff' },
       specificity:    { icon: '📐', name: t('dimensions.specificity'),    color: '#7c3aed' },
       structure:      { icon: '🏗️', name: t('dimensions.structure'),      color: '#f59e0b' },
       robustness:     { icon: '🛡️', name: t('dimensions.robustness'),     color: '#10b981' },
       context:        { icon: '🧩', name: t('dimensions.context'),        color: '#ec4899' },
-      outputFormat:   { icon: '📝', name: t('dimensions.outputFormat'),   color: '#6366f1' },
+      outputFormat:   { icon: '📝', name: t('dimensions.outputFormat'),   color: '#38bdf8' },
       chainOfThought: { icon: '🔗', name: t('dimensions.chainOfThought'), color: '#f97316' },
       safety:         { icon: '⚠️', name: t('dimensions.safety'),         color: '#ef4444' },
     };
@@ -421,9 +432,10 @@ const App = (() => {
     container.innerHTML = '';
 
     for (const [key, dim] of Object.entries(dimensions)) {
-      const config = dimConfig[key];
+      const config = dimConfig[key] || { icon: '🔍', name: key, color: '#00e5ff' };
       const card = document.createElement('div');
       card.className = 'dimension-card';
+      card.dataset.dim = key;
       card.style.setProperty('--dim-color', config.color);
 
       const scoreClass = dim.score >= 70 ? 'good' : dim.score >= 40 ? 'warning' : 'bad';
@@ -661,14 +673,14 @@ const App = (() => {
     if (!container || !dimensions) return;
 
     const dimList = [
-      { key: 'clarity',        label: 'Clarity',     color: '#00e5ff' },
-      { key: 'context',        label: 'Context',     color: '#f472b6' },
-      { key: 'role',           label: 'Role',        color: '#fbbf24' },
-      { key: 'constraints',    label: 'Constraints', color: '#a78bfa' },
-      { key: 'outputFormat',   label: 'Output',      color: '#38bdf8' },
-      { key: 'chainOfThought', label: 'CoT',         color: '#f97316' },
-      { key: 'safety',         label: 'Safety',      color: '#f87171' },
-      { key: 'robustness',     label: 'Robustness',  color: '#34d399' },
+      { key: 'clarity',        label: t('dimensions.clarity'),        color: '#00e5ff' },
+      { key: 'specificity',    label: t('dimensions.specificity'),    color: '#7c3aed' },
+      { key: 'structure',      label: t('dimensions.structure'),      color: '#f59e0b' },
+      { key: 'robustness',     label: t('dimensions.robustness'),     color: '#10b981' },
+      { key: 'context',        label: t('dimensions.context'),        color: '#ec4899' },
+      { key: 'outputFormat',   label: t('dimensions.outputFormat'),   color: '#38bdf8' },
+      { key: 'chainOfThought', label: t('dimensions.chainOfThought'), color: '#f97316' },
+      { key: 'safety',         label: t('dimensions.safety'),         color: '#ef4444' },
     ];
 
     container.innerHTML = dimList.map(d => {
@@ -677,12 +689,42 @@ const App = (() => {
       const scoreDec = (scoreVal / 10).toFixed(1);
 
       return `
-        <div class="eval-dim-card" style="border-top: 2px solid ${d.color}; box-shadow: 0 4px 16px ${d.color}15;">
+        <div class="eval-dim-card" data-dim="${d.key}" style="border-top: 2px solid ${d.color}; box-shadow: 0 4px 16px ${d.color}15;">
           <div class="eval-dim-name">${escapeHtml(d.label)}</div>
           <div class="eval-dim-score" style="color: ${d.color}">${scoreDec}</div>
         </div>
       `;
     }).join('');
+
+    container.querySelectorAll('.eval-dim-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const dimKey = card.dataset.dim;
+        navigateToDimensionDetail(dimKey);
+      });
+    });
+  }
+
+  // ── Interactive Navigation to Dimension Details ───────────
+  function navigateToDimensionDetail(dimKey) {
+    if (!dimKey) return;
+
+    // 1. Switch active tab to 'dimensions'
+    const tabBtn = document.querySelector('.tab[data-tab="dimensions"]');
+    if (tabBtn) tabBtn.click();
+
+    // 2. Locate target dimension card, scroll into view and highlight
+    const targetCard = document.querySelector(`.dimension-card[data-dim="${dimKey}"]`);
+    if (targetCard) {
+      targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (!targetCard.classList.contains('expanded')) {
+        targetCard.classList.add('expanded');
+      }
+      targetCard.classList.add('highlight-pulse');
+      setTimeout(() => targetCard.classList.remove('highlight-pulse'), 2000);
+    } else {
+      const tabsSection = document.getElementById('analysis-tabs-section');
+      if (tabsSection) tabsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
   // ── Color-Coded XML Highlighted Prompt Renderer ────────────
@@ -797,6 +839,17 @@ const App = (() => {
     currentAnalysis = null;
     document.getElementById('empty-state').classList.remove('hidden');
     document.getElementById('results-content').classList.add('hidden');
+
+    // Reset 3D constellation back to protoplanetary disk state
+    if (typeof Constellation3D !== 'undefined' && Constellation3D.isInitialized()) {
+      Constellation3D.reset();
+    }
+
+    // Reset central score display
+    const scoreNum = document.getElementById('score-number');
+    const scoreGrade = document.getElementById('score-grade');
+    if (scoreNum) scoreNum.textContent = '--';
+    if (scoreGrade) scoreGrade.textContent = t('constellation.awaitingEvaluation');
 
     const unoptBadge = document.getElementById('unoptimized-score-badge');
     if (unoptBadge) {
