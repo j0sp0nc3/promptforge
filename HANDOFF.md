@@ -33,6 +33,15 @@ interactiva desplegada en Vercel.
 - **Flujo:** commit en `dev` → verificar en `promptometer.vercel.app` → merge `dev`→`main` → live en `promptometer.tech`
 - **(Histórico):** `promptforge-beta-ten.vercel.app` fue el primer deployment; `promptometer.is-a.dev` quedó descartado al registrar `.tech`.
 
+### ⚙️ Especificación de Variables de Entorno (Vercel & Local)
+
+| Variable de Entorno | Entornos | ¿Requerida? | Comportamiento AL TENER la variable | Comportamiento SIN la variable (Fallback) |
+| :--- | :--- | :---: | :--- | :--- |
+| **`STORAGE_KV_REST_API_URL`**<br>*(o `UPSTASH_REDIS_REST_URL` / `KV_REST_API_URL`)* | Production, Preview | ❌ Opcional | Leaderboard y filtro anti-spam persisten globalmente en Vercel KV / Upstash Redis. | Degrada a almacenamiento en memoria local de la función serverless. |
+| **`STORAGE_KV_REST_API_TOKEN`**<br>*(o `UPSTASH_REDIS_REST_TOKEN` / `KV_REST_API_TOKEN`)* | Production, Preview | ❌ Opcional | Token de autenticación Bearer para escribir y leer en Vercel KV / Redis. | Conexión Redis desactivada; fallback automático a memoria. |
+| **`PROMPTOMETER_API_KEY`** | Production | ❌ Opcional | Exige encabezado `x-api-key` / `Bearer` para acceder a los endpoints Serverless (`401 Unauthorized` si falla). | API opera de forma pública abierta (ideal para demo web sin autenticación). |
+| **`PORT`** | Local Dev | ❌ Opcional | Define el puerto TCP de `server.js`. | Utiliza el puerto por defecto `3001`. |
+
 ### Autor
 
 - **Nombre:** Jose Ponce

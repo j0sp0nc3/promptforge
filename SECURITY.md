@@ -158,15 +158,16 @@ ES/EN.
 
 ---
 
-## 🔑 Gestión de secrets
+## 🔑 Gestión de secrets y Variables de Entorno
 
-- **API Key**: `process.env.PROMPTOMETER_API_KEY` — configurada en Vercel,
-  **nunca** en el código fuente.
-- **Upstash Redis**: `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN`
-  (con aliases para Vercel KV: `KV_REST_API_URL`, etc.) — configuradas en
-  Vercel, nunca en el código.
-- El repo no contiene ningún secret. Verificado: `grep -r "sk-\|Bearer \|password"
-  api/ js/` no encuentra nada.
+| Variable de Entorno | Entornos | ¿Requerida? | Comportamiento AL TENER la variable | Comportamiento SIN la variable (Fallback) |
+| :--- | :--- | :---: | :--- | :--- |
+| **`STORAGE_KV_REST_API_URL`**<br>*(o `UPSTASH_REDIS_REST_URL`)* | Production, Preview | ❌ Opcional | Leaderboard y filtro anti-spam persisten globalmente en Vercel KV / Upstash Redis. | Degrada a almacenamiento en memoria local de la función serverless. |
+| **`STORAGE_KV_REST_API_TOKEN`**<br>*(o `UPSTASH_REDIS_REST_TOKEN`)* | Production, Preview | ❌ Opcional | Token de autenticación Bearer para escribir y leer en Vercel KV / Redis. | Conexión Redis desactivada; fallback automático a memoria. |
+| **`PROMPTOMETER_API_KEY`** | Production | ❌ Opcional | Exige encabezado `x-api-key` / `Bearer` para acceder a los endpoints Serverless (`401 Unauthorized` si falla). | API opera de forma pública abierta (ideal para demo web sin autenticación). |
+| **`PORT`** | Local Dev | ❌ Opcional | Define el puerto TCP de `server.js`. | Utiliza el puerto por defecto `3001`. |
+
+- **Seguridad**: Ninguna llave ni secreto está expuesto en el código fuente. Verificado: `grep -r "sk-\|Bearer \|password" api/ js/` no encuentra secretos duros.
 
 ---
 

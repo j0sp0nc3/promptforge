@@ -112,6 +112,17 @@ The REST API endpoints (`/api/analyze`, `/api/improve`, `/api/adversarial`) are 
 
 ---
 
+## ⚙️ Environment Variables Specification
+
+| Environment Variable | Environments | Required? | Behavior WITH Variable | Fallback / Behavior WITHOUT Variable |
+| :--- | :--- | :---: | :--- | :--- |
+| **`STORAGE_KV_REST_API_URL`**<br>*(or `UPSTASH_REDIS_REST_URL` / `KV_REST_API_URL`)* | Production, Preview | ❌ Optional | Leaderboard & anti-spam rate limiter persist globally across Vercel instances in Upstash Redis / Vercel KV. | Gracefully falls back to an in-memory array per Vercel instance. App remains 100% functional. |
+| **`STORAGE_KV_REST_API_TOKEN`**<br>*(or `UPSTASH_REDIS_REST_TOKEN` / `KV_REST_API_TOKEN`)* | Production, Preview | ❌ Optional | Authenticates read/write operations (`GET`, `SET`, `ZADD`, `HSET`) against Vercel KV / Redis. | Redis client disabled; degrades to in-memory storage fallback. |
+| **`PROMPTOMETER_API_KEY`** | Production | ❌ Optional | Enforces private key authentication (`x-api-key` / `Bearer token`) on Serverless API endpoints (`HTTP 401` on invalid key). | API operates in open public access mode (ideal for public web UI demo). |
+| **`PORT`** | Local Dev | ❌ Optional | Custom TCP port for local Express server (`server.js`). | Defaults to port `3001`. |
+
+---
+
 ## 📦 Multi-Language Core Libraries
 
 The evaluation engine is decoupled from the UI and published as a standalone package ([`promptometer-core`](https://github.com/j0sp0nc3/promptometer)) with JS/Python parity:
