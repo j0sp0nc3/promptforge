@@ -269,7 +269,7 @@ promptforge/                    ← App Web (Vercel)
 - **Fecha:** 2026-08-09
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
 - **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
-- **Último commit promptforge:** `822e46c` (feat: integrate Three.js 3D visualization engine and implement dynamic theme-switching system)
+- **Último commit promptforge:** `4001965` (feat(3d): enhance Three.js 3D solar system with protoplanetary accretion, objective weights, permanent planet labels, and depth rendering fixes)
 - **Estado:** 22/22 tests en PASS. Paridad ES/EN verificada. Prototipo 3D con colores unificados y navegación interactiva desarrollado en local (`http://localhost:3001`).
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
@@ -464,7 +464,7 @@ promptforge/                    ← App Web (Vercel)
 - **Fecha:** 2026-08-09
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
 - **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
-- **Último commit promptforge:** `822e46c` (feat: integrate Three.js 3D visualization engine and implement dynamic theme-switching system)
+- **Último commit promptforge:** `4001965` (feat(3d): enhance Three.js 3D solar system with protoplanetary accretion, objective weights, permanent planet labels, and depth rendering fixes)
 - **Estado:** 22/22 tests en PASS. Paridad ES/EN verificada. Prototipo 3D con colores unificados y navegación interactiva desarrollado en local (`http://localhost:3001`).
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
