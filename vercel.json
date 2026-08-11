@@ -56,6 +56,16 @@
       "dest": "/api/index.js"
     },
     {
+      "src": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "api.promptometer.tech"
+        }
+      ],
+      "dest": "/api/index.js"
+    },
+    {
       "src": "/favicon.svg",
       "dest": "/favicon.svg"
     },
