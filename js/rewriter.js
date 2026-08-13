@@ -28,14 +28,15 @@ const Rewriter = {
     const detected = analysis?.detected || {};
     const overallScore = analysis?.overallScore ?? this._estimateBaseScore(working);
 
+    // Canonical tag set — fixed English names, canonical order enforced by _restructure
     const tTags = {
-      role: I18n.t('rewriterTags.role') || 'rol',
-      context: I18n.t('rewriterTags.context') || 'contexto',
-      task: I18n.t('rewriterTags.task') || 'tarea',
-      format: I18n.t('rewriterTags.outputFormat') || 'formato_salida',
-      restrictions: I18n.t('rewriterTags.restrictions') || 'restricciones',
-      examples: I18n.t('rewriterTags.examples') || 'ejemplos',
-      errors: I18n.t('rewriterTags.errors') || 'manejo_errores'
+      role:         'system_role',
+      context:      'context',
+      task:         'objective',
+      format:       'output_format',
+      restrictions: 'requirements',
+      examples:     'examples',
+      errors:       'error_handling'
     };
 
     // ── Step 1: Add XML structure if missing ────────────────────────────
@@ -295,14 +296,15 @@ const Rewriter = {
    * @private
    */
   _restructure(prompt, tTags) {
+    // Canonical order: system_role → objective → context → requirements → output_format → examples → error_handling
     const sectionOrder = [
-      tTags.role,
-      tTags.context,
-      tTags.task,
-      tTags.format,
-      tTags.restrictions,
-      tTags.examples,
-      tTags.errors
+      'system_role',
+      'objective',
+      'context',
+      'requirements',
+      'output_format',
+      'examples',
+      'error_handling'
     ];
     const sections = {};
     const sectionRegex = /<(\w+)>([\s\S]*?)<\/\1>/g;
@@ -373,15 +375,15 @@ const Rewriter = {
   _insertSection(prompt, sectionName, content) {
     const newSection = `\n\n<${sectionName}>\n${content}\n</${sectionName}>`;
 
-    // Insertion priority map
+    // Canonical insertion priority (English tags)
     const insertAfter = {
-      'rol': null,               // goes at start
-      'contexto': 'rol',
-      'tarea': 'contexto',
-      'formato_salida': 'tarea',
-      'restricciones': 'formato_salida',
-      'ejemplos': 'restricciones',
-      'manejo_errores': 'ejemplos'
+      'system_role':   null,
+      'objective':     'system_role',
+      'context':       'objective',
+      'requirements':  'context',
+      'output_format': 'requirements',
+      'examples':      'output_format',
+      'error_handling':'examples'
     };
 
     // Find the best anchor to insert after
@@ -389,13 +391,11 @@ const Rewriter = {
 
     if (targetAnchor && this._hasSection(prompt, targetAnchor)) {
       const anchorRegex = new RegExp(`(<\\/${targetAnchor}>)`);
-      // Use a function replacement so `$` characters in `newSection` are not
-      // interpreted as special replacement patterns ($1, $&, $$, etc.).
       return prompt.replace(anchorRegex, (m, g1) => `${g1}${newSection}`);
     }
 
     // Try inserting before the next section in order
-    const sectionOrder = ['rol', 'contexto', 'tarea', 'formato_salida', 'restricciones', 'ejemplos', 'manejo_errores'];
+    const sectionOrder = ['system_role', 'objective', 'context', 'requirements', 'output_format', 'examples', 'error_handling'];
     const myIndex = sectionOrder.indexOf(sectionName);
 
     for (let i = myIndex + 1; i < sectionOrder.length; i++) {
@@ -534,5 +534,42 @@ const Rewriter = {
     // Diminishing returns as score gets higher
     const headroom = 100 - currentScore;
     return Math.min(improvement, headroom * 0.85);
+  },
+
+  /**
+   * Cleanly inject a domain context snippet into a prompt.
+   * @param {string} prompt Base prompt
+   * @param {string} snippet Snippet to inject
+   * @returns {string} Enriched prompt
+   */
+  injectSnippet(prompt, snippet) {
+    if (!prompt) return snippet || '';
+    if (!snippet) return prompt;
+
+    if (prompt.includes(snippet.trim())) return prompt;
+
+    const trimmedPrompt = prompt.trim();
+    if (trimmedPrompt.includes('</requirements>')) {
+      return trimmedPrompt.replace('</requirements>', `</requirements>\n${snippet}`);
+    }
+    return `${trimmedPrompt}\n${snippet}`;
+  },
+
+  /**
+   * Deep domain-specific optimization using DomainAnalyzer local synthesizer.
+   * @param {string} prompt
+   * @param {string} archetype
+   * @param {Array} gaps
+   * @returns {{ improvedPrompt: string, archetype: string, gapsFixedCount: number }}
+   */
+  deepDomainOptimize(prompt, archetype, gaps) {
+    if (typeof DomainAnalyzer !== 'undefined') {
+      return DomainAnalyzer.synthesizeLocal(prompt, archetype, gaps);
+    }
+    return {
+      improvedPrompt: this.improve(prompt, {}).improvedPrompt,
+      archetype: archetype || 'general_task',
+      gapsFixedCount: 0
+    };
   }
 };

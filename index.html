@@ -368,15 +368,48 @@
                 </button>
               </div>
             </div>
+
+            <!-- Domain Archetype & Context Gaps Panel -->
+            <div id="domain-intelligence-panel" class="domain-intelligence-panel hidden">
+              <div class="domain-badge-bar">
+                <span class="domain-label" data-i18n="domain.title">Arquetipo de Dominio</span>:
+                <span id="domain-archetype-badge" class="domain-archetype-badge">🎯 General</span>
+              </div>
+              <div id="domain-context-gaps-card" class="domain-context-gaps-card hidden">
+                <div class="gaps-card-header">
+                  <span class="gaps-card-title" data-i18n="contextGaps.title">Brechas de Contexto de Dominio</span>
+                </div>
+                <div id="domain-gaps-list" class="domain-gaps-list"></div>
+                <div id="domain-action-chips" class="domain-action-chips"></div>
+              </div>
+              <div id="domain-justification-banner" class="domain-justification-banner hidden">
+                <div class="justification-header">
+                  <span class="justification-icon">💡</span>
+                  <span class="justification-title" data-i18n="domain.justificationTitle">Justificación de la Mejora IA:</span>
+                </div>
+                <div id="domain-justification-text" class="domain-justification-text"></div>
+              </div>
+              <div class="domain-ai-actions" style="margin-top: 10px;">
+                <button class="btn btn-secondary btn-sm" id="btn-deep-domain-ai">
+                  <span id="btn-deep-domain-ai-text" data-i18n="contextGaps.deepAiBtn">✨ Optimizar Contexto Profundo con IA</span>
+                </button>
+              </div>
+            </div>
           </div>
         </section>
       </div>
 
       <!-- ── SECTION 2: Grand 8D Orbital Constellation Stage (Mockup 1) ── -->
       <section class="orbital-constellation-section" id="orbital-constellation-section">
-        <div class="constellation-header-bar">
-          <h3 class="constellation-title">8D PROMPT EVALUATION CONSTELLATION</h3>
-          <span class="constellation-subtitle">Real-time Spectral Resonance Mapping</span>
+        <div class="constellation-header-bar" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 class="constellation-title">8D PROMPT EVALUATION CONSTELLATION</h3>
+            <span class="constellation-subtitle">Real-time Spectral Resonance Mapping</span>
+          </div>
+          <button id="btn-score-legend-trigger" class="btn-score-legend-pill" data-i18n-title="legend.title" title="¿Qué significa el Prompt Score y la letra de calificación?">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <span data-i18n="legend.btnLabel">Escala de Calificación</span>
+          </button>
         </div>
 
         <div class="orbital-constellation-container" style="position: relative; overflow: hidden;">
@@ -858,6 +891,77 @@
       </div>
       <div class="modal-actions">
         <button class="btn btn-ghost" id="btn-close-share-modal-bottom" data-i18n="leaderboard.cancel">Cerrar</button>
+  <!-- ── Prompt Score Legend Modal ────────────────────────────────────── -->
+  <div id="modal-score-legend" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="score-legend-modal-title">
+    <div class="modal-panel" style="max-width: 680px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="score-legend-modal-title" data-i18n="legend.title">Escala de Puntuación & Calificaciones (Prompt Score)</h3>
+        <button class="modal-close-btn" id="btn-close-score-legend" aria-label="Cerrar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <p class="modal-desc" data-i18n="legend.subtitle">Comprensión del sistema de evaluación multidimensional de 0 a 100 puntos y sus letras de rango (A+ a F).</p>
+      
+      <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
+        <div class="score-legend-intro-box">
+          <h4 data-i18n="legend.scoreExplanationTitle">¿Qué es el Prompt Score?</h4>
+          <p data-i18n="legend.scoreExplanationText">El Prompt Score es una evaluación ponderada de 0 a 100 puntos calculada a través de 8 dimensiones (Claridad, Especificidad, Estructura, Robustez, Contexto, Formato de Salida, Cadena de Pensamiento y Seguridad). Representa la probabilidad de que un modelo de lenguaje (LLM) ejecute el prompt de forma precisa y sin alucinaciones.</p>
+        </div>
+
+        <h4 style="margin-top: 1.2rem; margin-bottom: 0.6rem;" data-i18n="legend.gradesTitle">Rúbrica de Calificaciones (A+ a F)</h4>
+        <div class="score-legend-table-wrapper">
+          <table class="score-legend-table">
+            <thead>
+              <tr>
+                <th data-i18n="legend.gradeHeader">Letra</th>
+                <th data-i18n="legend.rangeHeader">Rango</th>
+                <th data-i18n="legend.statusHeader">Estado</th>
+                <th data-i18n="legend.descriptionHeader">Significado & Acción Recomendada</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="badge-grade grade-a-plus">A+</span></td>
+                <td>95 – 100</td>
+                <td><strong class="grade-status-emerald" data-i18n="legend.statusAPlus">Listo para Producción</strong></td>
+                <td data-i18n="legend.descAPlus">Prompt de nivel experto. Exhaustivo, estructurado con XML y completamente protegido contra alucinaciones.</td>
+              </tr>
+              <tr>
+                <td><span class="badge-grade grade-a">A / A-</span></td>
+                <td>85 – 94</td>
+                <td><strong class="grade-status-emerald" data-i18n="legend.statusA">Excelente</strong></td>
+                <td data-i18n="legend.descA">Alta calidad técnica. Instrucciones claras y delimitadas. Excelente precisión en modelos avanzados.</td>
+              </tr>
+              <tr>
+                <td><span class="badge-grade grade-b">B+ / B / B-</span></td>
+                <td>70 – 84</td>
+                <td><strong class="grade-status-blue" data-i18n="legend.statusB">Bueno / Aceptable</strong></td>
+                <td data-i18n="legend.descB">Prompt sólido que genera buenos resultados, pero puede mejorar agregando ejemplos (few-shot) o formato de salida.</td>
+              </tr>
+              <tr>
+                <td><span class="badge-grade grade-c">C+ / C / C-</span></td>
+                <td>55 – 69</td>
+                <td><strong class="grade-status-amber" data-i18n="legend.statusC">Básico</strong></td>
+                <td data-i18n="legend.descC">Comprensible para modelos grandes (GPT-4), pero propenso a desviaciones en modelos medianos. Requiere mayor especificidad.</td>
+              </tr>
+              <tr>
+                <td><span class="badge-grade grade-d">D+ / D / D-</span></td>
+                <td>40 – 54</td>
+                <td><strong class="grade-status-orange" data-i18n="legend.statusD">Deficiente / Ambiguo</strong></td>
+                <td data-i18n="legend.descD">Falta de contexto, restricciones o rol claro. Alto riesgo de alucinación o respuestas genéricas.</td>
+              </tr>
+              <tr>
+                <td><span class="badge-grade grade-f">F</span></td>
+                <td>0 – 39</td>
+                <td><strong class="grade-status-red" data-i18n="legend.statusF">Insuficiente / Crítico</strong></td>
+                <td data-i18n="legend.descF">Prompt ultra-corto o vago (ej. "haz una app" o "hola"). El LLM no puede determinar la intención real. Requiere reescritura urgente.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="btn-close-score-legend-bottom" data-i18n="leaderboard.cancel">Entendido</button>
       </div>
     </div>
   </div>
@@ -869,6 +973,7 @@
   <!-- Scripts -->
   <script src="js/i18n.js"></script>
   <script src="js/api-config.js"></script>
+  <script src="js/domain-analyzer.js"></script>
   <script src="js/signals.js"></script>
   <script src="js/patterns.js"></script>
   <script src="js/analyzer.js"></script>

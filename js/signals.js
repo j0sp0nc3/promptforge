@@ -162,6 +162,9 @@ const Signals = {
       vagueQualifiers,
       vagueAdjectives,
       contradictions,
+      // Domain Intelligence
+      domainArchetype: (typeof DomainAnalyzer !== 'undefined' ? DomainAnalyzer : (typeof globalThis !== 'undefined' ? globalThis.DomainAnalyzer : null))?.inferArchetype(prompt) || 'general_task',
+      contextGaps: (typeof DomainAnalyzer !== 'undefined' ? DomainAnalyzer : (typeof globalThis !== 'undefined' ? globalThis.DomainAnalyzer : null))?.evaluateContextGaps(prompt, (typeof DomainAnalyzer !== 'undefined' ? DomainAnalyzer : (typeof globalThis !== 'undefined' ? globalThis.DomainAnalyzer : null))?.inferArchetype(prompt) || 'general_task') || [],
     };
   },
 

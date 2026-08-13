@@ -5,6 +5,13 @@ try {
   PromptometerCore = require('../../promptometer/packages/core/promptometer-core.js');
 }
 
+let DomainAnalyzer;
+try {
+  DomainAnalyzer = require('../js/domain-analyzer');
+} catch (e) {
+  DomainAnalyzer = require('./js/domain-analyzer');
+}
+
 // Content moderation for the public leaderboard (profanity, injection, spam).
 const Moderation = require('./moderation');
 
@@ -77,7 +84,8 @@ const ALLOWED_API_HOSTS = [
 
 function isApiHostAllowed(host) {
   if (!host) return true; // local dev / direct serverless calls may omit host
-  return ALLOWED_API_HOSTS.some(allowed => host === allowed || host.endsWith('.' + allowed));
+  const cleanHost = host.split(':')[0];
+  return ALLOWED_API_HOSTS.some(allowed => cleanHost === allowed || cleanHost.endsWith('.' + allowed));
 }
 
 const MAX_PAYLOAD_BYTES = 100 * 1024; // 100 KB limit
@@ -204,7 +212,7 @@ let globalLeaderboard = [
 
 module.exports = (req, res) => {
   const origin = req.headers.origin || '';
-  const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '127.0.0.1';
+  const clientIp = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '127.0.0.1';
   const host = req.headers.host || '';
 
   // 0. Host check — enforce physical separation: API only answers on its
@@ -358,6 +366,12 @@ module.exports = (req, res) => {
         // ── POST /api/suggest-creator ──────────────────────────
         if (url.includes('suggest-creator')) {
           _handleSuggestCreator(req, res, payload);
+          return;
+        }
+
+        // ── POST /api/analyze-intent ───────────────────────────
+        if (url.includes('analyze-intent')) {
+          _handleAnalyzeIntent(req, res, payload);
           return;
         }
 
@@ -575,4 +589,186 @@ async function _handleSuggestCreator(req, res, payload) {
 
   res.writeHead(200, { 'Content-Type': 'application/json' });
   return res.end(JSON.stringify({ success: true, id, stored: 'memory' }));
+}
+
+async function _handleAnalyzeIntent(req, res, payload) {
+  const prompt = payload.prompt || '';
+  if (!prompt.trim()) {
+    res.writeHead(400, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({ error: "El parámetro 'prompt' es requerido." }));
+  }
+
+  const archetype = DomainAnalyzer ? DomainAnalyzer.inferArchetype(prompt) : 'general_task';
+  const gaps = DomainAnalyzer ? DomainAnalyzer.evaluateContextGaps(prompt, archetype) : [];
+
+  // Layer 1: Local synthesizer fallback
+  const localResult = DomainAnalyzer ? DomainAnalyzer.synthesizeLocal(prompt, archetype, gaps) : {
+    improvedPrompt: prompt,
+    archetype,
+    inferredGoal: prompt.substring(0, 100),
+    gapsFixedCount: 0,
+    source: 'local_fallback'
+  };
+
+  const analysisObj = payload.analysis || (PromptometerCore ? PromptometerCore.analyze(prompt) : null);
+  const overallScore = analysisObj?.overallScore ?? 50;
+  const grade = analysisObj?.grade ?? 'C';
+  const rawFindings = analysisObj?.findings || analysisObj?.weaknesses || [];
+  const rawSuggestions = analysisObj?.suggestions || [];
+
+  const findingsStr = rawFindings.map(f => typeof f === 'string' ? f : f.message || f.description || '').filter(Boolean).join('\n- ');
+  const suggestionsStr = rawSuggestions.map(s => typeof s === 'string' ? s : s.message || s.description || '').filter(Boolean).join('\n- ');
+  const gapsStr = gaps.map(g => `${g.label || g.id} (${g.actionChipKey || g.key})`).join('\n- ');
+
+  const diagnosticPrompt = `PROMPT DE ENTRADA A EVALUAR Y OPTIMIZAR:
+"""
+${prompt}
+"""
+
+DIAGNÓSTICO DE ANÁLISIS DE DEBILIDADES DETECTADAS POR EL EVALUADOR:
+- Puntuación actual del prompt: ${overallScore}/100 (Grado: ${grade})
+- Dominio inferido: ${archetype}
+- Debilidades y fallas específicas detectadas:
+${findingsStr ? '- ' + findingsStr : '- Carece de estructura explícita y contexto de dominio'}
+- Sugerencias de optimización recomendadas:
+${suggestionsStr ? '- ' + suggestionsStr : '- Definir rol de experto y restricciones claras'}
+- Brechas de contexto faltantes:
+${gapsStr ? '- ' + gapsStr : '- Ninguna adicional'}`;
+
+  const systemPrompt = `Eres un Juez de Intención e Ingeniero de Prompts de Elite.
+Tu objetivo es tomar el prompt del usuario y su DIAGNÓSTICO DE DEBILIDADES Y FALLAS para transformarlo en un prompt de nivel Producción A+.
+
+REGLAS OBLIGATORIAS:
+1. ALINEACIÓN CON EL DIAGNÓSTICO: Debes solucionar explícitamente CADA debilidad y brecha de contexto identificadas en el diagnóstico.
+2. DESANIDAMIENTO Y LIMPIEZA: Si el prompt de entrada ya contiene etiquetas XML (<role>, <rol>, <system_role>, <task>, <tarea>, <objective>, etc.), EXTRAE ÚNICAMENTE la tarea o pregunta central real del usuario. NUNCA anides, dupliques ni conserves roles o bloques genéricos anteriores.
+3. ROL ALINEADO AL TEMA REAL: Asigna un <system_role> de experto perfectamente ajustado al tema de la tarea (ej: magma/volcanes → "Geólogo y Vulcanólogo Senior"; universo/física → "Científico de Investigación en Astrofísica"). NUNCA asignes "Experto en IA o Arquitectura de Sistemas" a menos que la tarea sea explícitamente sobre ingeniería de software o IA.
+4. ORDEN CANÓNICO ESTRICTO: El improvedPrompt DEBE contener los bloques en ESTE ORDEN EXACTO (omite los que no apliquen, pero NUNCA cambia el orden):
+   a) <system_role> — Quién es el modelo (rol de experto)
+   b) <objective>  — Qué debe hacer (tarea central del usuario, SIN plantillas genéricas)
+   c) <context>    — Con qué contexto trabaja (solo si hay información contextual relevante)
+   d) <requirements> — Qué reglas debe cumplir (restricciones específicas del dominio)
+   e) <output_format> — Cómo debe responder (formato de salida deseado)
+   f) <examples>   — Ejemplos de comportamiento (solo si aplica al tipo de tarea)
+   g) <error_handling> — Qué hacer en casos límite (solo si aplica)
+5. JUSTIFICACIÓN: Proporciona 1-2 oraciones en español explicando QUÉ se mejoró y POR QUÉ basándote en las debilidades corregidas.
+6. SIN PLANTILLAS GENÉRICAS: Los bloques <examples>, <output_format> y <error_handling> deben ser específicos al tema. Si no tienes ejemplos reales del dominio, omite el bloque <examples>.
+
+Devuelve únicamente un JSON válido con esta estructura exacta:
+{
+  "inferredGoal": string,
+  "weaknessesIdentified": string[],
+  "justification": string,
+  "gapsFixedCount": number,
+  "improvedPrompt": string
+}`;
+
+  // Layer 2: LLM-as-a-Judge (supports OPENAI_API_KEY, GROQ_API_KEY, or GEMINI_API_KEY)
+  const openaiKey = process.env.OPENAI_API_KEY || '';
+  const groqKey = process.env.GROQ_API_KEY || '';
+  const geminiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_AI_KEY || '';
+
+  // Option A: OpenAI or Groq (OpenAI-compatible)
+  if (openaiKey || groqKey) {
+    try {
+      const endpoint = groqKey ? 'https://api.groq.com/openai/v1/chat/completions' : 'https://api.openai.com/v1/chat/completions';
+      const key = groqKey || openaiKey;
+      const model = groqKey ? 'llama-3.3-70b-versatile' : 'gpt-4o-mini';
+
+      const aiRes = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${key}`
+        },
+        body: JSON.stringify({
+          model,
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: diagnosticPrompt }
+          ],
+          response_format: { type: 'json_object' }
+        })
+      });
+
+      if (aiRes.ok) {
+        const data = await aiRes.json();
+        const parsed = JSON.parse(data.choices[0].message.content);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({
+          success: true,
+          source: 'llm_as_a_judge',
+          provider: groqKey ? 'groq' : 'openai',
+          archetype,
+          inferredGoal: parsed.inferredGoal || localResult.inferredGoal,
+          weaknessesIdentified: parsed.weaknessesIdentified || rawFindings,
+          justification: parsed.justification || 'Se solucionaron las debilidades detectadas alineando el rol de experto y la estructura del prompt.',
+          gapsFixedCount: parsed.gapsFixedCount || gaps.length,
+          improvedPrompt: parsed.improvedPrompt || localResult.improvedPrompt
+        }));
+      }
+    } catch (e) {
+      // Graceful fallback to local synthesizer
+    }
+  }
+
+  // Option B: Google Gemini API
+  if (geminiKey) {
+    try {
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${geminiKey}`;
+      const aiRes = await fetch(geminiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{ text: `${systemPrompt}\n\n${diagnosticPrompt}` }]
+          }],
+          generationConfig: { responseMimeType: 'application/json' }
+        })
+      });
+
+      if (aiRes.ok) {
+        const data = await aiRes.json();
+        const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (rawText) {
+          let parsed;
+          try {
+            parsed = JSON.parse(rawText);
+          } catch (parseErr) {
+            console.error('[Gemini] JSON parse failed:', parseErr.message, '\nrawText:', rawText.substring(0, 300));
+            throw parseErr;
+          }
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({
+            success: true,
+            source: 'llm_as_a_judge',
+            provider: 'gemini',
+            archetype,
+            inferredGoal: parsed.inferredGoal || localResult.inferredGoal,
+            weaknessesIdentified: parsed.weaknessesIdentified || rawFindings,
+            justification: parsed.justification || 'Se solucionaron las debilidades detectadas alineando el rol de experto y la estructura del prompt.',
+            gapsFixedCount: parsed.gapsFixedCount || gaps.length,
+            improvedPrompt: parsed.improvedPrompt || localResult.improvedPrompt
+          }));
+        } else {
+          console.error('[Gemini] No rawText in response. Full data:', JSON.stringify(data).substring(0, 400));
+        }
+      } else {
+        const errText = await aiRes.text();
+        console.error('[Gemini] Non-OK status:', aiRes.status, errText.substring(0, 300));
+      }
+    } catch (e) {
+      console.error('[Gemini] fetch/parse error:', e.message);
+    }
+  }
+
+  res.writeHead(200, { 'Content-Type': 'application/json' });
+  return res.end(JSON.stringify({
+    success: true,
+    source: 'local_synthesizer',
+    archetype,
+    inferredGoal: localResult.inferredGoal,
+    implicitAssumptions: gaps.map(g => g.id),
+    gapsFixedCount: localResult.gapsFixedCount,
+    improvedPrompt: localResult.improvedPrompt
+  }));
 }

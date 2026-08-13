@@ -71,6 +71,58 @@ const I18n = (() => {
         creative: '✍️ Redacción Creativa & Copywriting',
       },
 
+      // ── Domain Archetypes & Context Gaps ────────────────────────────────
+      domain: {
+        title: 'Arquetipo de Dominio',
+        software_engineering: '💻 Ingeniería de Software & Sistemas',
+        data_extraction: '📊 Extracción & Estructuración de Datos',
+        marketing_copy: '📣 Marketing & Copywriting Persuasivo',
+        rhetoric_creative: '✍️ Redacción Creativa & Narrativa',
+        rag_knowledge: '📚 RAG & Base de Conocimiento de Documentos',
+        agentic_tool_use: '🤖 Agente Autónomo & Llamada a Herramientas',
+        financial_legal: '⚖️ Cumplimiento Legal & Financiero',
+        general_task: '🎯 Tarea General',
+        justificationTitle: 'Justificación de la Mejora IA:',
+      },
+
+      contextGaps: {
+        title: 'Brechas de Contexto de Dominio',
+        none: 'Excelente: El prompt satisface los requerimientos esenciales de contexto para su dominio.',
+        software: {
+          techStack: 'Falta especificar el stack técnico (lenguaje, framework o base de datos).',
+          errorStrategy: 'Falta estrategia de manejo de errores (especificación de respuestas HTTP 4xx / 5xx).',
+          securitySpec: 'Faltan requisitos de autenticación o sanitización de datos.',
+        },
+        extraction: {
+          targetSchema: 'Falta definir el esquema JSON objetivo o la estructura de tabla esperada.',
+          nullFallback: 'Falta regla de fallback para campos de datos nulos o faltantes.',
+        },
+        marketing: {
+          targetAudience: 'Falta definir el perfil de audiencia objetivo o meta comercial.',
+          brandTone: 'Falta especificar el tono de voz de la marca.',
+        },
+        rag: {
+          antiHallucination: 'Falta prohibición explícita de usar conocimiento externo fuera de los documentos.',
+        },
+        agentic: {
+          agentReasoning: 'Falta requerimiento de ciclo de pensamiento interno (<thought> / <action>) antes de la ejecución.',
+        },
+        chips: {
+          addTechStack: '+ Inyectar Stack Técnico',
+          addErrorStrategy: '+ Inyectar Manejo de Errores HTTP',
+          addSecuritySpec: '+ Inyectar Auth & Sanitización',
+          addTargetSchema: '+ Inyectar Esquema JSON',
+          addNullFallback: '+ Inyectar Regla Nulo / NA',
+          addTargetAudience: '+ Inyectar Audiencia Objetivo',
+          addBrandTone: '+ Inyectar Tono de Marca',
+          addRagAntiHallucination: '+ Inyectar Filtro Anti-Alucinación',
+          addAgentReasoning: '+ Inyectar Ciclo de Razonamiento',
+        },
+        deepAiBtn: '✨ Optimizar Contexto Profundo con IA',
+        deepAiLoading: 'Analizando supuestos implícitos con IA...',
+        deepAiSuccess: 'Contexto de dominio enriquecido exitosamente.',
+      },
+
       // ── Editor ──────────────────────────────────────────────────────────
       editor: {
         title: 'Tu Prompt',
@@ -105,6 +157,38 @@ const I18n = (() => {
         awaitingEvaluation: 'Esperando evaluación…',
         analyzing: 'Analizando…',
         protostarHint: 'Escribe un prompt para formar el sistema',
+      },
+
+      // ── Score & Grade Scale Legend ──────────────────────────────────────
+      legend: {
+        btnLabel: 'Escala de Calificación',
+        title: 'Escala de Puntuación & Calificaciones (Prompt Score)',
+        subtitle: 'Comprensión del sistema de evaluación multidimensional de 0 a 100 puntos y sus letras de rango (A+ a F).',
+        scoreExplanationTitle: '¿Qué es el Prompt Score?',
+        scoreExplanationText: 'El Prompt Score es una evaluación ponderada de 0 a 100 puntos calculada a través de 8 dimensiones (Claridad, Especificidad, Estructura, Robustez, Contexto, Formato de Salida, Cadena de Pensamiento y Seguridad). Representa la probabilidad de que un modelo de lenguaje (LLM) ejecute el prompt de forma precisa y sin alucinaciones.',
+        gradesTitle: 'Rúbrica de Calificaciones (A+ a F)',
+        rangeHeader: 'Rango',
+        gradeHeader: 'Letra',
+        statusHeader: 'Estado',
+        descriptionHeader: 'Significado & Acción Recomendada',
+        gradeAPlus: 'A+ (95–100)',
+        statusAPlus: 'Listo para Producción',
+        descAPlus: 'Prompt de nivel experto. Exhaustivo, estructurado con XML y completamente protegido contra alucinaciones.',
+        gradeA: 'A / A- (85–94)',
+        statusA: 'Excelente',
+        descA: 'Alta calidad técnica. Instrucciones claras y delimitadas. Excelente precisión en modelos avanzados.',
+        gradeB: 'B+ / B / B- (70–84)',
+        statusB: 'Bueno / Aceptable',
+        descB: 'Prompt sólido que genera buenos resultados, pero puede mejorar agregando ejemplos (few-shot) o formato de salida.',
+        gradeC: 'C+ / C / C- (55–69)',
+        statusC: 'Básico',
+        descC: 'Comprensible para modelos grandes (GPT-4), pero propenso a desviaciones en modelos medianos. Requiere mayor especificidad.',
+        gradeD: 'D+ / D / D- (40–54)',
+        statusD: 'Deficiente / Ambiguo',
+        descD: 'Falta de contexto, restricciones o rol claro. Alto riesgo de alucinación o respuestas genéricas.',
+        gradeF: 'F (0–39)',
+        statusF: 'Insuficiente / Crítico',
+        descF: 'Prompt ultra-corto o vago (ej. "haz una app" o "hola"). El LLM no puede determinar la intención real. Requiere reescritura urgente.',
       },
 
       // ── Result tabs ─────────────────────────────────────────────────────
@@ -728,6 +812,8 @@ const I18n = (() => {
           reactTechnique: 'Usa el patrón ReAct (Thought/Action/Observation) para razonar con herramientas externas.',
           selfConsistency: 'Aplica Self-Consistency: generar varias cadenas y elegir la respuesta mayoritaria.',
           reflexion: 'Usa Reflexion: el modelo critica y mejora su propia respuesta.',
+          tooShort: 'El prompt es demasiado breve para incluir instrucciones de razonamiento paso a paso.',
+          tooShortSugg: 'Para tareas complejas añade: "Piensa paso a paso antes de responder" o "Primero analiza, luego concluye".',
         },
         safety: {
           antiHallucination: 'Incluye protecciones contra alucinaciones del modelo.',
@@ -747,6 +833,8 @@ const I18n = (() => {
           assumesCapabilitySugg: 'Aclara las limitaciones: "Si no tienes acceso a datos en tiempo real, indícalo".',
           postCutoff: 'El prompt pide información que podría ser posterior a la fecha de corte del modelo.',
           postCutoffSugg: 'Proporciona el contexto actual o usa RAG: "Usa solo la siguiente información actualizada: ...".',
+          tooShort: 'El prompt es demasiado breve para incluir guardrails de seguridad, alcance o protecciones anti-alucinación.',
+          tooShortSugg: 'Añade: "No inventes datos", "Cita tus fuentes" o "Si no lo sabes, indícalo".',
         },
         empty: {
           finding: 'No se proporcionó un prompt válido.',
@@ -1009,6 +1097,58 @@ const I18n = (() => {
         creative: '✍️ Creative Writing & Copywriting',
       },
 
+      // ── Domain Archetypes & Context Gaps ────────────────────────────────
+      domain: {
+        title: 'Domain Archetype',
+        software_engineering: '💻 Software & Systems Engineering',
+        data_extraction: '📊 Data Extraction & Structuring',
+        marketing_copy: '📣 Marketing & Persuasive Copywriting',
+        rhetoric_creative: '✍️ Creative & Narrative Writing',
+        rag_knowledge: '📚 RAG & Document Knowledge Base',
+        agentic_tool_use: '🤖 Autonomous Agent & Tool Calling',
+        financial_legal: '⚖️ Financial & Legal Compliance',
+        general_task: '🎯 General Purpose Task',
+        justificationTitle: 'AI Optimization Justification:',
+      },
+
+      contextGaps: {
+        title: 'Domain Context Gaps',
+        none: 'Excellent: The prompt satisfies the essential context requirements for its domain.',
+        software: {
+          techStack: 'Missing technical stack specification (language, framework, or database).',
+          errorStrategy: 'Missing error handling strategy (HTTP 4xx / 5xx response spec).',
+          securitySpec: 'Missing authentication or data sanitization requirements.',
+        },
+        extraction: {
+          targetSchema: 'Missing target JSON schema / expected table structure.',
+          nullFallback: 'Missing fallback rule for null or missing data fields.',
+        },
+        marketing: {
+          targetAudience: 'Missing target audience persona or commercial goal.',
+          brandTone: 'Missing brand tone of voice.',
+        },
+        rag: {
+          antiHallucination: 'Missing explicit prohibition of external knowledge beyond documents.',
+        },
+        agentic: {
+          agentReasoning: 'Missing internal reasoning loop requirement (<thought> / <action>) before execution.',
+        },
+        chips: {
+          addTechStack: '+ Inject Tech Stack',
+          addErrorStrategy: '+ Inject HTTP Error Handling',
+          addSecuritySpec: '+ Inject Auth & Sanitization',
+          addTargetSchema: '+ Inject JSON Schema',
+          addNullFallback: '+ Inject Null / N/A Rule',
+          addTargetAudience: '+ Inject Target Audience',
+          addBrandTone: '+ Inject Brand Tone',
+          addRagAntiHallucination: '+ Inject Anti-Hallucination Filter',
+          addAgentReasoning: '+ Inject Reasoning Loop',
+        },
+        deepAiBtn: '✨ Deep Context Optimization with AI',
+        deepAiLoading: 'Analyzing implicit assumptions with AI...',
+        deepAiSuccess: 'Domain context successfully enriched.',
+      },
+
       editor: {
         title: 'Your Prompt',
         paste: 'Paste',
@@ -1039,6 +1179,38 @@ const I18n = (() => {
         awaitingEvaluation: 'Awaiting evaluation…',
         analyzing: 'Analyzing…',
         protostarHint: 'Write a prompt to form the system',
+      },
+
+      // ── Score & Grade Scale Legend ──────────────────────────────────────
+      legend: {
+        btnLabel: 'Grade Scale',
+        title: 'Prompt Score Scale & Letter Grades',
+        subtitle: 'Understanding the 0 to 100 multidimensional evaluation system and letter grade rubric (A+ to F).',
+        scoreExplanationTitle: 'What is Prompt Score?',
+        scoreExplanationText: 'Prompt Score is a weighted 0–100 evaluation calculated across 8 dimensions (Clarity, Specificity, Structure, Robustness, Context, Output Format, Chain of Thought, and Safety). It reflects how reliably an LLM will execute the prompt with high accuracy and zero hallucinations.',
+        gradesTitle: 'Letter Grade Rubric (A+ to F)',
+        rangeHeader: 'Range',
+        gradeHeader: 'Grade',
+        statusHeader: 'Status',
+        descriptionHeader: 'Meaning & Recommended Action',
+        gradeAPlus: 'A+ (95–100)',
+        statusAPlus: 'Production Ready',
+        descAPlus: 'Expert-level prompt. Thorough, XML-structured, and fully guarded against hallucinations.',
+        gradeA: 'A / A- (85–94)',
+        statusA: 'Excellent',
+        descA: 'High technical quality. Clear, delimited instructions with strong precision in frontier models.',
+        gradeB: 'B+ / B / B- (70–84)',
+        statusB: 'Good / Acceptable',
+        descB: 'Solid prompt producing reliable results, but can improve with few-shot examples or explicit output formatting.',
+        gradeC: 'C+ / C / C- (55–69)',
+        statusC: 'Basic',
+        descC: 'Understandable for frontier LLMs (GPT-4), but prone to drift in smaller models. Needs higher specificity.',
+        gradeD: 'D+ / D / D- (40–54)',
+        statusD: 'Weak / Vague',
+        descD: 'Lacks context, constraints, or a clear role. High risk of hallucination or generic outputs.',
+        gradeF: 'F (0–39)',
+        statusF: 'Critical / Unusable',
+        descF: 'Ultra-short or vague prompt (e.g. "make an app" or "hi"). LLMs cannot infer intent. Urgent rewrite needed.',
       },
 
       tabs: {
@@ -1576,6 +1748,8 @@ const I18n = (() => {
           multiTaskSugg: 'Number each task or subtask: "1. Analyze... 2. Generate... 3. Compare..."',
           capsEmphasis: 'CAPS are used for emphasis instead of appropriate delimiters.',
           capsSugg: 'Use **bold**, `backticks` or XML tags instead of CAPS for highlighting.',
+          tooShort: 'The prompt is too brief to contain any structure (no sections, lists, or delimiters).',
+          tooShortSugg: 'Organize your prompt into sections with XML tags (<task>, <context>) or numbered lists.',
         },
         robustness: {
           errorHandling: 'Includes error-handling or invalid-input instructions.',
@@ -1589,6 +1763,8 @@ const I18n = (() => {
           noEdgeCasesSugg: 'Consider what happens with: empty inputs, missing data, extreme values, unexpected formats.',
           tooManyNegations: 'Excess of negations can make the prompt fragile to variations.',
           negationsSugg: 'Convert negative instructions into positive ones for greater robustness.',
+          tooShort: 'The prompt is too brief to include error handling, edge cases, or validations.',
+          tooShortSugg: 'Add instructions like "If the input is empty, respond N/A" or "Handle the case where data is missing".',
         },
         context: {
           role: 'Defines a role or persona for the model.',
@@ -1620,6 +1796,8 @@ const I18n = (() => {
           noLengthSugg: 'Specify the length: "maximum 200 words", "3 paragraphs", "short answer of 2-3 sentences".',
           noLangSpec: 'Prompt in mixed languages without specifying response language.',
           noLangSpecSugg: 'Specify the response language: "Respond in Spanish" or "Answer in English".',
+          tooShort: 'No output format specified (JSON, table, list) nor expected length.',
+          tooShortSugg: 'Specify the format: "Respond in JSON with keys..." or "Return a markdown table".',
         },
         chainOfThought: {
           explicitCoT: 'Explicitly requests step-by-step reasoning (Chain of Thought).',
@@ -1636,6 +1814,8 @@ const I18n = (() => {
           reactTechnique: 'Uses the ReAct pattern (Thought/Action/Observation) to reason with external tools.',
           selfConsistency: 'Applies Self-Consistency: generate several chains and pick the majority answer.',
           reflexion: 'Uses Reflexion: the model critiques and improves its own answer.',
+          tooShort: 'The prompt is too brief to include step-by-step reasoning instructions.',
+          tooShortSugg: 'For complex tasks add: "Think step by step before answering" or "First analyze, then conclude".',
         },
         safety: {
           antiHallucination: 'Includes protections against model hallucinations.',
@@ -1655,6 +1835,8 @@ const I18n = (() => {
           assumesCapabilitySugg: 'Clarify the limits: "If you lack access to real-time data, state so".',
           postCutoff: 'The prompt asks for information that may be past the model cutoff date.',
           postCutoffSugg: 'Provide current context or use RAG: "Use only the following up-to-date information: ...".',
+          tooShort: 'The prompt is too brief to include safety guardrails, scope limits, or anti-hallucination protections.',
+          tooShortSugg: 'Add: "Do not invent data", "Cite your sources", or "If you are not sure, state so".',
         },
         empty: {
           finding: 'No valid prompt was provided.',

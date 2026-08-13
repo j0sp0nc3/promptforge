@@ -15,6 +15,20 @@ try {
 }
 
 const PORT = process.env.PORT || 3000;
+
+// Load .env file automatically if present
+if (fs.existsSync(path.join(__dirname, '.env'))) {
+  const envContent = fs.readFileSync(path.join(__dirname, '.env'), 'utf8');
+  envContent.split('\n').forEach(line => {
+    const trimmed = line.trim();
+    if (trimmed && !trimmed.startsWith('#') && trimmed.includes('=')) {
+      const [key, ...vals] = trimmed.split('=');
+      const val = vals.join('=').trim().replace(/^["']|["']$/g, '');
+      if (key.trim()) process.env[key.trim()] = val;
+    }
+  });
+}
+
 const API_KEY = process.env.PROMPTOMETER_API_KEY || process.env.API_KEY || '';
 
 const ALLOWED_ORIGINS = [
@@ -131,89 +145,10 @@ const server = http.createServer((req, res) => {
     }
   }
 
-  // Route GET /api (API Status)
-  if (req.method === 'GET' && (req.url === '/api' || req.url === '/api/')) {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    return res.end(JSON.stringify({
-      service: 'Promptometer Core API (Secured & Authenticated)',
-      version: PromptometerCore.version,
-      status: 'online',
-      security: {
-        authentication: 'API Key Required (x-api-key or Authorization: Bearer)',
-        cors: 'Restricted to Official Web UI',
-        rateLimit: '30 req/min',
-        maxPayload: '100 KB'
-      },
-      endpoints: {
-        analyze: 'POST /api/analyze',
-        improve: 'POST /api/improve',
-        adversarial: 'POST /api/adversarial'
-      }
-    }));
-  }
-
-  // Handle POST API requests
-  if (req.method === 'POST' && req.url.startsWith('/api')) {
-    let body = '';
-    let bodySize = 0;
-    let overflow = false;
-
-    req.on('data', chunk => {
-      bodySize += chunk.length;
-      if (bodySize > MAX_PAYLOAD_BYTES) {
-        overflow = true;
-        req.destroy();
-      } else {
-        body += chunk.toString();
-      }
-    });
-
-    req.on('end', () => {
-      if (overflow) {
-        res.writeHead(413, { 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ error: 'El tamaño de la solicitud excede el límite máximo permitido de 100KB.' }));
-      }
-
-      try {
-        const payload = JSON.parse(body || '{}');
-        const prompt = payload.prompt || '';
-
-        if (!prompt.trim()) {
-          res.writeHead(400, { 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ error: "El parámetro 'prompt' es requerido." }));
-        }
-
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-
-        if (req.url === '/api/improve') {
-          const analysis = PromptometerCore.analyze(prompt);
-          const improved = PromptometerCore.improve(prompt, analysis);
-          return res.end(JSON.stringify(improved));
-        }
-
-        if (req.url === '/api/adversarial') {
-          const adversarial = PromptometerCore.runAdversarial(prompt);
-          return res.end(JSON.stringify(adversarial));
-        }
-
-        // /api/analyze or fallback
-        const analysis = PromptometerCore.analyze(prompt);
-        return res.end(JSON.stringify(analysis));
-
-      } catch (err) {
-        res.writeHead(500, { 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ error: 'Error procesando solicitud JSON: ' + err.message }));
-      }
-    });
-
-    req.on('error', () => {
-      if (overflow) {
-        res.writeHead(413, { 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ error: 'El tamaño de la solicitud excede el límite máximo permitido de 100KB.' }));
-      }
-    });
-
-    return;
+  // Delegate API endpoints to api/index.js for complete feature parity (including /api/analyze-intent)
+  if (req.url.startsWith('/api')) {
+    const apiHandler = require('./api/index.js');
+    return apiHandler(req, res);
   }
 
   // Serve static files for GET requests

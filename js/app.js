@@ -19,6 +19,7 @@ const App = (() => {
     setupEditor();
     setupTabs();
     setupExport();
+    setupScoreLegend();
     setupTemplatesView();
     setupHistoryView();
     setupLearnView();
@@ -228,6 +229,68 @@ const App = (() => {
         }
       });
     }
+
+    const btnDeepAi = document.getElementById('btn-deep-domain-ai');
+    if (btnDeepAi) {
+      btnDeepAi.addEventListener('click', async () => {
+        const promptInput = document.getElementById('prompt-input');
+        const prompt = promptInput ? promptInput.value.trim() : '';
+        if (!prompt) return;
+
+        const btnText = document.getElementById('btn-deep-domain-ai-text');
+        btnDeepAi.disabled = true;
+        if (btnText) btnText.textContent = t('contextGaps.deepAiLoading');
+
+        try {
+          const res = await fetch(API_CONFIG.getUrl('/api/analyze-intent'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              prompt,
+              analysis: currentAnalysis?.analysis || currentAnalysis
+            })
+          });
+
+          let result;
+          if (res.ok) {
+            result = await res.json();
+          } else {
+            const arch = currentAnalysis?.analysis?.domainArchetype || 'general_task';
+            const gaps = currentAnalysis?.analysis?.contextGaps || [];
+            result = Rewriter.deepDomainOptimize(prompt, arch, gaps);
+          }
+
+          if (result && result.improvedPrompt) {
+            promptInput.value = result.improvedPrompt;
+            updateEditorStats();
+            runAnalysis();
+
+            const justBanner = document.getElementById('domain-justification-banner');
+            const justText = document.getElementById('domain-justification-text');
+            if (justBanner && justText && result.justification) {
+              justText.textContent = result.justification;
+              justBanner.classList.remove('hidden');
+            }
+
+            const toastMsg = result.justification ? `✨ ${result.justification}` : t('contextGaps.deepAiSuccess');
+            showToast(toastMsg, 'success', 6000);
+          }
+        } catch (e) {
+          const arch = currentAnalysis?.analysis?.domainArchetype || 'general_task';
+          const gaps = currentAnalysis?.analysis?.contextGaps || [];
+          const result = Rewriter.deepDomainOptimize(prompt, arch, gaps);
+          if (result && result.improvedPrompt) {
+            promptInput.value = result.improvedPrompt;
+            updateEditorStats();
+            runAnalysis();
+            showToast(t('contextGaps.deepAiSuccess'), 'success');
+          }
+        } finally {
+          btnDeepAi.disabled = false;
+          if (btnText) btnText.textContent = t('contextGaps.deepAiBtn');
+        }
+      });
+    }
   }
 
   function updateEditorStats() {
@@ -368,6 +431,9 @@ const App = (() => {
     // Improved prompt
     renderImproved(improved);
 
+    // Domain Intelligence & Context Gaps
+    renderDomainIntelligence(analysis);
+
     // Radar chart is initialised lazily when the user visits the Radar tab.
     if (document.getElementById('tab-radar').classList.contains('active')) {
       if (!Charts.radarChart) Charts.initRadar('radar-canvas');
@@ -375,6 +441,46 @@ const App = (() => {
     }
 
     // Keep the currently active results tab active.
+  }
+
+  function escapeAttr(str) {
+    return String(str || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  function renderDomainIntelligence(analysis) {
+    const panel = document.getElementById('domain-intelligence-panel');
+    const badge = document.getElementById('domain-archetype-badge');
+    const card = document.getElementById('domain-context-gaps-card');
+    const gapsList = document.getElementById('domain-gaps-list');
+    const chipsContainer = document.getElementById('domain-action-chips');
+
+    if (!panel || !badge) return;
+
+    const archetypeKey = analysis.domainArchetype || 'general_task';
+    const translatedArchetype = t(`domain.${archetypeKey}`) || t(`domain.archetypes.${archetypeKey}`) || archetypeKey;
+    badge.textContent = translatedArchetype;
+    panel.classList.remove('hidden');
+
+    const gaps = analysis.contextGaps || [];
+    if (gaps.length > 0 && card && gapsList && chipsContainer) {
+      gapsList.innerHTML = gaps.map(g => `<div class="gap-item">⚠️ ${escapeHtml(t(g.key) || g.id)}</div>`).join('');
+      chipsContainer.innerHTML = gaps.map(g => `<button class="action-chip" data-snippet="${escapeAttr(g.snippetToInject)}">${escapeHtml(t(g.actionChipKey) || '+ Inyectar Contexto')}</button>`).join('');
+      card.classList.remove('hidden');
+
+      chipsContainer.querySelectorAll('.action-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          const snippet = chip.dataset.snippet;
+          const textarea = document.getElementById('prompt-input');
+          if (textarea && snippet) {
+            textarea.value = Rewriter.injectSnippet(textarea.value, snippet);
+            updateEditorStats();
+            runAnalysis();
+          }
+        });
+      });
+    } else if (card) {
+      card.classList.add('hidden');
+    }
   }
 
   function animateScore(targetScore, grade) {
@@ -906,17 +1012,19 @@ const App = (() => {
     const btn = document.getElementById('btn-export-menu');
     const menu = document.getElementById('export-menu');
 
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const rect = btn.getBoundingClientRect();
-      menu.style.top = `${rect.bottom + 8}px`;
-      menu.style.right = `${window.innerWidth - rect.right}px`;
-      menu.classList.toggle('hidden');
-    });
+    if (btn && menu) {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const rect = btn.getBoundingClientRect();
+        menu.style.top = `${rect.bottom + 8}px`;
+        menu.style.right = `${window.innerWidth - rect.right}px`;
+        menu.classList.toggle('hidden');
+      });
 
-    document.addEventListener('click', () => menu.classList.add('hidden'));
+      document.addEventListener('click', () => menu.classList.add('hidden'));
+    }
 
-    document.getElementById('export-json').addEventListener('click', () => {
+    document.getElementById('export-json')?.addEventListener('click', () => {
       const promptText = document.getElementById('prompt-input')?.value?.trim() || currentAnalysis?.prompt;
       if (!promptText) return showToast(t('toast.writePrompt'), 'warning');
       const analysisObj = currentAnalysis?.analysis || { prompt: promptText, overallScore: 0 };
@@ -924,7 +1032,7 @@ const App = (() => {
       ExportUtil.downloadFile(json, 'promptometer-analysis.json', 'application/json');
     });
 
-    document.getElementById('export-markdown').addEventListener('click', () => {
+    document.getElementById('export-markdown')?.addEventListener('click', () => {
       const promptText = document.getElementById('prompt-input')?.value?.trim() || currentAnalysis?.prompt;
       if (!promptText) return showToast(t('toast.writePrompt'), 'warning');
       const analysisObj = currentAnalysis?.analysis || { prompt: promptText, overallScore: 0 };
@@ -932,7 +1040,7 @@ const App = (() => {
       ExportUtil.downloadFile(md, 'promptometer-analysis.md', 'text/markdown');
     });
 
-    document.getElementById('export-clipboard').addEventListener('click', () => {
+    document.getElementById('export-clipboard')?.addEventListener('click', () => {
       const promptText = document.getElementById('prompt-input')?.value?.trim() || currentAnalysis?.prompt;
       if (!promptText) return showToast(t('toast.writePrompt'), 'warning');
       const analysisObj = currentAnalysis?.analysis || { prompt: promptText, overallScore: 0 };
@@ -940,7 +1048,7 @@ const App = (() => {
       ExportUtil.toClipboard(md);
     });
 
-    document.getElementById('export-share').addEventListener('click', () => {
+    document.getElementById('export-share')?.addEventListener('click', () => {
       const promptText = document.getElementById('prompt-input')?.value?.trim() || currentAnalysis?.prompt;
       if (!promptText) return showToast(t('toast.writePrompt'), 'warning');
       const url = ExportUtil.generateShareURL(promptText);
@@ -960,6 +1068,25 @@ const App = (() => {
         input.select();
       }
     });
+
+  }
+
+  function setupScoreLegend() {
+    const triggerBtn = document.getElementById('btn-score-legend-trigger');
+    const scoreBox = document.querySelector('.central-score-box');
+    const closeBtn = document.getElementById('btn-close-score-legend');
+    const closeBottomBtn = document.getElementById('btn-close-score-legend-bottom');
+    const modal = document.getElementById('modal-score-legend');
+
+    if (triggerBtn) triggerBtn.addEventListener('click', openScoreLegendModal);
+    if (scoreBox) scoreBox.addEventListener('click', openScoreLegendModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeScoreLegendModal);
+    if (closeBottomBtn) closeBottomBtn.addEventListener('click', closeScoreLegendModal);
+    if (modal) {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeScoreLegendModal();
+      });
+    }
   }
 
   // ── Templates View ─────────────────────────────────────
@@ -1137,6 +1264,14 @@ const App = (() => {
 
   function closeShareModal() {
     document.getElementById('modal-share-link')?.classList.add('hidden');
+  }
+
+  function openScoreLegendModal() {
+    document.getElementById('modal-score-legend')?.classList.remove('hidden');
+  }
+
+  function closeScoreLegendModal() {
+    document.getElementById('modal-score-legend')?.classList.add('hidden');
   }
 
   function checkShareURL() {
