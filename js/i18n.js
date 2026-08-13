@@ -71,6 +71,58 @@ const I18n = (() => {
         creative: '✍️ Redacción Creativa & Copywriting',
       },
 
+      // ── Domain Archetypes & Context Gaps ────────────────────────────────
+      domain: {
+        title: 'Arquetipo de Dominio',
+        software_engineering: '💻 Ingeniería de Software & Sistemas',
+        data_extraction: '📊 Extracción & Estructuración de Datos',
+        marketing_copy: '📣 Marketing & Copywriting Persuasivo',
+        rhetoric_creative: '✍️ Redacción Creativa & Narrativa',
+        rag_knowledge: '📚 RAG & Base de Conocimiento de Documentos',
+        agentic_tool_use: '🤖 Agente Autónomo & Llamada a Herramientas',
+        financial_legal: '⚖️ Cumplimiento Legal & Financiero',
+        general_task: '🎯 Tarea General',
+        justificationTitle: 'Justificación de la Mejora IA:',
+      },
+
+      contextGaps: {
+        title: 'Brechas de Contexto de Dominio',
+        none: 'Excelente: El prompt satisface los requerimientos esenciales de contexto para su dominio.',
+        software: {
+          techStack: 'Falta especificar el stack técnico (lenguaje, framework o base de datos).',
+          errorStrategy: 'Falta estrategia de manejo de errores (especificación de respuestas HTTP 4xx / 5xx).',
+          securitySpec: 'Faltan requisitos de autenticación o sanitización de datos.',
+        },
+        extraction: {
+          targetSchema: 'Falta definir el esquema JSON objetivo o la estructura de tabla esperada.',
+          nullFallback: 'Falta regla de fallback para campos de datos nulos o faltantes.',
+        },
+        marketing: {
+          targetAudience: 'Falta definir el perfil de audiencia objetivo o meta comercial.',
+          brandTone: 'Falta especificar el tono de voz de la marca.',
+        },
+        rag: {
+          antiHallucination: 'Falta prohibición explícita de usar conocimiento externo fuera de los documentos.',
+        },
+        agentic: {
+          agentReasoning: 'Falta requerimiento de ciclo de pensamiento interno (<thought> / <action>) antes de la ejecución.',
+        },
+        chips: {
+          addTechStack: '+ Inyectar Stack Técnico',
+          addErrorStrategy: '+ Inyectar Manejo de Errores HTTP',
+          addSecuritySpec: '+ Inyectar Auth & Sanitización',
+          addTargetSchema: '+ Inyectar Esquema JSON',
+          addNullFallback: '+ Inyectar Regla Nulo / NA',
+          addTargetAudience: '+ Inyectar Audiencia Objetivo',
+          addBrandTone: '+ Inyectar Tono de Marca',
+          addRagAntiHallucination: '+ Inyectar Filtro Anti-Alucinación',
+          addAgentReasoning: '+ Inyectar Ciclo de Razonamiento',
+        },
+        deepAiBtn: '✨ Optimizar Contexto Profundo con IA',
+        deepAiLoading: 'Analizando supuestos implícitos con IA...',
+        deepAiSuccess: 'Contexto de dominio enriquecido exitosamente.',
+      },
+
       // ── Editor ──────────────────────────────────────────────────────────
       editor: {
         title: 'Tu Prompt',
@@ -1043,6 +1095,58 @@ const I18n = (() => {
         json_schema: '📐 Structured JSON & Data Schema',
         safety_rag: '🛡️ Guardrails & RAG Context',
         creative: '✍️ Creative Writing & Copywriting',
+      },
+
+      // ── Domain Archetypes & Context Gaps ────────────────────────────────
+      domain: {
+        title: 'Domain Archetype',
+        software_engineering: '💻 Software & Systems Engineering',
+        data_extraction: '📊 Data Extraction & Structuring',
+        marketing_copy: '📣 Marketing & Persuasive Copywriting',
+        rhetoric_creative: '✍️ Creative & Narrative Writing',
+        rag_knowledge: '📚 RAG & Document Knowledge Base',
+        agentic_tool_use: '🤖 Autonomous Agent & Tool Calling',
+        financial_legal: '⚖️ Financial & Legal Compliance',
+        general_task: '🎯 General Purpose Task',
+        justificationTitle: 'AI Optimization Justification:',
+      },
+
+      contextGaps: {
+        title: 'Domain Context Gaps',
+        none: 'Excellent: The prompt satisfies the essential context requirements for its domain.',
+        software: {
+          techStack: 'Missing technical stack specification (language, framework, or database).',
+          errorStrategy: 'Missing error handling strategy (HTTP 4xx / 5xx response spec).',
+          securitySpec: 'Missing authentication or data sanitization requirements.',
+        },
+        extraction: {
+          targetSchema: 'Missing target JSON schema / expected table structure.',
+          nullFallback: 'Missing fallback rule for null or missing data fields.',
+        },
+        marketing: {
+          targetAudience: 'Missing target audience persona or commercial goal.',
+          brandTone: 'Missing brand tone of voice.',
+        },
+        rag: {
+          antiHallucination: 'Missing explicit prohibition of external knowledge beyond documents.',
+        },
+        agentic: {
+          agentReasoning: 'Missing internal reasoning loop requirement (<thought> / <action>) before execution.',
+        },
+        chips: {
+          addTechStack: '+ Inject Tech Stack',
+          addErrorStrategy: '+ Inject HTTP Error Handling',
+          addSecuritySpec: '+ Inject Auth & Sanitization',
+          addTargetSchema: '+ Inject JSON Schema',
+          addNullFallback: '+ Inject Null / N/A Rule',
+          addTargetAudience: '+ Inject Target Audience',
+          addBrandTone: '+ Inject Brand Tone',
+          addRagAntiHallucination: '+ Inject Anti-Hallucination Filter',
+          addAgentReasoning: '+ Inject Reasoning Loop',
+        },
+        deepAiBtn: '✨ Deep Context Optimization with AI',
+        deepAiLoading: 'Analyzing implicit assumptions with AI...',
+        deepAiSuccess: 'Domain context successfully enriched.',
       },
 
       editor: {

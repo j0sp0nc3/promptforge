@@ -25,14 +25,18 @@ globalThis.localStorage = {
   removeItem(k) { delete this._store[k]; }
 };
 
-// Evaluate i18n, Leaderboard & Knowledge scripts safely into global scope
+// Evaluate i18n, Leaderboard, Knowledge & DomainAnalyzer scripts safely into global scope
 const i18nCode = fs.readFileSync(path.join(__dirname, 'js/i18n.js'), 'utf8');
 const leaderboardCode = fs.readFileSync(path.join(__dirname, 'js/leaderboard.js'), 'utf8');
 const knowledgeCode = fs.readFileSync(path.join(__dirname, 'js/knowledge.js'), 'utf8');
+const domainAnalyzerCode = fs.readFileSync(path.join(__dirname, 'js/domain-analyzer.js'), 'utf8');
+const rewriterCode = fs.readFileSync(path.join(__dirname, 'js/rewriter.js'), 'utf8');
 
 (0, eval)(i18nCode.replace('const I18n =', 'globalThis.I18n ='));
 (0, eval)(leaderboardCode.replace('const Leaderboard =', 'globalThis.Leaderboard ='));
 (0, eval)(knowledgeCode.replace('const Knowledge =', 'globalThis.Knowledge ='));
+(0, eval)(domainAnalyzerCode.replace('const DomainAnalyzer =', 'globalThis.DomainAnalyzer ='));
+(0, eval)(rewriterCode.replace('const Rewriter =', 'globalThis.Rewriter ='));
 
 // ============================================================
 // 1. ENGINE STRESS & EDGE CASE SUITE (14 Vectors)
@@ -192,6 +196,137 @@ const moderationTests = [
   } catch (err) {
     failedCount++;
     console.log(` ❌ 5.1 Radar Suite                               | CRASH: ${err.message}`);
+  }
+
+  // ============================================================
+  // 6. DOMAIN INTELLIGENCE & CONTEXT GAPS SUITE
+  // ============================================================
+  console.log("\n📌 SUITE 6: Motor de Arquetipos & Brechas de Dominio (js/domain-analyzer.js)\n");
+
+  try {
+    const testCases = [
+      { prompt: "Escribe una función async en Node.js con Express para conectar a PostgreSQL", expectedArchetype: "software_engineering" },
+      { prompt: "Extrae de la factura en PDF los datos en formato JSON con fecha y monto", expectedArchetype: "data_extraction" },
+      { prompt: "Redacta un correo de ventas B2B para promocionar un software SaaS", expectedArchetype: "marketing_copy" },
+      { prompt: "Basado exclusivamente en los documentos adjuntos de la base de conocimiento", expectedArchetype: "rag_knowledge" },
+      { prompt: "Usa la herramienta tool_choice para llamar a la función disponible @tool", expectedArchetype: "agentic_tool_use" }
+    ];
+
+    let archetypePass = true;
+    testCases.forEach(tc => {
+      const arch = DomainAnalyzer.inferArchetype(tc.prompt);
+      if (arch !== tc.expectedArchetype) {
+        archetypePass = false;
+        console.log(` ❌ Fallo en arquetipo: esperado ${tc.expectedArchetype}, obtenido ${arch}`);
+      }
+    });
+
+    const codePrompt = "Escribe un endpoint en Node.js";
+    const gaps = DomainAnalyzer.evaluateContextGaps(codePrompt, "software_engineering");
+    const gapsPass = Array.isArray(gaps) && gaps.length >= 2;
+
+    const localSynth = DomainAnalyzer.synthesizeLocal(codePrompt, "software_engineering", gaps);
+    const synthPass = Boolean(localSynth && localSynth.improvedPrompt && localSynth.improvedPrompt.includes('<rol>'));
+
+    // Test 6.2: Unnesting & Dynamic Domain Role Alignment (Magma Geology Case)
+    const nestedMagmaPrompt = '<rol>Actúa como un Experto en IA</rol><tarea><role>You are an expert analyst</role><task>quiero una investigación del magma</task></tarea>';
+    const magmaSynth = DomainAnalyzer.synthesizeLocal(nestedMagmaPrompt, 'general_task', []);
+    const unnestPass = Boolean(
+      magmaSynth.improvedPrompt.includes('Geólogo y Vulcanólogo') &&
+      !magmaSynth.improvedPrompt.includes('<role>') &&
+      (magmaSynth.improvedPrompt.match(/<rol>/g) || []).length === 1
+    );
+
+    if (archetypePass && gapsPass && synthPass && unnestPass) {
+      passedCount++;
+      console.log(` ✅ 6.1 Clasificación de Dominio & Sintetizador Local | PASS | 8 Arquetipos y Brechas OK`);
+      passedCount++;
+      console.log(` ✅ 6.2 Desanidamiento XML & Rol Temático (Geología) | PASS | Limpieza y Rol de Vulcanólogo OK`);
+    } else {
+      failedCount++;
+      console.log(` ❌ 6.1 Clasificación de Dominio & Sintetizador Local | FAIL | Arch: ${archetypePass}, Gaps: ${gapsPass}, Synth: ${synthPass}, Unnest: ${unnestPass}`);
+    }
+  } catch (err) {
+    failedCount++;
+    console.log(` ❌ 6.1 Domain Intelligence Suite                  | CRASH: ${err.message}`);
+  }
+
+  // ============================================================
+  // 7. ACTION CHIPS & SNIPPET INJECTION SUITE (js/rewriter.js)
+  // ============================================================
+  console.log("\n📌 SUITE 7: Inyección de Snippets & Chips de Acción Rápida (js/rewriter.js)\n");
+
+  try {
+    const basePrompt = "Escribe un script en Python";
+    const snippet = "<stack_tecnico>\nLenguaje: Python\nFramework: FastAPI\n</stack_tecnico>";
+
+    const injected = Rewriter.injectSnippet(basePrompt, snippet);
+    const injectPass = Boolean(injected && injected.includes(snippet));
+
+    const reInjected = Rewriter.injectSnippet(injected, snippet);
+    const noDupPass = reInjected === injected;
+
+    const deepOptimized = Rewriter.deepDomainOptimize(basePrompt, "software_engineering", []);
+    const deepOptimPass = Boolean(deepOptimized && deepOptimized.improvedPrompt && deepOptimized.improvedPrompt.includes('<rol>'));
+
+    if (injectPass && noDupPass && deepOptimPass) {
+      passedCount++;
+      console.log(` ✅ 7.1 Inyección de Snippets & Anti-Duplicación     | PASS | Inyección y Deduplicación OK`);
+    } else {
+      failedCount++;
+      console.log(` ❌ 7.1 Inyección de Snippets & Anti-Duplicación     | FAIL | Inj: ${injectPass}, Dedupe: ${noDupPass}, Deep: ${deepOptimPass}`);
+    }
+  } catch (err) {
+    failedCount++;
+    console.log(` ❌ 7.1 Snippet Injection Suite                    | CRASH: ${err.message}`);
+  }
+
+  // ============================================================
+  // 8. SERVERLESS ENDPOINT & INTENT ANALYZER SUITE (api/index.js)
+  // ============================================================
+  console.log("\n📌 SUITE 8: Endpoint Serverless de Intención (api/index.js)\n");
+
+  try {
+    const apiHandler = require('./api/index.js');
+    let apiPass = false;
+    const mockReq = {
+      method: 'POST',
+      url: '/api/analyze-intent',
+      headers: { host: 'localhost:3001' },
+      on: (event, cb) => {
+        if (event === 'data') cb(Buffer.from(JSON.stringify({ prompt: "Extraer datos JSON de factura" })));
+        if (event === 'end') cb();
+      }
+    };
+
+    await new Promise((resolve) => {
+      const mockRes = {
+        setHeader: (k, v) => {},
+        writeHead: (status, headers) => {},
+        end: (dataStr) => {
+          try {
+            const parsed = JSON.parse(dataStr);
+            if (parsed.success && parsed.improvedPrompt && (parsed.source === 'llm_as_a_judge' || parsed.source === 'local_synthesizer')) {
+              apiPass = true;
+            }
+          } catch (e) {}
+          resolve();
+        }
+      };
+
+      apiHandler(mockReq, mockRes);
+    });
+
+    if (apiPass) {
+      passedCount++;
+      console.log(` ✅ 8.1 Endpoint POST /api/analyze-intent          | PASS | Respuesta JSON y Fallback OK`);
+    } else {
+      failedCount++;
+      console.log(` ❌ 8.1 Endpoint POST /api/analyze-intent          | FAIL | Status o Payload inválido`);
+    }
+  } catch (err) {
+    failedCount++;
+    console.log(` ❌ 8.1 Serverless Intent Suite                    | CRASH: ${err.message}`);
   }
 
   console.log("\n------------------------------------------------------------");

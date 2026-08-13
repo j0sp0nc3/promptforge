@@ -368,6 +368,33 @@
                 </button>
               </div>
             </div>
+
+            <!-- Domain Archetype & Context Gaps Panel -->
+            <div id="domain-intelligence-panel" class="domain-intelligence-panel hidden">
+              <div class="domain-badge-bar">
+                <span class="domain-label" data-i18n="domain.title">Arquetipo de Dominio</span>:
+                <span id="domain-archetype-badge" class="domain-archetype-badge">🎯 General</span>
+              </div>
+              <div id="domain-context-gaps-card" class="domain-context-gaps-card hidden">
+                <div class="gaps-card-header">
+                  <span class="gaps-card-title" data-i18n="contextGaps.title">Brechas de Contexto de Dominio</span>
+                </div>
+                <div id="domain-gaps-list" class="domain-gaps-list"></div>
+                <div id="domain-action-chips" class="domain-action-chips"></div>
+              </div>
+              <div id="domain-justification-banner" class="domain-justification-banner hidden">
+                <div class="justification-header">
+                  <span class="justification-icon">💡</span>
+                  <span class="justification-title" data-i18n="domain.justificationTitle">Justificación de la Mejora IA:</span>
+                </div>
+                <div id="domain-justification-text" class="domain-justification-text"></div>
+              </div>
+              <div class="domain-ai-actions" style="margin-top: 10px;">
+                <button class="btn btn-secondary btn-sm" id="btn-deep-domain-ai">
+                  <span id="btn-deep-domain-ai-text" data-i18n="contextGaps.deepAiBtn">✨ Optimizar Contexto Profundo con IA</span>
+                </button>
+              </div>
+            </div>
           </div>
         </section>
       </div>
@@ -946,6 +973,7 @@
   <!-- Scripts -->
   <script src="js/i18n.js"></script>
   <script src="js/api-config.js"></script>
+  <script src="js/domain-analyzer.js"></script>
   <script src="js/signals.js"></script>
   <script src="js/patterns.js"></script>
   <script src="js/analyzer.js"></script>

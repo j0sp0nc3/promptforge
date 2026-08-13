@@ -40,6 +40,7 @@ interactiva desplegada en Vercel.
 | **`STORAGE_KV_REST_API_URL`**<br>*(o `UPSTASH_REDIS_REST_URL` / `KV_REST_API_URL`)* | Production, Preview | ❌ Opcional | Leaderboard y filtro anti-spam persisten globalmente en Vercel KV / Upstash Redis. | Degrada a almacenamiento en memoria local de la función serverless. |
 | **`STORAGE_KV_REST_API_TOKEN`**<br>*(o `UPSTASH_REDIS_REST_TOKEN` / `KV_REST_API_TOKEN`)* | Production, Preview | ❌ Opcional | Token de autenticación Bearer para escribir y leer en Vercel KV / Redis. | Conexión Redis desactivada; fallback automático a memoria. |
 | **`PROMPTOMETER_API_KEY`** | Production | ❌ Opcional | Exige encabezado `x-api-key` / `Bearer` para acceder a los endpoints Serverless (`401 Unauthorized` si falla). | API opera de forma pública abierta (ideal para demo web sin autenticación). |
+| **`OPENAI_API_KEY`** / **`GROQ_API_KEY`** / **`GEMINI_API_KEY`** | Production, Dev | ❌ Opcional | Habilita inferencia en vivo con LLM-as-a-Judge en el endpoint `/api/analyze-intent`. | Degrada automáticamente al sintetizador heurístico local (`DomainAnalyzer.synthesizeLocal`) a costo $0 y latencia 0. |
 | **`PORT`** | Local Dev | ❌ Opcional | Define el puerto TCP de `server.js`. | Utiliza el puerto por defecto `3001`. |
 
 ### Autor
@@ -89,6 +90,7 @@ interactiva desplegada en Vercel.
 - [x] **Especificaciones Machine-Readable para IA & SEO**: `llms.txt`, `llms-full.txt`, `robots.txt`, `sitemap.xml`, Schemas JSON-LD y OpenGraph.
 - [x] **Leyenda de Calificaciones & Rúbrica de Notas (Score Scale Modal)**: Modal interactivo (`#modal-score-legend`) desplegable al hacer clic en la insignia de score o en el botón de ayuda para explicar detalladamente el sistema multidimensional de 0 a 100 y la rúbrica de notas de letra (**A+** a **F**).
 - [x] **Feedback Específico para Prompts Ultra-Cortos**: Adición de hallazgos y sugerencias explicativas (`tooShort` & `tooShortSugg`) en las dimensiones de Estructura, Robustez, Chain of Thought y Seguridad cuando el prompt contiene menos de 3 palabras.
+- [x] **Motor Híbrido de Análisis de Intención y Enriquecimiento de Contexto de Dominio (`js/domain-analyzer.js`, `api/index.js`, `js/rewriter.js`, `js/app.js`)**: Detección de 8 Arquetipos de Dominio, matriz de brechas de contexto, chips de inyección rápida de fragmentos XML en 1-clic, endpoint serverless `/api/analyze-intent` (con fallback local `synthesizeLocal`) e insignia de arquetipo en el Workbench.
 
 ---
 
@@ -116,22 +118,24 @@ promptforge/                    ← App Web (Vercel)
 ├── llms.txt                    ← Especificación para IA (Estándar Answer.ai / Jeremy Howard)
 ├── llms-full.txt               ← Documentación extendida para modelos de IA
 ├── manifest.json               ← Manifest PWA
-├── css/index.css               ← Design system Editorial Technical & Cosmic (Glassmorphic Dual Mode)
+├── css/index.css               ← Design system Editorial Technical & Cosmic (Glassmorphic Dual Mode + Action Chips)
 ├── js/
-│   ├── app.js                  ← Controlador principal de UI (modal score legend, router y renderers)
-│   ├── analyzer.js             ← Motor de análisis (8 dimensiones con reglas para prompts ultra-cortos)
-│   ├── signals.js              ← Extracción de señales compartidas
+│   ├── app.js                  ← Controlador principal de UI (modal score legend, domain intelligence, router y renderers)
+│   ├── domain-analyzer.js      ← Motor de clasificación de 8 arquetipos y brechas de contexto de dominio
+│   ├── analyzer.js             ← Motor de análisis (8 dimensiones con scoring adaptativo de dominio)
+│   ├── signals.js              ← Extracción de señales compartidas e inteligencia de dominio
 │   ├── patterns.js             ← Detección de anti-patrones (34 APs / 15 BPs)
 │   ├── i18n.js                 ← Diccionarios ES/EN + actualización dinámica de meta tags
 │   ├── knowledge.js            ← Hub de conocimiento (20 términos, 13 técnicas, 6 frameworks, 13 refs, 20 creadores)
 │   ├── leaderboard.js          ← Módulo de ranking Top 10 y persistencia
-│   ├── rewriter.js             ← Mejora automática de prompts
+│   ├── rewriter.js             ← Mejora automática de prompts y chips de inyección de contexto XML
 │   ├── constellation3d.js      ← Motor del Sistema Solar 3D en Three.js WebGL
 │   └── export.js               ← Exportación JSON, Markdown, Clipboard y URL
-├── api/index.js                ← API serverless desplegada en Vercel (incluye /api/leaderboard y /api/suggest-creator)
+├── api/index.js                ← API serverless desplegada en Vercel (incluye /api/leaderboard, /api/suggest-creator y /api/analyze-intent)
 ├── server.js                   ← Servidor local de desarrollo
 ├── vercel.json                 ← Configuración de despliegue Vercel (rutas estáticas)
-├── test_edge_cases.js          ← Suite de 22 tests de estrés (PASS)
+├── test_edge_cases.js          ← Suite de 26 tests de estrés (8 Suites, 26/26 PASS)
+├── test_edge_cases.py          
 └── package.json                ← Dependencia: promptometer-core@^1.0.0
 ```
 
@@ -142,17 +146,23 @@ promptforge/                    ← App Web (Vercel)
 - **Fecha:** 2026-08-13
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
 - **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
-- **Último commit promptforge:** `2978612` (feat(scoring): add score scale legend modal and short prompt analyzer feedback)
-- **Estado:** 22/22 tests en PASS. Paridad ES/EN y enrutamiento directo por Host en Producción (`api.promptometer.tech`) verificados al 100%.
+- **Último commit promptforge:** `1af4316` (feat(scoring): add score scale legend modal and short prompt analyzer feedback)
+- **Estado:** 26/26 tests en PASS (8 Suites completas). Paridad ES/EN, desanidamiento XML, rol temático dinámico, diagnóstico de debilidades enviado al LLM, y `justification` banner integrado en UI. Endpoint Gemini verificado y funcionando en `llm_as_a_judge`.
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
-> - **Modal de Leyenda de Calificaciones & Rúbrica de Notas (`#modal-score-legend`)**:
->   - Creado un modal interactivo accesible al hacer clic sobre la insignia central de score (`.central-score-box`) o mediante el botón de información del motor.
->   - Presenta una explicación clara del sistema multidimensional de 0 a 100 y una tabla completa con la rúbrica de notas de letra (**A+** a **F**), sus rangos de puntuación, estado en producción y acciones recomendadas.
-> - **Feedback Perfeccionado para Prompts Ultra-Cortos (< 3 palabras)**:
->   - Adición de hallazgos y sugerencias explícitas (`tooShort` & `tooShortSugg`) en `js/analyzer.js` para las dimensiones de **Estructura**, **Robustez**, **Chain of Thought** y **Seguridad**.
->   - Explicación detallada al usuario sobre por qué un prompt vago como `"Hola"` o `"haz una app"` recibe calificación **F**, con sugerencias accionables para incorporar contexto y restricciones.
-> - **Internacionalización y Paridad i18n (`js/i18n.js`)**:
->   - Incorporadas todas las claves de traducción bilingües (`legend.*` y `analyzer.*.tooShort`) en español e inglés.
->   - Verificación de paridad con 0 llaves faltantes en la suite de pruebas.
-> - **Verificación y Pruebas**: 22/22 PASS en `node test_edge_cases.js`.
+> - **Corrección de Desanidamiento XML & Asignación Dinámica de Rol Temático (`js/domain-analyzer.js`, `api/index.js`)**:
+>   - **Extracción limpia del Prompt Central (`extractCoreTask`)**: Elimina bloques metálicos anteriores (`<role>`, `<rol>`, `<task>`, `<tarea>`, `<constraints>`, `<restricciones>`) evitando que se dupliquen o aniden etiquetas sobre prompts ya mejorados.
+>   - **Inferencia Dinámica de Rol por Tema (`inferDynamicRole`)**: Si el prompt trata sobre geología/magma, asigna `"Geólogo y Vulcanólogo Senior especializado en Dinámica del Manto"`; si es salud, asigna `"Especialista Biomédico"`; si es física, asigna `"Científico de Investigación"`; si es genérico, asigna `"Especialista de Investigación e Inteligencia Analítica"`.
+> - **Diagnóstico de Debilidades enviado al LLM (`api/index.js`):**
+>   - `_handleAnalyzeIntent` ahora acepta `payload.analysis` (o lo computa con `PromptometerCore.analyze`) y formatea `findings`, `suggestions` y `contextGaps` en un `diagnosticPrompt` estructurado que se inyecta como contenido de usuario al LLM.
+>   - El `systemPrompt` actualizado exige que el LLM: (1) solucione CADA debilidad detectada, (2) asigne un rol alineado al tema, (3) produzca una `justification` en 1-2 oraciones en español explicando qué se mejoró y por qué.
+>   - La respuesta JSON del LLM ahora incluye: `{ inferredGoal, weaknessesIdentified, justification, gapsFixedCount, improvedPrompt }`.
+> - **Justification Banner en UI (`index.html`, `css/index.css`, `js/app.js`):**
+>   - Añadido `#domain-justification-banner` y `#domain-justification-text` en `index.html` dentro del panel de dominio.
+>   - Estilos `.domain-justification-banner` añadidos en `css/index.css` para ambos temas (Cosmic Dark y Editorial Light).
+>   - `#btn-deep-domain-ai` handler en `js/app.js` actualizado para: enviar `{ prompt, analysis: currentAnalysis?.analysis }` al API; renderizar `result.justification` en el banner; mostrar toast con la justificación (6s).
+> - **Internacionalización (`js/i18n.js`):**
+>   - Añadido `domain.justificationTitle` en diccionarios ES y EN.
+> - **Suite de pruebas (`test_edge_cases.js`):**
+>   - SUITE 8 ahora es async (`await new Promise`) para aguardar la respuesta del endpoint serverless local antes de evaluar `apiPass`. **26/26 PASS**.
+> - **Gemini verificado en vivo:** `source: llm_as_a_judge`, `provider: gemini`, `justification` generada correctamente en español alineada al tema.

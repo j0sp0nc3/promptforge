@@ -534,5 +534,42 @@ const Rewriter = {
     // Diminishing returns as score gets higher
     const headroom = 100 - currentScore;
     return Math.min(improvement, headroom * 0.85);
+  },
+
+  /**
+   * Cleanly inject a domain context snippet into a prompt.
+   * @param {string} prompt Base prompt
+   * @param {string} snippet Snippet to inject
+   * @returns {string} Enriched prompt
+   */
+  injectSnippet(prompt, snippet) {
+    if (!prompt) return snippet || '';
+    if (!snippet) return prompt;
+
+    if (prompt.includes(snippet.trim())) return prompt;
+
+    const trimmedPrompt = prompt.trim();
+    if (trimmedPrompt.includes('</restricciones>')) {
+      return trimmedPrompt.replace('</restricciones>', `</restricciones>\n${snippet}`);
+    }
+    return `${trimmedPrompt}\n${snippet}`;
+  },
+
+  /**
+   * Deep domain-specific optimization using DomainAnalyzer local synthesizer.
+   * @param {string} prompt
+   * @param {string} archetype
+   * @param {Array} gaps
+   * @returns {{ improvedPrompt: string, archetype: string, gapsFixedCount: number }}
+   */
+  deepDomainOptimize(prompt, archetype, gaps) {
+    if (typeof DomainAnalyzer !== 'undefined') {
+      return DomainAnalyzer.synthesizeLocal(prompt, archetype, gaps);
+    }
+    return {
+      improvedPrompt: this.improve(prompt, {}).improvedPrompt,
+      archetype: archetype || 'general_task',
+      gapsFixedCount: 0
+    };
   }
 };

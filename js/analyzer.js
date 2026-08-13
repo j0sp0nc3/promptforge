@@ -99,6 +99,8 @@ const Analyzer = {
         model: I18n.getLang() === 'en' ? '~GPT tokenizer (words × 1.3)' : '~GPT tokenizer (palabras × 1.3)',
         cost: null,
       },
+      domainArchetype: signals.domainArchetype || 'general_task',
+      contextGaps: signals.contextGaps || [],
       suggestions: this._flattenSuggestions(dimensions, patternResults),
     };
   },
@@ -521,6 +523,18 @@ const Analyzer = {
       score -= 8;
       findings.push(k('noTone'));
       suggestions.push(k('noToneSugg'));
+    }
+
+    // Domain Context Gaps evaluation
+    if (signals.contextGaps && signals.contextGaps.length > 0) {
+      signals.contextGaps.forEach(gap => {
+        score -= 6;
+        const translatedGap = I18n.t(gap.key);
+        if (translatedGap && !findings.includes(translatedGap)) {
+          findings.push(translatedGap);
+          suggestions.push(I18n.t(gap.actionChipKey) || translatedGap);
+        }
+      });
     }
 
     return { score: this._clamp(score), findings, suggestions };

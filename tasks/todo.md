@@ -1,20 +1,23 @@
-# Plan de Implementación: Sistema Solar 3D en Three.js para la Constelación 8D
+# Plan de Implementación: Motor Híbrido de Análisis de Intención y Enriquecimiento de Contexto de Dominio
 
-- [x] **Fase 1: Carga y Configuración del Canvas 3D**
-  - Scripts Three.js y OrbitControls cargados en `index.html`.
-  - Contenedor Canvas 3D `#constellation-3d-canvas` integrado con fallback SVG.
+- [x] **Fase 1: Motor Local de Arquetipos y Brechas de Contexto (`js/domain-analyzer.js`)**
+  - Detección de 8 Arquetipos de Dominio (`software_engineering`, `data_extraction`, `marketing_copy`, `rhetoric_creative`, `rag_knowledge`, `agentic_tool_use`, `financial_legal`, `general_task`).
+  - Matriz de Brechas de Contexto (`DomainRequirements`): Identificación de elementos faltantes según el dominio (ej. stack técnico, esquema JSON, audiencias, fallbacks RAG, etc.).
+  - Integración en `Signals` y `Analyzer` para enriquecer la puntuación de contexto y recomendaciones.
 
-- [x] **Fase 2: Motor Astronómico 3D con Estado Protoplanetario (`js/constellation3d.js`)**
-  - Protoestrella inicial con disco giratorio de polvo estelar protoplanetario (`protoplanetaryDisk`).
-  - Animación de transición en 2 fases (condensación de polvo + crecimiento escalonado de 8 planetas geométricos).
-  - Reinicio automático (`reset()`) al pulsar "Limpiar".
-  - `OrbitControls` y `Raycaster` con tooltips al hacer hover.
+- [x] **Fase 2: Reescritor de Dominio y Chips de Inyección Rápida (`js/rewriter.js`)**
+  - Plantillas de reescritura dinámicas que inyectan secciones XML específicas del dominio (`<stack_tecnico>`, `<audiencia_objetivo>`, `<fallbacks_dominio>`).
+  - Chips de acción rápida en UI para insertar contextos faltantes en 1-click (`+ Inyectar Stack`, `+ Inyectar Errores HTTP`, etc.).
 
-- [x] **Fase 3: Flotación del Score y Adaptación de Temas (Black Hole 🕳️ / Luna 🌙)**
-  - Texto central `PROMPT SCORE` flotante y transparente directamente dentro del Sol 3D, **sin marcos o cajas rectangulares**.
-  - Temas adaptados dinámicamente en tiempo real.
-  - Corrección de llamadas en `Charts` para evitar excepciones en la consola.
+- [x] **Fase 3: Endpoint Serverless de Análisis Semántico Profundo (`api/index.js` / `/api/analyze-intent`)**
+  - Endpoint de análisis semántico mediante LLM-as-a-Judge (con fallback heurístico si no hay clave de API).
+  - Extracción de Objetivo Primario, Supuestos Implícitos y Reescritura Experta de Dominio.
 
-- [x] **Fase 4: Verificación y Pruebas Locales (Cero Pushes)**
-  - Pruebas automatizadas `node test_edge_cases.js`: **22/22 PASS**.
-  - Pruebas visuales completadas en `http://localhost:3001`.
+- [x] **Fase 4: Interfaz de Usuario y Tab de Intención & Dominio (`index.html`, `js/app.js`, `css/index.css`)**
+  - Insignia visual del Arquetipo de Dominio detectado en la cabecera del Workbench.
+  - Panel de Brechas de Contexto de Dominio con acciones de reparación instantánea.
+  - Botón *"✨ Optimizar Contexto Profundo con IA"* conectado al endpoint Serverless.
+
+- [x] **Fase 5: Internacionalización (i18n) y Pruebas Automatizadas**
+  - Diccionario i18n bilingüe ES/EN (`domain.*`, `contextGaps.*`).
+  - Suite de pruebas de estrés `node test_edge_cases.js` (Suite 6 para clasificación de arquetipos y brechas de dominio).

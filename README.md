@@ -227,11 +227,12 @@ promptforge/                    # Web App Repo (Vercel deployment)
 │   └── index.css               # Editorial Technical Design System
 ├── js/
 │   ├── i18n.js                 # Internationalization Engine (ES/EN)
+│   ├── domain-analyzer.js      # Domain Archetype Classifier & Context Gap Synthesizer
 │   ├── signals.js              # Single Source of Truth Signal Extractor
 │   ├── patterns.js             # Catalog of 34 Anti-Patterns & 15 Strengths
 │   ├── analyzer.js             # 8-Dimension Scoring Engine
 │   ├── adversarial.js          # Security & Resilience Simulator (13 tests)
-│   ├── rewriter.js             # Non-Destructive XML Rewriter
+│   ├── rewriter.js             # Non-Destructive XML Rewriter & Action Chips
 │   ├── templates.js            # 12 Production-Ready Prompt Templates
 │   ├── knowledge.js            # Knowledge Hub (Glossary, Techniques, Frameworks, References)
 │   ├── leaderboard.js          # Top 10 Hall of Fame & Persistence Module
@@ -241,11 +242,11 @@ promptforge/                    # Web App Repo (Vercel deployment)
 │   ├── constellation3d.js      # 3D Solar System Constellation Engine (Three.js WebGL)
 │   └── app.js                  # Main UI Orchestrator
 ├── api/
-│   ├── index.js                # Secured Vercel Serverless API wrapper
+│   ├── index.js                # Secured Vercel Serverless API wrapper (including /api/analyze-intent)
 │   └── moderation.js           # Content moderation & anti-spam filter
 ├── server.js                   # REST API Microservice & Local Dev Server
 ├── cli.js                      # Node Terminal Executable
-├── test_edge_cases.js          # JS Test Suite Runner (14/14 PASS)
+├── test_edge_cases.js          # JS Test Suite Runner (26/26 PASS across 8 Suites)
 ├── test_edge_cases.py          # Python Test Suite Runner (14/14 PASS)
 ├── vercel.json                 # Vercel Deployment Config
 ├── HANDOFF.md                  # Project State & Handoff Document

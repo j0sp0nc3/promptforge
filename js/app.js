@@ -229,6 +229,68 @@ const App = (() => {
         }
       });
     }
+
+    const btnDeepAi = document.getElementById('btn-deep-domain-ai');
+    if (btnDeepAi) {
+      btnDeepAi.addEventListener('click', async () => {
+        const promptInput = document.getElementById('prompt-input');
+        const prompt = promptInput ? promptInput.value.trim() : '';
+        if (!prompt) return;
+
+        const btnText = document.getElementById('btn-deep-domain-ai-text');
+        btnDeepAi.disabled = true;
+        if (btnText) btnText.textContent = t('contextGaps.deepAiLoading');
+
+        try {
+          const res = await fetch(API_CONFIG.getUrl('/api/analyze-intent'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              prompt,
+              analysis: currentAnalysis?.analysis || currentAnalysis
+            })
+          });
+
+          let result;
+          if (res.ok) {
+            result = await res.json();
+          } else {
+            const arch = currentAnalysis?.analysis?.domainArchetype || 'general_task';
+            const gaps = currentAnalysis?.analysis?.contextGaps || [];
+            result = Rewriter.deepDomainOptimize(prompt, arch, gaps);
+          }
+
+          if (result && result.improvedPrompt) {
+            promptInput.value = result.improvedPrompt;
+            updateEditorStats();
+            runAnalysis();
+
+            const justBanner = document.getElementById('domain-justification-banner');
+            const justText = document.getElementById('domain-justification-text');
+            if (justBanner && justText && result.justification) {
+              justText.textContent = result.justification;
+              justBanner.classList.remove('hidden');
+            }
+
+            const toastMsg = result.justification ? `✨ ${result.justification}` : t('contextGaps.deepAiSuccess');
+            showToast(toastMsg, 'success', 6000);
+          }
+        } catch (e) {
+          const arch = currentAnalysis?.analysis?.domainArchetype || 'general_task';
+          const gaps = currentAnalysis?.analysis?.contextGaps || [];
+          const result = Rewriter.deepDomainOptimize(prompt, arch, gaps);
+          if (result && result.improvedPrompt) {
+            promptInput.value = result.improvedPrompt;
+            updateEditorStats();
+            runAnalysis();
+            showToast(t('contextGaps.deepAiSuccess'), 'success');
+          }
+        } finally {
+          btnDeepAi.disabled = false;
+          if (btnText) btnText.textContent = t('contextGaps.deepAiBtn');
+        }
+      });
+    }
   }
 
   function updateEditorStats() {
@@ -369,6 +431,9 @@ const App = (() => {
     // Improved prompt
     renderImproved(improved);
 
+    // Domain Intelligence & Context Gaps
+    renderDomainIntelligence(analysis);
+
     // Radar chart is initialised lazily when the user visits the Radar tab.
     if (document.getElementById('tab-radar').classList.contains('active')) {
       if (!Charts.radarChart) Charts.initRadar('radar-canvas');
@@ -376,6 +441,46 @@ const App = (() => {
     }
 
     // Keep the currently active results tab active.
+  }
+
+  function escapeAttr(str) {
+    return String(str || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  function renderDomainIntelligence(analysis) {
+    const panel = document.getElementById('domain-intelligence-panel');
+    const badge = document.getElementById('domain-archetype-badge');
+    const card = document.getElementById('domain-context-gaps-card');
+    const gapsList = document.getElementById('domain-gaps-list');
+    const chipsContainer = document.getElementById('domain-action-chips');
+
+    if (!panel || !badge) return;
+
+    const archetypeKey = analysis.domainArchetype || 'general_task';
+    const translatedArchetype = t(`domain.${archetypeKey}`) || t(`domain.archetypes.${archetypeKey}`) || archetypeKey;
+    badge.textContent = translatedArchetype;
+    panel.classList.remove('hidden');
+
+    const gaps = analysis.contextGaps || [];
+    if (gaps.length > 0 && card && gapsList && chipsContainer) {
+      gapsList.innerHTML = gaps.map(g => `<div class="gap-item">⚠️ ${escapeHtml(t(g.key) || g.id)}</div>`).join('');
+      chipsContainer.innerHTML = gaps.map(g => `<button class="action-chip" data-snippet="${escapeAttr(g.snippetToInject)}">${escapeHtml(t(g.actionChipKey) || '+ Inyectar Contexto')}</button>`).join('');
+      card.classList.remove('hidden');
+
+      chipsContainer.querySelectorAll('.action-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          const snippet = chip.dataset.snippet;
+          const textarea = document.getElementById('prompt-input');
+          if (textarea && snippet) {
+            textarea.value = Rewriter.injectSnippet(textarea.value, snippet);
+            updateEditorStats();
+            runAnalysis();
+          }
+        });
+      });
+    } else if (card) {
+      card.classList.add('hidden');
+    }
   }
 
   function animateScore(targetScore, grade) {
