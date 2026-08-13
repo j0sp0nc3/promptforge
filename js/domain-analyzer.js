@@ -183,24 +183,19 @@ const DomainAnalyzer = (() => {
       text = taskMatch[1].trim();
     }
 
-    // 2. Strip full blocks of previous metadata tags (<role>...</role>, <rol>...</rol>, etc.)
-    text = text.replace(/<(?:role|rol)>[\s\S]*?<\/(?:role|rol)>/gi, '');
-    text = text.replace(/<(?:output_format|formato_salida)>[\s\S]*?<\/(?:output_format|formato_salida)>/gi, '');
-    text = text.replace(/<(?:constraints|restricciones)>[\s\S]*?<\/(?:constraints|restricciones)>/gi, '');
-    text = text.replace(/<(?:examples|ejemplos)>[\s\S]*?<\/(?:examples|ejemplos)>/gi, '');
-    text = text.replace(/<(?:error_handling|manejo_errores)>[\s\S]*?<\/(?:error_handling|manejo_errores)>/gi, '');
-    text = text.replace(/<(?:context|contexto)>[\s\S]*?<\/(?:context|contexto)>/gi, '');
-    text = text.replace(/<(?:stack_tecnico|tech_stack)>[\s\S]*?<\/(?:stack_tecnico|tech_stack)>/gi, '');
+    // 3. Strip full blocks of ALL known structural tags (old Spanish + new English canonical)
+    const structuralTagPattern = /<(?:role|rol|system_role|output_format|formato_salida|constraints|restricciones|requirements|examples|ejemplos|error_handling|manejo_errores|context|contexto|objective|stack_tecnico|tech_stack|audiencia_objetivo|tono_de_marca|patron_ejecucion|proteccion_anti_alucinacion)>[\s\S]*?<\/(?:role|rol|system_role|output_format|formato_salida|constraints|restricciones|requirements|examples|ejemplos|error_handling|manejo_errores|context|contexto|objective|stack_tecnico|tech_stack|audiencia_objetivo|tono_de_marca|patron_ejecucion|proteccion_anti_alucinacion)>/gi;
+    text = text.replace(structuralTagPattern, '');
 
-    // 3. Strip lingering orphan opening/closing tags
-    text = text.replace(/<\/?(?:role|rol|task|tarea|context|contexto|constraints|restricciones|output_format|formato_salida|examples|ejemplos|error_handling|manejo_errores|stack_tecnico|audiencia_objetivo)>/gi, '');
+    // 4. Strip lingering orphan opening/closing tags for all known tag names
+    text = text.replace(/<\/?(?:role|rol|system_role|task|tarea|objective|context|contexto|constraints|restricciones|requirements|output_format|formato_salida|examples|ejemplos|error_handling|manejo_errores|stack_tecnico|audiencia_objetivo|tono_de_marca|patron_ejecucion|proteccion_anti_alucinacion)>/gi, '');
 
-    // 4. Strip prepended/appended template instructions if present
+    // 5. Strip prepended/appended template instructions if present
     text = text.replace(/Before giving your final answer, think step by step:[\s\S]*?meets all the requested requirements\./gi, '');
     text = text.replace(/Structure your response clearly:[\s\S]*?unsolicited information\./gi, '');
     text = text.replace(/Example input:[\s\S]*?expected in the response\./gi, '');
 
-    // 5. Clean up extra blank lines
+    // 6. Clean up extra blank lines
     text = text.replace(/\n{3,}/g, '\n\n').trim();
 
     return text || prompt.trim();
@@ -267,11 +262,17 @@ const DomainAnalyzer = (() => {
     const cleanUserPrompt = extractCoreTask(prompt);
     const derivedArchetype = archetype || inferArchetype(cleanUserPrompt);
     const gapsToFix = gaps && gaps.length > 0 ? gaps : evaluateContextGaps(cleanUserPrompt, derivedArchetype);
-    let injectedSnippets = gapsToFix.map(g => g.snippetToInject).join('\n');
+    const injectedSnippets = gapsToFix.map(g => g.snippetToInject).join('\n');
 
     const domainRole = inferDynamicRole(cleanUserPrompt, derivedArchetype);
 
-    const improvedPrompt = `<rol>\nActúa como un ${domainRole}.\nTu objetivo es ejecutar la siguiente tarea con precisión técnica impecable, cero alucinaciones y estricto apego a los requerimientos de dominio.\n</rol>\n\n<tarea>\n${cleanUserPrompt}\n</tarea>${injectedSnippets ? '\n\n' + injectedSnippets : ''}\n\n<restricciones>\n- Cumple rigurosamente con todas las especificaciones indicadas.\n- Si la información proporcionada es insuficiente o ambigua, indícalo expresamente antes de asumir datos.\n</restricciones>`;
+    // Canonical order: system_role → objective → context → requirements → output_format → examples → error_handling
+    const improvedPrompt = [
+      `<system_role>\nActúa como un ${domainRole}.\nTu objetivo es ejecutar la siguiente tarea con precisión técnica impecable, cero alucinaciones y estricto apego a los requerimientos de dominio.\n</system_role>`,
+      `<objective>\n${cleanUserPrompt}\n</objective>`,
+      injectedSnippets ? injectedSnippets.trim() : null,
+      `<requirements>\n- Cumple rigurosamente con todas las especificaciones indicadas.\n- Si la información proporcionada es insuficiente o ambigua, indícalo expresamente antes de asumir datos.\n</requirements>`
+    ].filter(Boolean).join('\n\n');
 
     return {
       improvedPrompt,

@@ -226,7 +226,7 @@ const moderationTests = [
     const gapsPass = Array.isArray(gaps) && gaps.length >= 2;
 
     const localSynth = DomainAnalyzer.synthesizeLocal(codePrompt, "software_engineering", gaps);
-    const synthPass = Boolean(localSynth && localSynth.improvedPrompt && localSynth.improvedPrompt.includes('<rol>'));
+    const synthPass = Boolean(localSynth && localSynth.improvedPrompt && localSynth.improvedPrompt.includes('<system_role>'));
 
     // Test 6.2: Unnesting & Dynamic Domain Role Alignment (Magma Geology Case)
     const nestedMagmaPrompt = '<rol>Actúa como un Experto en IA</rol><tarea><role>You are an expert analyst</role><task>quiero una investigación del magma</task></tarea>';
@@ -234,7 +234,7 @@ const moderationTests = [
     const unnestPass = Boolean(
       magmaSynth.improvedPrompt.includes('Geólogo y Vulcanólogo') &&
       !magmaSynth.improvedPrompt.includes('<role>') &&
-      (magmaSynth.improvedPrompt.match(/<rol>/g) || []).length === 1
+      (magmaSynth.improvedPrompt.match(/<system_role>/g) || []).length === 1
     );
 
     if (archetypePass && gapsPass && synthPass && unnestPass) {
@@ -267,7 +267,7 @@ const moderationTests = [
     const noDupPass = reInjected === injected;
 
     const deepOptimized = Rewriter.deepDomainOptimize(basePrompt, "software_engineering", []);
-    const deepOptimPass = Boolean(deepOptimized && deepOptimized.improvedPrompt && deepOptimized.improvedPrompt.includes('<rol>'));
+    const deepOptimPass = Boolean(deepOptimized && deepOptimized.improvedPrompt && deepOptimized.improvedPrompt.includes('<system_role>'));
 
     if (injectPass && noDupPass && deepOptimPass) {
       passedCount++;

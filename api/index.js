@@ -640,10 +640,18 @@ Tu objetivo es tomar el prompt del usuario y su DIAGNÓSTICO DE DEBILIDADES Y FA
 
 REGLAS OBLIGATORIAS:
 1. ALINEACIÓN CON EL DIAGNÓSTICO: Debes solucionar explícitamente CADA debilidad y brecha de contexto identificadas en el diagnóstico.
-2. DESANIDAMIENTO Y LIMPIEZA: Si el prompt de entrada ya contiene etiquetas XML (<role>, <rol>, <task>, <tarea>, etc.), EXTRAE ÚNICAMENTE la tarea o pregunta central real del usuario. NUNCA anides ni dupliques etiquetas XML ni conserves roles genéricos introducidos anteriormente.
-3. ROL ALINEADO AL TEMA REAL: Asigna un <rol> de experto perfectamente ajustado al tema de la tarea (ej: si el tema es magma/volcanes, asigna "Geólogo y Vulcanólogo Senior").
-4. JUSTIFICACIÓN DE MEJORAS: Proporciona una breve y concisa justificación (en 1 o 2 oraciones) en español explicando QUÉ se mejoró y POR QUÉ basándote en las debilidades corregidas.
-5. ESTRUCTURA CANÓNICA: Genera un improvedPrompt con estructura limpia <rol>, <tarea> y <restricciones>.
+2. DESANIDAMIENTO Y LIMPIEZA: Si el prompt de entrada ya contiene etiquetas XML (<role>, <rol>, <system_role>, <task>, <tarea>, <objective>, etc.), EXTRAE ÚNICAMENTE la tarea o pregunta central real del usuario. NUNCA anides, dupliques ni conserves roles o bloques genéricos anteriores.
+3. ROL ALINEADO AL TEMA REAL: Asigna un <system_role> de experto perfectamente ajustado al tema de la tarea (ej: magma/volcanes → "Geólogo y Vulcanólogo Senior"; universo/física → "Científico de Investigación en Astrofísica"). NUNCA asignes "Experto en IA o Arquitectura de Sistemas" a menos que la tarea sea explícitamente sobre ingeniería de software o IA.
+4. ORDEN CANÓNICO ESTRICTO: El improvedPrompt DEBE contener los bloques en ESTE ORDEN EXACTO (omite los que no apliquen, pero NUNCA cambia el orden):
+   a) <system_role> — Quién es el modelo (rol de experto)
+   b) <objective>  — Qué debe hacer (tarea central del usuario, SIN plantillas genéricas)
+   c) <context>    — Con qué contexto trabaja (solo si hay información contextual relevante)
+   d) <requirements> — Qué reglas debe cumplir (restricciones específicas del dominio)
+   e) <output_format> — Cómo debe responder (formato de salida deseado)
+   f) <examples>   — Ejemplos de comportamiento (solo si aplica al tipo de tarea)
+   g) <error_handling> — Qué hacer en casos límite (solo si aplica)
+5. JUSTIFICACIÓN: Proporciona 1-2 oraciones en español explicando QUÉ se mejoró y POR QUÉ basándote en las debilidades corregidas.
+6. SIN PLANTILLAS GENÉRICAS: Los bloques <examples>, <output_format> y <error_handling> deben ser específicos al tema. Si no tienes ejemplos reales del dominio, omite el bloque <examples>.
 
 Devuelve únicamente un JSON válido con esta estructura exacta:
 {
