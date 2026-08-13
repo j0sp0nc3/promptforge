@@ -146,23 +146,27 @@ promptforge/                    ← App Web (Vercel)
 - **Fecha:** 2026-08-13
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
 - **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
-- **Último commit promptforge:** `1af4316` (feat(scoring): add score scale legend modal and short prompt analyzer feedback)
-- **Estado:** 26/26 tests en PASS (8 Suites completas). Paridad ES/EN, desanidamiento XML, rol temático dinámico, diagnóstico de debilidades enviado al LLM, y `justification` banner integrado en UI. Endpoint Gemini verificado y funcionando en `llm_as_a_judge`.
+- **Último commit promptforge:** `cb28095` (refactor(prompt-structure): enforce canonical XML tag order across all generators)
+- **Estado:** 26/26 tests en PASS (8 Suites completas). Paridad ES/EN, desanidamiento XML, rol temático dinámico, diagnóstico de debilidades al LLM, banner `justification` en UI, Gemini verificado, y orden canónico de 7 bloques XML aplicado en toda la cadena.
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
-> - **Corrección de Desanidamiento XML & Asignación Dinámica de Rol Temático (`js/domain-analyzer.js`, `api/index.js`)**:
->   - **Extracción limpia del Prompt Central (`extractCoreTask`)**: Elimina bloques metálicos anteriores (`<role>`, `<rol>`, `<task>`, `<tarea>`, `<constraints>`, `<restricciones>`) evitando que se dupliquen o aniden etiquetas sobre prompts ya mejorados.
->   - **Inferencia Dinámica de Rol por Tema (`inferDynamicRole`)**: Si el prompt trata sobre geología/magma, asigna `"Geólogo y Vulcanólogo Senior especializado en Dinámica del Manto"`; si es salud, asigna `"Especialista Biomédico"`; si es física, asigna `"Científico de Investigación"`; si es genérico, asigna `"Especialista de Investigación e Inteligencia Analítica"`.
+>
+> **Commit `0444e02` — Diagnóstico de Debilidades + Banner de Justificación:**
 > - **Diagnóstico de Debilidades enviado al LLM (`api/index.js`):**
->   - `_handleAnalyzeIntent` ahora acepta `payload.analysis` (o lo computa con `PromptometerCore.analyze`) y formatea `findings`, `suggestions` y `contextGaps` en un `diagnosticPrompt` estructurado que se inyecta como contenido de usuario al LLM.
->   - El `systemPrompt` actualizado exige que el LLM: (1) solucione CADA debilidad detectada, (2) asigne un rol alineado al tema, (3) produzca una `justification` en 1-2 oraciones en español explicando qué se mejoró y por qué.
->   - La respuesta JSON del LLM ahora incluye: `{ inferredGoal, weaknessesIdentified, justification, gapsFixedCount, improvedPrompt }`.
-> - **Justification Banner en UI (`index.html`, `css/index.css`, `js/app.js`):**
->   - Añadido `#domain-justification-banner` y `#domain-justification-text` en `index.html` dentro del panel de dominio.
->   - Estilos `.domain-justification-banner` añadidos en `css/index.css` para ambos temas (Cosmic Dark y Editorial Light).
->   - `#btn-deep-domain-ai` handler en `js/app.js` actualizado para: enviar `{ prompt, analysis: currentAnalysis?.analysis }` al API; renderizar `result.justification` en el banner; mostrar toast con la justificación (6s).
-> - **Internacionalización (`js/i18n.js`):**
->   - Añadido `domain.justificationTitle` en diccionarios ES y EN.
-> - **Suite de pruebas (`test_edge_cases.js`):**
->   - SUITE 8 ahora es async (`await new Promise`) para aguardar la respuesta del endpoint serverless local antes de evaluar `apiPass`. **26/26 PASS**.
-> - **Gemini verificado en vivo:** `source: llm_as_a_judge`, `provider: gemini`, `justification` generada correctamente en español alineada al tema.
+>   - `_handleAnalyzeIntent` acepta `payload.analysis` o lo computa con `PromptometerCore.analyze`.
+>   - Construye un `diagnosticPrompt` con score, grade, findings, suggestions y contextGaps.
+>   - Respuesta JSON incluye: `{ inferredGoal, weaknessesIdentified, justification, gapsFixedCount, improvedPrompt }`.
+> - **Banner de Justificación en UI (`index.html`, `css/index.css`, `js/app.js`):**
+>   - `#domain-justification-banner` y `#domain-justification-text` en panel de dominio.
+>   - El handler de `#btn-deep-domain-ai` envía `{ prompt, analysis }` y renderiza `result.justification`.
+> - **i18n:** `domain.justificationTitle` en ES y EN.
+> - **SUITE 8 (`test_edge_cases.js`):** Hecha async con `await new Promise`. **26/26 PASS**.
+> - **Gemini verificado:** `source: llm_as_a_judge`, `provider: gemini`, `justification` en español alineada al tema.
+>
+> **Commit `cb28095` — Orden Canónico de 7 Bloques XML:**
+> - **Set único de etiquetas canónicas en inglés** aplicado en toda la cadena (rewriter, domain-analyzer, LLM):
+>   `<system_role>` → `<objective>` → `<context>` → `<requirements>` → `<output_format>` → `<examples>` → `<error_handling>`
+> - **`js/rewriter.js`:** `tTags` con nombres canónicos fijos, `_restructure()` y `_insertSection()` siguen el nuevo orden.
+> - **`js/domain-analyzer.js`:** `synthesizeLocal()` genera `<system_role>/<objective>/<requirements>`. `extractCoreTask()` elimina todos los tags viejos y nuevos.
+> - **`api/index.js`:** `systemPrompt` con instrucción explícita del orden de 7 bloques y prohibición de placeholders genéricos.
+> - **`test_edge_cases.js`:** Suites 6 y 7 actualizadas para verificar `<system_role>`. **26/26 PASS**.
