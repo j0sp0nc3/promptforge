@@ -19,6 +19,7 @@ const App = (() => {
     setupEditor();
     setupTabs();
     setupExport();
+    setupScoreLegend();
     setupTemplatesView();
     setupHistoryView();
     setupLearnView();
@@ -906,17 +907,19 @@ const App = (() => {
     const btn = document.getElementById('btn-export-menu');
     const menu = document.getElementById('export-menu');
 
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const rect = btn.getBoundingClientRect();
-      menu.style.top = `${rect.bottom + 8}px`;
-      menu.style.right = `${window.innerWidth - rect.right}px`;
-      menu.classList.toggle('hidden');
-    });
+    if (btn && menu) {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const rect = btn.getBoundingClientRect();
+        menu.style.top = `${rect.bottom + 8}px`;
+        menu.style.right = `${window.innerWidth - rect.right}px`;
+        menu.classList.toggle('hidden');
+      });
 
-    document.addEventListener('click', () => menu.classList.add('hidden'));
+      document.addEventListener('click', () => menu.classList.add('hidden'));
+    }
 
-    document.getElementById('export-json').addEventListener('click', () => {
+    document.getElementById('export-json')?.addEventListener('click', () => {
       const promptText = document.getElementById('prompt-input')?.value?.trim() || currentAnalysis?.prompt;
       if (!promptText) return showToast(t('toast.writePrompt'), 'warning');
       const analysisObj = currentAnalysis?.analysis || { prompt: promptText, overallScore: 0 };
@@ -924,7 +927,7 @@ const App = (() => {
       ExportUtil.downloadFile(json, 'promptometer-analysis.json', 'application/json');
     });
 
-    document.getElementById('export-markdown').addEventListener('click', () => {
+    document.getElementById('export-markdown')?.addEventListener('click', () => {
       const promptText = document.getElementById('prompt-input')?.value?.trim() || currentAnalysis?.prompt;
       if (!promptText) return showToast(t('toast.writePrompt'), 'warning');
       const analysisObj = currentAnalysis?.analysis || { prompt: promptText, overallScore: 0 };
@@ -932,7 +935,7 @@ const App = (() => {
       ExportUtil.downloadFile(md, 'promptometer-analysis.md', 'text/markdown');
     });
 
-    document.getElementById('export-clipboard').addEventListener('click', () => {
+    document.getElementById('export-clipboard')?.addEventListener('click', () => {
       const promptText = document.getElementById('prompt-input')?.value?.trim() || currentAnalysis?.prompt;
       if (!promptText) return showToast(t('toast.writePrompt'), 'warning');
       const analysisObj = currentAnalysis?.analysis || { prompt: promptText, overallScore: 0 };
@@ -940,7 +943,7 @@ const App = (() => {
       ExportUtil.toClipboard(md);
     });
 
-    document.getElementById('export-share').addEventListener('click', () => {
+    document.getElementById('export-share')?.addEventListener('click', () => {
       const promptText = document.getElementById('prompt-input')?.value?.trim() || currentAnalysis?.prompt;
       if (!promptText) return showToast(t('toast.writePrompt'), 'warning');
       const url = ExportUtil.generateShareURL(promptText);
@@ -960,6 +963,25 @@ const App = (() => {
         input.select();
       }
     });
+
+  }
+
+  function setupScoreLegend() {
+    const triggerBtn = document.getElementById('btn-score-legend-trigger');
+    const scoreBox = document.querySelector('.central-score-box');
+    const closeBtn = document.getElementById('btn-close-score-legend');
+    const closeBottomBtn = document.getElementById('btn-close-score-legend-bottom');
+    const modal = document.getElementById('modal-score-legend');
+
+    if (triggerBtn) triggerBtn.addEventListener('click', openScoreLegendModal);
+    if (scoreBox) scoreBox.addEventListener('click', openScoreLegendModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeScoreLegendModal);
+    if (closeBottomBtn) closeBottomBtn.addEventListener('click', closeScoreLegendModal);
+    if (modal) {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeScoreLegendModal();
+      });
+    }
   }
 
   // ── Templates View ─────────────────────────────────────
@@ -1137,6 +1159,14 @@ const App = (() => {
 
   function closeShareModal() {
     document.getElementById('modal-share-link')?.classList.add('hidden');
+  }
+
+  function openScoreLegendModal() {
+    document.getElementById('modal-score-legend')?.classList.remove('hidden');
+  }
+
+  function closeScoreLegendModal() {
+    document.getElementById('modal-score-legend')?.classList.add('hidden');
   }
 
   function checkShareURL() {

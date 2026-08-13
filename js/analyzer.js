@@ -356,6 +356,8 @@ const Analyzer = {
     // Extremely short prompt (< 3 words)
     if (words.length < 3) {
       score -= 20;
+      findings.push(k('tooShort'));
+      suggestions.push(k('tooShortSugg'));
     }
 
     // ALL CAPS emphasis
@@ -411,6 +413,8 @@ const Analyzer = {
     // Extremely short prompt (< 3 words)
     if (words.length < 3) {
       score -= 20;
+      findings.push(k('tooShort'));
+      suggestions.push(k('tooShortSugg'));
     }
 
     // No error handling in a long, complex prompt (threshold raised to 60)
@@ -535,6 +539,8 @@ const Analyzer = {
     // Extremely short prompt (< 3 words)
     if (words.length < 3) {
       score -= 25;
+      findings.push(k('tooShort'));
+      suggestions.push(k('tooShortSugg'));
     }
 
     // Explicit format request: only counts if a request verb + a format name co-occur.
@@ -674,6 +680,13 @@ const Analyzer = {
     // NOTE: the old "+10 simpleBonus" for short prompts was REMOVED — it
     // inflated scores of short prompts in a dimension that doesn't apply.
 
+    // Ultra-short prompt: no room for reasoning instructions
+    if (words.length < 3) {
+      score -= 15;
+      findings.push(k('tooShort'));
+      suggestions.push(k('tooShortSugg'));
+    }
+
     return { score: this._clamp(score), findings, suggestions };
   },
 
@@ -761,6 +774,13 @@ const Analyzer = {
       score -= 6;
       findings.push(k('noScope'));
       suggestions.push(k('noScopeSugg'));
+    }
+
+    // Ultra-short prompt: no room for safety guardrails
+    if (words.length < 3) {
+      score -= 15;
+      findings.push(k('tooShort'));
+      suggestions.push(k('tooShortSugg'));
     }
 
     return { score: this._clamp(score), findings, suggestions };
