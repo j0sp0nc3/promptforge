@@ -247,6 +247,7 @@ const App = (() => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               prompt,
+              objective: currentAnalysis?.objective || document.getElementById('prompt-objective-select')?.value || 'general',
               analysis: currentAnalysis?.analysis || currentAnalysis
             })
           });

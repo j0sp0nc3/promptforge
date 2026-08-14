@@ -610,11 +610,27 @@ async function _handleAnalyzeIntent(req, res, payload) {
     source: 'local_fallback'
   };
 
-  const analysisObj = payload.analysis || (PromptometerCore ? PromptometerCore.analyze(prompt) : null);
+  // Objective selected by the user in the Workbench — drives both the local
+  // analysis weights and the LLM optimization priority.
+  const objective = payload.objective && payload.objective !== 'general' ? payload.objective : null;
+  const analysisObj = payload.analysis || (PromptometerCore ? PromptometerCore.analyze(prompt, { objective: objective || 'general' }) : null);
   const overallScore = analysisObj?.overallScore ?? 50;
   const grade = analysisObj?.grade ?? 'C';
   const rawFindings = analysisObj?.findings || analysisObj?.weaknesses || [];
   const rawSuggestions = analysisObj?.suggestions || [];
+
+  // Human-readable description of the declared objective so the LLM knows
+  // exactly what the user wants to optimize for.
+  const objectiveLabels = {
+    coding: 'Ingeniería de Software / Código',
+    reasoning: 'Razonamiento y Análisis Complejo',
+    json_schema: 'Extracción de Datos / JSON Estructurado',
+    safety_rag: 'Grounding RAG / Seguridad Factual',
+    creative: 'Escritura Creativa / Marketing',
+  };
+  const objectiveStr = objective
+    ? `${objectiveLabels[objective] || objective} (las dimensiones relevantes a este objetivo DEBEN priorizarse)`
+    : 'No declarado (optimización general equilibrada)';
 
   const findingsStr = rawFindings.map(f => typeof f === 'string' ? f : f.message || f.description || '').filter(Boolean).join('\n- ');
   const suggestionsStr = rawSuggestions.map(s => typeof s === 'string' ? s : s.message || s.description || '').filter(Boolean).join('\n- ');
@@ -627,6 +643,7 @@ ${prompt}
 
 DIAGNÓSTICO DE ANÁLISIS DE DEBILIDADES DETECTADAS POR EL EVALUADOR:
 - Puntuación actual del prompt: ${overallScore}/100 (Grado: ${grade})
+- Objetivo declarado por el usuario: ${objectiveStr}
 - Dominio inferido: ${archetype}
 - Debilidades y fallas específicas detectadas:
 ${findingsStr ? '- ' + findingsStr : '- Carece de estructura explícita y contexto de dominio'}
@@ -640,6 +657,7 @@ Tu objetivo es tomar el prompt del usuario y su DIAGNÓSTICO DE DEBILIDADES Y FA
 
 REGLAS OBLIGATORIAS:
 1. ALINEACIÓN CON EL DIAGNÓSTICO: Debes solucionar explícitamente CADA debilidad y brecha de contexto identificadas en el diagnóstico.
+1b. PRIORIDAD DEL OBJETIVO DECLARADO: Si el diagnóstico incluye un "Objetivo declarado por el usuario", la reescritura DEBE optimizar prioritariamente las dimensiones críticas para ese objetivo (ej: coding → stack técnico, casos límite y manejo de errores; reasoning → razonamiento paso a paso y criterios de evaluación; json_schema → esquema de salida estricto y validación; safety_rag → grounding factual y anti-alucinación; creative → tono, audiencia y estilo). El <objective> del prompt mejorado debe reflejar fielmente la intención declarada, nunca sustituirla por una tarea genérica.
 2. DESANIDAMIENTO Y LIMPIEZA: Si el prompt de entrada ya contiene etiquetas XML (<role>, <rol>, <system_role>, <task>, <tarea>, <objective>, etc.), EXTRAE ÚNICAMENTE la tarea o pregunta central real del usuario. NUNCA anides, dupliques ni conserves roles o bloques genéricos anteriores.
 3. ROL ALINEADO AL TEMA REAL: Asigna un <system_role> de experto perfectamente ajustado al tema de la tarea (ej: magma/volcanes → "Geólogo y Vulcanólogo Senior"; universo/física → "Científico de Investigación en Astrofísica"). NUNCA asignes "Experto en IA o Arquitectura de Sistemas" a menos que la tarea sea explícitamente sobre ingeniería de software o IA.
 4. ORDEN CANÓNICO ESTRICTO: El improvedPrompt DEBE contener los bloques en ESTE ORDEN EXACTO (omite los que no apliquen, pero NUNCA cambia el orden):
