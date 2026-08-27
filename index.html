@@ -274,12 +274,18 @@
   <!-- Live Gen AI & Creators News Ticker -->
   <div class="news-ticker-bar" id="news-ticker-bar">
     <div class="news-ticker-label">
-      <span class="ticker-badge" data-i18n="ticker.badge">⚡ LIVE AI RADAR</span>
+      <span class="ticker-badge" data-i18n="ticker.badge">🔴 LIVE AI RADAR</span>
     </div>
-    <div class="news-ticker-viewport">
+    <div class="news-ticker-viewport" id="news-ticker-viewport">
       <div class="news-ticker-track" id="news-ticker-track">
         <!-- Dynamic Ticker Feed -->
       </div>
+    </div>
+    <div class="news-ticker-controls" id="news-ticker-controls">
+      <button id="ticker-prev-btn" class="ticker-ctrl-btn" aria-label="Anterior" data-i18n-title="radar.tickerPrev" title="Novedad anterior">‹</button>
+      <button id="ticker-toggle-btn" class="ticker-ctrl-btn" aria-label="Pausar ticker" data-i18n-title="radar.tickerPause" title="Pausar ticker">⏸</button>
+      <button id="ticker-next-btn" class="ticker-ctrl-btn" aria-label="Siguiente" data-i18n-title="radar.tickerNext" title="Siguiente novedad">›</button>
+      <button id="ticker-view-all-btn" class="ticker-ctrl-btn ticker-ctrl-btn--text" data-i18n="radar.tickerViewAll">Ver todo</button>
     </div>
   </div>
 
@@ -824,6 +830,30 @@
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           <span data-i18n="radar.confirmSuggest">Enviar Sugerencia</span>
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 📜 Live Radar Feed Log Modal 📜 -->
+  <div id="modal-ticker-feed" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="ticker-modal-title">
+    <div class="modal-panel" style="max-width:660px">
+      <div class="modal-header">
+        <h3 class="modal-title" id="ticker-modal-title" data-i18n="radar.modalFeedTitle">📡 Novedades del Radar IA</h3>
+        <button class="modal-close-btn" id="btn-close-ticker-modal" aria-label="Cerrar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <p class="modal-desc" data-i18n="radar.modalFeedDesc">Últimas publicaciones, papers y descubrimientos seleccionados de los principales creadores de Gen AI.</p>
+      
+      <!-- Category Filter Pills inside Modal -->
+      <div class="ticker-feed-filter-bar" id="ticker-feed-filter-bar">
+        <!-- Rendered Filter Chips dynamically -->
+      </div>
+
+      <div class="modal-body ticker-feed-modal-body">
+        <div id="ticker-feed-list" class="ticker-feed-list">
+          <!-- Rendered feed items list -->
+        </div>
       </div>
     </div>
   </div>

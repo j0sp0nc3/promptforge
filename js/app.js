@@ -65,6 +65,107 @@ const App = (() => {
     if (currentView === 'analyzer' && currentAnalysis) renderResults();
   }
 
+  
+
+  // 📡 Live News Ticker Controls & Modal Feed 📡
+  let isTickerPaused = false;
+  let activeTickerFeedCategory = 'all';
+
+  function setupTickerControls() {
+    const toggleBtn = document.getElementById('ticker-toggle-btn');
+    const prevBtn = document.getElementById('ticker-prev-btn');
+    const nextBtn = document.getElementById('ticker-next-btn');
+    const viewAllBtn = document.getElementById('ticker-view-all-btn');
+    const track = document.getElementById('news-ticker-track');
+    const viewport = document.getElementById('news-ticker-viewport');
+
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', () => {
+        isTickerPaused = !isTickerPaused;
+        if (track) track.classList.toggle('paused', isTickerPaused);
+        toggleBtn.textContent = isTickerPaused ? '▶' : '⏸';
+        toggleBtn.setAttribute('title', isTickerPaused ? t('radar.tickerPlay') : t('radar.tickerPause'));
+        toggleBtn.setAttribute('aria-label', isTickerPaused ? t('radar.tickerPlay') : t('radar.tickerPause'));
+      });
+    }
+
+    if (prevBtn && viewport) {
+      prevBtn.addEventListener('click', () => {
+        viewport.scrollBy({ left: -260, behavior: 'smooth' });
+      });
+    }
+
+    if (nextBtn && viewport) {
+      nextBtn.addEventListener('click', () => {
+        viewport.scrollBy({ left: 260, behavior: 'smooth' });
+      });
+    }
+
+    if (viewAllBtn) {
+      viewAllBtn.addEventListener('click', openTickerFeedModal);
+    }
+
+    const closeFeedBtn = document.getElementById('btn-close-ticker-modal');
+    if (closeFeedBtn) {
+      closeFeedBtn.addEventListener('click', closeTickerFeedModal);
+    }
+  }
+
+  function openTickerFeedModal() {
+    const modal = document.getElementById('modal-ticker-feed');
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    setupModalA11y(modal, closeTickerFeedModal);
+    renderTickerFeedModalContent();
+  }
+
+  function closeTickerFeedModal() {
+    const modal = document.getElementById('modal-ticker-feed');
+    if (modal) modal.classList.add('hidden');
+  }
+
+  function renderTickerFeedModalContent() {
+    const filterBar = document.getElementById('ticker-feed-filter-bar');
+    const feedList = document.getElementById('ticker-feed-list');
+    if (!feedList || typeof Knowledge === 'undefined') return;
+    const lang = I18n.getLang();
+    const feed = Knowledge.feed || [];
+
+    const tags = ['all', ...new Set(feed.map(f => f.tag).filter(Boolean))];
+
+    if (filterBar) {
+      filterBar.innerHTML = tags.map(tag => `
+        <button class="ticker-filter-chip ${activeTickerFeedCategory === tag ? 'active' : ''}" data-tag="${escapeHtml(tag)}">
+          ${tag === 'all' ? t('radar.allCategories') : escapeHtml(tag)}
+        </button>
+      `).join('');
+
+      filterBar.onclick = (e) => {
+        const chip = e.target.closest('.ticker-filter-chip');
+        if (!chip) return;
+        activeTickerFeedCategory = chip.dataset.tag;
+        renderTickerFeedModalContent();
+      };
+    }
+
+    const filtered = activeTickerFeedCategory === 'all' 
+      ? feed 
+      : feed.filter(f => f.tag === activeTickerFeedCategory);
+
+    feedList.innerHTML = filtered.map(item => `
+      <a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer" class="ticker-feed-card">
+        <div class="ticker-feed-card-header">
+          <span class="ticker-feed-author">${escapeHtml(item.author)}</span>
+          <div class="ticker-feed-meta">
+            <span class="ticker-tag">${escapeHtml(item.tag)}</span>
+            <span class="ticker-feed-time">${escapeHtml(item.timestamp)}</span>
+          </div>
+        </div>
+        <div class="ticker-feed-text">${escapeHtml(item.text[lang] || item.text.es)}</div>
+      </a>
+    `).join('');
+  }
+
   function renderNewsTicker() {
     const track = document.getElementById('news-ticker-track');
     if (!track || typeof Knowledge === 'undefined') return;

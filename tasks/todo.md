@@ -1,23 +1,25 @@
-# Plan de Implementación: Motor Híbrido de Análisis de Intención y Enriquecimiento de Contexto de Dominio
+﻿# Plan de Implementación: Mejoras al Radar de Creadores IA & Live Ticker UI
 
-- [x] **Fase 1: Motor Local de Arquetipos y Brechas de Contexto (`js/domain-analyzer.js`)**
-  - Detección de 8 Arquetipos de Dominio (`software_engineering`, `data_extraction`, `marketing_copy`, `rhetoric_creative`, `rag_knowledge`, `agentic_tool_use`, `financial_legal`, `general_task`).
-  - Matriz de Brechas de Contexto (`DomainRequirements`): Identificación de elementos faltantes según el dominio (ej. stack técnico, esquema JSON, audiencias, fallbacks RAG, etc.).
-  - Integración en `Signals` y `Analyzer` para enriquecer la puntuación de contexto y recomendaciones.
+- [x] **Fase 1: Corrección de Datos de Creadores (`js/knowledge.js`)**
+  - [x] Corregir el handle y URL de Riley Goodside (`@goodside` y `https://x.com/goodside`) en el array `radar` y el array `feed`.
+  - [x] Verificar handles y URLs de los 20 creadores de IA.
 
-- [x] **Fase 2: Reescritor de Dominio y Chips de Inyección Rápida (`js/rewriter.js`)**
-  - Plantillas de reescritura dinámicas que inyectan secciones XML específicas del dominio (`<stack_tecnico>`, `<audiencia_objetivo>`, `<fallbacks_dominio>`).
-  - Chips de acción rápida en UI para insertar contextos faltantes en 1-click (`+ Inyectar Stack`, `+ Inyectar Errores HTTP`, etc.).
+- [x] **Fase 2: Controles Interactivos del Live Ticker (`index.html`, `css/index.css`, `js/app.js`)**
+  - [x] Añadir botones de control a la barra del ticker: **Pausa/Play** (`#ticker-toggle-btn`), **Anterior/Siguiente** (`#ticker-prev-btn`, `#ticker-next-btn`), y **Ver Novedades** (`#ticker-view-all-btn`).
+  - [x] Implementar la lógica de animación, desplazamiento manual y estado pausado en `js/app.js`.
+  - [x] Pausar el ticker automáticamente en `:hover`, `:focus-within` y eventos táctiles en móviles.
+  - [x] Ajustar la velocidad por defecto a un desplazamiento más suave y legible.
 
-- [x] **Fase 3: Endpoint Serverless de Análisis Semántico Profundo (`api/index.js` / `/api/analyze-intent`)**
-  - Endpoint de análisis semántico mediante LLM-as-a-Judge (con fallback heurístico si no hay clave de API).
-  - Extracción de Objetivo Primario, Supuestos Implícitos y Reescritura Experta de Dominio.
+- [x] **Fase 3: Modal de Historial de Novedades del Radar (`#modal-ticker-feed`)**
+  - [x] Crear el modal dialog `#modal-ticker-feed` en `index.html`.
+  - [x] Renderizar la lista completa de noticias/novedades del ticker con badges de categoría, fecha, autor y enlace directo.
+  - [x] Añadir filtro por etiqueta/categoría dentro del modal.
 
-- [x] **Fase 4: Interfaz de Usuario y Tab de Intención & Dominio (`index.html`, `js/app.js`, `css/index.css`)**
-  - Insignia visual del Arquetipo de Dominio detectado en la cabecera del Workbench.
-  - Panel de Brechas de Contexto de Dominio con acciones de reparación instantánea.
-  - Botón *"✨ Optimizar Contexto Profundo con IA"* conectado al endpoint Serverless.
+- [x] **Fase 4: Búsqueda y Filtros en la Vista Radar (`/radar`)**
+  - [x] Añadir barra de búsqueda rápida y botones de filtro por categoría (Prompting, Arquitectura, Agentes, Seguridad).
+  - [x] Conectar la búsqueda instantánea en `js/app.js`.
 
-- [x] **Fase 5: Internacionalización (i18n) y Pruebas Automatizadas**
-  - Diccionario i18n bilingüe ES/EN (`domain.*`, `contextGaps.*`).
-  - Suite de pruebas de estrés `node test_edge_cases.js` (Suite 6 para clasificación de arquetipos y brechas de dominio).
+- [x] **Fase 5: Paridad i18n & Pruebas Automatizadas**
+  - [x] Agregar todas las claves i18n en `es` y `en` en `js/i18n.js`.
+  - [x] Ejecutar `node test_edge_cases.js` (26/26 PASS).
+  - [x] Actualizar `HANDOFF.md` y `README.md`.
