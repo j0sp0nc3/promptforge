@@ -4061,3 +4061,12 @@ body.theme-editorial .grade-status-emerald { color: #4F7942; }
     gap: var(--space-lg);
   }
 }
+
+
+@media (max-width: 640px) {
+  /* Disable opening external links directly from mobile ticker items */
+  .news-ticker-track .ticker-item {
+    pointer-events: none !important;
+    cursor: pointer;
+  }
+}
