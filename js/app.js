@@ -574,22 +574,6 @@ const App = (() => {
       }
     }, 600);
 
-    // Badges (optional elements depending on view layout)
-    const complexityKey = analysis.complexity; // 'basic' | 'intermediate' | 'advanced'
-    const complexityBadge = document.getElementById('badge-complexity');
-    if (complexityBadge) {
-      complexityBadge.textContent = t(`complexity.${complexityKey}`);
-      complexityBadge.className = `badge badge-${complexityKey === 'advanced' ? 'success' : complexityKey === 'intermediate' ? 'warning' : 'info'}`;
-    }
-
-    const langBadge = document.getElementById('badge-language');
-    if (langBadge) {
-      langBadge.textContent = analysis.language === 'es' ? t('language.es')
-                            : analysis.language === 'en' ? t('language.en')
-                            : t('language.mixed');
-      langBadge.className = 'badge badge-info';
-    }
-
     // Dimensions
     renderDimensions(analysis.dimensions);
 
@@ -657,12 +641,6 @@ const App = (() => {
   function animateScore(targetScore, grade) {
     const numberEl = document.getElementById('score-number');
     const gradeEl = document.getElementById('score-grade');
-    const ringFill = document.getElementById('score-ring-fill');
-    const circumference = 2 * Math.PI * 54;
-
-    if (ringFill) {
-      ringFill.style.strokeDasharray = circumference;
-    }
 
     let current = 0;
     const duration = 1200;
@@ -675,12 +653,6 @@ const App = (() => {
       current = Math.round(eased * targetScore);
 
       if (numberEl) numberEl.textContent = current;
-      if (ringFill) {
-        const offset = circumference - (current / 100) * circumference;
-        ringFill.style.strokeDashoffset = offset;
-        const hue = (current / 100) * 120;
-        ringFill.style.stroke = `hsl(${hue}, 80%, 55%)`;
-      }
 
       if (progress < 1) {
         requestAnimationFrame(update);
@@ -1852,48 +1824,6 @@ const App = (() => {
     }
   }
 
-  function renderReferences() {
-    const container = document.getElementById('learn-references');
-    if (!container || typeof Knowledge === 'undefined') return;
-    const lang = I18n.getLang();
-    const references = Knowledge.references || [];
-
-    const badgeMap = {
-      official: { class: 'badge-success', label: { es: 'Oficial', en: 'Official' } },
-      guide: { class: 'badge-info', label: { es: 'Guía', en: 'Guide' } },
-      paper: { class: 'badge-warning', label: { es: 'Investigación', en: 'Paper' } },
-      security: { class: 'badge-critical', label: { es: 'Seguridad', en: 'Security' } },
-    };
-
-    container.innerHTML = `
-      <div class="learn-panel-header">
-        <h2 class="view-title">${t('learn.referencesTitle')}</h2>
-        <p class="view-subtitle">${t('learn.referencesSubtitle')}</p>
-      </div>
-      <div class="learn-grid">
-        ${references.map(ref => {
-          const badgeInfo = badgeMap[ref.type] || { class: 'badge-info', label: { es: ref.type, en: ref.type } };
-          const badgeText = badgeInfo.label[lang] || badgeInfo.label.es;
-          return `
-          <article class="learn-card learn-card-reference" data-id="${ref.id}">
-            <div class="learn-card-header">
-              <span class="learn-term-name">${escapeHtml(ref.title[lang] || ref.title.es)}</span>
-              <span class="badge ${badgeInfo.class}">${escapeHtml(badgeText)}</span>
-            </div>
-            <p class="learn-meta"><strong>${escapeHtml(ref.source)}</strong></p>
-            <p class="learn-term-def">${escapeHtml(ref.desc[lang] || ref.desc.es)}</p>
-            <div class="learn-example-block" style="margin-top:auto">
-              <a href="${escapeHtml(ref.url)}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm learn-link-btn" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px">
-                ${t('learn.visitLink')}
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-              </a>
-            </div>
-          </article>`;
-        }).join('')}
-      </div>
-    `;
-  }
-
   function renderGlossary() {
     const container = document.getElementById('learn-glossary');
     if (!container || typeof Knowledge === 'undefined') return;
@@ -2171,10 +2101,8 @@ const App = (() => {
     const btnCloseModal = document.getElementById('btn-close-submit-modal');
     const btnCancelModal = document.getElementById('btn-cancel-submit-modal');
     const btnConfirmSubmit = document.getElementById('btn-confirm-submit');
-    const btnSubmitHero = document.getElementById('btn-submit-to-leaderboard');
 
     if (btnOpenModal) btnOpenModal.addEventListener('click', openLeaderboardSubmitModal);
-    if (btnSubmitHero) btnSubmitHero.addEventListener('click', openLeaderboardSubmitModal);
     if (btnCloseModal) btnCloseModal.addEventListener('click', closeLeaderboardSubmitModal);
     if (btnCancelModal) btnCancelModal.addEventListener('click', closeLeaderboardSubmitModal);
     if (btnConfirmSubmit) btnConfirmSubmit.addEventListener('click', submitPromptToLeaderboard);

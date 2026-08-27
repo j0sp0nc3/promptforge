@@ -1389,16 +1389,16 @@ If the query is ambiguous, ask for clarification before recommending.
 
   /* ── 6. Live Feed & AI News Ticker ───────────────────────────
      Latest posts, releases, papers & discoveries from top AI creators. */
-  feed: [
+    feed: [
     {
       id: 'feed-1',
       author: '@goodside',
       tag: 'Prompt Injection',
       text: {
-        es: 'Publicada nueva guía sobre defensa contra ataques de Inyección de Prompt en Agentes RAG.',
-        en: 'Published new guide on defending against Prompt Injection attacks in RAG Agents.'
+        es: 'Investigación pionera sobre ataques de Inyección de Prompt y brechas de seguridad en LLMs.',
+        en: 'Pioneering research on Prompt Injection attacks and LLM security vulnerabilities.'
       },
-      url: 'https://x.com/goodside',
+      url: 'https://x.com/goodside/status/1569128808308957185',
       timestamp: '10m ago'
     },
     {
@@ -1406,10 +1406,10 @@ If the query is ambiguous, ask for clarification before recommending.
       author: '@karpathy',
       tag: 'LLM Architecture',
       text: {
-        es: 'Nuevo video en YouTube: "Building GPT from Scratch: Tokenization and Self-Attention".',
-        en: 'New YouTube video: "Building GPT from Scratch: Tokenization and Self-Attention".'
+        es: 'Masterclass en video: "Let\'s build GPT from scratch, in code, spelled out" con tokenización y auto-atención.',
+        en: 'Video Masterclass: "Let\'s build GPT from scratch, in code, spelled out" with tokenization and self-attention.'
       },
-      url: 'https://www.youtube.com/@karpathy',
+      url: 'https://www.youtube.com/watch?v=kCc8FmEb1nY',
       timestamp: '45m ago'
     },
     {
@@ -1417,10 +1417,10 @@ If the query is ambiguous, ask for clarification before recommending.
       author: 'Anthropic Research',
       tag: 'System Prompts',
       text: {
-        es: 'Actualizada la guía oficial de System Prompts y evaluación con metamodelos LLM-as-a-Judge.',
-        en: 'Updated official System Prompts guide and evaluation with LLM-as-a-Judge meta-models.'
+        es: 'Guía técnica oficial sobre diseño de System Prompts y metaprompts estructurados en XML para Claude.',
+        en: 'Official technical guide on System Prompt design and XML-structured metaprompts for Claude.'
       },
-      url: 'https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview',
+      url: 'https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/system-prompts',
       timestamp: '2h ago'
     },
     {
@@ -1428,10 +1428,10 @@ If the query is ambiguous, ask for clarification before recommending.
       author: '@lilianweng',
       tag: 'Autonomous Agents',
       text: {
-        es: 'Nuevo artículo en Lil\'Log: "Extending Context Windows with Hierarchical Memory Graphs".',
-        en: 'New post on Lil\'Log: "Extending Context Windows with Hierarchical Memory Graphs".'
+        es: 'Artículo exhaustivo en Lil\'Log: "LLM Powered Autonomous Agents" sobre planificación, memoria y herramientas.',
+        en: 'Comprehensive post on Lil\'Log: "LLM Powered Autonomous Agents" on planning, memory, and tool use.'
       },
-      url: 'https://lilianweng.github.io/',
+      url: 'https://lilianweng.github.io/posts/2023-06-23-agent/',
       timestamp: '4h ago'
     },
     {
@@ -1439,10 +1439,10 @@ If the query is ambiguous, ask for clarification before recommending.
       author: '@swyx',
       tag: 'AI Engineering',
       text: {
-        es: 'Lanzado episodio de Latent Space Podcast: "The Future of Speculative Decoding and Evals".',
-        en: 'Released Latent Space Podcast episode: "The Future of Speculative Decoding and Evals".'
+        es: 'Análisis en Latent Space: "Reverse Prompt Engineering & The AI Engineer Developer Stack".',
+        en: 'Deep dive on Latent Space: "Reverse Prompt Engineering & The AI Engineer Developer Stack".'
       },
-      url: 'https://www.latent.space/',
+      url: 'https://www.latent.space/p/prompt-engineering',
       timestamp: '6h ago'
     },
     {
@@ -1450,10 +1450,10 @@ If the query is ambiguous, ask for clarification before recommending.
       author: '@simonw',
       tag: 'Security',
       text: {
-        es: 'Análisis de vulnerabilidad: Indirect Prompt Injection a través de imágenes codificadas en OCR.',
-        en: 'Vulnerability analysis: Indirect Prompt Injection via OCR-encoded images.'
+        es: 'Investigación técnica: "Delving into Prompt Injection & Security Exploits in AI Applications".',
+        en: 'Technical research: "Delving into Prompt Injection & Security Exploits in AI Applications".'
       },
-      url: 'https://simonwillison.net/',
+      url: 'https://simonwillison.net/2023/Apr/14/worst-that-can-happen/',
       timestamp: '8h ago'
     },
     {
@@ -1461,10 +1461,10 @@ If the query is ambiguous, ask for clarification before recommending.
       author: '@hwchase17',
       tag: 'LangGraph',
       text: {
-        es: 'LangGraph v0.2 soporta depuración de grafos de razonamiento y checkpoints en tiempo real.',
-        en: 'LangGraph v0.2 supports reasoning graph debugging and real-time checkpoints.'
+        es: 'Guía de arquitectura: "LangGraph Multi-Agent Workflows & Cyclic Reasoning Graphs".',
+        en: 'Architecture guide: "LangGraph Multi-Agent Workflows & Cyclic Reasoning Graphs".'
       },
-      url: 'https://x.com/hwchase17',
+      url: 'https://blog.langchain.dev/langgraph-multi-agent-workflows/',
       timestamp: '12h ago'
     },
     {
@@ -1472,10 +1472,10 @@ If the query is ambiguous, ask for clarification before recommending.
       author: '@omarsar0',
       tag: 'Techniques 2026',
       text: {
-        es: 'Agregados ejemplos interactivos de Chain of Verification (CoVe) en Prompt Engineering Guide.',
-        en: 'Added interactive Chain of Verification (CoVe) examples to Prompt Engineering Guide.'
+        es: 'Documentación interactiva de Chain-of-Verification (CoVe) en Prompt Engineering Guide.',
+        en: 'Interactive Chain-of-Verification (CoVe) documentation in Prompt Engineering Guide.'
       },
-      url: 'https://www.promptingguide.ai/',
+      url: 'https://www.promptingguide.ai/techniques/cove',
       timestamp: '1d ago'
     }
   ],

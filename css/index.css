@@ -813,7 +813,7 @@ body.theme-editorial .central-score-value {
   letter-spacing: 0.04em;
 }
 .central-score-desc {
-  font-size: 0.65rem; color: var(--ink-soft); margin-top: 4px; line-height: 1.2;
+  font-size: 0.7rem; color: var(--ink-soft); margin-top: 4px; line-height: 1.2;
 }
 
 .evaluation-dimensions-row {
@@ -1253,7 +1253,7 @@ body.theme-editorial .score-ring-bg { stroke: #D9D2C4; }
 .template-desc { font-size: 0.85rem; color: var(--ink-soft); line-height: 1.55; flex: 1; margin-bottom: var(--space-md); }
 .template-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: var(--space-md); }
 .tag {
-  padding: 2px 7px; font-family: var(--font-mono); font-size: 0.66rem; font-weight: 500;
+  padding: 2px 7px; font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500;
   color: var(--ink-faint); background: var(--bg-sunken);
   border-radius: 2px;
 }
@@ -1293,7 +1293,7 @@ body.theme-editorial .score-ring-bg { stroke: #D9D2C4; }
 .history-score-value.good { color: var(--ok); }
 .history-score-value.warning { color: var(--warn); }
 .history-score-value.bad { color: var(--accent); }
-.history-score-grade { font-family: var(--font-mono); font-size: 0.62rem; font-weight: 600; color: var(--ink-faint); margin-top: 2px; }
+.history-score-grade { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600; color: var(--ink-faint); margin-top: 2px; }
 .history-info { flex: 1; min-width: 0; }
 .history-preview { font-size: 0.86rem; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
 .history-date { font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-faint); }
@@ -1519,7 +1519,7 @@ body.theme-editorial .score-ring-bg { stroke: #D9D2C4; }
 }
 .cross-ref {
   font-family: var(--font-mono);
-  font-size: 0.66rem;
+  font-size: 0.7rem;
   color: var(--info);
   background: var(--info-bg);
   padding: 2px 7px;
@@ -1724,7 +1724,7 @@ body.theme-editorial .score-ring-bg { stroke: #D9D2C4; }
     padding: 6px;
   }
   .central-score-title {
-    font-size: 0.55rem;
+    font-size: 0.7rem;
   }
   .central-score-value {
     font-size: 1.8rem;
@@ -2234,7 +2234,7 @@ body.theme-editorial .score-ring-bg { stroke: #D9D2C4; }
 
 .constellation-node-label {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 11px;
   fill: var(--ink-soft);
   text-anchor: middle;
   pointer-events: none;
@@ -3105,6 +3105,53 @@ body.theme-editorial .domain-justification-banner .justification-header {
 }
 body.theme-editorial .domain-justification-banner .domain-justification-text {
   color: #374151;
+}
+
+/* ============================================================
+   EDITORIAL OVERRIDES — semantic pills, XML tags & grade badges
+   (cosmic pastels hardcoded above get paper-friendly variants)
+   ============================================================ */
+body.theme-editorial .warning-pill   { background: #F4DAD5; color: #8B2C1F; border-color: #E5C4BD; }
+body.theme-editorial .calibrated-pill-tag { background: #E0E8F0; color: #3A5F7F; border-color: #C9D6E2; }
+body.theme-editorial .tag-objective  { background: #F4ECD2; color: #B8860B; border-color: #E8DCC0; }
+body.theme-editorial .badge-red      { background: #F4DAD5; color: #8B2C1F; border-color: #E5C4BD; }
+body.theme-editorial .badge-emerald  { background: #E8EDE2; color: #4F7942; border-color: #D4DEC9; }
+body.theme-editorial .central-score-grade { color: var(--ok); }
+body.theme-editorial .suggest-status--success { border-color: var(--ok); color: var(--ok); }
+
+body.theme-editorial .xml-tag-role        { background: #EDE9F7; color: #6D28D9; border-color: #D9D0EE; }
+body.theme-editorial .xml-tag-context     { background: #E0E8F0; color: #3A5F7F; border-color: #C9D6E2; }
+body.theme-editorial .xml-tag-task        { background: #F4ECD2; color: #B8860B; border-color: #E8DCC0; }
+body.theme-editorial .xml-tag-format      { background: #E8EDE2; color: #4F7942; border-color: #D4DEC9; }
+body.theme-editorial .xml-tag-constraints { background: #FBEAE6; color: #C73E2D; border-color: #F0CCC5; }
+body.theme-editorial .xml-tag-examples    { background: #F4E7F0; color: #9D5B8F; border-color: #E6D2DE; }
+body.theme-editorial .xml-tag-error       { background: #F4DAD5; color: #8B2C1F; border-color: #E5C4BD; }
+
+body.theme-editorial .grade-a-plus { background: #E8EDE2; color: #4F7942; border-color: #D4DEC9; }
+body.theme-editorial .grade-a      { background: #E8EDE2; color: #4F7942; }
+body.theme-editorial .grade-b      { background: #E0E8F0; color: #3A5F7F; }
+body.theme-editorial .grade-c      { background: #F4ECD2; color: #B8860B; }
+body.theme-editorial .grade-d      { background: #F4ECD2; color: #B45309; }
+body.theme-editorial .grade-f      { background: #F4DAD5; color: #8B2C1F; border-color: #E5C4BD; }
+body.theme-editorial .grade-status-emerald { color: #4F7942; }
+
+/* ── Leaderboard: clamp prompt previews to 3 lines ────────────────── */
+.leaderboard-prompt-preview {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Mobile paint performance: drop fixed backgrounds & heavy blurs ── */
+@media (max-width: 768px) {
+  body { background-attachment: scroll; }
+  .orbital-constellation-section {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .spectral-prism { filter: none; }
 }
 
 /* ============================================================
