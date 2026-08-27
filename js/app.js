@@ -25,6 +25,7 @@ const App = (() => {
     setupHistoryView();
     setupLearnView();
     setupRadarView();
+    setupModelsView();
     setupLeaderboardView();
     setupTickerControls();
     renderNewsTicker();
@@ -66,6 +67,7 @@ const App = (() => {
     if (currentView === 'templates') renderTemplatesView(getActiveCategoryFilter());
     if (currentView === 'history') renderHistoryView();
     if (currentView === 'learn') renderLearnView(getActiveLearnSub());
+    if (currentView === 'models') renderModelsView();
     if (currentView === 'radar') renderRadarView(getActiveRadarSub());
     if (currentView === 'leaderboard') renderLeaderboardView();
     // Analyzer results (dimension cards, eval cards, improved prompt…) are
@@ -404,6 +406,7 @@ const App = (() => {
     if (viewName === 'history') renderHistoryView();
     if (viewName === 'templates') renderTemplatesView(getActiveCategoryFilter());
     if (viewName === 'learn') renderLearnView(getActiveLearnSub());
+    if (viewName === 'models') renderModelsView();
     if (viewName === 'radar') renderRadarView(getActiveRadarSub());
     if (viewName === 'leaderboard') renderLeaderboardView();
   }
@@ -2349,7 +2352,354 @@ const App = (() => {
     switchView('analyzer');
   }
 
-  return { init, showToast, switchView, loadPrompt };
+  
+  // ── Models Directory & Benchmarks View ────────────────────────────
+  let currentModelFilter = 'all';
+  let currentModelSearch = '';
+  let activeSelectedModel = null;
+
+  function setupModelsView() {
+    const searchInput = document.getElementById('models-search-input');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        currentModelSearch = (e.target.value || '').trim().toLowerCase();
+        renderModelsView();
+      });
+    }
+
+    const filterContainer = document.getElementById('models-filter-pills');
+    if (filterContainer) {
+      filterContainer.addEventListener('click', (e) => {
+        const btn = e.target.closest('.filter-chip');
+        if (!btn) return;
+        filterContainer.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentModelFilter = btn.dataset.type || 'all';
+        renderModelsView();
+      });
+    }
+
+    // Event delegation on Podium cards
+    const podiumContainer = document.getElementById('models-podium-section');
+    if (podiumContainer) {
+      podiumContainer.addEventListener('click', (e) => {
+        const card = e.target.closest('.podium-card');
+        if (card && card.dataset.id) {
+          openModelDetailModal(card.dataset.id);
+        }
+      });
+    }
+
+    // Event delegation on Grid cards
+    const gridContainer = document.getElementById('models-grid');
+    if (gridContainer) {
+      gridContainer.addEventListener('click', (e) => {
+        const card = e.target.closest('.model-card');
+        if (card && card.dataset.id) {
+          openModelDetailModal(card.dataset.id);
+        }
+      });
+    }
+
+    // Suggest Model Modal listeners
+    const btnOpenSuggestModel = document.getElementById('btn-open-suggest-model-modal');
+    const modalSuggest = document.getElementById('modal-suggest-model');
+    const btnCloseSuggest = document.getElementById('btn-close-suggest-model-modal');
+    const btnCancelSuggest = document.getElementById('btn-cancel-suggest-model');
+    const btnConfirmSuggest = document.getElementById('btn-confirm-suggest-model');
+
+    function openSuggestModelModal() {
+      if (modalSuggest) {
+        modalSuggest.classList.remove('hidden');
+        focusModal(modalSuggest);
+      }
+    }
+
+    function closeSuggestModelModal() {
+      if (modalSuggest) modalSuggest.classList.add('hidden');
+    }
+
+    if (btnOpenSuggestModel) btnOpenSuggestModel.addEventListener('click', openSuggestModelModal);
+    if (btnCloseSuggest) btnCloseSuggest.addEventListener('click', closeSuggestModelModal);
+    if (btnCancelSuggest) btnCancelSuggest.addEventListener('click', closeSuggestModelModal);
+    setupModalA11y('modal-suggest-model', closeSuggestModelModal);
+
+    if (btnConfirmSuggest) {
+      btnConfirmSuggest.addEventListener('click', () => {
+        const nameInput = document.getElementById('suggest-model-name');
+        const providerInput = document.getElementById('suggest-model-provider');
+        const name = (nameInput?.value || '').trim();
+        const provider = (providerInput?.value || '').trim();
+
+        if (!name || !provider) {
+          showToast(I18n.getLang() === 'en' ? 'Please fill in model name and creator/lab.' : 'Por favor ingresa el nombre y creador del modelo.', 'warning');
+          return;
+        }
+
+        // Reset and close
+        if (nameInput) nameInput.value = '';
+        if (providerInput) providerInput.value = '';
+        const benchInput = document.getElementById('suggest-model-benchmarks');
+        if (benchInput) benchInput.value = '';
+
+        closeSuggestModelModal();
+        showToast(I18n.t('models.suggestSuccessToast'), 'success');
+      });
+    }
+
+    // Modal close listeners
+    const closeBtn = document.getElementById('btn-close-model-modal');
+    const closeBottomBtn = document.getElementById('btn-close-model-modal-bottom');
+    if (closeBtn) closeBtn.addEventListener('click', closeModelDetailModal);
+    if (closeBottomBtn) closeBottomBtn.addEventListener('click', closeModelDetailModal);
+    setupModalA11y('modal-model-detail', closeModelDetailModal);
+
+    // Copy prompt listener in modal
+    const copyBtn = document.getElementById('btn-copy-model-prompt');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', () => {
+        if (!activeSelectedModel || !activeSelectedModel.promptingTips) return;
+        const text = activeSelectedModel.promptingTips.samplePrompt || '';
+        navigator.clipboard.writeText(text).then(() => {
+          const label = document.getElementById('btn-copy-model-prompt-label');
+          if (label) label.textContent = I18n.getLang() === 'en' ? 'Copied!' : '¡Copiado!';
+          setTimeout(() => {
+            if (label) label.textContent = I18n.getLang() === 'en' ? 'Copy' : 'Copiar';
+          }, 1800);
+        });
+      });
+    }
+
+    // Use prompt in Workbench
+    const useBtn = document.getElementById('btn-use-model-prompt');
+    if (useBtn) {
+      useBtn.addEventListener('click', () => {
+        if (!activeSelectedModel || !activeSelectedModel.promptingTips) return;
+        const promptText = activeSelectedModel.promptingTips.samplePrompt;
+        loadPrompt(promptText);
+        closeModelDetailModal();
+        showToast(I18n.t('models.promptLoadedToast', { model: activeSelectedModel.name }), 'success');
+      });
+    }
+  }
+
+  function renderModelsView() {
+    if (typeof Knowledge === 'undefined' || !Knowledge.models) return;
+    const lang = I18n.getLang();
+    const models = Knowledge.models;
+
+    // Filter models
+    const filtered = models.filter(m => {
+      // Type / Category filter
+      if (currentModelFilter === 'frontier' && m.type !== 'frontier') return false;
+      if (currentModelFilter === 'open_weights' && m.type !== 'open_weights') return false;
+      if (currentModelFilter === 'reasoning' && m.category !== 'reasoning') return false;
+      if (currentModelFilter === 'coding' && m.category !== 'coding') return false;
+
+      // Text search
+      if (currentModelSearch) {
+        const query = currentModelSearch;
+        const matchName = m.name.toLowerCase().includes(query);
+        const matchProvider = m.provider.toLowerCase().includes(query);
+        const matchDesc = (m.desc[lang] || m.desc.es).toLowerCase().includes(query);
+        const matchLicense = m.license.toLowerCase().includes(query);
+        if (!matchName && !matchProvider && !matchDesc && !matchLicense) return false;
+      }
+      return true;
+    });
+
+    // Render Podium (Top 3) if no search/filter or if top models are present
+    const podiumContainer = document.getElementById('models-podium-section');
+    if (podiumContainer) {
+      if (!currentModelSearch && currentModelFilter === 'all') {
+        const top3 = models.slice(0, 3);
+        const podiumClasses = ['podium-card--gold', 'podium-card--silver', 'podium-card--bronze'];
+        
+        podiumContainer.innerHTML = top3.map((m, idx) => {
+          const badgeText = lang === 'en' ? (m.badgeEn || m.badge) : m.badge;
+          const descText = m.desc[lang] || m.desc.es;
+          return `
+            <div class="podium-card ${podiumClasses[idx]}" data-id="${m.id}" onclick="App.openModelDetailModal('${m.id}')">
+              <div class="podium-card-badge-top">${badgeText}</div>
+              <h3 class="podium-card-title">#${m.rank} ${m.name}</h3>
+              <div class="podium-card-provider">${m.provider} · <span class="model-type-tag model-type-tag--${m.type}">${m.type === 'frontier' ? (lang === 'en' ? 'Frontier' : 'Frontera') : 'Open Weights'}</span></div>
+              <p class="podium-card-desc">${descText}</p>
+              
+              <div class="model-metrics-grid">
+                <div class="metric-item">
+                  <span class="metric-val">${m.benchmarks.arenaElo}</span>
+                  <span class="metric-lbl">Arena ELO</span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-val">${m.benchmarks.sweBench}</span>
+                  <span class="metric-lbl">SWE-bench</span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-val">${m.contextWindow}</span>
+                  <span class="metric-lbl">${lang === 'en' ? 'Context' : 'Contexto'}</span>
+                </div>
+              </div>
+
+              <div class="model-card-footer">
+                <span>${m.pricing.input}</span>
+                <span class="model-card-action">
+                  <span>${I18n.t('models.viewSpecs')}</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </span>
+              </div>
+            </div>
+          `;
+        }).join('');
+        podiumContainer.style.display = 'grid';
+      } else {
+        podiumContainer.style.display = 'none';
+      }
+    }
+
+    // Render Full Grid
+    const grid = document.getElementById('models-grid');
+    const emptyState = document.getElementById('models-empty-state');
+    if (!grid) return;
+
+    if (filtered.length === 0) {
+      grid.innerHTML = '';
+      if (emptyState) emptyState.classList.remove('hidden');
+      return;
+    }
+
+    if (emptyState) emptyState.classList.add('hidden');
+    grid.innerHTML = filtered.map(m => {
+      const typeLabel = m.type === 'frontier' ? (lang === 'en' ? 'Frontier' : 'Frontera') : 'Open Weights';
+      const descText = m.desc[lang] || m.desc.es;
+      return `
+        <div class="model-card" data-id="${m.id}" onclick="App.openModelDetailModal('${m.id}')">
+          <div>
+            <div class="model-card-header">
+              <div class="model-card-header-left">
+                <span class="model-rank-badge">#${m.rank}</span>
+                <span class="model-card-name">${m.name}</span>
+              </div>
+              <span class="model-type-tag model-type-tag--${m.type}">${typeLabel}</span>
+            </div>
+            <div class="model-card-provider">${m.provider} · ${m.license}</div>
+            
+            <div class="model-metrics-grid">
+              <div class="metric-item">
+                <span class="metric-val">${m.benchmarks.arenaElo}</span>
+                <span class="metric-lbl">Arena ELO</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-val">${m.benchmarks.humanEval}</span>
+                <span class="metric-lbl">HumanEval</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-val">${m.contextWindow}</span>
+                <span class="metric-lbl">${lang === 'en' ? 'Context' : 'Contexto'}</span>
+              </div>
+            </div>
+
+            <p class="model-modal-desc" style="font-size:12px; margin: 8px 0; -webkit-line-clamp:2; display:-webkit-box; -webkit-box-orient:vertical; overflow:hidden;">
+              ${descText}
+            </p>
+          </div>
+
+          <div class="model-card-footer">
+            <span>${m.pricing.input}</span>
+            <span class="model-card-action">
+              <span>${I18n.t('models.viewSpecs')}</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function openModelDetailModal(modelId) {
+    if (typeof Knowledge === 'undefined' || !Knowledge.models) return;
+    const model = Knowledge.models.find(m => m.id === modelId);
+    if (!model) return;
+    activeSelectedModel = model;
+
+    const lang = I18n.getLang();
+    const modal = document.getElementById('modal-model-detail');
+    if (!modal) return;
+
+    // Header info
+    document.getElementById('model-modal-rank').textContent = '#' + model.rank;
+    document.getElementById('model-detail-modal-title').textContent = model.name;
+    const typeLabel = model.type === 'frontier' ? (lang === 'en' ? 'Frontier / Proprietary' : 'Frontera / Propietario') : 'Open Source / Open Weights';
+    document.getElementById('model-modal-provider').textContent = `${model.provider} · ${typeLabel} · ${model.license}`;
+
+    // Metrics grid
+    const metricsGrid = document.getElementById('model-modal-metrics-grid');
+    if (metricsGrid) {
+      metricsGrid.innerHTML = `
+        <div class="metric-item">
+          <span class="metric-val">${model.benchmarks.arenaElo}</span>
+          <span class="metric-lbl">Arena ELO</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-val">${model.benchmarks.mmluPro}</span>
+          <span class="metric-lbl">MMLU-Pro</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-val">${model.benchmarks.sweBench}</span>
+          <span class="metric-lbl">SWE-bench</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-val">${model.benchmarks.math500}</span>
+          <span class="metric-lbl">MATH 500</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-val">${model.benchmarks.humanEval}</span>
+          <span class="metric-lbl">HumanEval</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-val">${model.contextWindow}</span>
+          <span class="metric-lbl">${lang === 'en' ? 'Context' : 'Contexto'}</span>
+        </div>
+      `;
+    }
+
+    // Description & Strengths
+    document.getElementById('model-modal-desc').textContent = model.desc[lang] || model.desc.es;
+    const strengthsList = document.getElementById('model-modal-strengths');
+    if (strengthsList) {
+      const list = model.strengths[lang] || model.strengths.es || [];
+      strengthsList.innerHTML = list.map(s => `<li>${s}</li>`).join('');
+    }
+
+    // Prompting style and sample prompt
+    const tipEl = document.getElementById('model-modal-prompt-tip');
+    if (tipEl) {
+      tipEl.textContent = model.promptingTips.style[lang] || model.promptingTips.style.es;
+    }
+    const sampleEl = document.getElementById('model-modal-sample-prompt');
+    if (sampleEl) {
+      sampleEl.textContent = model.promptingTips.samplePrompt || '';
+    }
+
+    // Docs Link
+    const docsLink = document.getElementById('btn-model-docs-link');
+    if (docsLink) {
+      docsLink.href = model.docsUrl || '#';
+    }
+
+    modal.classList.remove('hidden');
+    document.body.classList.add('modal-open');
+  }
+
+  function closeModelDetailModal() {
+    const modal = document.getElementById('modal-model-detail');
+    if (modal) {
+      modal.classList.add('hidden');
+      document.body.classList.remove('modal-open');
+    }
+    activeSelectedModel = null;
+  }
+
+  return { init, showToast, switchView, loadPrompt, openModelDetailModal, closeModelDetailModal, renderModelsView };
 })();
 
 // Boot

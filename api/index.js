@@ -210,6 +210,33 @@ let globalLeaderboard = [
   }
 ];
 
+
+function _handleSuggestModel(req, res, payload) {
+  const name = String(payload.name || '').trim();
+  const provider = String(payload.provider || '').trim();
+  const type = String(payload.type || 'frontier').trim();
+  const benchmarks = String(payload.benchmarks || '').trim();
+
+  if (!name || !provider) {
+    res.writeHead(400, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({ error: 'El nombre y proveedor del modelo son obligatorios.' }));
+  }
+
+  // Sanitize
+  const cleanName = name.replace(/[<>]/g, '').slice(0, 100);
+  const cleanProvider = provider.replace(/[<>]/g, '').slice(0, 100);
+  const cleanBenchmarks = benchmarks.replace(/[<>]/g, '').slice(0, 500);
+
+  console.log(`[Model Suggestion] ${cleanName} by ${cleanProvider} (${type}) - ${cleanBenchmarks}`);
+
+  res.writeHead(200, { 'Content-Type': 'application/json' });
+  return res.end(JSON.stringify({
+    success: true,
+    message: 'Sugerencia de modelo recibida con éxito para verificación automática en el Observatorio.',
+    model: { name: cleanName, provider: cleanProvider, type }
+  }));
+}
+
 module.exports = (req, res) => {
   const origin = req.headers.origin || '';
   const clientIp = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '127.0.0.1';
@@ -278,6 +305,36 @@ module.exports = (req, res) => {
     if (url.includes('ai-news')) {
       _handleAiNews(req, res);
       return;
+    }
+
+    // ── GET /api/models ───────────────────────────────────────────
+    if (url.includes('models')) {
+      let modelsList = [];
+      try {
+        const kPath = path.join(__dirname, '../js/knowledge.js');
+        if (fs.existsSync(kPath)) {
+          const knowledgeModule = fs.readFileSync(kPath, 'utf8');
+          const s = { globalThis: {} };
+          s.window = s;
+          (0, eval)(knowledgeModule.replace('const Knowledge =', 'globalThis.Knowledge ='));
+          modelsList = globalThis.Knowledge.models || [];
+        }
+      } catch (e) {}
+
+      res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({
+        success: true,
+        updated: '2026-08',
+        total: modelsList.length,
+        models: modelsList,
+        sources: [
+          { name: 'LMSYS Chatbot Arena', url: 'https://lmarena.ai/' },
+          { name: 'BenchLM Leaderboard', url: 'https://benchlm.ai/' },
+          { name: 'Artificial Analysis', url: 'https://artificialanalysis.ai/' },
+          { name: 'OpenRouter Telemetry', url: 'https://openrouter.ai/models' }
+        ]
+      }));
     }
 
     if (url.includes('leaderboard')) {

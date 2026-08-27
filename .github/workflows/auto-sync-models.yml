@@ -1,0 +1,46 @@
+name: Automated LLM Models & Benchmark Sync
+
+on:
+  schedule:
+    # Run automatically every Monday at 04:00 UTC (zero human intervention)
+    - cron: '0 4 * * 1'
+  workflow_dispatch: # Allows manual trigger from GitHub UI if ever needed
+
+jobs:
+  sync-models:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies (if any)
+        run: npm ci || npm install --no-audit
+
+      - name: Fetch Live LLM Models & Benchmark Telemetry
+        run: node scripts/auto_sync_models.js
+
+      - name: Run Test Verification Suite
+        run: node test_edge_cases.js
+
+      - name: Commit & Push Changes (if updated)
+        run: |
+          git config --global user.name "Promptometer Bot"
+          git config --global user.email "bot@promptometer.tech"
+          git add js/knowledge.js
+          if git diff --staged --quiet; then
+            echo "No benchmark or model changes detected. Everything up to date."
+          else
+            git commit -m "chore(models): auto-sync latest SOTA LLM models and benchmark telemetry [skip ci]"
+            git push origin dev
+            echo "Changes pushed to dev. Vercel deployment triggered automatically."
+          fi
