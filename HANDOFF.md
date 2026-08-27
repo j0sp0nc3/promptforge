@@ -91,6 +91,7 @@ interactiva desplegada en Vercel.
 - [x] **Leyenda de Calificaciones & Rúbrica de Notas (Score Scale Modal)**: Modal interactivo (`#modal-score-legend`) desplegable al hacer clic en la insignia de score o en el botón de ayuda para explicar detalladamente el sistema multidimensional de 0 a 100 y la rúbrica de notas de letra (**A+** a **F**).
 - [x] **Feedback Específico para Prompts Ultra-Cortos**: Adición de hallazgos y sugerencias explicativas (`tooShort` & `tooShortSugg`) en las dimensiones de Estructura, Robustez, Chain of Thought y Seguridad cuando el prompt contiene menos de 3 palabras.
 - [x] **Motor Híbrido de Análisis de Intención y Enriquecimiento de Contexto de Dominio (`js/domain-analyzer.js`, `api/index.js`, `js/rewriter.js`, `js/app.js`)**: Detección de 8 Arquetipos de Dominio, matriz de brechas de contexto, chips de inyección rápida de fragmentos XML en 1-clic, endpoint serverless `/api/analyze-intent` (con fallback local `synthesizeLocal`) e insignia de arquetipo en el Workbench.
+- [x] **Auditoría UX & Accesibilidad (fixes de estilos rotos + WCAG)**: Tokens CSS faltantes definidos (`--shadow-sm/lg`, `--vermilion`, `--rule-color` + typos `--space-2xl`/`--ink-soft`/`--font-sans`), toasts con posicionamiento fixed restaurado (`#toast-container`), modal suggest-creator duplicado eliminado (7 IDs repetidos), share modal des-anidado (3 `</div>`), layout Learn restaurado a grid con subnav sticky, chips `.action-chip` consolidados (modificador `--inject`), `:focus-visible` global, `prefers-reduced-motion`, contraste AA de `--ink-faint`, ARIA (role=dialog/tablist/tab, aria-current, aria-expanded, aria-label en icon-only), y cierre uniforme de modales (ESC + backdrop + foco inicial).
 
 ---
 
@@ -143,13 +144,25 @@ promptforge/                    ← App Web (Vercel)
 
 ## 🔄 Última Actualización
 
-- **Fecha:** 2026-08-16
+- **Fecha:** 2026-08-26
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
 - **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
-- **Último commit promptforge:** `9bb897b` (feat(llm): propagate selected prompt objective into Gemini diagnostic pipeline)
-- **Estado:** 26/26 tests en PASS (8 Suites completas). Paridad ES/EN, desanidamiento XML, rol temático dinámico, diagnóstico de debilidades al LLM con prioridad de objetivo declarado, banner `justification` en UI, Gemini verificado, y orden canónico de 7 bloques XML aplicado en toda la cadena.
+- **Último commit promptforge:** auditoría UX/accesibilidad (fixes de estilos rotos + WCAG)
+- **Estado:** 26/26 tests en PASS (8 Suites completas). Fixes de UX aplicados: tokens CSS definidos, toasts fixed, modales deduplicados y des-anidados, foco de teclado visible, reduced-motion, contraste AA y ARIA completo.
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (reciente):**
+>
+> **Auditoría UX & Accesibilidad — Fixes de estilos rotos + WCAG:**
+> - **Tokens CSS indefinidos (`css/index.css`):** Definidos `--shadow-sm`, `--shadow-lg`, `--vermilion` (cósmico `#FF9E00` / editorial `#C73E2D`), `--rule-color` (color puro) en `:root` y `body.theme-editorial`. Corregidos typos `--space-xxl`→`--space-2xl`, `--ink-body`→`--ink-soft`, `--font-body`→`--font-sans` y `border-top: 1px solid var(--rule-color)`. La sección Radar IA recupera sus acentos y los modales su sombra.
+> - **Toasts (`index.html`):** `#toast-container` ahora lleva la clase `.toast-container` (el CSS posicionaba la clase pero el HTML solo tenía el id) + `aria-live="polite"`.
+> - **Modal suggest-creator duplicado (`index.html`):** Eliminada la versión vieja (7 IDs duplicados); se conserva la accesible con `role="dialog"`. Los errores de validación (`#suggest-creator-status`) vuelven a ser visibles.
+> - **Share modal malformado (`index.html`):** Cerrados 3 `</div>` faltantes → `#modal-score-legend` des-anidado.
+> - **Layout Learn (`css/index.css`):** Eliminada la redefinición flex que pisaba el grid `220px 1fr` con subnav sticky.
+> - **Chips (`css/index.css`, `js/app.js`):** `.action-chip` consolidada (base neutral del design system + modificador `.action-chip--inject` mono/azul para inyección de dominio). El chip editorial ya no sale azul por error de cascada.
+> - **Accesibilidad (`css/index.css`):** `:focus-visible` global (anillo con `--accent`), `prefers-reduced-motion` (ticker, constelación, spin, smooth-scroll), contraste AA de `--ink-faint` (`#94A3B8` cósmico / `#6B6153` editorial).
+> - **ARIA (`index.html`, `js/app.js`, `js/i18n.js`):** `role="dialog"/aria-modal` en los 4 modales vivos, tabs de resultados con `role="tablist"/"tab"/"tabpanel"` + `aria-selected`, `aria-current="page"` en nav, `aria-expanded` + teclado en acordeón de dimensiones (delegación de eventos), `aria-label` en textarea y botones icon-only (i18n `a11y.*` ES/EN).
+> - **Modales uniformes (`js/app.js`):** `setupModalA11y()` (ESC + click en backdrop) y `focusModal()` (foco inicial al primer input/botón) en los 4 modales.
+> - **Verificación:** 26/26 tests PASS, HTML sin IDs duplicados y con divs balanceados (136/136), CSS con llaves balanceadas y 0 variables sin resolver sin fallback, servidor local verificado.
 >
 > **Commit `9bb897b` — Propagación de Objetivo Declarado al Pipeline Diagnóstico Gemini:**
 > - **Inclusión de `objective` en Payload (`js/app.js`):** El handler de `#btn-deep-domain-ai` incluye el objetivo seleccionado en el selector del Workbench (`coding`, `reasoning`, `json_schema`, `safety_rag`, `creative` o `general`).

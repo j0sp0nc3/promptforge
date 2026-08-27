@@ -48,6 +48,14 @@ const I18n = (() => {
         toggleTheme: 'Cambiar tema visual',
       },
 
+      // ── Accessibility labels (aria) ────────────────────────────────────
+      a11y: {
+        mainNav: 'Navegación principal',
+        promptInput: 'Prompt a evaluar',
+        switchLang: 'Cambiar idioma',
+        close: 'Cerrar',
+      },
+
       // ── Prompt types (referenced by analyzer.js as promptType.${type}) ──
       promptType: {
         system: 'Prompt de sistema',
@@ -1072,6 +1080,14 @@ const I18n = (() => {
         themeCosmic: 'Black Hole Mode 🕳️',
         themeEditorial: 'Moon Mode 🌙',
         toggleTheme: 'Toggle visual theme',
+      },
+
+      // ── Accessibility labels (aria) ────────────────────────────────────
+      a11y: {
+        mainNav: 'Main navigation',
+        promptInput: 'Prompt to evaluate',
+        switchLang: 'Switch language',
+        close: 'Close',
       },
 
       // ── Prompt types (referenced by analyzer.js as promptType.${type}) ──

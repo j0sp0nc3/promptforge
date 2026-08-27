@@ -147,13 +147,13 @@
 
 <body>
   <!-- Toast container -->
-  <div id="toast-container"></div>
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
 
   <!-- App Header -->
   <header class="app-header" id="app-header">
     <div class="header-left">
       <div class="logo">
-        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
           <defs>
             <linearGradient id="logo-bg" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
               <stop offset="0%" stop-color="#F7F3EC" />
@@ -193,9 +193,9 @@
         <h1 class="logo-text">Prompt<span class="logo-accent">ometer</span></h1>
       </div>
     </div>
-    <nav class="header-nav">
+    <nav class="header-nav" aria-label="Navegación principal" data-i18n-aria="a11y.mainNav">
       <button class="nav-btn active" data-view="analyzer" id="nav-analyzer">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"
           stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="8" />
           <path d="m21 21-4.3-4.3" />
@@ -203,7 +203,7 @@
         <span data-i18n="nav.analyze">Analizar</span>
       </button>
       <button class="nav-btn" data-view="templates" id="nav-templates">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"
           stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="3" width="7" height="7" />
           <rect x="14" y="3" width="7" height="7" />
@@ -213,7 +213,7 @@
         <span data-i18n="nav.templates">Templates</span>
       </button>
       <button class="nav-btn" data-view="history" id="nav-history">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"
           stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10" />
           <polyline points="12 6 12 12 16 14" />
@@ -221,7 +221,7 @@
         <span data-i18n="nav.history">Historial</span>
       </button>
       <button class="nav-btn" data-view="learn" id="nav-learn">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"
           stroke-linecap="round" stroke-linejoin="round">
           <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
           <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
@@ -229,7 +229,7 @@
         <span data-i18n="nav.learn">Aprender</span>
       </button>
       <button class="nav-btn" data-view="radar" id="nav-radar">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"
           stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10" />
           <path d="M12 2a10 10 0 0 1 10 10" />
@@ -239,7 +239,7 @@
         <span data-i18n="nav.radar">Radar IA</span>
       </button>
       <button class="nav-btn" data-view="leaderboard" id="nav-leaderboard">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"
           stroke-linecap="round" stroke-linejoin="round">
           <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
           <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
@@ -252,16 +252,16 @@
       </button>
     </nav>
     <div class="header-right">
-      <button class="theme-toggle-btn" id="theme-toggle-btn" type="button" data-i18n-title="nav.toggleTheme" title="Cambiar tema visual">
+      <button class="theme-toggle-btn" id="theme-toggle-btn" type="button" data-i18n-title="nav.toggleTheme" title="Cambiar tema visual" aria-label="Cambiar tema visual" data-i18n-aria="nav.toggleTheme">
         <span class="theme-icon" id="theme-icon">🕳️</span>
         <span class="theme-label" id="theme-label" data-i18n="nav.themeCosmic">Modo Black Hole 🕳️</span>
       </button>
-      <div class="lang-switcher" id="lang-switcher">
+      <div class="lang-switcher" id="lang-switcher" role="group" aria-label="Cambiar idioma" data-i18n-aria="a11y.switchLang">
         <button class="lang-btn active" data-lang="es" type="button">ES</button>
         <button class="lang-btn" data-lang="en" type="button">EN</button>
       </div>
-      <button class="btn-icon" id="btn-export-menu" data-i18n-title="nav.export" title="Exportar">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      <button class="btn-icon" id="btn-export-menu" data-i18n-title="nav.export" title="Exportar" aria-label="Exportar" data-i18n-aria="nav.export">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"
           stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
           <polyline points="7 10 12 15 17 10" />
@@ -350,6 +350,7 @@
             </div>
             <textarea id="prompt-input" class="prompt-textarea"
               placeholder="Write or paste your prompt here to evaluate and calibrate..." data-i18n-placeholder="editor.placeholder"
+              aria-label="Prompt a evaluar" data-i18n-aria="a11y.promptInput"
               spellcheck="false"></textarea>
             <div class="editor-footer">
               <div class="editor-stats">
@@ -361,7 +362,7 @@
               </div>
               <div class="editor-actions">
                 <button class="btn btn-primary btn-analyze" id="btn-analyze">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
                   </svg>
                   <span data-i18n="editor.analyze">Calibrate & Optimize</span>
@@ -432,28 +433,28 @@
       <section class="analysis-tabs-section" id="analysis-tabs-section" style="margin-top: var(--space-xl);">
         
         <!-- Navigation Tabs -->
-        <div class="tab-bar" id="results-tabs">
-          <button class="tab active" data-tab="dimensions" data-i18n="tabs.dimensions">Dimensiones</button>
-          <button class="tab" data-tab="radar" data-i18n="tabs.radar">Radar</button>
-          <button class="tab" data-tab="antipatterns" data-i18n="tabs.antipatterns">Anti-patrones</button>
-          <button class="tab" data-tab="adversarial" data-i18n="tabs.adversarial">Adversarial</button>
-          <button class="tab" data-tab="improved" data-i18n="tabs.improved">Mejora</button>
+        <div class="tab-bar" id="results-tabs" role="tablist" aria-label="Resultados de análisis">
+          <button class="tab active" data-tab="dimensions" data-i18n="tabs.dimensions" role="tab" id="tabbtn-dimensions" aria-controls="tab-dimensions" aria-selected="true">Dimensiones</button>
+          <button class="tab" data-tab="radar" data-i18n="tabs.radar" role="tab" id="tabbtn-radar" aria-controls="tab-radar" aria-selected="false">Radar</button>
+          <button class="tab" data-tab="antipatterns" data-i18n="tabs.antipatterns" role="tab" id="tabbtn-antipatterns" aria-controls="tab-antipatterns" aria-selected="false">Anti-patrones</button>
+          <button class="tab" data-tab="adversarial" data-i18n="tabs.adversarial" role="tab" id="tabbtn-adversarial" aria-controls="tab-adversarial" aria-selected="false">Adversarial</button>
+          <button class="tab" data-tab="improved" data-i18n="tabs.improved" role="tab" id="tabbtn-improved" aria-controls="tab-improved" aria-selected="false">Mejora</button>
         </div>
 
         <!-- Tab: Dimensions Breakdown -->
-        <div class="tab-content active" id="tab-dimensions">
+        <div class="tab-content active" id="tab-dimensions" role="tabpanel" aria-labelledby="tabbtn-dimensions">
           <div class="dimensions-list" id="dimensions-list"></div>
         </div>
 
         <!-- Tab: 8D Radar Canvas -->
-        <div class="tab-content" id="tab-radar">
+        <div class="tab-content" id="tab-radar" role="tabpanel" aria-labelledby="tabbtn-radar">
           <div class="radar-chart-container" style="display:flex; justify-content:center; padding:var(--space-lg);">
-            <canvas id="radar-canvas" width="400" height="400"></canvas>
+            <canvas id="radar-canvas" width="400" height="400" role="img" aria-label="Radar de 8 dimensiones del prompt"></canvas>
           </div>
         </div>
 
         <!-- Tab: Anti-patterns & Strengths -->
-        <div class="tab-content" id="tab-antipatterns">
+        <div class="tab-content" id="tab-antipatterns" role="tabpanel" aria-labelledby="tabbtn-antipatterns">
           <div class="section-header">
             <h3 data-i18n="sections.antipatternsDetected">Anti-patrones Detectados</h3>
             <span class="count-badge" id="antipattern-count">0</span>
@@ -467,7 +468,7 @@
         </div>
 
         <!-- Tab: Adversarial Stress-Tests -->
-        <div class="tab-content" id="tab-adversarial">
+        <div class="tab-content" id="tab-adversarial" role="tabpanel" aria-labelledby="tabbtn-adversarial">
           <div class="section-header">
             <h3 data-i18n="sections.adversarialTests">Pruebas Adversariales</h3>
             <div class="resistance-badge" id="resistance-badge">
@@ -478,7 +479,7 @@
         </div>
 
         <!-- Tab: Improved Breakdown & Calibrated Output -->
-        <div class="tab-content" id="tab-improved">
+        <div class="tab-content" id="tab-improved" role="tabpanel" aria-labelledby="tabbtn-improved">
           <section class="workbench-card calibrated-card" id="results-panel" style="margin-bottom: 1.5rem;">
             <div class="workbench-card-header">
               <div class="card-title-group">
@@ -683,11 +684,11 @@
   </main>
 
   <!-- Submit to Leaderboard Modal -->
-  <div class="modal-backdrop hidden" id="modal-submit-leaderboard">
+  <div class="modal-backdrop hidden" id="modal-submit-leaderboard" role="dialog" aria-modal="true" aria-labelledby="submit-leaderboard-modal-title">
     <div class="modal-card">
       <div class="modal-header">
-        <h3 class="modal-title" data-i18n="leaderboard.modalTitle">Publicar Prompt en el Top 10</h3>
-        <button class="modal-close" id="btn-close-submit-modal" type="button">&times;</button>
+        <h3 class="modal-title" id="submit-leaderboard-modal-title" data-i18n="leaderboard.modalTitle">Publicar Prompt en el Top 10</h3>
+        <button class="modal-close" id="btn-close-submit-modal" type="button" aria-label="Cerrar" data-i18n-aria="a11y.close">&times;</button>
       </div>
       <div class="modal-body">
         <p class="modal-desc" data-i18n="leaderboard.modalDesc">Ingresa un título descriptivo y tu nombre o alias para enviar tu prompt actual al ranking.</p>
@@ -706,35 +707,6 @@
       <div class="modal-footer">
         <button class="btn btn-secondary" id="btn-cancel-submit-modal" data-i18n="leaderboard.cancel">Cancelar</button>
         <button class="btn btn-primary" id="btn-confirm-submit" data-i18n="leaderboard.confirmSubmit">Enviar al Ranking</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Suggest Creator Modal -->
-  <div class="modal-backdrop hidden" id="modal-suggest-creator">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3 class="modal-title" data-i18n="radar.modalTitle">Sugerir Creador / Cuenta AI</h3>
-        <button class="modal-close" id="btn-close-suggest-modal" type="button">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p class="modal-desc" data-i18n="radar.modalDesc">Propón un perfil de redes sociales o canal técnico enfocado en Prompt Engineering o Gen AI para la comunidad.</p>
-        <div class="form-group">
-          <label for="suggest-creator-name" data-i18n="radar.labelName">Nombre / Organización</label>
-          <input type="text" id="suggest-creator-name" class="form-control" data-i18n-placeholder="radar.placeholderName" placeholder="Ej. Andrej Karpathy">
-        </div>
-        <div class="form-group">
-          <label for="suggest-creator-handle" data-i18n="radar.labelHandle">Handle / Enlace a Red Social</label>
-          <input type="text" id="suggest-creator-handle" class="form-control" data-i18n-placeholder="radar.placeholderHandle" placeholder="Ej. @karpathy o https://x.com/karpathy">
-        </div>
-        <div class="form-group">
-          <label for="suggest-creator-reason" data-i18n="radar.labelReason">¿Por qué recomendarlo? (opcional)</label>
-          <textarea id="suggest-creator-reason" class="form-control" rows="2" data-i18n-placeholder="radar.placeholderReason" placeholder="Ej. Comparte guías profundas de arquitectura de LLMs y tokenización."></textarea>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" id="btn-cancel-suggest-modal" data-i18n="leaderboard.cancel">Cancelar</button>
-        <button class="btn btn-primary" id="btn-confirm-suggest-creator" data-i18n="radar.confirmSuggest">Enviar Sugerencia</button>
       </div>
     </div>
   </div>
@@ -826,7 +798,7 @@
       <div class="modal-header">
         <h3 class="modal-title" id="suggest-creator-modal-title" data-i18n="radar.modalTitle">Sugerir Creador / Cuenta AI</h3>
         <button class="modal-close-btn" id="btn-close-suggest-modal" aria-label="Cerrar">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
       <p class="modal-desc" data-i18n="radar.modalDesc">Propón un perfil de redes sociales o canal técnico enfocado en Prompt Engineering o Gen AI para la comunidad.</p>
@@ -862,7 +834,7 @@
       <div class="modal-header">
         <h3 class="modal-title" id="share-link-modal-title" data-i18n="export.shareModalTitle">Compartir Prompt</h3>
         <button class="modal-close-btn" id="btn-close-share-modal" aria-label="Cerrar">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
       <p class="modal-desc" data-i18n="export.shareModalDesc">Usa este enlace directo para compartir tu prompt con cualquier colega o usuario.</p>
@@ -891,13 +863,17 @@
       </div>
       <div class="modal-actions">
         <button class="btn btn-ghost" id="btn-close-share-modal-bottom" data-i18n="leaderboard.cancel">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ── Prompt Score Legend Modal ────────────────────────────────────── -->
   <div id="modal-score-legend" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="score-legend-modal-title">
     <div class="modal-panel" style="max-width: 680px;">
       <div class="modal-header">
         <h3 class="modal-title" id="score-legend-modal-title" data-i18n="legend.title">Escala de Puntuación & Calificaciones (Prompt Score)</h3>
         <button class="modal-close-btn" id="btn-close-score-legend" aria-label="Cerrar">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
       <p class="modal-desc" data-i18n="legend.subtitle">Comprensión del sistema de evaluación multidimensional de 0 a 100 puntos y sus letras de rango (A+ a F).</p>
