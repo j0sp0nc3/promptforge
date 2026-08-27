@@ -274,6 +274,12 @@ module.exports = (req, res) => {
   // Route GET /api & /api/leaderboard
   if (req.method === 'GET') {
     const url = req.url || '';
+    // ── GET /api/ai-news — fresh AI stories from Hacker News (Algolia) ──
+    if (url.includes('ai-news')) {
+      _handleAiNews(req, res);
+      return;
+    }
+
     if (url.includes('leaderboard')) {
       // If Upstash is configured, fetch from Redis (global, persistent).
       // Otherwise fall back to the in-memory array.
@@ -589,6 +595,55 @@ async function _handleSuggestCreator(req, res, payload) {
 
   res.writeHead(200, { 'Content-Type': 'application/json' });
   return res.end(JSON.stringify({ success: true, id, stored: 'memory' }));
+}
+
+// ── /api/ai-news: live AI news feed (Hacker News via Algolia search) ──────
+// Free, keyless, CORS-open public API. Results are cached in the serverless
+// instance for 10 minutes so the ticker refreshes stay cheap.
+const AI_NEWS_CACHE_TTL_MS = 10 * 60 * 1000;
+const _aiNewsCache = { at: 0, items: [] };
+
+async function _handleAiNews(req, res) {
+  const now = Date.now();
+  const fresh = _aiNewsCache.items.length > 0 && (now - _aiNewsCache.at) < AI_NEWS_CACHE_TTL_MS;
+  if (fresh) {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({ source: 'hackernews', cachedAt: _aiNewsCache.at, items: _aiNewsCache.items }));
+  }
+
+  try {
+    const q = encodeURIComponent('AI OR LLM');
+    const hnUrl = `https://hn.algolia.com/api/v1/search_by_date?query=${q}&tags=story&hitsPerPage=30`;
+    const resp = await fetch(hnUrl, { headers: { 'User-Agent': 'promptometer/1.0' } });
+    if (!resp.ok) throw new Error('HN status ' + resp.status);
+    const data = await resp.json();
+
+    // Quality filter: Algolia's OR query is fuzzy — keep only stories whose
+    // title actually mentions AI/LLM terms.
+    const AI_TITLE_RE = /\b(AI|A\.I\.|LLM|LLMs|GPT|ChatGPT|Claude|Gemini|Llama|Mistral|Copilot|agent|agents|agentic|prompt|inference|fine-?tun|transformer|neural|OpenAI|Anthropic|DeepSeek|diffusion|RAG)\b/i;
+    const items = (data.hits || [])
+      .filter(h => h.title && (h.points || 0) >= 5 && AI_TITLE_RE.test(h.title))
+      .slice(0, 12)
+      .map(h => ({
+        id: 'hn-' + h.objectID,
+        title: h.title,
+        url: h.url || ('https://news.ycombinator.com/item?id=' + h.objectID),
+        author: h.author || 'hn',
+        points: h.points || 0,
+        comments: h.num_comments || 0,
+        publishedAt: (h.created_at_i || 0) * 1000,
+      }));
+
+    _aiNewsCache.at = now;
+    _aiNewsCache.items = items;
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ source: 'hackernews', cachedAt: now, items }));
+  } catch (e) {
+    // Serve stale cache if available; otherwise an empty list (client falls
+    // back to the curated static feed).
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ source: 'hackernews', cachedAt: _aiNewsCache.at, items: _aiNewsCache.items, degraded: true }));
+  }
 }
 
 async function _handleAnalyzeIntent(req, res, payload) {

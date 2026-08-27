@@ -28,6 +28,13 @@ const App = (() => {
     setupLeaderboardView();
     setupTickerControls();
     renderNewsTicker();
+    // Live AI news: fetch on load, then refresh every 5 minutes (and when the
+    // tab regains focus after being away for a while).
+    refreshAiNews();
+    setInterval(refreshAiNews, 5 * 60 * 1000);
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) refreshAiNews();
+    });
     checkShareURL();
     updateEditorStats();
 
@@ -114,7 +121,7 @@ const App = (() => {
         toggleBtn.setAttribute('title', t('radar.tickerPlay'));
       }
 
-      const totalItems = Knowledge.feed ? Knowledge.feed.length : items.length;
+      const totalItems = getTickerFeed().length;
       if (dir === 'next') {
         tickerStepIndex = (tickerStepIndex + 1) % totalItems;
       } else {
@@ -172,7 +179,7 @@ const App = (() => {
     const feedList = document.getElementById('ticker-feed-list');
     if (!feedList || typeof Knowledge === 'undefined') return;
     const lang = I18n.getLang();
-    const feed = Knowledge.feed || [];
+    const feed = getTickerFeed();
 
     const tags = ['all', ...new Set(feed.map(f => f.tag).filter(Boolean))];
 
@@ -227,11 +234,56 @@ const App = (() => {
     `).join('');
   }
 
+  // ── Live AI News (from /api/ai-news — Hacker News) ──────
+  let liveAiNews = [];
+
+  function getTickerFeed() {
+    const curated = (typeof Knowledge !== 'undefined' && Knowledge.feed) ? Knowledge.feed : [];
+    return liveAiNews.length ? [...liveAiNews, ...curated] : curated;
+  }
+
+  function _timeAgo(ms, lang) {
+    const diffMin = Math.max(1, Math.round((Date.now() - ms) / 60000));
+    if (diffMin < 60) return lang === 'es' ? `hace ${diffMin}m` : `${diffMin}m ago`;
+    const diffH = Math.round(diffMin / 60);
+    if (diffH < 24) return lang === 'es' ? `hace ${diffH}h` : `${diffH}h ago`;
+    const diffD = Math.round(diffH / 24);
+    return lang === 'es' ? `hace ${diffD}d` : `${diffD}d ago`;
+  }
+
+  async function refreshAiNews() {
+    try {
+      const res = await fetch(API_CONFIG.getUrl('/api/ai-news'));
+      if (!res.ok) return;
+      const data = await res.json();
+      if (!data || !Array.isArray(data.items)) return;
+
+      const lang = I18n.getLang();
+      liveAiNews = data.items
+        .filter(it => it.title && it.url)
+        .map(it => ({
+          id: it.id,
+          author: '@' + (it.author || 'hn'),
+          tag: 'HN · ' + (it.points || 0) + ' pts',
+          text: { es: it.title, en: it.title },
+          url: it.url,
+          timestamp: it.publishedAt ? _timeAgo(it.publishedAt, lang) : '',
+        }));
+
+      // Re-render so the fresh items show up immediately.
+      renderNewsTicker();
+      const modal = document.getElementById('modal-ticker-feed');
+      if (modal && !modal.classList.contains('hidden')) renderTickerFeedModalContent();
+    } catch (e) {
+      // Network/offline: keep the curated static feed.
+    }
+  }
+
   function renderNewsTicker() {
     const track = document.getElementById('news-ticker-track');
     if (!track || typeof Knowledge === 'undefined') return;
     const lang = I18n.getLang();
-    const feed = Knowledge.feed || [];
+    const feed = getTickerFeed();
 
     // Duplicate feed list to create seamless infinite loop animation
     const fullFeed = [...feed, ...feed];

@@ -1384,6 +1384,107 @@ If the query is ambiguous, ask for clarification before recommending.
         es: 'Uno de los creadores de contenido sobre IA con mayor crecimiento. Su canal de YouTube y newsletter "Future Tools" son el mapa definitivo de las nuevas herramientas de IA, demos prácticas y prompts aplicados a flujos creativos.',
         en: 'One of the fastest-growing AI content creators. His YouTube channel and "Future Tools" newsletter are the definitive map of new AI tools, practical demos, and prompts applied to creative workflows.'
       }
+    },
+    {
+      id: 'cr-dotcsv',
+      name: 'DotCSV (Carlos Santana)',
+      handle: '@DotCSV',
+      role: { es: 'Divulgador de IA en español · YouTube (~800k)', en: 'Spanish-language AI educator · YouTube (~800k)' },
+      category: 'architecture',
+      platforms: [
+        { name: 'X / Twitter', url: 'https://x.com/DotCSV', type: 'x' },
+        { name: 'YouTube', url: 'https://www.youtube.com/channel/UCy5znSnfMsDwaLlROnZ7Qbg', type: 'youtube' }
+      ],
+      desc: {
+        es: '🇪🇸 El divulgador de IA en español más respetado: deep dives sobre redes neuronales, transformers y los últimos modelos, con rigor técnico y divulgación de primer nivel.',
+        en: '🇪🇸 The most respected Spanish-language AI educator: deep dives on neural networks, transformers and the latest models, with technical rigor and first-class science communication.'
+      }
+    },
+    {
+      id: 'cr-ia-en-espanol',
+      name: 'IA en Español',
+      handle: 'iaenespanol.club',
+      role: { es: 'La mayor newsletter de IA en español (40k+ miembros)', en: 'Largest Spanish-language AI newsletter (40k+ members)' },
+      category: 'prompting',
+      platforms: [
+        { name: 'Newsletter', url: 'https://iaenespanol.club/', type: 'substack' }
+      ],
+      desc: {
+        es: '🇪🇸 Newsletter de referencia hispanohablante: noticias de IA, análisis de herramientas y prompts prácticos cada pocos días, por Jesús Arias y Emilio García.',
+        en: '🇪🇸 The go-to Spanish-language newsletter: AI news, tool analysis and practical prompts every few days, by Jesús Arias and Emilio García.'
+      }
+    },
+    {
+      id: 'cr-saul-gordillo',
+      name: 'Saul Gordillo',
+      handle: 'saulgordillo.substack.com',
+      role: { es: 'Analista de IA & Substack (español)', en: 'AI analyst & Substack (Spanish)' },
+      category: 'prompting',
+      platforms: [
+        { name: 'Substack', url: 'https://saulgordillo.substack.com/', type: 'substack' }
+      ],
+      desc: {
+        es: '🇪🇸 Analista y cronista del ecosistema de IA en español: mapas de creadores, tendencias de generativos y aplicaciones reales de IA en empresas.',
+        en: '🇪🇸 Analyst and chronicler of the Spanish-language AI ecosystem: creator maps, generative AI trends and real business applications.'
+      }
+    },
+    {
+      id: 'cr-defend-intelligence',
+      name: 'Defend Intelligence (Anis Ayari)',
+      handle: 'defendintelligence.com',
+      role: { es: 'Ingeniero IA & creador de contenido (francés)', en: 'AI engineer & content creator (French)' },
+      category: 'architecture',
+      platforms: [
+        { name: 'YouTube', url: 'https://www.youtube.com/c/DefendIntelligence-tech', type: 'youtube' },
+        { name: 'Web', url: 'https://defendintelligence.com/', type: 'substack' }
+      ],
+      desc: {
+        es: '🇫🇷 El canal de IA francófono más influyente: decodificación de modelos, actualidades de IA, masterclasses y el oficio de Data Scientist.',
+        en: '🇫🇷 The most influential French-speaking AI channel: model deep dives, AI news, masterclasses and the Data Scientist craft.'
+      }
+    },
+    {
+      id: 'cr-everlast-ai',
+      name: 'Everlast AI (Leonard Schmedding)',
+      handle: '@everlastai',
+      role: { es: 'Semanario de noticias KI & consultoría (alemán)', en: 'Weekly KI news & consulting (German)' },
+      category: 'architecture',
+      platforms: [
+        { name: 'YouTube', url: 'https://www.youtube.com/@everlastai', type: 'youtube' }
+      ],
+      desc: {
+        es: '🇩🇪 Referencia alemana sobre IA: noticias semanales de KI, casos de uso empresariales, tutoriales y entrevistas con expertos.',
+        en: '🇩🇪 German-language AI reference: weekly KI news, enterprise use cases, tutorials and expert interviews.'
+      }
+    },
+    {
+      id: 'cr-didatica-tech',
+      name: 'Didática Tech',
+      handle: '@DidaticaTech',
+      role: { es: 'Educación de ML & Data Science (portugués)', en: 'ML & Data Science education (Portuguese)' },
+      category: 'architecture',
+      platforms: [
+        { name: 'YouTube', url: 'https://www.youtube.com/c/Did%C3%A1ticaTech', type: 'youtube' },
+        { name: 'Web', url: 'https://didatica.tech/', type: 'substack' }
+      ],
+      desc: {
+        es: '🇧🇷 El canal brasileño que "descomplica" la IA: machine learning, ciencia de datos y fundamentos matemáticos explicados desde cero en portugués.',
+        en: '🇧🇷 The Brazilian channel that "de-complicates" AI: machine learning, data science and math foundations explained from scratch in Portuguese.'
+      }
+    },
+    {
+      id: 'cr-ledge-ai',
+      name: 'Ledge.ai',
+      handle: 'ledge.ai',
+      role: { es: 'El mayor medio de noticias de IA de Japón', en: 'Japan\'s largest AI news media' },
+      category: 'prompting',
+      platforms: [
+        { name: 'Web', url: 'https://ledge.ai/', type: 'substack' }
+      ],
+      desc: {
+        es: '🇯🇵 Medio japonés de referencia sobre IA: cobertura diaria de LLMs, lanzamientos de modelos y aplicaciones empresariales de IA en el mercado japonés.',
+        en: '🇯🇵 Japan\'s reference AI media: daily coverage of LLMs, model releases and enterprise AI adoption in the Japanese market.'
+      }
     }
   ],
 
