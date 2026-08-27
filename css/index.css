@@ -3135,3 +3135,302 @@ body.theme-editorial .domain-justification-banner .domain-justification-text {
 }
 
 
+
+
+/* 📡 Live News Ticker Controls & Feed Modal CSS 📡 */
+.news-ticker-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 var(--space-sm);
+  background: var(--bg-paper);
+  border-left: var(--rule);
+  height: 100%;
+  flex-shrink: 0;
+  z-index: 2;
+}
+
+.ticker-ctrl-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-sunken);
+  color: var(--ink);
+  border: 1px solid var(--rule-color);
+  border-radius: var(--radius-sm);
+  height: 24px;
+  min-width: 24px;
+  padding: 0 6px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.ticker-ctrl-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent);
+  color: var(--vermilion);
+}
+
+.ticker-ctrl-btn--text {
+  font-size: 0.72rem;
+  padding: 0 8px;
+}
+
+.news-ticker-track.paused,
+.news-ticker-track:focus-within {
+  animation-play-state: paused !important;
+}
+
+.ticker-feed-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+  padding: var(--space-xs) 0 var(--space-md) 0;
+  border-bottom: 1px solid var(--rule-color);
+  margin-bottom: var(--space-md);
+}
+
+.ticker-filter-chip {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--rule-color);
+  background: var(--bg-sunken);
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ticker-filter-chip:hover,
+.ticker-filter-chip.active {
+  background: var(--vermilion);
+  color: #ffffff;
+  border-color: var(--vermilion);
+}
+
+.ticker-feed-modal-body {
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.ticker-feed-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.ticker-feed-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: var(--space-md);
+  border: 1px solid var(--rule-color);
+  border-radius: var(--radius-md);
+  background: var(--bg-paper);
+  text-decoration: none;
+  color: var(--ink);
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.ticker-feed-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.ticker-feed-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.ticker-feed-author {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--ink);
+}
+
+.ticker-feed-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.ticker-feed-time {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-faint);
+}
+
+.ticker-feed-text {
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  line-height: 1.4;
+}
+
+.radar-controls-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg-paper);
+  border: 1px solid var(--rule-color);
+  border-radius: var(--radius-md);
+}
+
+.radar-search-wrapper {
+  flex: 1;
+  min-width: 220px;
+}
+
+.radar-search-input {
+  width: 100%;
+  padding: 8px 12px;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  background: var(--bg-sunken);
+  color: var(--ink);
+  border: 1px solid var(--rule-color);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.radar-search-input:focus {
+  border-color: var(--accent);
+}
+
+.radar-category-pills {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.radar-cat-btn {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--rule-color);
+  background: var(--bg-sunken);
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.radar-cat-btn:hover,
+.radar-cat-btn.active {
+  background: var(--vermilion);
+  color: #fff;
+  border-color: var(--vermilion);
+}
+
+
+/* 📜 Compact Ticker Feed Modal & Row Layout 📜 */
+.ticker-modal-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-xs);
+}
+
+.modal-input--sm {
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  border-radius: var(--radius-sm);
+  background: var(--bg-sunken);
+  border: 1px solid var(--rule-color);
+  width: 100%;
+}
+
+.ticker-feed-modal-body {
+  max-height: 310px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.ticker-feed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ticker-feed-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: 8px 12px;
+  border: 1px solid var(--rule-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-paper);
+  text-decoration: none;
+  color: var(--ink);
+  transition: all 0.15s ease;
+}
+
+.ticker-feed-row:hover {
+  border-color: var(--vermilion);
+  background: var(--bg-hover);
+  transform: translateX(2px);
+}
+
+.ticker-feed-row-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.ticker-feed-row-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ticker-feed-author-name {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.78rem;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.ticker-feed-row-text {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ticker-feed-row-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.ticker-feed-link-icon {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--vermilion);
+  opacity: 0.7;
+  transition: opacity 0.15s ease;
+}
+
+.ticker-feed-row:hover .ticker-feed-link-icon {
+  opacity: 1;
+}

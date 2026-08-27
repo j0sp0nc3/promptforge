@@ -1082,11 +1082,11 @@ If the query is ambiguous, ask for clarification before recommending.
     {
       id: 'cr-riley-goodside',
       name: 'Riley Goodside',
-      handle: '@RileyGoodside',
+      handle: '@goodside',
       role: { es: 'Staff Prompt Engineer en Scale AI', en: 'Staff Prompt Engineer at Scale AI' },
       category: 'prompting',
       platforms: [
-        { name: 'X / Twitter', url: 'https://x.com/RileyGoodside', type: 'x' }
+        { name: 'X / Twitter', url: 'https://x.com/goodside', type: 'x' }
       ],
       desc: {
         es: 'Primer Staff Prompt Engineer de la industria. Conocido por sus descubrimientos de inyección de prompt, jailbreaks y técnicas de prompting.',
@@ -1392,13 +1392,13 @@ If the query is ambiguous, ask for clarification before recommending.
   feed: [
     {
       id: 'feed-1',
-      author: '@RileyGoodside',
+      author: '@goodside',
       tag: 'Prompt Injection',
       text: {
         es: 'Publicada nueva guía sobre defensa contra ataques de Inyección de Prompt en Agentes RAG.',
         en: 'Published new guide on defending against Prompt Injection attacks in RAG Agents.'
       },
-      url: 'https://x.com/RileyGoodside',
+      url: 'https://x.com/goodside',
       timestamp: '10m ago'
     },
     {
