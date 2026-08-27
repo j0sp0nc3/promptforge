@@ -141,6 +141,30 @@ const I18n = (() => {
         placeholder: 'Escribe o pega tu prompt aquí para analizarlo...\n\nEjemplo:\nEres un experto en marketing digital. Analiza el siguiente texto y extrae las 5 ideas principales. Presenta los resultados en formato de lista numerada con una breve explicación de cada punto.',
       },
 
+      // ── Analyzer hero header ─────────────────────────────────────────────
+      hero: {
+        title: 'Comparación & Calibración de Prompts',
+        subtitle: 'Optimización de Prompts & Espacio de Calibración Orbital 8D',
+      },
+
+      // ── Workbench cards, pills & action chips ──────────────────────────
+      workbench: {
+        unoptimizedTitle: 'Prompt Sin Optimizar',
+        pillVagueGoal: '[Objetivo Vago]',
+        pillNoConstraints: '[Sin Restricciones]',
+        pillMissingPersona: '[Sin Persona]',
+        goalPill: '[Meta: {name}]',
+        calibratedTitle: 'Promptometer Calibrado ✨',
+        pillRoleDefined: '[Rol Definido]',
+        pillStrictSchema: '[Esquema Estricto]',
+        chipShorten: '⚡ Acortar',
+        chipCoT: '🧠 Añadir CoT',
+        chipJson: '📐 Forzar JSON',
+        chipSafety: '🛡️ Salvaguardas',
+        copy: '📋 Copiar',
+        apply: '✨ Aplicar',
+      },
+
       // ── Stats ───────────────────────────────────────────────────────────
       stats: {
         chars: '{n} caracteres',
@@ -157,11 +181,14 @@ const I18n = (() => {
       // ── Score hero ──────────────────────────────────────────────────────
       score: {
         label: 'Puntuación General',
+        centralLabel: 'PUNTUACIÓN DEL PROMPT',
         max: '/100',
       },
 
       // ── Constellation 3D states ──────────────────────────────────────────
       constellation: {
+        title: 'CONSTELACIÓN DE EVALUACIÓN DE PROMPTS 8D',
+        subtitle: 'Mapeo Espectral de Resonancia en Tiempo Real',
         awaitingEvaluation: 'Esperando evaluación…',
         analyzing: 'Analizando…',
         protostarHint: 'Escribe un prompt para formar el sistema',
@@ -530,15 +557,10 @@ const I18n = (() => {
         medium: 'Medio',
         dense: 'Denso',
       },
-      domain: {
-        code: 'código',
-        data: 'datos',
-        writing: 'redacción',
-        analysis: 'análisis',
-        education: 'educación',
-        business: 'negocio',
-        general: 'general',
-      },
+      // NOTE: a second legacy `domain` section (lowercase export labels) used
+      // to live here. JS object literals keep only the LAST duplicate key, so
+      // it silently clobbered the archetype translations (`domain.general_task`
+      // etc.) and the badge rendered the raw key. Removed — it had no consumers.
 
       // ── Export report (Markdown/JSON labels) ────────────────────────────
       report: {
@@ -847,6 +869,10 @@ const I18n = (() => {
         empty: {
           finding: 'No se proporcionó un prompt válido.',
           sugg: 'Ingresa un prompt para analizar.',
+        },
+        insufficient: {
+          finding: 'Prompt sin sustancia: no declara ninguna tarea accionable (verbo de acción o pregunta directa), ni estructura, ni restricciones.',
+          sugg: 'Declara explícitamente qué debe hacer el modelo (ej. "Analiza…", "Escribe…"), añade contexto del dominio y formato de salida esperado.',
         },
       },
 
@@ -1174,6 +1200,28 @@ const I18n = (() => {
         placeholder: 'Type or paste your prompt here to analyze it...\n\nExample:\nYou are a digital marketing expert. Analyze the following text and extract the 5 main ideas. Present the results as a numbered list with a brief explanation of each point.',
       },
 
+      hero: {
+        title: 'Prompt Comparison & Calibration',
+        subtitle: 'Prompt Optimization & 8D Orbital Calibration Workspace',
+      },
+
+      workbench: {
+        unoptimizedTitle: 'Unoptimized Prompt',
+        pillVagueGoal: '[Vague Goal]',
+        pillNoConstraints: '[No Constraints]',
+        pillMissingPersona: '[Missing Persona]',
+        goalPill: '[Goal: {name}]',
+        calibratedTitle: 'Promptometer Calibrated ✨',
+        pillRoleDefined: '[Role Defined]',
+        pillStrictSchema: '[Strict Schema]',
+        chipShorten: '⚡ Shorten',
+        chipCoT: '🧠 Add CoT',
+        chipJson: '📐 Enforce JSON',
+        chipSafety: '🛡️ Guardrails',
+        copy: '📋 Copy',
+        apply: '✨ Apply',
+      },
+
       stats: {
         chars: '{n} characters',
         words: '{n} words',
@@ -1187,11 +1235,14 @@ const I18n = (() => {
 
       score: {
         label: 'Overall Score',
+        centralLabel: 'PROMPT SCORE',
         max: '/100',
       },
 
       // ── Constellation 3D states ──────────────────────────────────────────
       constellation: {
+        title: '8D PROMPT EVALUATION CONSTELLATION',
+        subtitle: 'Real-time Spectral Resonance Mapping',
         awaitingEvaluation: 'Awaiting evaluation…',
         analyzing: 'Analyzing…',
         protostarHint: 'Write a prompt to form the system',
@@ -1547,15 +1598,7 @@ const I18n = (() => {
         medium: 'Medium',
         dense: 'Dense',
       },
-      domain: {
-        code: 'code',
-        data: 'data',
-        writing: 'writing',
-        analysis: 'analysis',
-        education: 'education',
-        business: 'business',
-        general: 'general',
-      },
+      // NOTE: legacy duplicate `domain` section removed (see ES note above).
 
       report: {
         title: '📊 Analysis Report — Promptometer',
@@ -1857,6 +1900,10 @@ const I18n = (() => {
         empty: {
           finding: 'No valid prompt was provided.',
           sugg: 'Enter a prompt to analyze.',
+        },
+        insufficient: {
+          finding: 'Substanceless prompt: it declares no actionable task (action verb or direct question), no structure, and no constraints.',
+          sugg: 'Explicitly state what the model must do (e.g. "Analyze…", "Write…"), add domain context and the expected output format.',
         },
       },
 

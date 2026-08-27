@@ -6,7 +6,7 @@
 // trivial — closing the "keyword stuffing" gaming vector.
 //
 // API:
-//   Signals.extract(prompt, lang)  → object with boolean/number signals
+//   Signals.extract(prompt, lang, objective)  → object with boolean/number signals
 //   Signals.inferType(prompt, signals, wordCount)  → 'system' | 'few-shot' | ...
 //   Signals.weightsFor(type)      → { clarity, specificity, ... } summing to 1
 // ============================================================================
@@ -20,9 +20,11 @@ const Signals = {
    *
    * @param {string} prompt  Raw prompt text.
    * @param {string} lang    'es' | 'en' | 'mixed' (from Analyzer._detectLanguage).
+   * @param {string} [objective] Selected Prompt Objective; forwarded to
+   *        DomainAnalyzer as a tie-breaker hint for the archetype.
    * @returns {Object} Signal map.
    */
-  extract(prompt, lang) {
+  extract(prompt, lang, objective) {
     const lower = prompt.toLowerCase();
     const words = lower.split(/\s+/).filter(Boolean);
     const wordCount = words.length;
@@ -162,9 +164,9 @@ const Signals = {
       vagueQualifiers,
       vagueAdjectives,
       contradictions,
-      // Domain Intelligence
-      domainArchetype: (typeof DomainAnalyzer !== 'undefined' ? DomainAnalyzer : (typeof globalThis !== 'undefined' ? globalThis.DomainAnalyzer : null))?.inferArchetype(prompt) || 'general_task',
-      contextGaps: (typeof DomainAnalyzer !== 'undefined' ? DomainAnalyzer : (typeof globalThis !== 'undefined' ? globalThis.DomainAnalyzer : null))?.evaluateContextGaps(prompt, (typeof DomainAnalyzer !== 'undefined' ? DomainAnalyzer : (typeof globalThis !== 'undefined' ? globalThis.DomainAnalyzer : null))?.inferArchetype(prompt) || 'general_task') || [],
+      // Domain Intelligence (objective hint breaks ties for neutral text)
+      domainArchetype: (typeof DomainAnalyzer !== 'undefined' ? DomainAnalyzer : (typeof globalThis !== 'undefined' ? globalThis.DomainAnalyzer : null))?.inferArchetype(prompt, objective) || 'general_task',
+      contextGaps: (typeof DomainAnalyzer !== 'undefined' ? DomainAnalyzer : (typeof globalThis !== 'undefined' ? globalThis.DomainAnalyzer : null))?.evaluateContextGaps(prompt, (typeof DomainAnalyzer !== 'undefined' ? DomainAnalyzer : (typeof globalThis !== 'undefined' ? globalThis.DomainAnalyzer : null))?.inferArchetype(prompt, objective) || 'general_task') || [],
     };
   },
 

@@ -254,7 +254,6 @@
     <div class="header-right">
       <button class="theme-toggle-btn" id="theme-toggle-btn" type="button" data-i18n-title="nav.toggleTheme" title="Cambiar tema visual" aria-label="Cambiar tema visual" data-i18n-aria="nav.toggleTheme">
         <span class="theme-icon" id="theme-icon">🕳️</span>
-        <span class="theme-label" id="theme-label" data-i18n="nav.themeCosmic">Modo Black Hole 🕳️</span>
       </button>
       <div class="lang-switcher" id="lang-switcher" role="group" aria-label="Cambiar idioma" data-i18n-aria="a11y.switchLang">
         <button class="lang-btn active" data-lang="es" type="button">ES</button>
@@ -292,8 +291,8 @@
       <!-- Top Title & Calibration Header -->
       <div class="analyzer-hero-header">
         <div class="hero-header-content">
-          <h2 class="hero-main-title">Prompt Comparison & Calibration</h2>
-          <p class="hero-main-subtitle">Prompt Optimization & 8D Orbital Calibration Workspace</p>
+          <h2 class="hero-main-title" data-i18n="hero.title">Prompt Comparison & Calibration</h2>
+          <p class="hero-main-subtitle" data-i18n="hero.subtitle">Prompt Optimization & 8D Orbital Calibration Workspace</p>
         </div>
       </div>
 
@@ -304,11 +303,11 @@
         <section class="workbench-card unoptimized-card" id="editor-panel">
           <div class="workbench-card-header">
             <div class="card-title-group">
-              <h3 class="card-title">Unoptimized Prompt</h3>
+              <h3 class="card-title" data-i18n="workbench.unoptimizedTitle">Unoptimized Prompt</h3>
               <div class="warning-pills-row" id="unoptimized-warning-pills">
-                <span class="warning-pill">[Vague Goal]</span>
-                <span class="warning-pill">[No Constraints]</span>
-                <span class="warning-pill">[Missing Persona]</span>
+                <span class="warning-pill" data-i18n="workbench.pillVagueGoal">[Vague Goal]</span>
+                <span class="warning-pill" data-i18n="workbench.pillNoConstraints">[No Constraints]</span>
+                <span class="warning-pill" data-i18n="workbench.pillMissingPersona">[Missing Persona]</span>
               </div>
             </div>
             <div style="display:flex; align-items:center; gap:8px;">
@@ -404,8 +403,8 @@
       <section class="orbital-constellation-section" id="orbital-constellation-section">
         <div class="constellation-header-bar" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
           <div>
-            <h3 class="constellation-title">8D PROMPT EVALUATION CONSTELLATION</h3>
-            <span class="constellation-subtitle">Real-time Spectral Resonance Mapping</span>
+            <h3 class="constellation-title" data-i18n="constellation.title">8D PROMPT EVALUATION CONSTELLATION</h3>
+            <span class="constellation-subtitle" data-i18n="constellation.subtitle">Real-time Spectral Resonance Mapping</span>
           </div>
           <button id="btn-score-legend-trigger" class="btn-score-legend-pill" data-i18n-title="legend.title" title="¿Qué significa el Prompt Score y la letra de calificación?">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
@@ -417,7 +416,7 @@
           <div id="constellation-3d-canvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;"></div>
           <svg id="orbital-constellation-svg" viewBox="0 0 800 450" width="100%" height="100%" style="position: absolute; top: 0; left: 0; pointer-events: none; z-index: 2; display: none;"></svg>
           <div class="central-score-box" style="z-index: 10;">
-            <span class="central-score-title">PROMPT SCORE</span>
+            <span class="central-score-title" data-i18n="score.centralLabel">PROMPT SCORE</span>
             <div class="central-score-value" id="score-number">--</div>
             <span class="central-score-grade" id="score-grade" data-i18n="constellation.awaitingEvaluation">Esperando evaluación…</span>
           </div>
@@ -483,11 +482,11 @@
           <section class="workbench-card calibrated-card" id="results-panel" style="margin-bottom: 1.5rem;">
             <div class="workbench-card-header">
               <div class="card-title-group">
-                <h3 class="card-title">Promptometer Calibrated ✨</h3>
+                <h3 class="card-title" data-i18n="workbench.calibratedTitle">Promptometer Calibrated ✨</h3>
                 <div class="calibrated-badges-row">
                   <span class="calibrated-pill-tag tag-objective" id="calibrated-objective-pill">[Goal: General]</span>
-                  <span class="calibrated-pill-tag tag-role">[Role Defined]</span>
-                  <span class="calibrated-pill-tag tag-format">[Strict Schema]</span>
+                  <span class="calibrated-pill-tag tag-role" data-i18n="workbench.pillRoleDefined">[Role Defined]</span>
+                  <span class="calibrated-pill-tag tag-format" data-i18n="workbench.pillStrictSchema">[Strict Schema]</span>
                 </div>
               </div>
               <div class="card-score-badge badge-neutral" id="calibrated-score-badge">--<span>/100</span></div>
@@ -514,15 +513,15 @@
               <!-- Action Chips Bar -->
               <div class="calibrated-actions-row">
                 <div class="action-chips-group">
-                  <button class="action-chip" id="chip-shorten">⚡ Shorten</button>
-                  <button class="action-chip" id="chip-cot">🧠 Add CoT</button>
-                  <button class="action-chip" id="chip-json">📐 Enforce JSON</button>
-                  <button class="action-chip" id="chip-safety">🛡️ Guardrails</button>
+                  <button class="action-chip" id="chip-shorten" data-i18n="workbench.chipShorten">⚡ Shorten</button>
+                  <button class="action-chip" id="chip-cot" data-i18n="workbench.chipCoT">🧠 Add CoT</button>
+                  <button class="action-chip" id="chip-json" data-i18n="workbench.chipJson">📐 Enforce JSON</button>
+                  <button class="action-chip" id="chip-safety" data-i18n="workbench.chipSafety">🛡️ Guardrails</button>
                 </div>
                 <div class="primary-actions-group">
                   <span class="improvement-badge" id="improvement-badge">+25 pts</span>
-                  <button class="btn btn-secondary btn-sm" id="btn-copy-improvement">📋 Copy</button>
-                  <button class="btn btn-primary btn-sm" id="btn-apply-improvement">✨ Apply</button>
+                  <button class="btn btn-secondary btn-sm" id="btn-copy-improvement" data-i18n="workbench.copy">📋 Copy</button>
+                  <button class="btn btn-primary btn-sm" id="btn-apply-improvement" data-i18n="workbench.apply">✨ Apply</button>
                 </div>
               </div>
             </div>

@@ -92,6 +92,7 @@ interactiva desplegada en Vercel.
 - [x] **Feedback Específico para Prompts Ultra-Cortos**: Adición de hallazgos y sugerencias explicativas (`tooShort` & `tooShortSugg`) en las dimensiones de Estructura, Robustez, Chain of Thought y Seguridad cuando el prompt contiene menos de 3 palabras.
 - [x] **Motor Híbrido de Análisis de Intención y Enriquecimiento de Contexto de Dominio (`js/domain-analyzer.js`, `api/index.js`, `js/rewriter.js`, `js/app.js`)**: Detección de 8 Arquetipos de Dominio, matriz de brechas de contexto, chips de inyección rápida de fragmentos XML en 1-clic, endpoint serverless `/api/analyze-intent` (con fallback local `synthesizeLocal`) e insignia de arquetipo en el Workbench.
 - [x] **Auditoría UX & Accesibilidad (fixes de estilos rotos + WCAG)**: Tokens CSS faltantes definidos (`--shadow-sm/lg`, `--vermilion`, `--rule-color` + typos `--space-2xl`/`--ink-soft`/`--font-sans`), toasts con posicionamiento fixed restaurado (`#toast-container`), modal suggest-creator duplicado eliminado (7 IDs repetidos), share modal des-anidado (3 `</div>`), layout Learn restaurado a grid con subnav sticky, chips `.action-chip` consolidados (modificador `--inject`), `:focus-visible` global, `prefers-reduced-motion`, contraste AA de `--ink-faint`, ARIA (role=dialog/tablist/tab, aria-current, aria-expanded, aria-label en icon-only), y cierre uniforme de modales (ESC + backdrop + foco inicial).
+- [x] **Fixes de Scoring, Arquetipo de Dominio e i18n (sesión 2026-08-26)**: (1) Gate de "sustancia insuficiente" en `Analyzer.analyze` — prompts sin tarea accionable (sin verbo de acción, pregunta directa, estructura, ejemplos ni restricciones) con < 8 palabras quedan limitados a grado F (≤25/100); "esto es un prompt" pasa de 48/D a 25/F, mientras tareas cortas legítimas ("Resume… en 3 puntos", "Qué es…?") no se penalizan. (2) `DomainAnalyzer.inferArchetype(prompt, objectiveHint)` — el objetivo seleccionado del Workbench actúa como desempate: con texto neutral y objetivo `coding`/`json_schema`/`safety_rag`/`creative` el arquetipo sigue al objetivo (las señales del texto siempre ganan). (3) Bug raíz del badge `domain.general_task` crudo: sección `domain` duplicada en los diccionarios i18n (la última pisaba a la de arquetipos en runtime) — eliminada la legacy sin consumidores. (4) i18n completo del Workbench: hero, pills warning/calibrated, chips de acción, Copy/Apply, título de constelación, PROMPT SCORE central y pill `[Meta: {name}]` (nuevas claves `hero.*`, `workbench.*`, `constellation.title/subtitle`, `score.centralLabel`); `onLangChange` ahora re-renderiza la vista Analizer (las cards 8D y resultados seguían el idioma del análisis). (5) Theme toggle solo icono (label eliminado; aria-label se mantiene).
 
 ---
 
@@ -147,10 +148,18 @@ promptforge/                    ← App Web (Vercel)
 - **Fecha:** 2026-08-26
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
 - **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
-- **Último commit promptforge:** auditoría UX/accesibilidad (fixes de estilos rotos + WCAG)
-- **Estado:** 26/26 tests en PASS (8 Suites completas). Fixes de UX aplicados: tokens CSS definidos, toasts fixed, modales deduplicados y des-anidados, foco de teclado visible, reduced-motion, contraste AA y ARIA completo.
+- **Último commit promptforge:** fixes de scoring (gate sustancia insuficiente), arquetipo por objetivo e i18n del Workbench
+- **Estado:** 26/26 tests en PASS. ⚠️ Pendiente: replicar el gate de sustancia insuficiente y el hint de objetivo en el paquete npm `promptometer-core` (el serverless `/api/analyze-intent` usa el core de npm; hoy recibe el `analysis` del cliente, por lo que la web ya está cubierta, pero el paquete por sí solo no incluye el gate).
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (reciente):**
+>
+> **Scoring + Arquetipo + i18n — Sesión 2026-08-26:**
+> - **Gate de sustancia insuficiente (`js/analyzer.js`):** `wordCount < 8` sin verbo de acción, pregunta directa, estructura, few-shot, formato solicitado ni restricción numérica → tope 30 por dimensión y overall ≤ 25 (F). Verificado: "esto es un prompt" 48→25; "Resume este artículo en 3 puntos" (51) y "Qué es la fotosíntesis?" (48) sin cambios.
+> - **Arquetipo por objetivo (`js/domain-analyzer.js`, `js/signals.js`, `js/analyzer.js`):** `inferArchetype(prompt, objectiveHint)` con mapa `coding→software_engineering`, `json_schema→data_extraction`, `safety_rag→rag_knowledge`, `creative→rhetoric_creative` solo cuando el texto no produce señales.
+> - **Bug i18n raíz (`js/i18n.js`):** sección `domain` duplicada (ES y EN) — la última (labels legacy de export sin consumidores) pisaba a la de arquetipos; por eso el badge mostraba `domain.general_task` crudo. Eliminada.
+> - **i18n del Workbench:** claves nuevas ES/EN `hero.*`, `workbench.*` (pills, chips, copy/apply, goalPill `{name}`), `constellation.title/subtitle`, `score.centralLabel`; `data-i18n` en el HTML; `onLangChange` re-renderiza el analyzer (cards 8D, resultados, dominio).
+> - **Theme toggle:** solo icono (label fuera, `aria-label` intacto).
+> - **Verificación:** 26/26 tests, harness de scoring, 133 claves data-i18n resuelven en ES y EN, servidor local actualizado sin restart.
 >
 > **Auditoría UX & Accesibilidad — Fixes de estilos rotos + WCAG:**
 > - **Tokens CSS indefinidos (`css/index.css`):** Definidos `--shadow-sm`, `--shadow-lg`, `--vermilion` (cósmico `#FF9E00` / editorial `#C73E2D`), `--rule-color` (color puro) en `:root` y `body.theme-editorial`. Corregidos typos `--space-xxl`→`--space-2xl`, `--ink-body`→`--ink-soft`, `--font-body`→`--font-sans` y `border-top: 1px solid var(--rule-color)`. La sección Radar IA recupera sus acentos y los modales su sombra.

@@ -60,6 +60,9 @@ const App = (() => {
     if (currentView === 'learn') renderLearnView(getActiveLearnSub());
     if (currentView === 'radar') renderRadarView(getActiveRadarSub());
     if (currentView === 'leaderboard') renderLeaderboardView();
+    // Analyzer results (dimension cards, eval cards, improved prompt…) are
+    // JS-rendered too: re-render them so they follow the language switch.
+    if (currentView === 'analyzer' && currentAnalysis) renderResults();
   }
 
   function renderNewsTicker() {
@@ -374,7 +377,7 @@ const App = (() => {
       const objText = t(`objectives.${objKey}`) || objKey;
       // Extract short name e.g. "General", "Código", "Análisis"
       const shortName = objText.replace(/^[\p{Emoji}\s]+/u, '');
-      objPill.textContent = `[Goal: ${shortName}]`;
+      objPill.textContent = t('workbench.goalPill', { name: shortName });
     }
 
     // Dual-card score badges
