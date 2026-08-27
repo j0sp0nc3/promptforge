@@ -1581,6 +1581,400 @@ If the query is ambiguous, ask for clarification before recommending.
     }
   ],
 
+  
+  /* ── 7. Top LLM Models & Benchmarks Directory ────────────────
+     Frontier & Open Source Foundation Models with Benchmark Telemetry & Prompting Guides. */
+  models: [
+    {
+      id: 'model-claude-3-7-sonnet',
+      rank: 1,
+      name: 'Claude 3.7 Sonnet',
+      provider: 'Anthropic',
+      type: 'frontier',
+      category: 'reasoning',
+      badge: '🥇 Top 1 Razonamiento Híbrido & Código',
+      badgeEn: '🥇 Top 1 Hybrid Reasoning & Code',
+      contextWindow: '200K tokens',
+      contextNum: 200000,
+      license: 'Proprietary (API)',
+      pricing: { input: '$3.00 / 1M', output: '$15.00 / 1M', note: { es: 'Modo thinking configurable', en: 'Configurable thinking tokens' } },
+      benchmarks: {
+        arenaElo: 1380,
+        mmluPro: '85.2%',
+        sweBench: '70.3%',
+        math500: '96.2%',
+        humanEval: '93.8%'
+      },
+      desc: {
+        es: 'El primer modelo con razonamiento híbrido (pensamiento extendido configurable). Líder absoluto en ingeniería de software, arquitectura de sistemas y seguimiento estricto de restricciones XML.',
+        en: 'The first hybrid reasoning model with configurable extended thinking. Industry leader in software engineering, system architecture, and strict XML constraint adherence.'
+      },
+      strengths: {
+        es: ['Estructuración XML perfecta', 'Edición quirúrgica de código en SWE-bench', 'Razonamiento extendido sin alucinaciones'],
+        en: ['Flawless XML structuring', 'SOTA SWE-bench software engineering', 'Extended reasoning with minimal hallucination']
+      },
+      promptingTips: {
+        style: { es: 'Etiquetas XML canónicas (<system_role>, <requirements>, <output_format>) y metaprompts.', en: 'Canonical XML tags (<system_role>, <requirements>, <output_format>) and metaprompts.' },
+        syntax: 'XML Tags + Directives',
+        samplePrompt: `<system_role>
+Eres un Arquitecto de Software Senior especializado en TypeScript y microservicios.
+</system_role>
+
+<objective>
+Diseña el esquema de tipos y la función de middleware para validación de tokens JWT en Node.js.
+</objective>
+
+<requirements>
+1. Proporciona código tipado con manejo exhaustivo de errores (TokenExpiredError, JsonWebTokenError).
+2. Estructura la respuesta con un bloque de explicación conciso y luego el bloque de código final.
+</requirements>
+
+<output_format>
+Devuelve el código TypeScript dentro de un bloque markdown.
+</output_format>`
+      },
+      docsUrl: 'https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/system-prompts'
+    },
+    {
+      id: 'model-gpt-4o',
+      rank: 2,
+      name: 'GPT-4o',
+      provider: 'OpenAI',
+      type: 'frontier',
+      category: 'multimodal',
+      badge: '🥈 Omnimodal SOTA & Audio/Visión',
+      badgeEn: '🥈 SOTA Omnimodal & Audio/Vision',
+      contextWindow: '128K tokens',
+      contextNum: 128000,
+      license: 'Proprietary (API)',
+      pricing: { input: '$2.50 / 1M', output: '$10.00 / 1M', note: { es: 'Baja latencia y visión nativa', en: 'Low latency & native vision' } },
+      benchmarks: {
+        arenaElo: 1345,
+        mmluPro: '82.8%',
+        sweBench: '53.8%',
+        math500: '88.5%',
+        humanEval: '90.2%'
+      },
+      desc: {
+        es: 'Modelo insignia omnimodal de OpenAI de alta velocidad. Excelente en generación de esquemas JSON estructurados, comprensión visual y tareas creativas de múltiples pasos.',
+        en: 'OpenAI flagship high-speed omnimodal model. Excellent in structured JSON schema generation, visual understanding, and multi-step creative tasks.'
+      },
+      strengths: {
+        es: ['Velocidad de inferencia ultra-rápida', 'Soporte JSON estructurado nativo (Structured Outputs)', 'Capacidad multimodal voz/imagen/texto'],
+        en: ['Ultra-fast inference speed', 'Native Structured Outputs (JSON Schema)', 'Seamless multimodal voice/image/text']
+      },
+      promptingTips: {
+        style: { es: 'Roles de sistema claros en Markdown, directivas explícitas de formato y Few-Shot examples.', en: 'Clear Markdown system roles, explicit formatting directives, and Few-Shot examples.' },
+        syntax: 'Markdown + JSON Schema',
+        samplePrompt: `# ROL: Analista de Datos Senior
+Analiza los datos de ventas y devuelve el resultado estrictamente en formato JSON válido.
+
+# ESQUEMA REQUERIDO
+{
+  "total_revenue": number,
+  "top_product": string,
+  "growth_rate_pct": number,
+  "recommendations": string[]
+}
+
+# ENTRADA DE DATOS
+Ventas Q1: Producto A ($12,000), Producto B ($8,500). Crecimiento interanual: +14.5%.`
+      },
+      docsUrl: 'https://platform.openai.com/docs/guides/prompt-engineering'
+    },
+    {
+      id: 'model-deepseek-r1',
+      rank: 3,
+      name: 'DeepSeek-R1',
+      provider: 'DeepSeek',
+      type: 'open_weights',
+      category: 'reasoning',
+      badge: '🥉 SOTA Open Weights Reasoning (CoT)',
+      badgeEn: '🥉 SOTA Open Weights Reasoning (CoT)',
+      contextWindow: '128K tokens',
+      contextNum: 128000,
+      license: 'MIT (Open Source)',
+      pricing: { input: '$0.55 / 1M', output: '$2.19 / 1M', note: { es: 'Gratis auto-hospedado (Ollama/vLLM)', en: 'Free self-hosted (Ollama/vLLM)' } },
+      benchmarks: {
+        arenaElo: 1365,
+        mmluPro: '84.0%',
+        sweBench: '49.2%',
+        math500: '97.3%',
+        humanEval: '92.1%'
+      },
+      desc: {
+        es: 'Modelo de razonamiento por aprendizaje por refuerzo a gran escala. Pensamiento explícito mediante bloques <think> con rendimiento a la par de o1 en matemáticas, lógica y algoritmos.',
+        en: 'Large-scale reinforcement learning reasoning model. Generates explicit thought chains in <think> tags matching o1 in mathematics, logic, and algorithms.'
+      },
+      strengths: {
+        es: ['Resolución matemática compleja (AIME / MATH 500)', 'Cadena de pensamiento transparente (<think>)', 'Licencia MIT abierta sin restricciones de uso comercial'],
+        en: ['Complex mathematical reasoning (AIME / MATH 500)', 'Transparent step-by-step chain of thought (<think>)', 'Permissive MIT open license with commercial freedom']
+      },
+      promptingTips: {
+        style: { es: 'Enunciados directos sin imponer pasos forzados; permitir que el modelo genere libremente su cadena <think>.', en: 'Direct problem statements without forcing rigid steps; allow the model to freely reason inside <think>.' },
+        syntax: 'Direct Zero-Shot / CoT',
+        samplePrompt: `Resuelve el siguiente problema de teoría de números paso a paso:
+Encuentra todos los enteros positivos n tales que n^4 + 4^n sea un número primo. Justifica rigurosamente tu respuesta demostrando que no existen otras soluciones.`
+      },
+      docsUrl: 'https://github.com/deepseek-ai/DeepSeek-R1'
+    },
+    {
+      id: 'model-gemini-2-flash',
+      rank: 4,
+      name: 'Gemini 2.0 Flash',
+      provider: 'Google DeepMind',
+      type: 'frontier',
+      category: 'multimodal',
+      badge: '⚡ Velocidad Extrema & 2M Contexto',
+      badgeEn: '⚡ Extreme Speed & 2M Context',
+      contextWindow: '2M tokens',
+      contextNum: 2000000,
+      license: 'Proprietary (API)',
+      pricing: { input: '$0.10 / 1M', output: '$0.40 / 1M', note: { es: 'Nivel gratuito generoso en Google AI Studio', en: 'Generous free tier on Google AI Studio' } },
+      benchmarks: {
+        arenaElo: 1350,
+        mmluPro: '82.1%',
+        sweBench: '51.5%',
+        math500: '91.0%',
+        humanEval: '89.6%'
+      },
+      desc: {
+        es: 'El modelo de mayor velocidad y ventana de contexto de la industria (2 millones de tokens). Capaz de ingerir bases de código enteras, horas de audio o libros completos con latencia ultra-baja.',
+        en: 'Fastest inference and largest context window in the industry (2M tokens). Capable of processing entire code repositories, hours of audio, or whole books with ultra-low latency.'
+      },
+      strengths: {
+        es: ['Ventana masiva de 2,000,000 de tokens', 'Invocación de herramientas (Function Calling) en tiempo real', 'Excelente relación costo-rendimiento'],
+        en: ['Massive 2,000,000 token context window', 'Real-time multi-tool function calling', 'Unbeatable cost-to-performance ratio']
+      },
+      promptingTips: {
+        style: { es: 'Instrucciones concisas, aprovechamiento de documentos masivos en contexto y delimitadores Markdown.', en: 'Concise directives, massive long-context document ingestion, and Markdown delimiters.' },
+        syntax: 'Long-Context Ingestion',
+        samplePrompt: `Examina el siguiente archivo de log de base de datos de 50,000 líneas.
+Identifica los 3 cuellos de botella de rendimiento más severos, las consultas lentas con tiempo > 1200ms y propón los índices necesarios en PostgreSQL.`
+      },
+      docsUrl: 'https://ai.google.dev/gemini-api/docs/prompting-strategies'
+    },
+    {
+      id: 'model-o3-mini',
+      rank: 5,
+      name: 'OpenAI o3-mini',
+      provider: 'OpenAI',
+      type: 'frontier',
+      category: 'reasoning',
+      badge: '🔬 Razonamiento STEM & Código Especializado',
+      badgeEn: '🔬 STEM Reasoning & Code Specialist',
+      contextWindow: '200K tokens',
+      contextNum: 200000,
+      license: 'Proprietary (API)',
+      pricing: { input: '$1.10 / 1M', output: '$4.40 / 1M', note: { es: 'Esfuerzo de razonamiento ajustable (low/medium/high)', en: 'Adjustable reasoning effort (low/medium/high)' } },
+      benchmarks: {
+        arenaElo: 1360,
+        mmluPro: '83.5%',
+        sweBench: '49.0%',
+        math500: '96.7%',
+        humanEval: '91.5%'
+      },
+      desc: {
+        es: 'Modelo de razonamiento compacto de última generación diseñado para tareas complejas en ciencia, tecnología, ingeniería, matemáticas (STEM) y desarrollo de software con esfuerzo de pensamiento calibrable.',
+        en: 'Next-generation compact reasoning model optimized for STEM, competitive math, and software engineering with calibrated reasoning effort.'
+      },
+      strengths: {
+        es: ['Capacidad de depuración y refactorización profunda', 'Puntaje de élite en competiciones de matemáticas', 'Esfuerzo de razonamiento parametrizable'],
+        en: ['Deep debugging and architectural refactoring', 'Elite performance in math olympiads', 'Configurable reasoning effort parameter']
+      },
+      promptingTips: {
+        style: { es: 'Planteamientos de problemas técnicos sin atajos; especificar criterios de aceptación rigurosos.', en: 'Technical problem statements with rigorous acceptance criteria; avoid forcing intermediate steps.' },
+        syntax: 'Rigorous Technical Specs',
+        samplePrompt: `Optimiza la siguiente función de búsqueda de grafos en Python para reducir la complejidad temporal de O(N^2) a O(N log N). Incluye pruebas unitarias con casos extremos (grafos cíclicos, nodos aislados).`
+      },
+      docsUrl: 'https://platform.openai.com/docs/guides/reasoning'
+    },
+    {
+      id: 'model-llama-3-3-70b',
+      rank: 6,
+      name: 'Llama 3.3 70B Instruct',
+      provider: 'Meta AI',
+      type: 'open_weights',
+      category: 'general',
+      badge: '🦙 Estándar Abierto de la Industria',
+      badgeEn: '🦙 Open Industry Standard',
+      contextWindow: '128K tokens',
+      contextNum: 128000,
+      license: 'Llama 3.3 Community',
+      pricing: { input: '$0.20 / 1M', output: '$0.40 / 1M', note: { es: 'Totalmente desplegable en local con Ollama / Groq / vLLM', en: 'Fully deployable locally with Ollama / Groq / vLLM' } },
+      benchmarks: {
+        arenaElo: 1310,
+        mmluPro: '78.2%',
+        sweBench: '42.0%',
+        math500: '82.5%',
+        humanEval: '88.4%'
+      },
+      desc: {
+        es: 'El modelo de pesos abiertos más equilibrado del mundo. Rinde al nivel del anterior Llama 3.1 405B pero con los requisitos de cómputo de un modelo de 70B parámetros.',
+        en: 'The world\'s most balanced open weights model. Matches the capability of the massive 405B model while fitting in 70B parameter compute requirements.'
+      },
+      strengths: {
+        es: ['Despliegue local y en servidores privados sin telemetría', 'Excelente seguimiento de directivas en lenguaje natural', 'Ecosistema de fine-tuning masivo'],
+        en: ['Private self-hosted deployment without external telemetry', 'Strong natural language instruction following', 'Massive fine-tuning and tool ecosystem']
+      },
+      promptingTips: {
+        style: { es: 'Uso de delimitadores Markdown (### Sistema, ### Instrucción) y especificaciones claras de audiencia.', en: 'Markdown delimiters (### System, ### Instruction) with clear audience definitions.' },
+        syntax: 'Markdown Headers + Directives',
+        samplePrompt: `### ROL
+Actúa como un Consultor de Ciberseguridad ISO 27001.
+
+### TAREA
+Redacta una política de contraseñas y autenticación multifactor (MFA) para una empresa tecnológica de 200 empleados.
+
+### REQUISITOS
+- Longitud mínima de 14 caracteres.
+- Rotación basada en riesgos (no obligatoria por calendario).
+- Procedimiento para incidentes de cuentas comprometidas.`
+      },
+      docsUrl: 'https://llama.meta.com/'
+    },
+    {
+      id: 'model-qwen-2-5-72b',
+      rank: 7,
+      name: 'Qwen 2.5 72B Instruct / Coder',
+      provider: 'Alibaba Cloud',
+      type: 'open_weights',
+      category: 'coding',
+      badge: '💻 SOTA Open Coding & Multilingüe',
+      badgeEn: '💻 SOTA Open Coding & Multilingual',
+      contextWindow: '128K tokens',
+      contextNum: 128000,
+      license: 'Apache 2.0 (Open Source)',
+      pricing: { input: '$0.35 / 1M', output: '$0.70 / 1M', note: { es: 'Licencia Apache 2.0 permisiva', en: 'Permissive Apache 2.0 license' } },
+      benchmarks: {
+        arenaElo: 1318,
+        mmluPro: '80.4%',
+        sweBench: '46.8%',
+        math500: '85.2%',
+        humanEval: '92.7%'
+      },
+      desc: {
+        es: 'Líder absoluto de código abierto en benchmarks de programación (HumanEval 92.7%) y soporte multilingüe en más de 29 idiomas. Licencia comercial Apache 2.0 completamente permisiva.',
+        en: 'Absolute open weights leader in coding benchmarks (HumanEval 92.7%) and multilingual support across 29+ languages under a permissive Apache 2.0 license.'
+      },
+      strengths: {
+        es: ['Puntaje superior en programación (Python, C++, JS, Rust)', 'Licencia comercial Apache 2.0 libre', 'Excelente soporte bilingüe y multilingüe'],
+        en: ['Top-tier coding accuracy across Python, C++, JS, Rust', 'Unrestricted Apache 2.0 commercial license', 'Outstanding multilingual capabilities']
+      },
+      promptingTips: {
+        style: { es: 'Especificaciones de código con firmas de funciones, tipos y doctests.', en: 'Code specifications with function signatures, types, and doctests.' },
+        syntax: 'Code Snippets + Type Signatures',
+        samplePrompt: `Escribe un algoritmo en Python que implemente un Rate Limiter con Token Bucket usando Redis. Incluye soporte para operaciones atómicas mediante scripts Lua y manejo de desconexiones.`
+      },
+      docsUrl: 'https://qwenlm.github.io/'
+    },
+    {
+      id: 'model-deepseek-v3',
+      rank: 8,
+      name: 'DeepSeek-V3',
+      provider: 'DeepSeek',
+      type: 'open_weights',
+      category: 'general',
+      badge: '🧠 Arquitectura MoE Ultra-Eficiente (671B)',
+      badgeEn: '🧠 Ultra-Efficient MoE Architecture (671B)',
+      contextWindow: '128K tokens',
+      contextNum: 128000,
+      license: 'MIT (Open Source)',
+      pricing: { input: '$0.14 / 1M', output: '$0.28 / 1M', note: { es: 'Costo por token más bajo del mercado para un modelo frontera', en: 'Lowest token cost on the market for a frontier-grade model' } },
+      benchmarks: {
+        arenaElo: 1325,
+        mmluPro: '81.2%',
+        sweBench: '44.5%',
+        math500: '87.1%',
+        humanEval: '89.2%'
+      },
+      desc: {
+        es: 'Modelo Mixture-of-Experts masivo (671B parámetros totales con 37B activos por token) que democratizó la inferencia de nivel frontera a una fracción del costo de la industria.',
+        en: 'Massive Mixture-of-Experts model (671B total params with 37B active) that democratized frontier-grade inference at a fraction of traditional cost.'
+      },
+      strengths: {
+        es: ['Costo de inferencia ultra-económico', 'Conocimiento general y traducción de alta fidelidad', 'Arquitectura MoE optimizada'],
+        en: ['Ultra-economical API pricing', 'High-fidelity general knowledge and translation', 'Highly optimized MoE architecture']
+      },
+      promptingTips: {
+        style: { es: 'Instrucciones estructuradas por viñetas, contexto claro y formato de salida especificado.', en: 'Bullet-point structured prompts, clear context, and explicit output formats.' },
+        syntax: 'Bullet-Point Directives',
+        samplePrompt: `Genera un informe comparativo entre las arquitecturas de bases de datos relacionales (PostgreSQL) y documentales (MongoDB) para un sistema de e-commerce de alto tráfico.`
+      },
+      docsUrl: 'https://github.com/deepseek-ai/DeepSeek-V3'
+    },
+    {
+      id: 'model-mistral-large-2',
+      rank: 9,
+      name: 'Mistral Large 2',
+      provider: 'Mistral AI',
+      type: 'open_weights',
+      category: 'coding',
+      badge: '🇪🇺 SOTA Europeo & Razonamiento Avanzado',
+      badgeEn: '🇪🇺 European SOTA & Advanced Reasoning',
+      contextWindow: '128K tokens',
+      contextNum: 128000,
+      license: 'Mistral Non-Commercial / Commercial API',
+      pricing: { input: '$2.00 / 1M', output: '$6.00 / 1M', note: { es: 'Especialista en código multilingüe', en: 'Multilingual and code specialist' } },
+      benchmarks: {
+        arenaElo: 1305,
+        mmluPro: '79.0%',
+        sweBench: '43.2%',
+        math500: '81.0%',
+        humanEval: '89.0%'
+      },
+      desc: {
+        es: 'El modelo insignia de 123B parámetros de Mistral AI. Especializado en generación y depuración de código en más de 80 lenguajes, razonamiento matemático y razonamiento multilingüe europeo.',
+        en: 'Mistral AI 123B parameter flagship model. Specialized in code generation across 80+ programming languages, mathematical reasoning, and European multilingual tasks.'
+      },
+      strengths: {
+        es: ['Soporte para más de 80 lenguajes de programación', 'Alineación precisa a directivas sin verbosidad excesiva', 'Invocación de funciones JSON robusta'],
+        en: ['Support for 80+ programming languages', 'Concise instruction following with minimal fluff', 'Robust JSON function calling']
+      },
+      promptingTips: {
+        style: { es: 'Instrucciones concisas y directas sin florituras ni preámbulos.', en: 'Concise and direct instructions without conversational filler.' },
+        syntax: 'Concise & Structured Prompting',
+        samplePrompt: `Refactoriza este endpoint en Node.js/Express para implementar compresión gzip, caché en cabeceras ETag y validación de esquema con Zod.`
+      },
+      docsUrl: 'https://docs.mistral.ai/'
+    },
+    {
+      id: 'model-grok-2',
+      rank: 10,
+      name: 'Grok 2 / Grok 3',
+      provider: 'xAI',
+      type: 'frontier',
+      category: 'general',
+      badge: '🚀 Datos en Tiempo Real & Pensamiento Crítico',
+      badgeEn: '🚀 Real-Time Data & Critical Thinking',
+      contextWindow: '128K tokens',
+      contextNum: 128000,
+      license: 'Proprietary (API)',
+      pricing: { input: '$2.00 / 1M', output: '$10.00 / 1M', note: { es: 'Acceso a feed de X en tiempo real', en: 'Live access to real-time X feed' } },
+      benchmarks: {
+        arenaElo: 1335,
+        mmluPro: '81.5%',
+        sweBench: '45.0%',
+        math500: '86.4%',
+        humanEval: '88.5%'
+      },
+      desc: {
+        es: 'Modelo de vanguardia de xAI entrenado en el clúster Colossus. Destaca por su capacidad para procesar información de actualidad en tiempo real, razonamiento lógico y generación de código sin censuras arbitrarias.',
+        en: 'Frontier model from xAI trained on the Colossus supercluster. Excels at real-time news synthesis, logical reasoning, and uncensored objective analysis.'
+      },
+      strengths: {
+        es: ['Acceso a información y tendencias en tiempo real', 'Menor tasa de negativas por filtros de seguridad excesivos', 'Comprensión contextual profunda'],
+        en: ['Real-time news and event integration', 'Lower refusal rate on complex technical prompts', 'Deep contextual comprehension']
+      },
+      promptingTips: {
+        style: { es: 'Preguntas directas, debates conceptuales y solicitudes de síntesis de eventos recientes.', en: 'Direct exploratory queries, conceptual debates, and real-time event synthesis.' },
+        syntax: 'Direct Exploratory Prompting',
+        samplePrompt: `Sintetiza los últimos avances en arquitecturas de modelos de razonamiento (DeepSeek-R1 vs OpenAI o3) y analiza su impacto en los costos de inferencia para startups de IA.`
+      },
+      docsUrl: 'https://x.ai/'
+    }
+  ],
+
   /* ── Helpers ────────────────────────────────────────────────── */
   getById(section, id) {
     const list = this[section] || [];

@@ -329,6 +329,30 @@ const moderationTests = [
     console.log(` ❌ 8.1 Serverless Intent Suite                    | CRASH: ${err.message}`);
   }
 
+    // ============================================================
+  // 9. LLM MODELS & BENCHMARKS DIRECTORY SUITE
+  // ============================================================
+  console.log("\n📌 SUITE 9: Catálogo de Modelos LLM & Benchmarks (js/knowledge.js)\n");
+
+  try {
+    const models = Knowledge.models || [];
+    const validCount = Array.isArray(models) && models.length >= 10;
+    const hasFrontierAndOpen = models.some(m => m.type === 'frontier') && models.some(m => m.type === 'open_weights');
+    const validBenchmarks = models.every(m => m.benchmarks && typeof m.benchmarks.arenaElo === 'number' && m.contextWindow);
+    const validPromptingTips = models.every(m => m.promptingTips && m.promptingTips.samplePrompt && m.promptingTips.style);
+
+    if (validCount && hasFrontierAndOpen && validBenchmarks && validPromptingTips) {
+      passedCount++;
+      console.log(` ✅ 9.1 Catálogo de Modelos LLM (${models.length} Modelos SOTA) | PASS | Benchmarks, Telemetría y Prompts OK`);
+    } else {
+      failedCount++;
+      console.log(` ❌ 9.1 Catálogo de Modelos LLM                   | FAIL | Count: ${models.length}, Valid: ${validBenchmarks}, Tips: ${validPromptingTips}`);
+    }
+  } catch (err) {
+    failedCount++;
+    console.log(` ❌ 9.1 Models Directory Suite                    | CRASH: ${err.message}`);
+  }
+
   console.log("\n------------------------------------------------------------");
   console.log(`Resumen Total: ${passedCount + failedCount} Pruebas | ✅ Éxito: ${passedCount} | ❌ Fallos/Crashes: ${failedCount}`);
   console.log("------------------------------------------------------------\n");

@@ -88,6 +88,7 @@ The **Learn ("Aprender")** and **Top 10** tabs provide an interactive educationa
 - **Bilingual Glossary (20 Terms):** Tokenization, Temperature, Top-p, Context Window, System/User/Assistant messages, Embeddings, Vector Stores, Fine-tuning, Grounding, Few-shot/Zero-shot, Chain of Thought, Prompt Injection, LLM-as-a-Judge, In-Context Learning, Delimiters, etc.
 - **13 Prompting Techniques:** ReAct, Tree of Thought, Self-Consistency, Reflexion, Zero-shot, Metaprompting, Chain of Verification (CoVe), Skeleton-of-Thought (SoT), Hierarchical CoT (Hi-CoT), Few-shot, CoT, RAG, and Role Prompting — with one-click **"Analyze"** buttons that load example prompts directly into the editor.
 - **6 Structural Frameworks:** RTF (Role-Task-Format), CRISPE, RACE, CO-STAR (GovTech Singapore), Bento-Box Modular Architecture, and native 7-section XML Anatomy.
+- **Directorio de Modelos LLM & Benchmarks (`#nav-models` & `#view-models`):** Pestaña dedicada con el Top 10 de modelos LLM SOTA (Claude 3.7 Sonnet, GPT-4o, DeepSeek-R1, Gemini 2.0 Flash, OpenAI o3-mini, Llama 3.3 70B, Qwen 2.5 72B, DeepSeek-V3, Mistral Large 2 y Grok 2/3), telemetría de benchmarks en vivo (LMSYS Arena ELO, MMLU-Pro, SWE-bench, MATH 500, HumanEval), filtros (*Todos*, *Frontera*, *Open Source*, *Razonamiento*, *Código*), podio Top 3 interactivo y modal con guías de prompting y prompts canónicos de 1-clic.
 - **Top-Level Radar IA Tab (`#nav-radar` & `#view-radar`):** Primary navigation tab uniting 20 curated AI Creators (Riley Goodside @goodside, Andrej Karpathy, Lilian Weng, swyx, Anthropic Research, Harrison Chase, etc.) with instant search, category filtering (Prompting, Architecture, Agents, Security), and 13 Research References & Guides.
 - **Live AI News Ticker (`#news-ticker-bar`):** Header bar displaying real-time updates, papers, and discoveries from top AI creators with play/pause controls, manual step navigation (‹ / ›), touch pause, and a modal feed log dialog (`#modal-ticker-feed`) to view and filter all live updates statically.
 - **Top 10 Hall of Fame (`js/leaderboard.js` & `/api/leaderboard`):** Global community ranking with zero-login API sync, gold/silver/bronze badges, submission modal, and "Analyze & Try" buttons.
@@ -252,7 +253,7 @@ promptforge/                    # Web App Repo (Vercel deployment)
 │   └── moderation.js           # Content moderation & anti-spam filter
 ├── server.js                   # REST API Microservice & Local Dev Server
 ├── cli.js                      # Node Terminal Executable
-├── test_edge_cases.js          # JS Test Suite Runner (26/26 PASS across 8 Suites)
+├── test_edge_cases.js          # JS Test Suite Runner (27/27 PASS across 9 Suites)
 ├── test_edge_cases.py          # Python Test Suite Runner (14/14 PASS)
 ├── vercel.json                 # Vercel Deployment Config
 ├── HANDOFF.md                  # Project State & Handoff Document
