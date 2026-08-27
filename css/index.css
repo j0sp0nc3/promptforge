@@ -156,9 +156,8 @@ body.theme-editorial {
 .theme-toggle-btn {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 8px;
-  padding: 6px 11px;
+  padding: 6px 14px;
   background: rgba(255, 255, 255, 0.07);
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: var(--radius-pill, 9999px);
@@ -2378,6 +2377,10 @@ body.theme-editorial .score-ring-bg { stroke: #D9D2C4; }
     flex: initial;
     gap: 6px;
     justify-content: flex-end;
+  }
+
+  .theme-label {
+    display: none; /* Icon-only on mobile to keep header clean and compact */
   }
 
   .theme-toggle-btn {

@@ -43,8 +43,8 @@ const I18n = (() => {
         radar: 'Radar IA',
         leaderboard: 'Top 10',
         export: 'Exportar',
-        themeCosmic: 'Modo Black Hole 🕳️',
-        themeEditorial: 'Modo Luna 🌙',
+        themeCosmic: 'Modo Black Hole',
+        themeEditorial: 'Modo Luna',
         toggleTheme: 'Cambiar tema visual',
       },
 
@@ -1103,8 +1103,8 @@ const I18n = (() => {
         radar: 'AI Radar',
         leaderboard: 'Top 10',
         export: 'Export',
-        themeCosmic: 'Black Hole Mode 🕳️',
-        themeEditorial: 'Moon Mode 🌙',
+        themeCosmic: 'Black Hole Mode',
+        themeEditorial: 'Moon Mode',
         toggleTheme: 'Toggle visual theme',
       },
 
