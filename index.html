@@ -281,9 +281,12 @@
   </header>
 
   <!-- Live Gen AI & Creators News Ticker -->
-  <div class="news-ticker-bar" id="news-ticker-bar">
-    <div class="news-ticker-label">
-      <span class="ticker-badge" data-i18n="ticker.badge">🔴 LIVE AI RADAR</span>
+  <div class="news-ticker-bar" id="news-ticker-bar" role="region" aria-label="Radar de Noticias IA">
+    <div class="news-ticker-label" id="news-ticker-badge-btn" role="button" tabindex="0" title="Ver Radar de Noticias IA" aria-label="Abrir radar de noticias IA">
+      <span class="ticker-badge">
+        <span class="ticker-badge-icon" aria-hidden="true">⚡</span>
+        <span class="ticker-badge-text" data-i18n="ticker.badgeText">LIVE AI RADAR</span>
+      </span>
     </div>
     <div class="news-ticker-viewport" id="news-ticker-viewport">
       <div class="news-ticker-track" id="news-ticker-track">

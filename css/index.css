@@ -3970,3 +3970,94 @@ body.theme-editorial .grade-status-emerald { color: #4F7942; }
   border-color: var(--accent);
   color: var(--accent);
 }
+
+
+/* ── Mobile Responsive Ticker Optimizations ────────────────────────── */
+.ticker-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ticker-badge-icon {
+  font-size: 0.82rem;
+  color: var(--vermilion);
+}
+
+@media (max-width: 640px) {
+  .news-ticker-label {
+    padding: 0 8px;
+  }
+  .ticker-badge-text {
+    display: none; /* Hide the full text on mobile screens */
+  }
+  .ticker-badge-icon {
+    font-size: 0.95rem;
+  }
+  .ticker-ctrl-btn--text {
+    display: none; /* Hide 'Ver todo' text button on mobile screens to give ticker full width */
+  }
+  .news-ticker-controls {
+    gap: 2px;
+    padding: 0 4px;
+  }
+  .ticker-ctrl-btn {
+    width: 22px;
+    height: 22px;
+    font-size: 11px;
+  }
+}
+
+
+/* ── Mobile Responsive Ticker & Modal Tap UX ────────────────────────── */
+.news-ticker-label {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.15s ease;
+}
+
+.news-ticker-label:hover {
+  background: var(--bg-hover, rgba(255, 255, 255, 0.06));
+}
+
+.ticker-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ticker-badge-icon {
+  font-size: 0.82rem;
+  color: var(--vermilion);
+}
+
+@media (max-width: 640px) {
+  .news-ticker-label {
+    padding: 0 8px;
+    border-right: none;
+  }
+  
+  /* Hide the full 'LIVE AI RADAR' text on mobile screens to maximize space */
+  .ticker-badge-text {
+    display: none !important;
+  }
+  
+  .ticker-badge-icon {
+    font-size: 1rem;
+    color: var(--vermilion);
+  }
+  
+  /* Hide ticker navigation buttons completely on mobile for maximum headline width */
+  .news-ticker-controls {
+    display: none !important;
+  }
+  
+  .news-ticker-viewport {
+    cursor: pointer;
+  }
+  
+  .news-ticker-track {
+    padding-left: 6px;
+    gap: var(--space-lg);
+  }
+}

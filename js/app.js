@@ -149,6 +149,28 @@ const App = (() => {
       viewAllBtn.addEventListener('click', openTickerFeedModal);
     }
 
+    // Tapping on ticker badge / label opens the full feed modal
+    const tickerBadgeBtn = document.getElementById('news-ticker-badge-btn') || document.querySelector('.news-ticker-label');
+    if (tickerBadgeBtn) {
+      tickerBadgeBtn.addEventListener('click', openTickerFeedModal);
+      tickerBadgeBtn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openTickerFeedModal();
+        }
+      });
+    }
+
+    // On mobile screens or general ticker tap, open the radar modal
+    const tickerViewport = document.getElementById('news-ticker-viewport');
+    if (tickerViewport) {
+      tickerViewport.addEventListener('click', (e) => {
+        if (window.innerWidth <= 640 || !e.target.closest('a')) {
+          openTickerFeedModal();
+        }
+      });
+    }
+
     const closeFeedBtn = document.getElementById('btn-close-ticker-modal');
     if (closeFeedBtn) {
       closeFeedBtn.addEventListener('click', closeTickerFeedModal);
