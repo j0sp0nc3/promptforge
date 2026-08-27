@@ -41,7 +41,7 @@ const Analyzer = {
 
     // Extract every signal ONCE so dimension scorers don't re-detect
     // (and don't double-count) the same cue.
-    const signals = Signals.extract(trimmed, lang);
+    const signals = Signals.extract(trimmed, lang, objective);
     const inferredType = Signals.inferType(trimmed, signals, wordCount);
     const promptType = (objective && objective !== 'general') ? objective : inferredType;
     const weights = Signals.weightsFor(inferredType, objective);
@@ -58,12 +58,36 @@ const Analyzer = {
       safety:         this._scoreSafety(trimmed, lang, signals),
     };
 
+    // ── Insufficient-substance gate ────────────────────────────────────────
+    // A prompt that declares no actionable task (no action verb, no direct
+    // question) and carries no structure, examples or constraints cannot be
+    // evaluated: the neutral base-50 per dimension would otherwise inflate
+    // its overall score ("esto es un prompt" scored 48/100). Cap every
+    // dimension and clamp the overall score to the F band instead.
+    const hasActionVerb = /\b(write|escribe|create|crea|explain|explica|list|enumera|describe|describir|analyze|analiza|compare|compara|summarize|resume|resumir|generate|genera|translate|traduce|design|diseña|implement|implementa|define|definir|evaluate|evalúa|calculate|calcula|draft|redacta|classify|clasifica|extract|extrae|parse|parsear|convert|convierte|build|construye|develop|desarrolla|make|haz|give|dame|proporciona|provide|act[úu]a|responde|answer)\b/i.test(trimmed);
+    const isDirectQuestion = /\?\s*$/.test(trimmed)
+      || /\b(qué|que|cómo|como|cuál|cual|cuándo|cuando|dónde|donde|quién|quien|por qué|what|how|why|which|when|where|who)\b\s+\w+/i.test(trimmed);
+    const hasAnySubstance = hasActionVerb || isDirectQuestion
+      || signals.hasXMLTags || signals.hasMarkdownHeaders || signals.hasBullets || signals.hasNumberedList
+      || signals.hasFewShot || signals.requestsOutputFormat || signals.hasNumericConstraint;
+    const insufficientSubstance = wordCount < 8 && !hasAnySubstance;
+    if (insufficientSubstance) {
+      const kFind = I18n.t('analyzer.insufficient.finding');
+      const kSugg = I18n.t('analyzer.insufficient.sugg');
+      for (const dim of Object.values(dimensions)) {
+        dim.score = Math.min(dim.score, 30);
+        if (!dim.findings.includes(kFind)) dim.findings.push(kFind);
+        if (!dim.suggestions.includes(kSugg)) dim.suggestions.push(kSugg);
+      }
+    }
+
     // Weighted average using the type-specific weights.
     let overallScore = 0;
     for (const [dim, weight] of Object.entries(weights)) {
       overallScore += dimensions[dim].score * weight;
     }
     overallScore = Math.round(Math.max(0, Math.min(100, overallScore)));
+    if (insufficientSubstance) overallScore = Math.min(overallScore, 25);
 
     // Detect patterns
     const patternResults = Patterns.detect(trimmed);
@@ -743,6 +767,29 @@ const Analyzer = {
     if (/\b(do not include|no incluyas|avoid.{0,10}mention|evita.{0,10}mencionar|never.{0,10}share|nunca.{0,10}compartas|sensitive data|datos sensibles|confidential|confidencial|privacy|privacidad|PII|GDPR|HIPAA)\b/i.test(lower)) {
       score += 8;
       findings.push(k('contentRestrictions'));
+    }
+
+    // --- OWASP LLM07: System Prompt Leakage ---
+
+    // The prompt defends its instructions against extraction (positive)
+    if (signals.leakageDefense) {
+      score += 12;
+      findings.push(k('leakageDefense'));
+    }
+
+    // The prompt itself is a system-prompt extraction attack (critical)
+    if (signals.systemPromptExtraction) {
+      score -= 18;
+      findings.push(k('extractionAttempt'));
+      suggestions.push(k('extractionAttemptSugg'));
+    }
+
+    // Sensitive content embedded in a system prompt without a confidentiality
+    // directive: if the system prompt leaks, so do the secrets.
+    if (signals.sensitiveSystemPrompt && !signals.leakageDefense) {
+      score -= 12;
+      findings.push(k('sensitiveNoDefense'));
+      suggestions.push(k('sensitiveNoDefenseSugg'));
     }
 
     // --- Negative signals ---

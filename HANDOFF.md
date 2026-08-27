@@ -91,6 +91,10 @@ interactiva desplegada en Vercel.
 - [x] **Leyenda de Calificaciones & Rúbrica de Notas (Score Scale Modal)**: Modal interactivo (`#modal-score-legend`) desplegable al hacer clic en la insignia de score o en el botón de ayuda para explicar detalladamente el sistema multidimensional de 0 a 100 y la rúbrica de notas de letra (**A+** a **F**).
 - [x] **Feedback Específico para Prompts Ultra-Cortos**: Adición de hallazgos y sugerencias explicativas (`tooShort` & `tooShortSugg`) en las dimensiones de Estructura, Robustez, Chain of Thought y Seguridad cuando el prompt contiene menos de 3 palabras.
 - [x] **Motor Híbrido de Análisis de Intención y Enriquecimiento de Contexto de Dominio (`js/domain-analyzer.js`, `api/index.js`, `js/rewriter.js`, `js/app.js`)**: Detección de 8 Arquetipos de Dominio, matriz de brechas de contexto, chips de inyección rápida de fragmentos XML en 1-clic, endpoint serverless `/api/analyze-intent` (con fallback local `synthesizeLocal`) e insignia de arquetipo en el Workbench.
+- [x] **Auditoría UX & Accesibilidad (fixes de estilos rotos + WCAG)**: Tokens CSS faltantes definidos (`--shadow-sm/lg`, `--vermilion`, `--rule-color` + typos `--space-2xl`/`--ink-soft`/`--font-sans`), toasts con posicionamiento fixed restaurado (`#toast-container`), modal suggest-creator duplicado eliminado (7 IDs repetidos), share modal des-anidado (3 `</div>`), layout Learn restaurado a grid con subnav sticky, chips `.action-chip` consolidados (modificador `--inject`), `:focus-visible` global, `prefers-reduced-motion`, contraste AA de `--ink-faint`, ARIA (role=dialog/tablist/tab, aria-current, aria-expanded, aria-label en icon-only), y cierre uniforme de modales (ESC + backdrop + foco inicial).
+- [x] **Fixes de Scoring, Arquetipo de Dominio e i18n (sesión 2026-08-26)**: (1) Gate de "sustancia insuficiente" en `Analyzer.analyze` — prompts sin tarea accionable (sin verbo de acción, pregunta directa, estructura, ejemplos ni restricciones) con < 8 palabras quedan limitados a grado F (≤25/100); "esto es un prompt" pasa de 48/D a 25/F, mientras tareas cortas legítimas ("Resume… en 3 puntos", "Qué es…?") no se penalizan. (2) `DomainAnalyzer.inferArchetype(prompt, objectiveHint)` — el objetivo seleccionado del Workbench actúa como desempate: con texto neutral y objetivo `coding`/`json_schema`/`safety_rag`/`creative` el arquetipo sigue al objetivo (las señales del texto siempre ganan). (3) Bug raíz del badge `domain.general_task` crudo: sección `domain` duplicada en los diccionarios i18n (la última pisaba a la de arquetipos en runtime) — eliminada la legacy sin consumidores. (4) i18n completo del Workbench: hero, pills warning/calibrated, chips de acción, Copy/Apply, título de constelación, PROMPT SCORE central y pill `[Meta: {name}]` (nuevas claves `hero.*`, `workbench.*`, `constellation.title/subtitle`, `score.centralLabel`); `onLangChange` ahora re-renderiza la vista Analizer (las cards 8D y resultados seguían el idioma del análisis). (5) Theme toggle solo icono (label eliminado; aria-label se mantiene).
+
+- [x] **Métrica OWASP LLM07 — System Prompt Leakage integrada al motor (`js/signals.js`, `js/analyzer.js`, `js/patterns.js`, `js/adversarial.js`)**: 3 señales nuevas (`leakageDefense`, `sensitiveSystemPrompt`, `systemPromptExtraction`) con lógica de co-ocurrencia ES/EN; scoring en la dimensión Seguridad (+12 defensa, −18 ataque de extracción, −12 contenido sensible sin directiva de confidencialidad); anti-patrón **AP047** (Fuga de System Prompt, critical) y best practice **BP016** (defensa anti-fuga); test adversarial #14 **systemPromptLeakage** (peso 2, categoría safety) que falla por definición si el prompt evaluado ES un ataque de extracción. Catálogos: 35 APs / 16 BPs / 14 tests adversariales. Paridad i18n ES/EN completa (21 claves nuevas).
 
 ---
 
@@ -143,26 +147,42 @@ promptforge/                    ← App Web (Vercel)
 
 ## 🔄 Última Actualización
 
-- **Fecha:** 2026-08-13
+- **Fecha:** 2026-08-26
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
 - **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
-- **Último commit promptforge:** `1af4316` (feat(scoring): add score scale legend modal and short prompt analyzer feedback)
-- **Estado:** 26/26 tests en PASS (8 Suites completas). Paridad ES/EN, desanidamiento XML, rol temático dinámico, diagnóstico de debilidades enviado al LLM, y `justification` banner integrado en UI. Endpoint Gemini verificado y funcionando en `llm_as_a_judge`.
+- **Último commit promptforge:** fixes de scoring (gate sustancia insuficiente), arquetipo por objetivo e i18n del Workbench
+- **Estado:** 26/26 tests en PASS. ⚠️ Pendiente: replicar el gate de sustancia insuficiente y el hint de objetivo en el paquete npm `promptometer-core` (el serverless `/api/analyze-intent` usa el core de npm; hoy recibe el `analysis` del cliente, por lo que la web ya está cubierta, pero el paquete por sí solo no incluye el gate).
 
-> 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
-> - **Corrección de Desanidamiento XML & Asignación Dinámica de Rol Temático (`js/domain-analyzer.js`, `api/index.js`)**:
->   - **Extracción limpia del Prompt Central (`extractCoreTask`)**: Elimina bloques metálicos anteriores (`<role>`, `<rol>`, `<task>`, `<tarea>`, `<constraints>`, `<restricciones>`) evitando que se dupliquen o aniden etiquetas sobre prompts ya mejorados.
->   - **Inferencia Dinámica de Rol por Tema (`inferDynamicRole`)**: Si el prompt trata sobre geología/magma, asigna `"Geólogo y Vulcanólogo Senior especializado en Dinámica del Manto"`; si es salud, asigna `"Especialista Biomédico"`; si es física, asigna `"Científico de Investigación"`; si es genérico, asigna `"Especialista de Investigación e Inteligencia Analítica"`.
-> - **Diagnóstico de Debilidades enviado al LLM (`api/index.js`):**
->   - `_handleAnalyzeIntent` ahora acepta `payload.analysis` (o lo computa con `PromptometerCore.analyze`) y formatea `findings`, `suggestions` y `contextGaps` en un `diagnosticPrompt` estructurado que se inyecta como contenido de usuario al LLM.
->   - El `systemPrompt` actualizado exige que el LLM: (1) solucione CADA debilidad detectada, (2) asigne un rol alineado al tema, (3) produzca una `justification` en 1-2 oraciones en español explicando qué se mejoró y por qué.
->   - La respuesta JSON del LLM ahora incluye: `{ inferredGoal, weaknessesIdentified, justification, gapsFixedCount, improvedPrompt }`.
-> - **Justification Banner en UI (`index.html`, `css/index.css`, `js/app.js`):**
->   - Añadido `#domain-justification-banner` y `#domain-justification-text` en `index.html` dentro del panel de dominio.
->   - Estilos `.domain-justification-banner` añadidos en `css/index.css` para ambos temas (Cosmic Dark y Editorial Light).
->   - `#btn-deep-domain-ai` handler en `js/app.js` actualizado para: enviar `{ prompt, analysis: currentAnalysis?.analysis }` al API; renderizar `result.justification` en el banner; mostrar toast con la justificación (6s).
-> - **Internacionalización (`js/i18n.js`):**
->   - Añadido `domain.justificationTitle` en diccionarios ES y EN.
-> - **Suite de pruebas (`test_edge_cases.js`):**
->   - SUITE 8 ahora es async (`await new Promise`) para aguardar la respuesta del endpoint serverless local antes de evaluar `apiPass`. **26/26 PASS**.
-> - **Gemini verificado en vivo:** `source: llm_as_a_judge`, `provider: gemini`, `justification` generada correctamente en español alineada al tema.
+> 📌 **RESUMEN DE TRABAJO COMPLETADO (reciente):**
+>
+> **Scoring + Arquetipo + i18n — Sesión 2026-08-26:**
+> - **Gate de sustancia insuficiente (`js/analyzer.js`):** `wordCount < 8` sin verbo de acción, pregunta directa, estructura, few-shot, formato solicitado ni restricción numérica → tope 30 por dimensión y overall ≤ 25 (F). Verificado: "esto es un prompt" 48→25; "Resume este artículo en 3 puntos" (51) y "Qué es la fotosíntesis?" (48) sin cambios.
+> - **Arquetipo por objetivo (`js/domain-analyzer.js`, `js/signals.js`, `js/analyzer.js`):** `inferArchetype(prompt, objectiveHint)` con mapa `coding→software_engineering`, `json_schema→data_extraction`, `safety_rag→rag_knowledge`, `creative→rhetoric_creative` solo cuando el texto no produce señales.
+> - **Bug i18n raíz (`js/i18n.js`):** sección `domain` duplicada (ES y EN) — la última (labels legacy de export sin consumidores) pisaba a la de arquetipos; por eso el badge mostraba `domain.general_task` crudo. Eliminada.
+> - **i18n del Workbench:** claves nuevas ES/EN `hero.*`, `workbench.*` (pills, chips, copy/apply, goalPill `{name}`), `constellation.title/subtitle`, `score.centralLabel`; `data-i18n` en el HTML; `onLangChange` re-renderiza el analyzer (cards 8D, resultados, dominio).
+> - **Theme toggle:** solo icono (label fuera, `aria-label` intacto).
+> - **Verificación:** 26/26 tests, harness de scoring, 133 claves data-i18n resuelven en ES y EN, servidor local actualizado sin restart.
+>
+> **Auditoría UX & Accesibilidad — Fixes de estilos rotos + WCAG:**
+> - **Tokens CSS indefinidos (`css/index.css`):** Definidos `--shadow-sm`, `--shadow-lg`, `--vermilion` (cósmico `#FF9E00` / editorial `#C73E2D`), `--rule-color` (color puro) en `:root` y `body.theme-editorial`. Corregidos typos `--space-xxl`→`--space-2xl`, `--ink-body`→`--ink-soft`, `--font-body`→`--font-sans` y `border-top: 1px solid var(--rule-color)`. La sección Radar IA recupera sus acentos y los modales su sombra.
+> - **Toasts (`index.html`):** `#toast-container` ahora lleva la clase `.toast-container` (el CSS posicionaba la clase pero el HTML solo tenía el id) + `aria-live="polite"`.
+> - **Modal suggest-creator duplicado (`index.html`):** Eliminada la versión vieja (7 IDs duplicados); se conserva la accesible con `role="dialog"`. Los errores de validación (`#suggest-creator-status`) vuelven a ser visibles.
+> - **Share modal malformado (`index.html`):** Cerrados 3 `</div>` faltantes → `#modal-score-legend` des-anidado.
+> - **Layout Learn (`css/index.css`):** Eliminada la redefinición flex que pisaba el grid `220px 1fr` con subnav sticky.
+> - **Chips (`css/index.css`, `js/app.js`):** `.action-chip` consolidada (base neutral del design system + modificador `.action-chip--inject` mono/azul para inyección de dominio). El chip editorial ya no sale azul por error de cascada.
+> - **Accesibilidad (`css/index.css`):** `:focus-visible` global (anillo con `--accent`), `prefers-reduced-motion` (ticker, constelación, spin, smooth-scroll), contraste AA de `--ink-faint` (`#94A3B8` cósmico / `#6B6153` editorial).
+> - **ARIA (`index.html`, `js/app.js`, `js/i18n.js`):** `role="dialog"/aria-modal` en los 4 modales vivos, tabs de resultados con `role="tablist"/"tab"/"tabpanel"` + `aria-selected`, `aria-current="page"` en nav, `aria-expanded` + teclado en acordeón de dimensiones (delegación de eventos), `aria-label` en textarea y botones icon-only (i18n `a11y.*` ES/EN).
+> - **Modales uniformes (`js/app.js`):** `setupModalA11y()` (ESC + click en backdrop) y `focusModal()` (foco inicial al primer input/botón) en los 4 modales.
+> - **Verificación:** 26/26 tests PASS, HTML sin IDs duplicados y con divs balanceados (136/136), CSS con llaves balanceadas y 0 variables sin resolver sin fallback, servidor local verificado.
+>
+> **Commit `9bb897b` — Propagación de Objetivo Declarado al Pipeline Diagnóstico Gemini:**
+> - **Inclusión de `objective` en Payload (`js/app.js`):** El handler de `#btn-deep-domain-ai` incluye el objetivo seleccionado en el selector del Workbench (`coding`, `reasoning`, `json_schema`, `safety_rag`, `creative` o `general`).
+> - **Priorización en Backend Serverless (`api/index.js`):** `_handleAnalyzeIntent` pasa `objective` a `PromptometerCore.analyze` para calibración de pesos, incluye el objetivo declarado en `diagnosticPrompt` y agrega la regla 1b al `systemPrompt` para obligar al LLM a priorizar dimensiones críticas del objetivo.
+> - **Tests:** 26/26 PASS.
+>
+> **Commit `0444e02` — Diagnóstico de Debilidades + Banner de Justificación:**
+> - **Diagnóstico de Debilidades enviado al LLM (`api/index.js`):** `_handleAnalyzeIntent` construye `diagnosticPrompt` con score, grade, findings, suggestions y contextGaps.
+> - **Banner de Justificación en UI (`index.html`, `css/index.css`, `js/app.js`):** `#domain-justification-banner` en panel de dominio.
+>
+> **Commit `cb28095` — Orden Canónico de 7 Bloques XML:**
+> - Set único de etiquetas canónicas (`<system_role>` → `<objective>` → `<context>` → `<requirements>` → `<output_format>` → `<examples>` → `<error_handling>`) en toda la cadena.

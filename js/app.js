@@ -18,6 +18,7 @@ const App = (() => {
     setupNavigation();
     setupEditor();
     setupTabs();
+    setupDimensionAccordion();
     setupExport();
     setupScoreLegend();
     setupTemplatesView();
@@ -59,6 +60,9 @@ const App = (() => {
     if (currentView === 'learn') renderLearnView(getActiveLearnSub());
     if (currentView === 'radar') renderRadarView(getActiveRadarSub());
     if (currentView === 'leaderboard') renderLeaderboardView();
+    // Analyzer results (dimension cards, eval cards, improved prompt…) are
+    // JS-rendered too: re-render them so they follow the language switch.
+    if (currentView === 'analyzer' && currentAnalysis) renderResults();
   }
 
   function renderNewsTicker() {
@@ -174,8 +178,12 @@ const App = (() => {
 
   function switchView(viewName) {
     currentView = viewName;
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    document.querySelector(`.nav-btn[data-view="${viewName}"]`).classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach(b => {
+      const isActive = b.dataset.view === viewName;
+      b.classList.toggle('active', isActive);
+      if (isActive) b.setAttribute('aria-current', 'page');
+      else b.removeAttribute('aria-current');
+    });
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.getElementById(`view-${viewName}`).classList.add('active');
 
@@ -247,6 +255,7 @@ const App = (() => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               prompt,
+              objective: currentAnalysis?.objective || document.getElementById('prompt-objective-select')?.value || 'general',
               analysis: currentAnalysis?.analysis || currentAnalysis
             })
           });
@@ -368,7 +377,7 @@ const App = (() => {
       const objText = t(`objectives.${objKey}`) || objKey;
       // Extract short name e.g. "General", "Código", "Análisis"
       const shortName = objText.replace(/^[\p{Emoji}\s]+/u, '');
-      objPill.textContent = `[Goal: ${shortName}]`;
+      objPill.textContent = t('workbench.goalPill', { name: shortName });
     }
 
     // Dual-card score badges
@@ -464,7 +473,7 @@ const App = (() => {
     const gaps = analysis.contextGaps || [];
     if (gaps.length > 0 && card && gapsList && chipsContainer) {
       gapsList.innerHTML = gaps.map(g => `<div class="gap-item">⚠️ ${escapeHtml(t(g.key) || g.id)}</div>`).join('');
-      chipsContainer.innerHTML = gaps.map(g => `<button class="action-chip" data-snippet="${escapeAttr(g.snippetToInject)}">${escapeHtml(t(g.actionChipKey) || '+ Inyectar Contexto')}</button>`).join('');
+      chipsContainer.innerHTML = gaps.map(g => `<button class="action-chip action-chip--inject" data-snippet="${escapeAttr(g.snippetToInject)}">${escapeHtml(t(g.actionChipKey) || '+ Inyectar Contexto')}</button>`).join('');
       card.classList.remove('hidden');
 
       chipsContainer.querySelectorAll('.action-chip').forEach(chip => {
@@ -547,7 +556,7 @@ const App = (() => {
       const scoreClass = dim.score >= 70 ? 'good' : dim.score >= 40 ? 'warning' : 'bad';
 
       card.innerHTML = `
-        <div class="dimension-header" onclick="this.parentElement.classList.toggle('expanded')">
+        <div class="dimension-header" role="button" tabindex="0" aria-expanded="false">
           <div class="dimension-left">
             <span class="dimension-icon">${config.icon}</span>
             <span class="dimension-name">${escapeHtml(config.name)}</span>
@@ -582,6 +591,29 @@ const App = (() => {
       `;
       container.appendChild(card);
     }
+  }
+
+  // Dimension cards accordion: click / Enter / Space toggles + aria-expanded
+  function setupDimensionAccordion() {
+    const container = document.getElementById('dimensions-list');
+    if (!container) return;
+
+    const toggle = (header) => {
+      const expanded = header.parentElement.classList.toggle('expanded');
+      header.setAttribute('aria-expanded', String(expanded));
+    };
+
+    container.addEventListener('click', (e) => {
+      const header = e.target.closest('.dimension-header');
+      if (header) toggle(header);
+    });
+    container.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      const header = e.target.closest('.dimension-header');
+      if (!header) return;
+      e.preventDefault();
+      toggle(header);
+    });
   }
 
   function renderRadar(dimensions) {
@@ -984,9 +1016,11 @@ const App = (() => {
   function switchTab(tabName) {
     const tabsBar = document.getElementById('results-tabs');
     if (tabsBar) {
-      tabsBar.querySelectorAll('.tab').forEach(tEl => tEl.classList.remove('active'));
-      const activeTab = tabsBar.querySelector(`.tab[data-tab="${tabName}"]`);
-      if (activeTab) activeTab.classList.add('active');
+      tabsBar.querySelectorAll('.tab').forEach(tEl => {
+        const isActive = tEl.dataset.tab === tabName;
+        tEl.classList.toggle('active', isActive);
+        tEl.setAttribute('aria-selected', String(isActive));
+      });
     }
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
     const targetContent = document.getElementById(`tab-${tabName}`);
@@ -1061,6 +1095,7 @@ const App = (() => {
     // Share Modal Handlers
     document.getElementById('btn-close-share-modal')?.addEventListener('click', closeShareModal);
     document.getElementById('btn-close-share-modal-bottom')?.addEventListener('click', closeShareModal);
+    setupModalA11y('modal-share-link', closeShareModal);
     document.getElementById('btn-copy-share-url')?.addEventListener('click', () => {
       const input = document.getElementById('share-url-input');
       if (input && input.value) {
@@ -1082,11 +1117,7 @@ const App = (() => {
     if (scoreBox) scoreBox.addEventListener('click', openScoreLegendModal);
     if (closeBtn) closeBtn.addEventListener('click', closeScoreLegendModal);
     if (closeBottomBtn) closeBottomBtn.addEventListener('click', closeScoreLegendModal);
-    if (modal) {
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeScoreLegendModal();
-      });
-    }
+    setupModalA11y('modal-score-legend', closeScoreLegendModal);
   }
 
   // ── Templates View ─────────────────────────────────────
@@ -1241,6 +1272,26 @@ const App = (() => {
   }
 
   // ── Share URL & Modal ──────────────────────────────────
+  // Unified modal a11y: close on ESC / backdrop click + initial focus
+  function setupModalA11y(modalId, closeFn) {
+    const modal = document.getElementById(modalId);
+    if (!modal || typeof closeFn !== 'function') return;
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeFn();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeFn();
+    });
+  }
+
+  function focusModal(modal) {
+    if (!modal) return;
+    const target = modal.querySelector('input:not([type="hidden"]), textarea, select')
+      || modal.querySelector('.modal-actions .btn, .modal-footer .btn, .modal-close-btn, .modal-close');
+    if (target) target.focus();
+  }
+
   function openShareModal(url, promptText) {
     const modal = document.getElementById('modal-share-link');
     const input = document.getElementById('share-url-input');
@@ -1267,7 +1318,11 @@ const App = (() => {
   }
 
   function openScoreLegendModal() {
-    document.getElementById('modal-score-legend')?.classList.remove('hidden');
+    const modal = document.getElementById('modal-score-legend');
+    if (modal) {
+      modal.classList.remove('hidden');
+      focusModal(modal);
+    }
   }
 
   function closeScoreLegendModal() {
@@ -1554,11 +1609,15 @@ const App = (() => {
     if (btnClose) btnClose.addEventListener('click', closeSuggestCreatorModal);
     if (btnCancel) btnCancel.addEventListener('click', closeSuggestCreatorModal);
     if (btnConfirm) btnConfirm.addEventListener('click', submitCreatorSuggestion);
+    setupModalA11y('modal-suggest-creator', closeSuggestCreatorModal);
   }
 
   function openSuggestCreatorModal() {
     const modal = document.getElementById('modal-suggest-creator');
-    if (modal) modal.classList.remove('hidden');
+    if (modal) {
+      modal.classList.remove('hidden');
+      focusModal(modal);
+    }
   }
 
   function closeSuggestCreatorModal() {
@@ -1957,6 +2016,7 @@ const App = (() => {
     if (btnCloseModal) btnCloseModal.addEventListener('click', closeLeaderboardSubmitModal);
     if (btnCancelModal) btnCancelModal.addEventListener('click', closeLeaderboardSubmitModal);
     if (btnConfirmSubmit) btnConfirmSubmit.addEventListener('click', submitPromptToLeaderboard);
+    setupModalA11y('modal-submit-leaderboard', closeLeaderboardSubmitModal);
 
     setupLeaderboardFilters();
   }
@@ -1975,7 +2035,10 @@ const App = (() => {
         <span class="badge badge-info">${escapeHtml(t(`complexity.${currentAnalysis.analysis.complexity}`))}</span>
       `;
     }
-    if (modal) modal.classList.remove('hidden');
+    if (modal) {
+      modal.classList.remove('hidden');
+      focusModal(modal);
+    }
   }
 
   function closeLeaderboardSubmitModal() {

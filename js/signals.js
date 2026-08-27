@@ -6,7 +6,7 @@
 // trivial — closing the "keyword stuffing" gaming vector.
 //
 // API:
-//   Signals.extract(prompt, lang)  → object with boolean/number signals
+//   Signals.extract(prompt, lang, objective)  → object with boolean/number signals
 //   Signals.inferType(prompt, signals, wordCount)  → 'system' | 'few-shot' | ...
 //   Signals.weightsFor(type)      → { clarity, specificity, ... } summing to 1
 // ============================================================================
@@ -20,9 +20,11 @@ const Signals = {
    *
    * @param {string} prompt  Raw prompt text.
    * @param {string} lang    'es' | 'en' | 'mixed' (from Analyzer._detectLanguage).
+   * @param {string} [objective] Selected Prompt Objective; forwarded to
+   *        DomainAnalyzer as a tie-breaker hint for the archetype.
    * @returns {Object} Signal map.
    */
-  extract(prompt, lang) {
+  extract(prompt, lang, objective) {
     const lower = prompt.toLowerCase();
     const words = lower.split(/\s+/).filter(Boolean);
     const wordCount = words.length;
@@ -86,8 +88,28 @@ const Signals = {
     const injectionGuard = /\b(ignore (any|previous|user).{0,20}instruction|ignora (cualquier|anterior|del usuario).{0,20}instrucción|do not reveal|no reveles|never share these instructions|nunca compartas estas instrucciones|disregard (external|user) commands|ignora comandos externos)\b/i.test(lower);
     const untrustedDelim = /\b(treat.{0,15}(content|text|input) as (data|untrusted)|trata.{0,15}(contenido|texto|entrada) como (dato|no confiable)|<untrusted>|<user_input>|contenido no confiable)\b/i.test(lower);
 
+    // ── OWASP LLM07: System Prompt Leakage signals ─────────────────────
+    // (a) The prompt DEFENDS its instructions against extraction.
+    // Co-occurrence logic: an explicit no-reveal directive, OR a confidentiality
+    // marker + an instructions reference, OR an if-asked-decline clause.
+    const noRevealDirective = /\b((no|nunca)\s+(las|los|them)?\s*(reveles|divulgues|repitas|compartas|muestres)|(do not|don'?t|never)\s+(reveal|disclose|repeat|share|show))\b/i.test(lower);
+    const confidentialityMarker = /\b(confidencial(es)?|confidential|secreto|secret[oa]?|privad[oa]|private)\b/i.test(lower);
+    const instructionRef = /\b(instrucciones?|instructions?|system prompt|prompt del sistema|reglas|rules|directivas|directives|configuraci[oó]n|configuration)\b/i.test(lower);
+    const leakageDefense = noRevealDirective
+      || (confidentialityMarker && instructionRef)
+      || /\b(if asked (about|for) (your|these|the) (instructions?|system prompt)|si (te )?(preguntan|piden) (por )?(tus|estas|las|el))\b/i.test(lower);
+    // (c) The prompt ITSELF is a system-prompt extraction attack.
+    const systemPromptExtraction = /\b(reveal|show|print|output|repeat|display|dump|export|ver|muestra|imprime|repite|ens[eé]ñame|dame)\b.{0,40}\b(your|the|this|tus|las|el|sus)?\s*(system prompt|initial prompt|original instructions?|hidden instructions?|above instructions?|previous instructions?|prompt del sistema|prompt inicial|instrucciones (ocultas|iniciales|originales|anteriores)|instrucciones del sistema)\b/i.test(lower)
+      || /\b(ignore (all )?(previous|prior|above) (instructions?|prompt)|ignora (todas )?las (instrucciones|indicaciones) (anteriores|previas))\b.{0,60}\b(reveal|show|print|repeat|display|dump|ver|muestra|imprime|repite|ens[eé]ñame)\b/i.test(lower);
+
     // ── Signals for type inference ─────────────────────────────────────
-    const systemPromptCue = /\b(you are (an?|the) .{3,40}(assistant|agent|expert|system|chatbot|representative|advisor)|eres un[oa]? .{3,40}(asistente|agente|experto|sistema|chatbot)|system prompt|prompt del sistema|<system>)\b/i.test(lower);
+    const systemPromptCue = /\b(you are (an?|the) .{3,40}(assistant|agent|expert|system|chatbot|representative|advisor)|eres (un[oa]?|el|la)? ?.{0,40}(asistente|agente|experto|sistema|chatbot|representante|consejer[oa])|system prompt|prompt del sistema|<system>)\b/i.test(lower);
+    // (b) The prompt embeds sensitive content that must not leak if exposed.
+    const sensitiveSystemPrompt = systemPromptCue && (
+         /\b(sk-[a-za-z0-9]{20,}|AKIA[0-9A-Z]{16}|ghp_[a-za-z0-9]{36}|xox[baprs]-[0-9a-z-]+|api[_ ]?key|token secreto|secret token|contraseña|password|credenciales)\b/i.test(lower)
+      || /\b(internal|confidential|privileged)\s+(process|policy|pricing|strategy|procedure|information|data)|(proceso|pol[ií]tica|precios|estrategia|procedimiento|informaci[oó]n|datos)\s+(internos?|confidenciales?|privilegiad\w*)\b/i.test(lower)
+      || /\b(salari(es|o|os)?|salary|payroll|n[oó]mina)\b.{0,25}\b(emplead\w*|employees?|staff)|(emplead\w*|employees?|staff)\b.{0,25}\b(salari(es|o|os)?|salary|payroll|n[oó]mina)\b/i.test(lower)
+    );
     const creativeTask = /\b(write (a |an )?(poem|haiku|story|song|script|joke|tweet|caption)|escribe (un[ao] )?(poema|haiku|canción|cuento|guion|chiste|tweet|pie))\b/i.test(lower);
     const factualRequest = /\b(statistic|estadística|who invented|quién inventó|when (was|did)|cuándo (fue|sucedió)|scientific study|estudio científico|citation needed| according to research|según investigaciones)\b/i.test(lower);
     const postCutoffYear = (() => {
@@ -158,13 +180,17 @@ const Signals = {
       postCutoffYear,
       assumesCapability,
       hasPII,
+      // OWASP LLM07 — System Prompt Leakage
+      leakageDefense,
+      sensitiveSystemPrompt,
+      systemPromptExtraction,
       // Negatives
       vagueQualifiers,
       vagueAdjectives,
       contradictions,
-      // Domain Intelligence
-      domainArchetype: (typeof DomainAnalyzer !== 'undefined' ? DomainAnalyzer : (typeof globalThis !== 'undefined' ? globalThis.DomainAnalyzer : null))?.inferArchetype(prompt) || 'general_task',
-      contextGaps: (typeof DomainAnalyzer !== 'undefined' ? DomainAnalyzer : (typeof globalThis !== 'undefined' ? globalThis.DomainAnalyzer : null))?.evaluateContextGaps(prompt, (typeof DomainAnalyzer !== 'undefined' ? DomainAnalyzer : (typeof globalThis !== 'undefined' ? globalThis.DomainAnalyzer : null))?.inferArchetype(prompt) || 'general_task') || [],
+      // Domain Intelligence (objective hint breaks ties for neutral text)
+      domainArchetype: (typeof DomainAnalyzer !== 'undefined' ? DomainAnalyzer : (typeof globalThis !== 'undefined' ? globalThis.DomainAnalyzer : null))?.inferArchetype(prompt, objective) || 'general_task',
+      contextGaps: (typeof DomainAnalyzer !== 'undefined' ? DomainAnalyzer : (typeof globalThis !== 'undefined' ? globalThis.DomainAnalyzer : null))?.evaluateContextGaps(prompt, (typeof DomainAnalyzer !== 'undefined' ? DomainAnalyzer : (typeof globalThis !== 'undefined' ? globalThis.DomainAnalyzer : null))?.inferArchetype(prompt, objective) || 'general_task') || [],
     };
   },
 

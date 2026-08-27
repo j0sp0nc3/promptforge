@@ -22,10 +22,22 @@ const DomainAnalyzer = (() => {
 
   /**
    * Infer the Domain Archetype of a prompt based on signal keywords and intent cues.
+   * Text signals always win: the hint from the selected Prompt Objective only
+   * breaks ties when the text itself yields no archetype (general_task).
    * @param {string} prompt Raw prompt text.
+   * @param {string} [objectiveHint] Selected Prompt Objective (coding, json_schema,
+   *        safety_rag, creative, reasoning, general). Used as tie-breaker only.
    * @returns {string} One of ARCHETYPES values.
    */
-  function inferArchetype(prompt) {
+  // Prompt Objectives that map to a Domain Archetype when the text is neutral.
+  const OBJECTIVE_ARCHETYPE_HINTS = {
+    coding: ARCHETYPES.SOFTWARE_ENGINEERING,
+    json_schema: ARCHETYPES.DATA_EXTRACTION,
+    safety_rag: ARCHETYPES.RAG_KNOWLEDGE,
+    creative: ARCHETYPES.RHETORIC_CREATIVE,
+  };
+
+  function inferArchetype(prompt, objectiveHint) {
     if (!prompt || typeof prompt !== 'string') return ARCHETYPES.GENERAL_TASK;
     const lower = prompt.toLowerCase();
 
@@ -63,6 +75,10 @@ const DomainAnalyzer = (() => {
     if (/\b(write a story|escribe una historia|poem|poema|haiku|novel|novela|creative writing|redacción creativa|guion|scriptwriter|personaje|fiction|ficción|fantasma|canción)\b/i.test(lower)) {
       return ARCHETYPES.RHETORIC_CREATIVE;
     }
+
+    // 8. No textual signal: fall back to the declared objective (if any).
+    const hinted = OBJECTIVE_ARCHETYPE_HINTS[objectiveHint];
+    if (hinted) return hinted;
 
     return ARCHETYPES.GENERAL_TASK;
   }

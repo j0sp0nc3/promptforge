@@ -34,9 +34,11 @@
 Promptometer is a complete professional workspace and engine to **evaluate, benchmark, learn, and optimize prompts for LLMs**. It provides:
 
 - **Multidimensional Score (0–100)** with letter grades (A+ to F) across **8 dimensions**, objective-driven scoring (`options.objective`: Code Generation, Reasoning, JSON Schema, Safety & RAG, Creative Writing), and interactive **Score Scale & Letter Grade Rubric Modal**.
-- **3D Solar System Constellation (Three.js WebGL)**: Real-time 3D orbital system with 2-phase protoplanetary disk accretion kinetics, signature 8D planet geometries, permanent floating 3D score badges, interactive planet hover pause (1.25x scale), 1-click smooth-scroll dimension navigation, and dual themes (Cosmic Black Hole 🕳️ & Editorial Moon Mode 🌙).
-- **Color-Coded XML Highlight Pills & Action Chips**: Translucent neon tag highlighting for `<rol>`, `<contexto>`, `<tarea>`, `<formato_salida>`, `<restricciones>`, `<ejemplos>`, and `<manejo_errores>` with 1-click transformation action chips (`⚡ Shorten`, `🧠 Add CoT`, `📐 Enforce JSON`, `🛡️ Guardrails`).
-- **Anti-Pattern Catalog** (34 anti-patterns) & **Best Practices** (15 strengths) with expandable `<details>` accordions.
+- **3D Solar System Constellation (Three.js WebGL)**: Real-time 3D orbital system with 2-phase protoplanetary disk accretion kinetics, signature 8D planet geometries, permanent floating 3D score badges, interactive planet hover pause (1.25x scale), 1-click smooth-scroll dimension navigation, and dual themes (Cosmic Black Hole 🗓️ & Editorial Moon Mode 🌙).
+- **Canonical 7-Block XML Structure**: The rewriter, domain synthesizer, and LLM all generate prompts in the same enforced order: `<system_role>` → `<objective>` → `<context>` → `<requirements>` → `<output_format>` → `<examples>` → `<error_handling>`. Color-coded XML highlighting with 1-click action chips (`⚡ Shorten`, `🧠 Add CoT`, `📐 Enforce JSON`, `🛡️ Guardrails`).
+- **LLM-as-a-Judge with Diagnostic Feedback**: The `/api/analyze-intent` endpoint injects the Promptometer diagnostic (score, grade, weaknesses, suggestions, context gaps) into the LLM system prompt. The LLM solves each identified weakness, assigns a domain-specific expert role (e.g., Geologist for magma topics), and returns a `justification` banner explaining improvements. Supports Gemini, OpenAI, and Groq with automatic heuristic fallback at $0 cost.
+- **Domain Archetype Engine** (`js/domain-analyzer.js`): Classifies prompts into 8 archetypes (Software Engineering, Data Extraction, Marketing Copy, RAG Knowledge, Agentic Tool Use, Financial/Legal, Rhetoric/Creative, General Task), evaluates context gaps, and synthesizes enriched prompts via `synthesizeLocal()` with `inferDynamicRole()` (geology, health, physics, history, etc.).
+- **Anti-Pattern Catalog** (35 anti-patterns) & **Best Practices** (15 strengths) with expandable `<details>` accordions.
 - **Adversarial Security Suite** (13 security tests: jailbreak resistance, prompt exfiltration, hallucination mitigation, etc.).
 - **Interactive Knowledge Hub** with a 20-term bilingual glossary, 13 prompting techniques (including CoVe, SoT, Hi-CoT), 6 structural frameworks (including CO-STAR and Bento-Box), 11 curated research references, and full-text real-time search.
 - **Top 10 Hall of Fame Leaderboard** with zero-login global API sync (`/api/leaderboard`), instant URL sharing (`?p=base64`), 10 elite seed prompts (94–99/100), and interactive "Analyze & Try" buttons.
@@ -89,7 +91,7 @@ The **Learn ("Aprender")** and **Top 10** tabs provide an interactive educationa
 - **Top-Level Radar IA Tab (`#nav-radar` & `#view-radar`):** Primary navigation tab uniting 12 curated AI Creators (Riley Goodside, Andrej Karpathy, Lilian Weng, swyx, Anthropic Research, Harrison Chase, etc.) and 11 Research References & Guides with sub-nav switching and community suggestion modal.
 - **Live AI News Ticker (`#news-ticker-bar`):** Infinite marquee header bar displaying real-time updates, papers, jailbreak discoveries, and new videos from top AI creators with pause-on-hover.
 - **Top 10 Hall of Fame (`js/leaderboard.js` & `/api/leaderboard`):** Global community ranking with zero-login API sync, gold/silver/bronze badges, submission modal, and "Analyze & Try" buttons.
-- **Unified Expandable Library:** Browse 34 anti-patterns, 15 best practices, and 13 adversarial tests as expandable accordions displaying dimension, description, and suggestions.
+- **Unified Expandable Library:** Browse 35 anti-patterns, 15 best practices, and 14 adversarial tests as expandable accordions displaying dimension, description, and suggestions.
 - **Real-Time Interactive Search:** Search bar filtering all terms, techniques, frameworks, references, and library entries dynamically as you type.
 
 ---
@@ -119,7 +121,10 @@ The REST API endpoints (`/api/analyze`, `/api/improve`, `/api/adversarial`) are 
 | **`STORAGE_KV_REST_API_URL`**<br>*(or `UPSTASH_REDIS_REST_URL` / `KV_REST_API_URL`)* | Production, Preview | ❌ Optional | Leaderboard & anti-spam rate limiter persist globally across Vercel instances in Upstash Redis / Vercel KV. | Gracefully falls back to an in-memory array per Vercel instance. App remains 100% functional. |
 | **`STORAGE_KV_REST_API_TOKEN`**<br>*(or `UPSTASH_REDIS_REST_TOKEN` / `KV_REST_API_TOKEN`)* | Production, Preview | ❌ Optional | Authenticates read/write operations (`GET`, `SET`, `ZADD`, `HSET`) against Vercel KV / Redis. | Redis client disabled; degrades to in-memory storage fallback. |
 | **`PROMPTOMETER_API_KEY`** | Production | ❌ Optional | Enforces private key authentication (`x-api-key` / `Bearer token`) on Serverless API endpoints (`HTTP 401` on invalid key). | API operates in open public access mode (ideal for public web UI demo). |
-| **`PORT`** | Local Dev | ❌ Optional | Custom TCP port for local Express server (`server.js`). | Defaults to port `3001`. |
+| **`GEMINI_API_KEY`** | Production, Dev | ❌ Optional | Enables live LLM-as-a-Judge inference on `/api/analyze-intent` using Gemini Flash. Returns `justification`, `weaknessesIdentified`, and `improvedPrompt`. | Degrades automatically to zero-latency heuristic synthesizer (`DomainAnalyzer.synthesizeLocal`). |
+| **`OPENAI_API_KEY`** | Production, Dev | ❌ Optional | Same as above using GPT models. | Same heuristic fallback. |
+| **`GROQ_API_KEY`** | Production, Dev | ❌ Optional | Same as above using Llama 3.3 via Groq. | Same heuristic fallback. |
+| **`PORT`** | Local Dev | ❌ Optional | Custom TCP port for local Express server (`server.js`). | Defaults to port `3000`. |
 
 ---
 

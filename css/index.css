@@ -16,13 +16,14 @@
   /* ── Ink: High contrast starlight white ──────────────────────────── */
   --ink:              #F0F4F8;
   --ink-soft:         #A0AEC0;
-  --ink-faint:        #64748B;
+  --ink-faint:        #94A3B8;
 
   /* ── Accents: Photon Ring Orange & Pulsar Cyan ───────────────────── */
   --accent:           #FF9E00;
   --accent-secondary: #00E5FF;
   --accent-soft:      #FFB703;
   --accent-bg:        rgba(255, 158, 0, 0.14);
+  --vermilion:        #FF9E00;
 
   /* ── Semantic state ─────────────────────────────────────────────── */
   --ok:               #10B981;
@@ -49,8 +50,13 @@
   --rule:        1px solid #1F263B;
   --rule-strong: 1px solid #334155;
   --rule-accent: 2px solid var(--accent);
+  --rule-color:  #334155;
   --glow-accent: 0 0 16px rgba(255, 158, 0, 0.35);
   --glow-cyan:   0 0 16px rgba(0, 229, 255, 0.35);
+
+  /* ── Elevation ─────────────────────────────────────────────────── */
+  --shadow-sm:   0 2px 8px rgba(8, 9, 14, 0.45);
+  --shadow-lg:   0 12px 40px rgba(4, 5, 10, 0.6);
 
   /* ── Radii ─────────────────────────────────────────────────────── */
   --radius-sm: 4px;
@@ -83,12 +89,13 @@ body.theme-editorial {
 
   --ink:              #1A1612;
   --ink-soft:         #4A4239;
-  --ink-faint:        #8B8275;
+  --ink-faint:        #6B6153;
 
   --accent:           #C73E2D;
   --accent-secondary: #3A5F7F;
   --accent-soft:      #E8B5AD;
   --accent-bg:        #FBEAE6;
+  --vermilion:        #C73E2D;
 
   --ok:               #4F7942;
   --ok-bg:            #E8EDE2;
@@ -111,8 +118,12 @@ body.theme-editorial {
   --rule:        1px solid #D9D2C4;
   --rule-strong: 1px solid var(--ink);
   --rule-accent: 2px solid var(--accent);
+  --rule-color:  #D9D2C4;
   --glow-accent: none;
   --glow-cyan:   none;
+
+  --shadow-sm:   0 2px 8px rgba(26, 22, 18, 0.12);
+  --shadow-lg:   0 12px 40px rgba(26, 22, 18, 0.2);
 }
 
 /* ── Reset ─────────────────────────────────────────────────────── */
@@ -796,10 +807,6 @@ body.theme-editorial .central-score-value {
   color: #10b981;
 }
 /* Awaiting-evaluation state: dimmer, neutral color */
-#score-number[data-empty="true"],
-.central-score-box:has(#score-number:not(:not(:empty))) {
-  /* placeholder for future pseudo-state */
-}
 .central-score-grade.is-awaiting {
   color: var(--ink-soft);
   opacity: 0.7;
@@ -1730,11 +1737,7 @@ body.theme-editorial .score-ring-bg { stroke: #D9D2C4; }
   }
 }
 /* ── Learn Hub (Knowledge) ───────────────────────────────── */
-.learn-layout {
-  display: flex;
-  gap: var(--space-xl);
-  align-items: flex-start;
-}
+/* Layout: grid 220px 1fr con subnav sticky (definido arriba, junto al resto del Hub) */
 
 /* — Knowledge Search Bar — */
 .learn-header-bar {
@@ -1790,7 +1793,7 @@ body.theme-editorial .score-ring-bg { stroke: #D9D2C4; }
 }
 /* ── Site Footer ─────────────────────────────────────────── */
 .site-footer {
-  margin-top: var(--space-xxl);
+  margin-top: var(--space-2xl);
   border-top: var(--rule);
   background: var(--bg-sunken);
   padding: var(--space-lg) var(--space-xl);
@@ -2394,7 +2397,7 @@ body.theme-editorial .score-ring-bg { stroke: #D9D2C4; }
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    border-top: var(--rule-color);
+    border-top: 1px solid var(--rule-color);
     padding: 0 4px;
     mask-image: linear-gradient(to right, black 0%, black calc(100% - 24px), transparent 100%);
     -webkit-mask-image: linear-gradient(to right, black 0%, black calc(100% - 24px), transparent 100%);
@@ -3034,7 +3037,7 @@ body.theme-editorial .gaps-card-title {
   flex-direction: column;
   gap: 4px;
   font-size: 0.8rem;
-  color: var(--ink-body);
+  color: var(--ink-soft);
   margin-bottom: 8px;
 }
 
@@ -3044,34 +3047,31 @@ body.theme-editorial .gaps-card-title {
   gap: 6px;
 }
 
-.action-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+/* Modificador: chips de inyección de contexto de dominio (mono, pill azul) */
+.action-chip.action-chip--inject {
   padding: 4px 10px;
   border-radius: var(--radius-pill, 9999px);
   font-family: var(--font-mono);
   font-size: 0.74rem;
-  font-weight: 600;
   background: rgba(59, 130, 246, 0.12);
   color: #60a5fa;
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  cursor: pointer;
-  transition: all 0.2s ease;
+  border-color: rgba(59, 130, 246, 0.3);
+  box-shadow: none;
 }
-.action-chip:hover {
+.action-chip.action-chip--inject:hover {
   background: rgba(59, 130, 246, 0.25);
   border-color: #60a5fa;
-  transform: translateY(-1px);
+  color: #60a5fa;
 }
-body.theme-editorial .action-chip {
+body.theme-editorial .action-chip.action-chip--inject {
   background: #E5EFFE;
   color: #1D4ED8;
   border-color: #BFDBFE;
 }
-body.theme-editorial .action-chip:hover {
+body.theme-editorial .action-chip.action-chip--inject:hover {
   background: #DBEAFE;
   border-color: #93C5FD;
+  color: #1D4ED8;
 }
 
 .domain-justification-banner {
@@ -3093,8 +3093,8 @@ body.theme-editorial .action-chip:hover {
   margin-bottom: 4px;
 }
 .domain-justification-banner .domain-justification-text {
-  color: var(--text-muted, #94a3b8);
-  font-family: var(--font-body);
+  color: var(--ink-soft);
+  font-family: var(--font-sans);
 }
 body.theme-editorial .domain-justification-banner {
   background: #F0FDF4;
@@ -3106,4 +3106,32 @@ body.theme-editorial .domain-justification-banner .justification-header {
 body.theme-editorial .domain-justification-banner .domain-justification-text {
   color: #374151;
 }
+
+/* ============================================================
+   ACCESSIBILITY — Keyboard focus & reduced motion
+   (Al final del archivo para ganar la cascada sobre outline:none)
+   ============================================================ */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Anillo de foco legible sobre superficies acentuadas (botones primarios) */
+.btn-primary:focus-visible,
+.action-chip:focus-visible,
+.nav-btn:focus-visible {
+  outline-color: var(--bg-body);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 
