@@ -2379,17 +2379,34 @@ const App = (() => {
       });
     }
 
+    // Event delegation on Podium cards
+    const podiumContainer = document.getElementById('models-podium-section');
+    if (podiumContainer) {
+      podiumContainer.addEventListener('click', (e) => {
+        const card = e.target.closest('.podium-card');
+        if (card && card.dataset.id) {
+          openModelDetailModal(card.dataset.id);
+        }
+      });
+    }
+
+    // Event delegation on Grid cards
+    const gridContainer = document.getElementById('models-grid');
+    if (gridContainer) {
+      gridContainer.addEventListener('click', (e) => {
+        const card = e.target.closest('.model-card');
+        if (card && card.dataset.id) {
+          openModelDetailModal(card.dataset.id);
+        }
+      });
+    }
+
     // Modal close listeners
-    const modal = document.getElementById('modal-model-detail');
     const closeBtn = document.getElementById('btn-close-model-modal');
     const closeBottomBtn = document.getElementById('btn-close-model-modal-bottom');
     if (closeBtn) closeBtn.addEventListener('click', closeModelDetailModal);
     if (closeBottomBtn) closeBottomBtn.addEventListener('click', closeModelDetailModal);
-    if (modal) {
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModelDetailModal();
-      });
-    }
+    setupModalA11y('modal-model-detail', closeModelDetailModal);
 
     // Copy prompt listener in modal
     const copyBtn = document.getElementById('btn-copy-model-prompt');
