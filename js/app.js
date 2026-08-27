@@ -165,10 +165,15 @@ const App = (() => {
     const tickerViewport = document.getElementById('news-ticker-viewport');
     if (tickerViewport) {
       tickerViewport.addEventListener('click', (e) => {
-        if (window.innerWidth <= 640 || !e.target.closest('a')) {
+        if (window.innerWidth <= 640) {
+          e.preventDefault();
+          e.stopPropagation();
+          openTickerFeedModal();
+        } else if (!e.target.closest('a')) {
           openTickerFeedModal();
         }
-      });
+      }, true);
+    }
     }
 
     const closeFeedBtn = document.getElementById('btn-close-ticker-modal');
