@@ -38,7 +38,7 @@ Promptometer is a complete professional workspace and engine to **evaluate, benc
 - **Canonical 7-Block XML Structure**: The rewriter, domain synthesizer, and LLM all generate prompts in the same enforced order: `<system_role>` → `<objective>` → `<context>` → `<requirements>` → `<output_format>` → `<examples>` → `<error_handling>`. Color-coded XML highlighting with 1-click action chips (`⚡ Shorten`, `🧠 Add CoT`, `📐 Enforce JSON`, `🛡️ Guardrails`).
 - **LLM-as-a-Judge with Diagnostic Feedback**: The `/api/analyze-intent` endpoint injects the Promptometer diagnostic (score, grade, weaknesses, suggestions, context gaps) into the LLM system prompt. The LLM solves each identified weakness, assigns a domain-specific expert role (e.g., Geologist for magma topics), and returns a `justification` banner explaining improvements. Supports Gemini, OpenAI, and Groq with automatic heuristic fallback at $0 cost.
 - **Domain Archetype Engine** (`js/domain-analyzer.js`): Classifies prompts into 8 archetypes (Software Engineering, Data Extraction, Marketing Copy, RAG Knowledge, Agentic Tool Use, Financial/Legal, Rhetoric/Creative, General Task), evaluates context gaps, and synthesizes enriched prompts via `synthesizeLocal()` with `inferDynamicRole()` (geology, health, physics, history, etc.).
-- **Anti-Pattern Catalog** (34 anti-patterns) & **Best Practices** (15 strengths) with expandable `<details>` accordions.
+- **Anti-Pattern Catalog** (35 anti-patterns) & **Best Practices** (15 strengths) with expandable `<details>` accordions.
 - **Adversarial Security Suite** (13 security tests: jailbreak resistance, prompt exfiltration, hallucination mitigation, etc.).
 - **Interactive Knowledge Hub** with a 20-term bilingual glossary, 13 prompting techniques (including CoVe, SoT, Hi-CoT), 6 structural frameworks (including CO-STAR and Bento-Box), 11 curated research references, and full-text real-time search.
 - **Top 10 Hall of Fame Leaderboard** with zero-login global API sync (`/api/leaderboard`), instant URL sharing (`?p=base64`), 10 elite seed prompts (94–99/100), and interactive "Analyze & Try" buttons.
@@ -91,7 +91,7 @@ The **Learn ("Aprender")** and **Top 10** tabs provide an interactive educationa
 - **Top-Level Radar IA Tab (`#nav-radar` & `#view-radar`):** Primary navigation tab uniting 12 curated AI Creators (Riley Goodside, Andrej Karpathy, Lilian Weng, swyx, Anthropic Research, Harrison Chase, etc.) and 11 Research References & Guides with sub-nav switching and community suggestion modal.
 - **Live AI News Ticker (`#news-ticker-bar`):** Infinite marquee header bar displaying real-time updates, papers, jailbreak discoveries, and new videos from top AI creators with pause-on-hover.
 - **Top 10 Hall of Fame (`js/leaderboard.js` & `/api/leaderboard`):** Global community ranking with zero-login API sync, gold/silver/bronze badges, submission modal, and "Analyze & Try" buttons.
-- **Unified Expandable Library:** Browse 34 anti-patterns, 15 best practices, and 13 adversarial tests as expandable accordions displaying dimension, description, and suggestions.
+- **Unified Expandable Library:** Browse 35 anti-patterns, 15 best practices, and 14 adversarial tests as expandable accordions displaying dimension, description, and suggestions.
 - **Real-Time Interactive Search:** Search bar filtering all terms, techniques, frameworks, references, and library entries dynamically as you type.
 
 ---

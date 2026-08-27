@@ -769,6 +769,29 @@ const Analyzer = {
       findings.push(k('contentRestrictions'));
     }
 
+    // --- OWASP LLM07: System Prompt Leakage ---
+
+    // The prompt defends its instructions against extraction (positive)
+    if (signals.leakageDefense) {
+      score += 12;
+      findings.push(k('leakageDefense'));
+    }
+
+    // The prompt itself is a system-prompt extraction attack (critical)
+    if (signals.systemPromptExtraction) {
+      score -= 18;
+      findings.push(k('extractionAttempt'));
+      suggestions.push(k('extractionAttemptSugg'));
+    }
+
+    // Sensitive content embedded in a system prompt without a confidentiality
+    // directive: if the system prompt leaks, so do the secrets.
+    if (signals.sensitiveSystemPrompt && !signals.leakageDefense) {
+      score -= 12;
+      findings.push(k('sensitiveNoDefense'));
+      suggestions.push(k('sensitiveNoDefenseSugg'));
+    }
+
     // --- Negative signals ---
 
     // PII / secrets present in the prompt (critical privacy risk)

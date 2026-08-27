@@ -1,6 +1,6 @@
 // ============================================================================
 // Promptometer — Adversarial Testing Simulator
-// Evaluates prompt resilience against 10 attack / failure vectors.
+// Evaluates prompt resilience against 14 attack / failure vectors.
 // All user-facing strings are resolved via I18n.t('adv.<test>.<field>').
 // ============================================================================
 
@@ -32,6 +32,7 @@ const Adversarial = {
       { weight: 2, result: this._testJailbreakRoleplay(trimmed) },
       { weight: 2, result: this._testIndirectInjection(trimmed) },
       { weight: 2, result: this._testDataExfiltration(trimmed) },
+      { weight: 2, result: this._testSystemPromptLeakage(trimmed) },
       { weight: 1, result: this._testAmbiguity(trimmed) },
       { weight: 1, result: this._testOverflow(trimmed) },
       { weight: 1, result: this._testLanguageMismatch(trimmed) },
@@ -413,6 +414,44 @@ const Adversarial = {
     } else {
       result.detail = I18n.t('adv.dataExfiltration.failDetail');
       result.suggestion = I18n.t('adv.dataExfiltration.failSugg');
+    }
+    return result;
+  },
+
+  // OWASP LLM07 — System Prompt Leakage: does the prompt keep its own
+  // instructions (and any embedded sensitive content) from being extracted?
+  _testSystemPromptLeakage(prompt) {
+    const result = this._base('systemPromptLeakage');
+    const hasSignals = typeof Signals !== 'undefined' || typeof globalThis.Signals !== 'undefined';
+    const S = hasSignals ? ((typeof Signals !== 'undefined') ? Signals : globalThis.Signals) : null;
+    const sig = S ? S.extract(prompt, 'es') : {};
+    const lower = prompt.toLowerCase();
+
+    // If the evaluated prompt IS an extraction attack, it fails by definition.
+    if (sig.systemPromptExtraction) {
+      result.status = 'fail';
+      result.detail = I18n.t('adv.systemPromptLeakage.attackDetail');
+      result.suggestion = I18n.t('adv.systemPromptLeakage.attackSugg');
+      return result;
+    }
+
+    let score = 0;
+    const details = [];
+    if (sig.leakageDefense) { score += 3; details.push(I18n.t('adv.systemPromptLeakage.d1')); }
+    else if (/\b(confidential|confidencial|do not (reveal|share)|no reveles|no compartas)\b/i.test(lower)) { score += 2; details.push(I18n.t('adv.systemPromptLeakage.d2')); }
+    if (!sig.sensitiveSystemPrompt) { score += 2; details.push(I18n.t('adv.systemPromptLeakage.d3')); }
+
+    const joined = details.join('; ');
+    if (score >= 5) {
+      result.status = 'pass';
+      result.detail = I18n.t('adv.systemPromptLeakage.passDetail', { details: joined });
+    } else if (score >= 2) {
+      result.status = 'warning';
+      result.detail = I18n.t('adv.systemPromptLeakage.warnDetail', { details: joined });
+      result.suggestion = I18n.t('adv.systemPromptLeakage.warnSugg');
+    } else {
+      result.detail = I18n.t('adv.systemPromptLeakage.failDetail');
+      result.suggestion = I18n.t('adv.systemPromptLeakage.failSugg');
     }
     return result;
   },
