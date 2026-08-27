@@ -96,6 +96,8 @@ interactiva desplegada en Vercel.
 
 - [x] **Live News Ticker & Radar de Creadores IA (`index.html`, `css/index.css`, `js/app.js`, `js/knowledge.js`)**: Barra superior de noticias en vivo (`#news-ticker-bar`) con controles manuales completos (Play/Pausa ⏸/▶, navegación anterior ‹ y siguiente › paso a paso con centrado suave sin saltos de animación), modal de novedades (`#modal-ticker-feed`) compacto con buscador integrado y filtrado por etiquetas; pestaña Radar IA (`#view-radar`) con 20 creadores curados, búsqueda rápida en tiempo real, filtros por categoría (Prompting, Arquitectura, Agentes, Seguridad) y corrección de handle de Riley Goodside (`@goodside`).
 - [x] **Métrica OWASP LLM07 — System Prompt Leakage integrada al motor (`js/signals.js`, `js/analyzer.js`, `js/patterns.js`, `js/adversarial.js`)**: 3 señales nuevas (`leakageDefense`, `sensitiveSystemPrompt`, `systemPromptExtraction`) con lógica de co-ocurrencia ES/EN; scoring en la dimensión Seguridad (+12 defensa, −18 ataque de extracción, −12 contenido sensible sin directiva de confidencialidad); anti-patrón **AP047** (Fuga de System Prompt, critical) y best practice **BP016** (defensa anti-fuga); test adversarial #14 **systemPromptLeakage** (peso 2, categoría safety) que falla por definición si el prompt evaluado ES un ataque de extracción. Catálogos: 35 APs / 16 BPs / 14 tests adversariales. Paridad i18n ES/EN completa (21 claves nuevas).
+- [x] **Paridad con `promptometer-core@1.1.0` (repo promptometer, commit `3f25c4c`)**: gate de sustancia insuficiente, `analyze(prompt, { objective })` con `domainArchetype` (hint de objetivo) y métrica OWASP LLM07 replicados en el paquete npm. ⚠️ Falta `npm publish` (sin sesión npm activa) — publicar y luego `npm install` en promptforge para que el serverless use el nuevo core.
+- [x] **Deuda UX menor resuelta (sesión 2026-08-27)**: overrides editoriales para pills semánticas/XML tags/grade badges hardcodeados (paleta paper-friendly), tipografía mínima ≥0.68rem/11px (antes 8.3-10px), line-clamp de 3 líneas en previews del leaderboard, performance móvil (sin `background-attachment: fixed` ni backdrop-filter/blur de prismas a ≤768px) y limpieza de dead markup JS (`renderReferences`, badges `complexity/language` fantasma, animación de `score-ring-fill` inexistente, `btn-submit-to-leaderboard`).
 
 ---
 
@@ -152,7 +154,7 @@ promptforge/                    ← App Web (Vercel)
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
 - **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
 - **Último commit promptforge:** fixes de scoring (gate sustancia insuficiente), arquetipo por objetivo e i18n del Workbench
-- **Estado:** 26/26 tests en PASS. ⚠️ Pendiente: replicar el gate de sustancia insuficiente y el hint de objetivo en el paquete npm `promptometer-core` (el serverless `/api/analyze-intent` usa el core de npm; hoy recibe el `analysis` del cliente, por lo que la web ya está cubierta, pero el paquete por sí solo no incluye el gate).
+- **Estado:** 26/26 tests en PASS. Paridad de features con `promptometer-core` v1.1.0 lograda en código (commit `3f25c4c` del repo promptometer; falta `npm publish` — sin sesión npm). Merge `dev`→`main` en curso para desplegar a producción.
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (reciente):**
 >
