@@ -228,6 +228,15 @@
         </svg>
         <span data-i18n="nav.learn">Aprender</span>
       </button>
+      <button class="nav-btn" data-view="models" id="nav-models">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"
+          stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+          <line x1="8" y1="21" x2="16" y2="21"/>
+          <line x1="12" y1="17" x2="12" y2="21"/>
+        </svg>
+        <span data-i18n="nav.models">Modelos LLM</span>
+      </button>
       <button class="nav-btn" data-view="radar" id="nav-radar">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"
           stroke-linecap="round" stroke-linejoin="round">
@@ -672,7 +681,51 @@
     </div>
   </div>
   <!-- Leaderboard / Top 10 Hall of Fame -->
-  <div class="view" id="view-leaderboard">
+    <!-- ══════════════════════════════════════════════════════════════════════
+       VIEW: LLM MODELS & BENCHMARKS DIRECTORY
+       ══════════════════════════════════════════════════════════════════════ -->
+  <div class="view" id="view-models">
+    <div class="models-header-panel">
+      <div class="models-title-block">
+        <h2 class="view-title" data-i18n="models.title">Directorio de Modelos LLM & Benchmarks</h2>
+        <p class="view-subtitle" data-i18n="models.subtitle">Catálogo exhaustivo de modelos de frontera y pesos abiertos, telemetría de rendimiento y guías de prompting optimizadas.</p>
+      </div>
+      <div class="models-controls-bar">
+        <div class="models-search-wrapper">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+          </svg>
+          <input type="text" id="models-search-input" class="models-search-input"
+                 data-i18n-placeholder="models.searchPlaceholder"
+                 placeholder="Buscar modelo por nombre, proveedor o arquitectura..." autocomplete="off" />
+        </div>
+        <div class="models-filter-pills" id="models-filter-pills">
+          <button class="filter-chip active" data-type="all" data-i18n="models.filterAll">Todos</button>
+          <button class="filter-chip" data-type="frontier" data-i18n="models.filterFrontier">Frontera</button>
+          <button class="filter-chip" data-type="open_weights" data-i18n="models.filterOpenWeights">Open Source</button>
+          <button class="filter-chip" data-type="reasoning" data-i18n="models.filterReasoning">Razonamiento</button>
+          <button class="filter-chip" data-type="coding" data-i18n="models.filterCoding">Código</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Podium Section: Top 3 SOTA Models -->
+    <div class="models-podium-section" id="models-podium-section">
+      <!-- Rendered dynamically -->
+    </div>
+
+    <!-- Full Grid of LLM Models -->
+    <div class="models-grid-container">
+      <div class="models-grid" id="models-grid">
+        <!-- Rendered dynamically -->
+      </div>
+      <div class="models-empty-state hidden" id="models-empty-state">
+        <p data-i18n="models.noResults">No se encontraron modelos que coincidan con los filtros.</p>
+      </div>
+    </div>
+  </div>
+
+<div class="view" id="view-leaderboard">
     <div class="leaderboard-header-panel">
       <div class="leaderboard-title-block">
         <h2 class="view-title" data-i18n="leaderboard.title">Pabellón de la Fama — Top 10 Prompts</h2>
