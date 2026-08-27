@@ -836,7 +836,7 @@
 
   <!-- 📜 Live Radar Feed Log Modal 📜 -->
   <div id="modal-ticker-feed" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="ticker-modal-title">
-    <div class="modal-panel" style="max-width:660px">
+    <div class="modal-panel" style="max-width:580px">
       <div class="modal-header">
         <h3 class="modal-title" id="ticker-modal-title" data-i18n="radar.modalFeedTitle">📡 Novedades del Radar IA</h3>
         <button class="modal-close-btn" id="btn-close-ticker-modal" aria-label="Cerrar">
@@ -845,14 +845,20 @@
       </div>
       <p class="modal-desc" data-i18n="radar.modalFeedDesc">Últimas publicaciones, papers y descubrimientos seleccionados de los principales creadores de Gen AI.</p>
       
-      <!-- Category Filter Pills inside Modal -->
-      <div class="ticker-feed-filter-bar" id="ticker-feed-filter-bar">
-        <!-- Rendered Filter Chips dynamically -->
+      <div class="ticker-modal-toolbar">
+        <div class="ticker-modal-search-wrapper">
+          <input type="text" id="ticker-feed-search-input" class="modal-input modal-input--sm" 
+                 data-i18n-placeholder="radar.modalSearchPlaceholder" 
+                 placeholder="Buscar novedad por texto, autor o tema..." autocomplete="off" />
+        </div>
+        <div class="ticker-feed-filter-bar" id="ticker-feed-filter-bar">
+          <!-- Rendered Filter Chips dynamically -->
+        </div>
       </div>
 
       <div class="modal-body ticker-feed-modal-body">
         <div id="ticker-feed-list" class="ticker-feed-list">
-          <!-- Rendered feed items list -->
+          <!-- Rendered compact feed items -->
         </div>
       </div>
     </div>

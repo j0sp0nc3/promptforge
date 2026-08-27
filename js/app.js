@@ -71,8 +71,8 @@ const App = (() => {
   // 📡 Live News Ticker Controls & Modal Feed 📡
   let isTickerPaused = false;
   let activeTickerFeedCategory = 'all';
-
-  let currentTickerOffset = 0;
+  let tickerModalSearchQuery = '';
+  let tickerStepIndex = 0;
 
   function setupTickerControls() {
     const toggleBtn = document.getElementById('ticker-toggle-btn');
@@ -80,36 +80,60 @@ const App = (() => {
     const nextBtn = document.getElementById('ticker-next-btn');
     const viewAllBtn = document.getElementById('ticker-view-all-btn');
     const track = document.getElementById('news-ticker-track');
-    const viewport = document.getElementById('news-ticker-viewport');
 
     if (toggleBtn) {
       toggleBtn.addEventListener('click', () => {
         isTickerPaused = !isTickerPaused;
-        if (track) track.classList.toggle('paused', isTickerPaused);
+        if (track) {
+          if (isTickerPaused) {
+            track.classList.add('paused');
+          } else {
+            track.classList.remove('paused');
+            track.style.animation = '';
+            track.style.transform = '';
+          }
+        }
         toggleBtn.textContent = isTickerPaused ? '▶' : '⏸';
         toggleBtn.setAttribute('title', isTickerPaused ? t('radar.tickerPlay') : t('radar.tickerPause'));
         toggleBtn.setAttribute('aria-label', isTickerPaused ? t('radar.tickerPlay') : t('radar.tickerPause'));
       });
     }
 
-    const pauseAndShift = (delta) => {
-      if (!track) return;
+    const stepTicker = (dir) => {
+      if (!track || typeof Knowledge === 'undefined') return;
+      const items = track.querySelectorAll('.ticker-item');
+      if (!items || items.length === 0) return;
+
       isTickerPaused = true;
       track.classList.add('paused');
+      track.style.animation = 'none'; // Disable keyframes so transform takes effect
+      track.style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+
       if (toggleBtn) {
         toggleBtn.textContent = '▶';
         toggleBtn.setAttribute('title', t('radar.tickerPlay'));
       }
-      currentTickerOffset += delta;
-      track.style.transform = `translateX(${currentTickerOffset}px)`;
+
+      const totalItems = Knowledge.feed ? Knowledge.feed.length : items.length;
+      if (dir === 'next') {
+        tickerStepIndex = (tickerStepIndex + 1) % totalItems;
+      } else {
+        tickerStepIndex = (tickerStepIndex - 1 + totalItems) % totalItems;
+      }
+
+      const targetEl = items[tickerStepIndex];
+      if (targetEl) {
+        const targetOffset = targetEl.offsetLeft;
+        track.style.transform = `translateX(-${targetOffset}px)`;
+      }
     };
 
     if (prevBtn) {
-      prevBtn.addEventListener('click', () => pauseAndShift(240));
+      prevBtn.addEventListener('click', () => stepTicker('prev'));
     }
 
     if (nextBtn) {
-      nextBtn.addEventListener('click', () => pauseAndShift(-240));
+      nextBtn.addEventListener('click', () => stepTicker('next'));
     }
 
     if (viewAllBtn) {
@@ -119,6 +143,14 @@ const App = (() => {
     const closeFeedBtn = document.getElementById('btn-close-ticker-modal');
     if (closeFeedBtn) {
       closeFeedBtn.addEventListener('click', closeTickerFeedModal);
+    }
+
+    const modalSearchInput = document.getElementById('ticker-feed-search-input');
+    if (modalSearchInput) {
+      modalSearchInput.addEventListener('input', (e) => {
+        tickerModalSearchQuery = e.target.value;
+        renderTickerFeedModalContent();
+      });
     }
   }
 
@@ -159,20 +191,38 @@ const App = (() => {
       };
     }
 
-    const filtered = activeTickerFeedCategory === 'all' 
-      ? feed 
-      : feed.filter(f => f.tag === activeTickerFeedCategory);
+    const query = tickerModalSearchQuery.toLowerCase().trim();
+    const filtered = feed.filter(item => {
+      const matchCat = activeTickerFeedCategory === 'all' || item.tag === activeTickerFeedCategory;
+      const text = (item.text[lang] || item.text.es || '').toLowerCase();
+      const author = (item.author || '').toLowerCase();
+      const tag = (item.tag || '').toLowerCase();
+      const matchQuery = !query || text.includes(query) || author.includes(query) || tag.includes(query);
+      return matchCat && matchQuery;
+    });
+
+    if (filtered.length === 0) {
+      feedList.innerHTML = `
+        <div class="empty-state" style="padding:24px; text-align:center; color:var(--ink-soft); font-size:0.85rem">
+          ${t('radar.noResults')}
+        </div>
+      `;
+      return;
+    }
 
     feedList.innerHTML = filtered.map(item => `
-      <a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer" class="ticker-feed-card">
-        <div class="ticker-feed-card-header">
-          <span class="ticker-feed-author">${escapeHtml(item.author)}</span>
-          <div class="ticker-feed-meta">
+      <a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer" class="ticker-feed-row">
+        <div class="ticker-feed-row-left">
+          <div class="ticker-feed-row-header">
+            <span class="ticker-feed-author-name">${escapeHtml(item.author)}</span>
             <span class="ticker-tag">${escapeHtml(item.tag)}</span>
             <span class="ticker-feed-time">${escapeHtml(item.timestamp)}</span>
           </div>
+          <div class="ticker-feed-row-text">${escapeHtml(item.text[lang] || item.text.es)}</div>
         </div>
-        <div class="ticker-feed-text">${escapeHtml(item.text[lang] || item.text.es)}</div>
+        <div class="ticker-feed-row-right">
+          <span class="ticker-feed-link-icon">↗</span>
+        </div>
       </a>
     `).join('');
   }
