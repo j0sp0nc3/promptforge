@@ -143,30 +143,22 @@ promptforge/                    ← App Web (Vercel)
 
 ## 🔄 Última Actualización
 
-- **Fecha:** 2026-08-13
+- **Fecha:** 2026-08-16
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
 - **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
-- **Último commit promptforge:** `cb28095` (refactor(prompt-structure): enforce canonical XML tag order across all generators)
-- **Estado:** 26/26 tests en PASS (8 Suites completas). Paridad ES/EN, desanidamiento XML, rol temático dinámico, diagnóstico de debilidades al LLM, banner `justification` en UI, Gemini verificado, y orden canónico de 7 bloques XML aplicado en toda la cadena.
+- **Último commit promptforge:** `9bb897b` (feat(llm): propagate selected prompt objective into Gemini diagnostic pipeline)
+- **Estado:** 26/26 tests en PASS (8 Suites completas). Paridad ES/EN, desanidamiento XML, rol temático dinámico, diagnóstico de debilidades al LLM con prioridad de objetivo declarado, banner `justification` en UI, Gemini verificado, y orden canónico de 7 bloques XML aplicado en toda la cadena.
 
-> 📌 **RESUMEN DE TRABAJO COMPLETADO (esta sesión):**
+> 📌 **RESUMEN DE TRABAJO COMPLETADO (reciente):**
+>
+> **Commit `9bb897b` — Propagación de Objetivo Declarado al Pipeline Diagnóstico Gemini:**
+> - **Inclusión de `objective` en Payload (`js/app.js`):** El handler de `#btn-deep-domain-ai` incluye el objetivo seleccionado en el selector del Workbench (`coding`, `reasoning`, `json_schema`, `safety_rag`, `creative` o `general`).
+> - **Priorización en Backend Serverless (`api/index.js`):** `_handleAnalyzeIntent` pasa `objective` a `PromptometerCore.analyze` para calibración de pesos, incluye el objetivo declarado en `diagnosticPrompt` y agrega la regla 1b al `systemPrompt` para obligar al LLM a priorizar dimensiones críticas del objetivo.
+> - **Tests:** 26/26 PASS.
 >
 > **Commit `0444e02` — Diagnóstico de Debilidades + Banner de Justificación:**
-> - **Diagnóstico de Debilidades enviado al LLM (`api/index.js`):**
->   - `_handleAnalyzeIntent` acepta `payload.analysis` o lo computa con `PromptometerCore.analyze`.
->   - Construye un `diagnosticPrompt` con score, grade, findings, suggestions y contextGaps.
->   - Respuesta JSON incluye: `{ inferredGoal, weaknessesIdentified, justification, gapsFixedCount, improvedPrompt }`.
-> - **Banner de Justificación en UI (`index.html`, `css/index.css`, `js/app.js`):**
->   - `#domain-justification-banner` y `#domain-justification-text` en panel de dominio.
->   - El handler de `#btn-deep-domain-ai` envía `{ prompt, analysis }` y renderiza `result.justification`.
-> - **i18n:** `domain.justificationTitle` en ES y EN.
-> - **SUITE 8 (`test_edge_cases.js`):** Hecha async con `await new Promise`. **26/26 PASS**.
-> - **Gemini verificado:** `source: llm_as_a_judge`, `provider: gemini`, `justification` en español alineada al tema.
+> - **Diagnóstico de Debilidades enviado al LLM (`api/index.js`):** `_handleAnalyzeIntent` construye `diagnosticPrompt` con score, grade, findings, suggestions y contextGaps.
+> - **Banner de Justificación en UI (`index.html`, `css/index.css`, `js/app.js`):** `#domain-justification-banner` en panel de dominio.
 >
 > **Commit `cb28095` — Orden Canónico de 7 Bloques XML:**
-> - **Set único de etiquetas canónicas en inglés** aplicado en toda la cadena (rewriter, domain-analyzer, LLM):
->   `<system_role>` → `<objective>` → `<context>` → `<requirements>` → `<output_format>` → `<examples>` → `<error_handling>`
-> - **`js/rewriter.js`:** `tTags` con nombres canónicos fijos, `_restructure()` y `_insertSection()` siguen el nuevo orden.
-> - **`js/domain-analyzer.js`:** `synthesizeLocal()` genera `<system_role>/<objective>/<requirements>`. `extractCoreTask()` elimina todos los tags viejos y nuevos.
-> - **`api/index.js`:** `systemPrompt` con instrucción explícita del orden de 7 bloques y prohibición de placeholders genéricos.
-> - **`test_edge_cases.js`:** Suites 6 y 7 actualizadas para verificar `<system_role>`. **26/26 PASS**.
+> - Set único de etiquetas canónicas (`<system_role>` → `<objective>` → `<context>` → `<requirements>` → `<output_format>` → `<examples>` → `<error_handling>`) en toda la cadena.
