@@ -26,6 +26,7 @@ const App = (() => {
     setupLearnView();
     setupRadarView();
     setupLeaderboardView();
+    setupTickerControls();
     renderNewsTicker();
     checkShareURL();
     updateEditorStats();
@@ -71,6 +72,8 @@ const App = (() => {
   let isTickerPaused = false;
   let activeTickerFeedCategory = 'all';
 
+  let currentTickerOffset = 0;
+
   function setupTickerControls() {
     const toggleBtn = document.getElementById('ticker-toggle-btn');
     const prevBtn = document.getElementById('ticker-prev-btn');
@@ -89,16 +92,24 @@ const App = (() => {
       });
     }
 
-    if (prevBtn && viewport) {
-      prevBtn.addEventListener('click', () => {
-        viewport.scrollBy({ left: -260, behavior: 'smooth' });
-      });
+    const pauseAndShift = (delta) => {
+      if (!track) return;
+      isTickerPaused = true;
+      track.classList.add('paused');
+      if (toggleBtn) {
+        toggleBtn.textContent = '▶';
+        toggleBtn.setAttribute('title', t('radar.tickerPlay'));
+      }
+      currentTickerOffset += delta;
+      track.style.transform = `translateX(${currentTickerOffset}px)`;
+    };
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => pauseAndShift(240));
     }
 
-    if (nextBtn && viewport) {
-      nextBtn.addEventListener('click', () => {
-        viewport.scrollBy({ left: 260, behavior: 'smooth' });
-      });
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => pauseAndShift(-240));
     }
 
     if (viewAllBtn) {
