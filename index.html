@@ -687,8 +687,28 @@
   <div class="view" id="view-models">
     <div class="models-header-panel">
       <div class="models-title-block">
-        <h2 class="view-title" data-i18n="models.title">Directorio de Modelos LLM & Benchmarks</h2>
-        <p class="view-subtitle" data-i18n="models.subtitle">Catálogo exhaustivo de modelos de frontera y pesos abiertos, telemetría de rendimiento y guías de prompting optimizadas.</p>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px;">
+          <div>
+            <h2 class="view-title" data-i18n="models.title">Directorio de Modelos LLM & Benchmarks</h2>
+            <p class="view-subtitle" data-i18n="models.subtitle">Catálogo exhaustivo de modelos de frontera y pesos abiertos, telemetría de rendimiento y guías de prompting optimizadas.</p>
+          </div>
+          <button class="btn btn-primary" id="btn-open-suggest-model-modal">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="10" y1="10" x2="14" y2="10"/><line x1="8" y1="21" x2="16" y2="21"/></svg>
+            <span data-i18n="models.suggestModelBtn">Sugerir Modelo</span>
+          </button>
+        </div>
+
+        <!-- Live Observatory & Benchmark Sources Bar -->
+        <div class="models-observatory-bar">
+          <span class="models-observatory-badge" data-i18n="models.observatoryBadge">Observatorio SOTA · Snapshot Agosto 2026</span>
+          <span class="models-observatory-label" data-i18n="models.observatorySources">Fuentes en Vivo:</span>
+          <div class="models-sources-chips">
+            <a href="https://lmarena.ai/" target="_blank" rel="noopener noreferrer" class="source-chip">LMSYS Arena ↗</a>
+            <a href="https://benchlm.ai/" target="_blank" rel="noopener noreferrer" class="source-chip">BenchLM ↗</a>
+            <a href="https://artificialanalysis.ai/" target="_blank" rel="noopener noreferrer" class="source-chip">Artificial Analysis ↗</a>
+            <a href="https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard" target="_blank" rel="noopener noreferrer" class="source-chip">Hugging Face Open LLM ↗</a>
+          </div>
+        </div>
       </div>
       <div class="models-controls-bar">
         <div class="models-search-wrapper">

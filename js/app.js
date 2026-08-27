@@ -2401,6 +2401,52 @@ const App = (() => {
       });
     }
 
+    // Suggest Model Modal listeners
+    const btnOpenSuggestModel = document.getElementById('btn-open-suggest-model-modal');
+    const modalSuggest = document.getElementById('modal-suggest-model');
+    const btnCloseSuggest = document.getElementById('btn-close-suggest-model-modal');
+    const btnCancelSuggest = document.getElementById('btn-cancel-suggest-model');
+    const btnConfirmSuggest = document.getElementById('btn-confirm-suggest-model');
+
+    function openSuggestModelModal() {
+      if (modalSuggest) {
+        modalSuggest.classList.remove('hidden');
+        focusModal(modalSuggest);
+      }
+    }
+
+    function closeSuggestModelModal() {
+      if (modalSuggest) modalSuggest.classList.add('hidden');
+    }
+
+    if (btnOpenSuggestModel) btnOpenSuggestModel.addEventListener('click', openSuggestModelModal);
+    if (btnCloseSuggest) btnCloseSuggest.addEventListener('click', closeSuggestModelModal);
+    if (btnCancelSuggest) btnCancelSuggest.addEventListener('click', closeSuggestModelModal);
+    setupModalA11y('modal-suggest-model', closeSuggestModelModal);
+
+    if (btnConfirmSuggest) {
+      btnConfirmSuggest.addEventListener('click', () => {
+        const nameInput = document.getElementById('suggest-model-name');
+        const providerInput = document.getElementById('suggest-model-provider');
+        const name = (nameInput?.value || '').trim();
+        const provider = (providerInput?.value || '').trim();
+
+        if (!name || !provider) {
+          showToast(I18n.getLang() === 'en' ? 'Please fill in model name and creator/lab.' : 'Por favor ingresa el nombre y creador del modelo.', 'warning');
+          return;
+        }
+
+        // Reset and close
+        if (nameInput) nameInput.value = '';
+        if (providerInput) providerInput.value = '';
+        const benchInput = document.getElementById('suggest-model-benchmarks');
+        if (benchInput) benchInput.value = '';
+
+        closeSuggestModelModal();
+        showToast(I18n.t('models.suggestSuccessToast'), 'success');
+      });
+    }
+
     // Modal close listeners
     const closeBtn = document.getElementById('btn-close-model-modal');
     const closeBottomBtn = document.getElementById('btn-close-model-modal-bottom');
