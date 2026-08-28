@@ -4327,19 +4327,35 @@ body.theme-editorial .grade-status-emerald { color: #4F7942; }
   gap: 8px;
   background: var(--bg-paper);
   border: 1px solid var(--rule-color);
+  border-left: 3px solid transparent;
   border-radius: var(--radius-sm);
   padding: 12px 14px;
   text-decoration: none;
   color: var(--ink);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
 }
 
 .editorial-feed-card:hover {
-  border-color: var(--vermilion);
-  background: #fffdf9;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  border-color: var(--rule-color);
+  border-left: 3px solid var(--vermilion);
+  background: #fbf8f2 !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
   transform: translateY(-1px);
+}
+
+.editorial-feed-card:hover .editorial-card-text {
+  color: #110e0c !important;
+}
+
+.editorial-feed-card:hover .editorial-author-name {
+  color: var(--vermilion) !important;
+}
+
+.editorial-feed-card:hover .editorial-tag-badge {
+  background: rgba(199, 62, 45, 0.08);
+  border-color: rgba(199, 62, 45, 0.25);
+  color: var(--vermilion);
 }
 
 .editorial-card-header {
