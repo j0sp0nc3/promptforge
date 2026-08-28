@@ -1493,333 +1493,278 @@ If the query is ambiguous, ask for clarification before recommending.
     feed: [
     {
         "id": "feed-1",
-        "author": "@goodside",
-        "tag": "Prompt Injection",
+        "author": "Anthropic Research",
+        "tag": "Claude 3.7 Sonnet",
         "text": {
-            "es": "Investigación pionera sobre ataques de Inyección de Prompt y brechas de seguridad adversarial en LLMs.",
-            "en": "Pioneering research on Prompt Injection attacks and adversarial security vulnerabilities in LLMs."
+            "es": "Lanzamiento de Claude 3.7 Sonnet: Primer modelo híbrido con modo de razonamiento extendido y control de presupuesto de tokens.",
+            "en": "Claude 3.7 Sonnet Release: First hybrid frontier model with extended thinking mode and adjustable reasoning token budget."
         },
-        "url": "https://x.com/goodside/status/1569128808308957185",
-        "timestamp": "Sep 2022 · Landmark"
+        "url": "https://www.anthropic.com/news/claude-3-7-sonnet",
+        "timestamp": "hace 2h"
     },
     {
         "id": "feed-2",
-        "author": "@karpathy",
-        "tag": "LLM Architecture",
+        "author": "DeepSeek AI",
+        "tag": "DeepSeek-R1",
         "text": {
-            "es": "Masterclass en video: \"Let's build GPT from scratch, in code, spelled out\" con tokenización y auto-atención.",
-            "en": "Video Masterclass: \"Let's build GPT from scratch, in code, spelled out\" with tokenization and self-attention."
+            "es": "DeepSeek-R1 en producción: Razonamiento de nivel OpenAI o1 con pesos abiertos y costo de inferencia 20x menor.",
+            "en": "DeepSeek-R1 in production: OpenAI o1-level reasoning with open weights and 20x lower inference cost."
         },
-        "url": "https://www.youtube.com/watch?v=kCc8FmEb1nY",
-        "timestamp": "Ene 2023 · Masterclass"
+        "url": "https://github.com/deepseek-ai/DeepSeek-R1",
+        "timestamp": "hace 4h"
     },
     {
         "id": "feed-3",
-        "author": "Anthropic Research",
-        "tag": "Prompt Engineering",
+        "author": "OpenAI Research",
+        "tag": "o3-mini & GPT-4o",
         "text": {
-            "es": "Guía oficial de Prompting para Claude: Delimitadores XML estructurados, Chain-of-Thought y Few-Shot.",
-            "en": "Official Claude Prompting Guide: Structured XML delimiters, Chain-of-Thought, and Few-Shot examples."
+            "es": "OpenAI o3-mini optimizado para STEM y código con soporte nativo de llamadas a funciones y salida estructurada.",
+            "en": "OpenAI o3-mini optimized for STEM and coding with native function calling and structured outputs."
         },
-        "url": "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview",
-        "timestamp": "2026 · Guía Oficial"
+        "url": "https://openai.com/index/openai-o3-mini/",
+        "timestamp": "hace 6h"
     },
     {
         "id": "feed-4",
-        "author": "Latent Space",
-        "tag": "AI Engineering",
+        "author": "Google DeepMind",
+        "tag": "Gemini 2.0 Flash",
         "text": {
-            "es": "Manifiesto \"The Rise of the AI Engineer\" y análisis del ecosistema de desarrollo con modelos de frontera.",
-            "en": "\"The Rise of the AI Engineer\" manifesto and technical analysis of the frontier model developer ecosystem."
+            "es": "Gemini 2.0 Flash: Ventana de contexto multimodal nativa de 2 millones de tokens a velocidad de tiempo real.",
+            "en": "Gemini 2.0 Flash: 2-million-token native multimodal context window operating at real-time speeds."
         },
-        "url": "https://www.latent.space/p/decoding-2026",
-        "timestamp": "2026 · AI Engineering"
+        "url": "https://deepmind.google/technologies/gemini/",
+        "timestamp": "hace 8h"
     },
     {
         "id": "feed-5",
-        "author": "Lilian Weng",
-        "tag": "Autonomous Agents",
+        "author": "Harrison Chase",
+        "tag": "LangGraph v0.3",
         "text": {
-            "es": "Paper de referencia \"LLM Powered Autonomous Agents\" detallando planificación, memoria y uso de herramientas.",
-            "en": "Landmark paper \"LLM Powered Autonomous Agents\" detailing planning, memory systems, and tool use."
+            "es": "LangGraph v0.3: Orquestación multi-agente con persistencia de estado, ciclos ReAct y control humano en el bucle.",
+            "en": "LangGraph v0.3: Multi-agent orchestration with state persistence, cyclic ReAct loops, and human-in-the-loop."
         },
-        "url": "https://lilianweng.github.io/posts/2023-06-23-agent/",
-        "timestamp": "Jun 2023 · Landmark Paper"
+        "url": "https://blog.langchain.dev/langgraph-v0-3/",
+        "timestamp": "hace 12h"
     },
     {
         "id": "feed-6",
-        "author": "DeepSeek AI",
-        "tag": "Reasoning Models",
+        "author": "Hamel Husain",
+        "tag": "LLM Evals 2026",
         "text": {
-            "es": "Paper técnico de DeepSeek-R1: Razonamiento autónomo incentivado mediante Reinforcement Learning puro sin SFT.",
-            "en": "DeepSeek-R1 technical report: Autonomous reasoning incentivized by pure Reinforcement Learning without SFT."
+            "es": "Metodología de Evals para sistemas de IA en producción: Generación sintética y tests de regresión de prompts.",
+            "en": "Production AI Evals methodology: Synthetic data generation and automated prompt regression testing."
         },
-        "url": "https://github.com/deepseek-ai/DeepSeek-R1",
-        "timestamp": "Ene 2025 · Reporte SOTA"
+        "url": "https://hamel.dev/blog/posts/evals/",
+        "timestamp": "hace 14h"
     },
     {
         "id": "feed-7",
-        "author": "OpenAI Research",
-        "tag": "Prompt Engineering",
+        "author": "Anthropic Engineering",
+        "tag": "Prompt Caching",
         "text": {
-            "es": "Estrategias oficiales de ingeniería de prompts para GPT-4o y modelos de razonamiento (o3-mini).",
-            "en": "Official prompt engineering strategies for GPT-4o and reasoning models (o3-mini)."
+            "es": "Prompt Caching & Contextual Retrieval: Reducción del 90% en costos de API y latencia 2x más rápida en prompts largos.",
+            "en": "Prompt Caching & Contextual Retrieval: 90% API cost reduction and 2x faster TTFT on long-context prompts."
         },
-        "url": "https://platform.openai.com/docs/guides/prompt-engineering",
-        "timestamp": "2026 · Guía Oficial"
+        "url": "https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching",
+        "timestamp": "hace 18h"
     },
     {
         "id": "feed-8",
-        "author": "Google DeepMind",
-        "tag": "Multimodal AI",
-        "text": {
-            "es": "Gemini 2.0 Flash: Procesamiento multimodal nativo de baja latencia con ventana de 2 millones de tokens.",
-            "en": "Gemini 2.0 Flash: Low-latency native multimodal processing with a 2-million-token context window."
-        },
-        "url": "https://deepmind.google/technologies/gemini/",
-        "timestamp": "Dic 2024 · Release"
-    },
-    {
-        "id": "feed-9",
-        "author": "Eugene Yan",
-        "tag": "Eval & Patterns",
-        "text": {
-            "es": "Patrones de diseño para sistemas basados en LLMs y desarrollo guiado por evaluaciones continuas (Evals).",
-            "en": "Design patterns for LLM-based systems and evaluation-driven development (Evals)."
-        },
-        "url": "https://eugeneyan.com/writing/llm-patterns/",
-        "timestamp": "Jul 2023 · Systems Guide"
-    },
-    {
-        "id": "feed-10",
-        "author": "Harrison Chase",
-        "tag": "Agent Workflows",
-        "text": {
-            "es": "LangGraph: Máquinas de estado multi-agente, ciclos de control y persistencia para flujos complejos de producción.",
-            "en": "LangGraph: Multi-agent state machines, cyclical control flows, and persistence for production workflows."
-        },
-        "url": "https://blog.langchain.dev/",
-        "timestamp": "2024 · Agent Architecture"
-    },
-    {
-        "id": "feed-11",
-        "author": "Simon Willison",
-        "tag": "Security & Web",
-        "text": {
-            "es": "Análisis exhaustivo de ataques de Inyección Indirecta de Prompt y aislamiento de contexto en herramientas web.",
-            "en": "In-depth analysis of Indirect Prompt Injection attacks and context sandboxing in web tools."
-        },
-        "url": "https://simonwillison.net/tags/prompt-injection/",
-        "timestamp": "2024 · Security Research"
-    },
-    {
-        "id": "feed-12",
-        "author": "Ethan Mollick",
-        "tag": "Frontier AI",
-        "text": {
-            "es": "Guía práctica para trabajar con modelos de frontera: Asignación de roles expertos y mitigación de sesgos.",
-            "en": "Practical guide for working with frontier models: Expert persona assignment and bias mitigation."
-        },
-        "url": "https://www.oneusefulthing.org/",
-        "timestamp": "2024 · Frontier Thinking"
-    },
-    {
-        "id": "feed-13",
-        "author": "Hamel Husain",
-        "tag": "LLM Evals",
-        "text": {
-            "es": "Tu producto de IA necesita Evals rigurosos, no solo más prompts: Metodología de testeo para producción.",
-            "en": "Your AI product needs rigorous Evals, not just prompts: Battle-tested testing methodology for production."
-        },
-        "url": "https://hamel.dev/blog/posts/evals/",
-        "timestamp": "Mar 2024 · Evals Guide"
-    },
-    {
-        "id": "feed-14",
-        "author": "Chip Huyen",
-        "tag": "Production LLMs",
-        "text": {
-            "es": "Arquitectura de aplicaciones LLM en producción: RAG híbrido, caché semántico y observabilidad.",
-            "en": "Production LLM application architecture: Hybrid RAG, semantic caching, and telemetry observability."
-        },
-        "url": "https://huyenchip.com/blog/",
-        "timestamp": "2023 · Production Architecture"
-    },
-    {
-        "id": "feed-15",
-        "author": "Jason Wei",
-        "tag": "Reasoning CoT",
-        "text": {
-            "es": "Paper seminal \"Chain-of-Thought Prompting\": Cómo el desglose paso a paso desbloquea el razonamiento en LLMs.",
-            "en": "Seminal paper \"Chain-of-Thought Prompting\": How step-by-step reasoning unlocks LLM capabilities."
-        },
-        "url": "https://arxiv.org/abs/2201.11903",
-        "timestamp": "Ene 2022 · Landmark Paper"
-    },
-    {
-        "id": "feed-16",
-        "author": "Jim Fan",
-        "tag": "Embodied Agents",
-        "text": {
-            "es": "Voyager: Agente autónomo con capacidad de aprendizaje continuo y librería iterativa de habilidades en código.",
-            "en": "Voyager: Autonomous embodied agent with lifelong learning and iterative code skill library."
-        },
-        "url": "https://voyager.minedojo.org/",
-        "timestamp": "May 2023 · Landmark Agent"
-    },
-    {
-        "id": "feed-17",
-        "author": "Philipp Schmid",
-        "tag": "Open Weights",
-        "text": {
-            "es": "Guía de fine-tuning y despliegue optimizado de modelos abiertos (Llama 3.3, DeepSeek) con Hugging Face TGI.",
-            "en": "Guide to fine-tuning and deploying open-weights models (Llama 3.3, DeepSeek) with Hugging Face TGI."
-        },
-        "url": "https://www.philschmid.de/",
-        "timestamp": "2024 · Fine-Tuning Guide"
-    },
-    {
-        "id": "feed-18",
-        "author": "Tim Dettmers",
-        "tag": "Quantization",
-        "text": {
-            "es": "Paper de QLoRA: Cuantización de 4 bits y adaptación de bajo rango para entrenar modelos gigantes en GPUs de consumo.",
-            "en": "QLoRA paper: 4-bit quantization and low-rank adaptation for training massive LLMs on consumer GPUs."
-        },
-        "url": "https://arxiv.org/abs/2305.14314",
-        "timestamp": "May 2023 · Landmark Paper"
-    },
-    {
-        "id": "feed-19",
-        "author": "Mistral AI",
-        "tag": "Open Weights",
-        "text": {
-            "es": "Mistral Large 2: Arquitectura avanzada con soporte nativo de llamadas a funciones y razonamiento multilingüe.",
-            "en": "Mistral Large 2: Advanced architecture with native function calling and multilingual reasoning."
-        },
-        "url": "https://mistral.ai/news/mistral-large-2407/",
-        "timestamp": "Jul 2024 · Release SOTA"
-    },
-    {
-        "id": "feed-20",
         "author": "Meta AI",
-        "tag": "Open Weights",
+        "tag": "Llama 3.3 70B",
         "text": {
             "es": "Llama 3.3 70B Instruct: Rendimiento comparable al modelo de 405B con eficiencia computacional 5x superior.",
             "en": "Llama 3.3 70B Instruct: 405B-tier capability with 5x compute efficiency for enterprise and local deployments."
         },
         "url": "https://ai.meta.com/blog/meta-llama-3/",
-        "timestamp": "Dic 2024 · Release"
+        "timestamp": "hace 1d"
     },
     {
-        "id": "feed-21",
-        "author": "Shreya Shankar",
-        "tag": "Eval & Telemetry",
+        "id": "feed-9",
+        "author": "Alibaba Qwen",
+        "tag": "Qwen 2.5 Coder",
         "text": {
-            "es": "Spade & Evaluaciones automatizadas: Detección de regresiones en respuestas de LLMs antes de ir a producción.",
-            "en": "Spade & Automated Evals: Detecting behavioral regressions in LLM outputs before production release."
+            "es": "Qwen 2.5 Coder 32B/72B: El modelo abierto de software engineering líder en SWE-bench con 128k de contexto.",
+            "en": "Qwen 2.5 Coder 32B/72B: The leading open software engineering model on SWE-bench with 128k context."
         },
-        "url": "https://www.sh-reya.com/",
-        "timestamp": "2024 · Research Paper"
+        "url": "https://qwenlm.github.io/blog/qwen2.5-coder/",
+        "timestamp": "hace 1d"
     },
     {
-        "id": "feed-22",
-        "author": "Dan Hendrycks",
-        "tag": "Benchmarks",
+        "id": "feed-10",
+        "author": "Latent Space",
+        "tag": "AI Engineering 2026",
         "text": {
-            "es": "MMLU-Pro: Nueva generación de benchmarks de evaluación para mitigar la saturación de los tests tradicionales.",
-            "en": "MMLU-Pro: Next-generation evaluation benchmark designed to address saturation in legacy benchmarks."
+            "es": "El estado del AI Engineering en 2026: La transición desde prompts simples hacia Sistemas de IA Compuestos.",
+            "en": "The State of AI Engineering in 2026: The architectural shift from simple prompts to Compound AI Systems."
+        },
+        "url": "https://www.latent.space/p/decoding-2026",
+        "timestamp": "hace 1d"
+    },
+    {
+        "id": "feed-11",
+        "author": "Simon Willison",
+        "tag": "AI Security 2026",
+        "text": {
+            "es": "Arquitectura Dual-LLM: Aislamiento de contexto y sandboxing para neutralizar inyecciones indirectas de prompt.",
+            "en": "Dual-LLM Architecture: Context sandboxing and privilege boundaries to neutralize indirect prompt injections."
+        },
+        "url": "https://simonwillison.net/tags/prompt-injection/",
+        "timestamp": "hace 2d"
+    },
+    {
+        "id": "feed-12",
+        "author": "Awni Hannun",
+        "tag": "Apple MLX",
+        "text": {
+            "es": "MLX v0.22: Inferencia local de modelos de 70B a más de 30 tokens/segundo en memoria unificada de Apple Silicon.",
+            "en": "MLX v0.22: Local 70B LLM inference at 30+ tokens/sec on Apple Silicon unified memory."
+        },
+        "url": "https://github.com/ml-explore/mlx",
+        "timestamp": "hace 2d"
+    },
+    {
+        "id": "feed-13",
+        "author": "Mistral AI",
+        "tag": "Mistral Large 2",
+        "text": {
+            "es": "Mistral Large 2: Soporte nativo de llamadas a funciones paralelas y razonamiento multilingüe de alta precisión.",
+            "en": "Mistral Large 2: Native parallel function calling and high-precision multilingual reasoning."
+        },
+        "url": "https://mistral.ai/news/mistral-large-2407/",
+        "timestamp": "hace 2d"
+    },
+    {
+        "id": "feed-14",
+        "author": "Dan Hendrycks",
+        "tag": "MMLU-Pro 2026",
+        "text": {
+            "es": "MMLU-Pro Benchmark: Evaluación de razonamiento multidisciplinario con opciones ampliadas para eliminar saturación.",
+            "en": "MMLU-Pro Benchmark: Multidisciplinary reasoning evaluation with expanded options to eliminate saturation."
         },
         "url": "https://github.com/TIGER-AI-Lab/MMLU-Pro",
-        "timestamp": "Jun 2024 · Benchmark SOTA"
+        "timestamp": "hace 3d"
     },
     {
-        "id": "feed-23",
-        "author": "Pliny the Prompter",
-        "tag": "Red Teaming",
+        "id": "feed-15",
+        "author": "Shreya Shankar",
+        "tag": "Continuous Evals",
         "text": {
-            "es": "Auditoría de seguridad adversarial en modelos SOTA: Análisis de jailbreaks lógicos y guardrails de seguridad.",
-            "en": "Adversarial security auditing across SOTA models: Analysis of logical jailbreaks and safety guardrails."
+            "es": "Spade: Framework de evaluación continua para detectar regresiones conductuales en prompts antes de producción.",
+            "en": "Spade: Continuous evaluation framework to catch behavioral regressions in prompt updates before production."
+        },
+        "url": "https://www.sh-reya.com/",
+        "timestamp": "hace 3d"
+    },
+    {
+        "id": "feed-16",
+        "author": "Pliny the Prompter",
+        "tag": "Adversarial Safety",
+        "text": {
+            "es": "Auditoría de seguridad en modelos con tokens <think>: Análisis de guardrails y robustez lógica en reasoning LLMs.",
+            "en": "Security audit on reasoning models with <think> tokens: Guardrail analysis and logical robustness."
         },
         "url": "https://x.com/elder_plinius",
-        "timestamp": "2025 · Red Teaming"
+        "timestamp": "hace 3d"
     },
     {
-        "id": "feed-24",
+        "id": "feed-17",
         "author": "Andrew Ng",
-        "tag": "Agentic Patterns",
+        "tag": "Agentic Workflows",
         "text": {
             "es": "Los 4 patrones de diseño para agentes de IA: Reflexión, Uso de Herramientas, Planificación y Multi-agente.",
             "en": "The 4 key design patterns for AI agents: Reflection, Tool Use, Planning, and Multi-agent Collaboration."
         },
         "url": "https://www.deeplearning.ai/the-batch/how-agents-can-improve-llm-performance/",
-        "timestamp": "Mar 2024 · Guía de Arquitectura"
+        "timestamp": "hace 4d"
+    },
+    {
+        "id": "feed-18",
+        "author": "Stanford CRFM",
+        "tag": "HELM Benchmark",
+        "text": {
+            "es": "Stanford HELM 2026: Nueva suite de evaluación de alineación, sesgos, precisión y calibración para modelos frontera.",
+            "en": "Stanford HELM 2026: Updated evaluation suite for alignment, bias, accuracy, and calibration across frontier models."
+        },
+        "url": "https://crfm.stanford.edu/helm/classic/latest/",
+        "timestamp": "hace 4d"
+    },
+    {
+        "id": "feed-19",
+        "author": "DeepSeek AI",
+        "tag": "DeepSeek-V3 MoE",
+        "text": {
+            "es": "DeepSeek-V3: Arquitectura Mixture of Experts de 671B parámetros activando 37B por token con Multi-head Latent Attention.",
+            "en": "DeepSeek-V3: 671B parameter Mixture of Experts activating 37B per token with Multi-head Latent Attention."
+        },
+        "url": "https://github.com/deepseek-ai/DeepSeek-V3",
+        "timestamp": "hace 5d"
+    },
+    {
+        "id": "feed-20",
+        "author": "Philipp Schmid",
+        "tag": "Open Weights SOTA",
+        "text": {
+            "es": "Guía práctica para servir modelos de pesos abiertos con vLLM y cuantización FP8 para máximo throughput.",
+            "en": "Practical guide to serving open-weights LLMs with vLLM and FP8 quantization for maximum throughput."
+        },
+        "url": "https://www.philschmid.de/",
+        "timestamp": "hace 5d"
+    },
+    {
+        "id": "feed-21",
+        "author": "Scale AI",
+        "tag": "SEAL Leaderboards",
+        "text": {
+            "es": "SEAL Leaderboards 2026: Evaluaciones independientes a ciegas para modelos de razonamiento y codificación avanzada.",
+            "en": "SEAL Leaderboards 2026: Independent blind evaluations for reasoning and advanced coding frontier models."
+        },
+        "url": "https://scale.com/leaderboard",
+        "timestamp": "hace 6d"
+    },
+    {
+        "id": "feed-22",
+        "author": "xAI Research",
+        "tag": "Grok 3 Engine",
+        "text": {
+            "es": "Grok 3 Reasoning Engine: Supercómputo en el cluster Colossus para síntesis de conocimiento e investigación matemática.",
+            "en": "Grok 3 Reasoning Engine: Colossus cluster supercomputing for real-time knowledge synthesis and mathematics."
+        },
+        "url": "https://x.ai/",
+        "timestamp": "hace 6d"
+    },
+    {
+        "id": "feed-23",
+        "author": "Hugging Face",
+        "tag": "Open LLM v2",
+        "text": {
+            "es": "Open LLM Leaderboard v2: Métricas endurecidas (GPQA, MuSR, IFEval, MATH) para evitar saturación de modelos abiertos.",
+            "en": "Open LLM Leaderboard v2: Hardened benchmarks (GPQA, MuSR, IFEval, MATH) to prevent metric saturation."
+        },
+        "url": "https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard",
+        "timestamp": "hace 1 sem"
+    },
+    {
+        "id": "feed-24",
+        "author": "Eugene Yan",
+        "tag": "Compound Systems",
+        "text": {
+            "es": "Patrones de arquitectura para Sistemas de IA Compuestos: RAG jerárquico, validación semántica y fallback de modelos.",
+            "en": "System design patterns for Compound AI Systems: Hierarchical RAG, semantic validation, and model fallback."
+        },
+        "url": "https://eugeneyan.com/writing/llm-patterns/",
+        "timestamp": "hace 1 sem"
     },
     {
         "id": "feed-25",
-        "author": "Alibaba Qwen Team",
-        "tag": "Coding Models",
-        "text": {
-            "es": "Qwen 2.5 Coder: Modelo especializado en desarrollo de software con puntuación SWE-bench competitiva con modelos frontera.",
-            "en": "Qwen 2.5 Coder: Specialized software engineering model with SWE-bench performance rivaling frontier models."
-        },
-        "url": "https://qwenlm.github.io/blog/qwen2.5-coder/",
-        "timestamp": "Nov 2024 · Release SOTA"
-    },
-    {
-        "id": "feed-26",
-        "author": "Percy Liang",
-        "tag": "Stanford HELM",
-        "text": {
-            "es": "Holistic Evaluation of Language Models (HELM): Evaluación multidimensional de precisión, sesgos y robustez.",
-            "en": "Holistic Evaluation of Language Models (HELM): Multidimensional evaluation of accuracy, bias, and robustness."
-        },
-        "url": "https://crfm.stanford.edu/helm/classic/latest/",
-        "timestamp": "2024 · Benchmark Suite"
-    },
-    {
-        "id": "feed-27",
-        "author": "Sébastien Bubeck",
-        "tag": "Emergent Reasoning",
-        "text": {
-            "es": "Investigación sobre capacidades emergentes y destilación de razonamiento en modelos compactos (Phi series).",
-            "en": "Research on emergent capabilities and reasoning distillation into compact models (Phi series)."
-        },
-        "url": "https://arxiv.org/abs/2303.12712",
-        "timestamp": "Mar 2023 · Research Paper"
-    },
-    {
-        "id": "feed-28",
-        "author": "Awni Hannun",
-        "tag": "Apple Silicon MLX",
-        "text": {
-            "es": "MLX Framework: Inferencia y fine-tuning ultrarrápido de modelos de 70B en memoria unificada de Apple Silicon.",
-            "en": "MLX Framework: Blazing-fast inference and fine-tuning of 70B models on Apple Silicon unified memory."
-        },
-        "url": "https://github.com/ml-explore/mlx",
-        "timestamp": "Dic 2023 · Local LLM Engine"
-    },
-    {
-        "id": "feed-29",
         "author": "Logan Kilpatrick",
-        "tag": "AI Dev Tools",
+        "tag": "AI Tooling SOTA",
         "text": {
-            "es": "Guía de diseño de herramientas para desarrolladores de IA: Gestión eficiente de contexto y caching de prompts.",
-            "en": "AI developer tooling design guide: Efficient context window management and prompt caching."
+            "es": "Mejores prácticas para desarrolladores de IA: Estrategias de compresión de contexto y herramientas de depuración de prompts.",
+            "en": "Best practices for AI developers: Context compression strategies and prompt debugging toolkits."
         },
         "url": "https://x.com/OfficialLoganK",
-        "timestamp": "2024 · Dev Tooling"
-    },
-    {
-        "id": "feed-30",
-        "author": "Arthur Mensch",
-        "tag": "Mixture of Experts",
-        "text": {
-            "es": "Arquitecturas Mixture-of-Experts (MoE): Activación dispersa de parámetros para inferencia de alto rendimiento.",
-            "en": "Mixture-of-Experts (MoE) architectures: Sparse parameter activation for high-throughput inference."
-        },
-        "url": "https://mistral.ai/news/mixtral-of-experts/",
-        "timestamp": "Dic 2023 · MoE Architecture"
+        "timestamp": "hace 1 sem"
     }
 ],
 
