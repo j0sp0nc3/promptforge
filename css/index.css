@@ -2761,7 +2761,7 @@ body.theme-editorial .score-ring-bg { stroke: #D9D2C4; }
   align-items: center;
   gap: var(--space-xl);
   white-space: nowrap;
-  animation: tickerSlide 45s linear infinite;
+  animation: tickerSlide 190s linear infinite;
   padding-left: var(--space-lg);
 }
 .news-ticker-track:hover {

@@ -316,6 +316,10 @@ const App = (() => {
     // Duplicate feed list to create seamless infinite loop animation
     const fullFeed = [...feed, ...feed];
 
+    // Smooth, gentle reading speed (~6.5s per item for effortless legibility)
+    const durationSec = Math.max(140, Math.round(feed.length * 6.5));
+    track.style.animationDuration = `${durationSec}s`;
+
     track.innerHTML = fullFeed.map(item => `
       <a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer" class="ticker-item">
         <span class="ticker-author">${escapeHtml(item.author)}</span>
