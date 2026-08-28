@@ -1104,6 +1104,7 @@ const I18n = (() => {
       },
           ticker: {
         badge: '⚡ RADAR EN VIVO',
+        badgeText: 'RADAR EN VIVO',
       },
 
       // ── Prompt Target Objectives ───────────────────────────────────────
@@ -2212,6 +2213,7 @@ const I18n = (() => {
 
       ticker: {
         badge: '⚡ LIVE AI RADAR',
+        badgeText: 'LIVE AI RADAR',
       },
 
       leaderboard: {
