@@ -36,10 +36,11 @@ jobs:
         run: |
           git config --global user.name "Promptometer Bot"
           git config --global user.email "bot@promptometer.tech"
-          git add js/knowledge.js
+          git add js/models.js
           if git diff --staged --quiet; then
             echo "No benchmark or model changes detected. Everything up to date."
           else
+            node scripts/sync_models.js --validate
             git commit -m "chore(models): auto-sync latest SOTA LLM models and benchmark telemetry [skip ci]"
             git push origin dev
             echo "Changes pushed to dev. Vercel deployment triggered automatically."

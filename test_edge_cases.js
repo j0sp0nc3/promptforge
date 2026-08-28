@@ -332,21 +332,29 @@ const moderationTests = [
     // ============================================================
   // 9. LLM MODELS & BENCHMARKS DIRECTORY SUITE
   // ============================================================
-  console.log("\n📌 SUITE 9: Catálogo de Modelos LLM & Benchmarks (js/knowledge.js)\n");
+  console.log("\n📌 SUITE 9: Catálogo de Modelos LLM & Benchmarks (js/models.js)\n");
 
   try {
-    const models = Knowledge.models || [];
-    const validCount = Array.isArray(models) && models.length >= 10;
+    // Single source of truth: js/models.js (UMD — browser global & Node export)
+    const Models = require('./js/models.js');
+    const models = (Models && Array.isArray(Models.list)) ? Models.list : [];
+    const validCount = models.length >= 10;
     const hasFrontierAndOpen = models.some(m => m.type === 'frontier') && models.some(m => m.type === 'open_weights');
-    const validBenchmarks = models.every(m => m.benchmarks && typeof m.benchmarks.arenaElo === 'number' && m.contextWindow);
+    // arenaElo may be null ("not verified") but must never be a random string
+    const validBenchmarks = models.every(m =>
+      m.benchmarks &&
+      (m.benchmarks.arenaElo === null || typeof m.benchmarks.arenaElo === 'number') &&
+      typeof m.contextWindow === 'string' && m.contextWindow.length > 0
+    );
     const validPromptingTips = models.every(m => m.promptingTips && m.promptingTips.samplePrompt && m.promptingTips.style);
+    const uniqueIds = new Set(models.map(m => m.id)).size === models.length;
 
-    if (validCount && hasFrontierAndOpen && validBenchmarks && validPromptingTips) {
+    if (validCount && hasFrontierAndOpen && validBenchmarks && validPromptingTips && uniqueIds) {
       passedCount++;
       console.log(` ✅ 9.1 Catálogo de Modelos LLM (${models.length} Modelos SOTA) | PASS | Benchmarks, Telemetría y Prompts OK`);
     } else {
       failedCount++;
-      console.log(` ❌ 9.1 Catálogo de Modelos LLM                   | FAIL | Count: ${models.length}, Valid: ${validBenchmarks}, Tips: ${validPromptingTips}`);
+      console.log(` ❌ 9.1 Catálogo de Modelos LLM                   | FAIL | Count: ${models.length}, Frontier+Open: ${hasFrontierAndOpen}, Valid: ${validBenchmarks}, Tips: ${validPromptingTips}, Unique: ${uniqueIds}`);
     }
   } catch (err) {
     failedCount++;

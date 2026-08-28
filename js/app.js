@@ -2481,7 +2481,7 @@ const App = (() => {
     setupModalA11y('modal-suggest-model', closeSuggestModelModal);
 
     if (btnConfirmSuggest) {
-      btnConfirmSuggest.addEventListener('click', () => {
+      btnConfirmSuggest.addEventListener('click', async () => {
         const nameInput = document.getElementById('suggest-model-name');
         const providerInput = document.getElementById('suggest-model-provider');
         const name = (nameInput?.value || '').trim();
@@ -2492,14 +2492,34 @@ const App = (() => {
           return;
         }
 
-        // Reset and close
-        if (nameInput) nameInput.value = '';
-        if (providerInput) providerInput.value = '';
-        const benchInput = document.getElementById('suggest-model-benchmarks');
-        if (benchInput) benchInput.value = '';
+        btnConfirmSuggest.disabled = true;
+        try {
+          const res = await fetch(API_CONFIG.getUrl('/api/suggest-model'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name,
+              provider,
+              benchmarks: (document.getElementById('suggest-model-benchmarks')?.value || '').trim(),
+            }),
+          });
 
-        closeSuggestModelModal();
-        showToast(I18n.t('models.suggestSuccessToast'), 'success');
+          if (res.ok) {
+            if (nameInput) nameInput.value = '';
+            if (providerInput) providerInput.value = '';
+            const benchInput = document.getElementById('suggest-model-benchmarks');
+            if (benchInput) benchInput.value = '';
+            closeSuggestModelModal();
+            showToast(I18n.t('models.suggestSuccessToast'), 'success');
+          } else {
+            const err = await res.json().catch(() => ({}));
+            showToast(err.error || t('toast.analysisError'), 'error');
+          }
+        } catch (e) {
+          showToast(I18n.getLang() === 'en' ? 'Network error — try again.' : 'Error de red — intenta de nuevo.', 'error');
+        } finally {
+          btnConfirmSuggest.disabled = false;
+        }
       });
     }
 
@@ -2539,10 +2559,15 @@ const App = (() => {
     }
   }
 
+  // Benchmark values may be null ("not verified") — render an em dash.
+  function fmtBench(v) {
+    return (v === null || v === undefined || v === '') ? '—' : v;
+  }
+
   function renderModelsView() {
-    if (typeof Knowledge === 'undefined' || !Knowledge.models) return;
+    if (typeof Models === 'undefined' || !Array.isArray(Models.list)) return;
     const lang = I18n.getLang();
-    const models = Knowledge.models;
+    const models = Models.list;
 
     // Filter models
     const filtered = models.filter(m => {
@@ -2575,29 +2600,29 @@ const App = (() => {
           const badgeText = lang === 'en' ? (m.badgeEn || m.badge) : m.badge;
           const descText = m.desc[lang] || m.desc.es;
           return `
-            <div class="podium-card ${podiumClasses[idx]}" data-id="${m.id}" onclick="App.openModelDetailModal('${m.id}')">
-              <div class="podium-card-badge-top">${badgeText}</div>
-              <h3 class="podium-card-title">#${m.rank} ${m.name}</h3>
-              <div class="podium-card-provider">${m.provider} · <span class="model-type-tag model-type-tag--${m.type}">${m.type === 'frontier' ? (lang === 'en' ? 'Frontier' : 'Frontera') : 'Open Weights'}</span></div>
-              <p class="podium-card-desc">${descText}</p>
-              
+            <div class="podium-card ${podiumClasses[idx]}" data-id="${escapeAttr(m.id)}">
+              <div class="podium-card-badge-top">${escapeHtml(badgeText)}</div>
+              <h3 class="podium-card-title">#${m.rank} ${escapeHtml(m.name)}</h3>
+              <div class="podium-card-provider">${escapeHtml(m.provider)} · <span class="model-type-tag model-type-tag--${m.type}">${m.type === 'frontier' ? (lang === 'en' ? 'Frontier' : 'Frontera') : 'Open Weights'}</span></div>
+              <p class="podium-card-desc">${escapeHtml(descText)}</p>
+
               <div class="model-metrics-grid">
                 <div class="metric-item">
-                  <span class="metric-val">${m.benchmarks.arenaElo}</span>
+                  <span class="metric-val">${fmtBench(m.benchmarks.arenaElo)}</span>
                   <span class="metric-lbl">Arena ELO</span>
                 </div>
                 <div class="metric-item">
-                  <span class="metric-val">${m.benchmarks.sweBench}</span>
+                  <span class="metric-val">${fmtBench(m.benchmarks.sweBench)}</span>
                   <span class="metric-lbl">SWE-bench</span>
                 </div>
                 <div class="metric-item">
-                  <span class="metric-val">${m.contextWindow}</span>
+                  <span class="metric-val">${escapeHtml(m.contextWindow)}</span>
                   <span class="metric-lbl">${lang === 'en' ? 'Context' : 'Contexto'}</span>
                 </div>
               </div>
 
               <div class="model-card-footer">
-                <span>${m.pricing.input}</span>
+                <span>${escapeHtml(m.pricing.input)}</span>
                 <span class="model-card-action">
                   <span>${I18n.t('models.viewSpecs')}</span>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
@@ -2628,39 +2653,39 @@ const App = (() => {
       const typeLabel = m.type === 'frontier' ? (lang === 'en' ? 'Frontier' : 'Frontera') : 'Open Weights';
       const descText = m.desc[lang] || m.desc.es;
       return `
-        <div class="model-card" data-id="${m.id}" onclick="App.openModelDetailModal('${m.id}')">
+        <div class="model-card" data-id="${escapeAttr(m.id)}">
           <div>
             <div class="model-card-header">
               <div class="model-card-header-left">
                 <span class="model-rank-badge">#${m.rank}</span>
-                <span class="model-card-name">${m.name}</span>
+                <span class="model-card-name">${escapeHtml(m.name)}</span>
               </div>
               <span class="model-type-tag model-type-tag--${m.type}">${typeLabel}</span>
             </div>
-            <div class="model-card-provider">${m.provider} · ${m.license}</div>
-            
+            <div class="model-card-provider">${escapeHtml(m.provider)} · ${escapeHtml(m.license)}</div>
+
             <div class="model-metrics-grid">
               <div class="metric-item">
-                <span class="metric-val">${m.benchmarks.arenaElo}</span>
+                <span class="metric-val">${fmtBench(m.benchmarks.arenaElo)}</span>
                 <span class="metric-lbl">Arena ELO</span>
               </div>
               <div class="metric-item">
-                <span class="metric-val">${m.benchmarks.humanEval}</span>
-                <span class="metric-lbl">HumanEval</span>
+                <span class="metric-val">${fmtBench(m.benchmarks.globalIndex)}</span>
+                <span class="metric-lbl">BenchLM</span>
               </div>
               <div class="metric-item">
-                <span class="metric-val">${m.contextWindow}</span>
+                <span class="metric-val">${escapeHtml(m.contextWindow)}</span>
                 <span class="metric-lbl">${lang === 'en' ? 'Context' : 'Contexto'}</span>
               </div>
             </div>
 
             <p class="model-modal-desc" style="font-size:12px; margin: 8px 0; -webkit-line-clamp:2; display:-webkit-box; -webkit-box-orient:vertical; overflow:hidden;">
-              ${descText}
+              ${escapeHtml(descText)}
             </p>
           </div>
 
           <div class="model-card-footer">
-            <span>${m.pricing.input}</span>
+            <span>${escapeHtml(m.pricing.input)}</span>
             <span class="model-card-action">
               <span>${I18n.t('models.viewSpecs')}</span>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
@@ -2672,8 +2697,8 @@ const App = (() => {
   }
 
   function openModelDetailModal(modelId) {
-    if (typeof Knowledge === 'undefined' || !Knowledge.models) return;
-    const model = Knowledge.models.find(m => m.id === modelId);
+    if (typeof Models === 'undefined' || !Array.isArray(Models.list)) return;
+    const model = Models.list.find(m => m.id === modelId);
     if (!model) return;
     activeSelectedModel = model;
 
@@ -2692,27 +2717,27 @@ const App = (() => {
     if (metricsGrid) {
       metricsGrid.innerHTML = `
         <div class="metric-item">
-          <span class="metric-val">${model.benchmarks.arenaElo}</span>
+          <span class="metric-val">${fmtBench(model.benchmarks.globalIndex)}</span>
+          <span class="metric-lbl">BenchLM Index</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-val">${fmtBench(model.benchmarks.arenaElo)}</span>
           <span class="metric-lbl">Arena ELO</span>
         </div>
         <div class="metric-item">
-          <span class="metric-val">${model.benchmarks.mmluPro}</span>
-          <span class="metric-lbl">MMLU-Pro</span>
-        </div>
-        <div class="metric-item">
-          <span class="metric-val">${model.benchmarks.sweBench}</span>
+          <span class="metric-val">${fmtBench(model.benchmarks.sweBench)}</span>
           <span class="metric-lbl">SWE-bench</span>
         </div>
         <div class="metric-item">
-          <span class="metric-val">${model.benchmarks.math500}</span>
-          <span class="metric-lbl">MATH 500</span>
+          <span class="metric-val">${fmtBench(model.benchmarks.gpqa)}</span>
+          <span class="metric-lbl">GPQA Diamond</span>
         </div>
         <div class="metric-item">
-          <span class="metric-val">${model.benchmarks.humanEval}</span>
-          <span class="metric-lbl">HumanEval</span>
+          <span class="metric-val">${fmtBench(model.benchmarks.agenticIndex)}</span>
+          <span class="metric-lbl">Agentic Index</span>
         </div>
         <div class="metric-item">
-          <span class="metric-val">${model.contextWindow}</span>
+          <span class="metric-val">${escapeHtml(model.contextWindow)}</span>
           <span class="metric-lbl">${lang === 'en' ? 'Context' : 'Contexto'}</span>
         </div>
       `;
@@ -2723,7 +2748,7 @@ const App = (() => {
     const strengthsList = document.getElementById('model-modal-strengths');
     if (strengthsList) {
       const list = model.strengths[lang] || model.strengths.es || [];
-      strengthsList.innerHTML = list.map(s => `<li>${s}</li>`).join('');
+      strengthsList.innerHTML = list.map(s => `<li>${escapeHtml(s)}</li>`).join('');
     }
 
     // Prompting style and sample prompt
