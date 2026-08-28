@@ -4166,3 +4166,302 @@ body.theme-editorial .grade-status-emerald { color: #4F7942; }
     line-height: 1.35;
   }
 }
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   EDITORIAL RADAR MODAL & SOTA FEED CARDS (EDITORIAL TECHNICAL DESIGN)
+   ══════════════════════════════════════════════════════════════════════ */
+
+.editorial-radar-modal {
+  background: var(--bg-paper);
+  border: 1px solid var(--rule-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  height: 82vh;
+  max-height: 720px;
+  width: 95vw;
+  max-width: 640px;
+  padding: 18px 20px;
+  box-sizing: border-box;
+}
+
+.editorial-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--rule-color);
+  flex-shrink: 0;
+}
+
+.editorial-modal-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.editorial-live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  background: rgba(199, 62, 45, 0.08);
+  border: 1px solid rgba(199, 62, 45, 0.25);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--vermilion);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.live-pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--vermilion);
+  animation: radarLivePulse 1.8s infinite ease-in-out;
+}
+
+@keyframes radarLivePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(0.75); }
+}
+
+.ticker-modal-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 0 8px 0;
+  flex-shrink: 0;
+}
+
+.editorial-search-box {
+  position: relative;
+  width: 100%;
+}
+
+.search-box-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink-soft);
+  pointer-events: none;
+}
+
+.editorial-search-input {
+  width: 100%;
+  padding: 8px 12px 8px 34px;
+  background: var(--bg-sunken);
+  border: 1px solid var(--rule-color);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  color: var(--ink);
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.editorial-search-input:focus {
+  outline: none;
+  border-color: var(--vermilion);
+  background: var(--bg-paper);
+}
+
+.editorial-tabs-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 2px;
+}
+
+.editorial-tabs-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.editorial-tab-btn {
+  background: transparent;
+  border: 1px solid var(--rule-color);
+  border-radius: var(--radius-sm);
+  padding: 5px 12px;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--ink-soft);
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.editorial-tab-btn:hover {
+  border-color: var(--ink-soft);
+  color: var(--ink);
+  background: var(--bg-hover);
+}
+
+.editorial-tab-btn.active {
+  background: var(--ink);
+  color: var(--bg-paper);
+  border-color: var(--ink);
+  font-weight: 600;
+}
+
+.editorial-feed-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 16px;
+}
+
+.editorial-feed-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--bg-paper);
+  border: 1px solid var(--rule-color);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  text-decoration: none;
+  color: var(--ink);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.editorial-feed-card:hover {
+  border-color: var(--vermilion);
+  background: #fffdf9;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transform: translateY(-1px);
+}
+
+.editorial-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.editorial-author-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.editorial-author-avatar {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--bg-sunken);
+  border: 1px solid var(--rule-color);
+  color: var(--vermilion);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.editorial-author-name {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.editorial-card-badges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.editorial-tag-badge {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 2px 7px;
+  background: var(--bg-sunken);
+  border: 1px solid var(--rule-color);
+  border-radius: var(--radius-sm);
+  color: var(--ink-soft);
+}
+
+.editorial-time-badge {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+}
+
+.editorial-card-body {
+  margin: 0;
+}
+
+.editorial-card-text {
+  font-family: var(--font-sans);
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: var(--ink);
+  margin: 0;
+}
+
+.editorial-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 2px;
+}
+
+.editorial-read-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--vermilion);
+  opacity: 0.85;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.editorial-feed-card:hover .editorial-read-link {
+  opacity: 1;
+  transform: translateX(2px);
+}
+
+.editorial-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+}
+
+@media (max-width: 640px) {
+  .editorial-radar-modal {
+    width: 96vw;
+    height: 90vh;
+    max-height: 90vh;
+    padding: 14px 12px;
+  }
+
+  .editorial-card-text {
+    font-size: 0.82rem;
+  }
+
+  .editorial-feed-card {
+    padding: 10px 12px;
+  }
+}
