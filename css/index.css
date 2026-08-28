@@ -4072,33 +4072,88 @@ body.theme-editorial .grade-status-emerald { color: #4F7942; }
 }
 
 
-/* ── Modal Ticker Feed Strict Screen Containment ───────────────────── */
+/* ── Modal Ticker Feed Complete Responsive Flex Layout ───────────── */
 #modal-ticker-feed .modal-panel {
-  max-width: 580px;
-  width: 94vw;
-  max-height: 85vh;
+  max-width: 620px;
+  width: 95vw;
+  height: 82vh;
+  max-height: 700px;
   display: flex;
   flex-direction: column;
+  padding: 18px 20px;
   box-sizing: border-box;
+  overflow: hidden;
+}
+
+#modal-ticker-feed .modal-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+#modal-ticker-feed .modal-desc {
+  flex-shrink: 0;
+  margin-bottom: 10px;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
+#modal-ticker-feed .ticker-modal-toolbar {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+#modal-ticker-feed .ticker-feed-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 2px 2px 6px 2px;
+  border-bottom: 1px solid var(--rule-color);
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+  flex-shrink: 0;
 }
 
 #modal-ticker-feed .ticker-feed-modal-body {
-  flex: 1;
-  max-height: 52vh;
-  overflow-y: auto;
+  flex: 1 1 auto;
+  min-height: 0; /* REQUIRED: unlocks vertical scrolling in nested flex */
+  max-height: none !important;
+  overflow-y: auto !important;
+  overflow-x: hidden;
   box-sizing: border-box;
   padding-right: 4px;
+  margin-top: 4px;
+}
+
+#modal-ticker-feed .ticker-feed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 12px;
 }
 
 @media (max-width: 640px) {
   #modal-ticker-feed .modal-panel {
-    max-height: 88vh !important;
-    width: 96vw !important;
-    padding: 12px !important;
+    width: 96vw;
+    height: 88vh;
+    max-height: 88vh;
+    padding: 12px 14px;
   }
 
-  #modal-ticker-feed .ticker-feed-modal-body {
-    max-height: 56vh !important;
+  #modal-ticker-feed .modal-desc {
+    display: none; /* Hide verbose subtitle on mobile to give maximum room to news feed */
+  }
+
+  #modal-ticker-feed .ticker-modal-toolbar {
+    margin-bottom: 8px;
+    gap: 6px;
   }
 
   .ticker-feed-row {
