@@ -1058,6 +1058,46 @@
   <!-- ══════════════════════════════════════════════════════════════════════
        MODAL: LLM MODEL DETAIL & PROMPTING GUIDE
        ══════════════════════════════════════════════════════════════════════ -->
+  
+  <!-- ══════════════════════════════════════════════════════════════════════
+       MODAL: SUGGEST NEW LLM MODEL
+       ══════════════════════════════════════════════════════════════════════ -->
+  <div id="modal-suggest-model" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="suggest-model-modal-title">
+    <div class="modal-panel" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="suggest-model-modal-title" data-i18n="models.modalSuggestTitle">Sugerir Nuevo Modelo LLM</h3>
+        <button class="modal-close-btn" id="btn-close-suggest-model-modal" aria-label="Cerrar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <p class="modal-desc" data-i18n="models.modalSuggestDesc">Propón un nuevo modelo de frontera o de código abierto para incorporarlo al ranking con sus benchmarks y guía de prompting.</p>
+      
+      <div class="modal-body">
+        <label class="modal-label" for="suggest-model-name" data-i18n="models.labelModelName">Nombre del Modelo</label>
+        <input class="modal-input" id="suggest-model-name" type="text" maxlength="100" placeholder="Ej. DeepSeek-R2, Gemini 2.5 Pro" autocomplete="off" />
+
+        <label class="modal-label" for="suggest-model-provider" data-i18n="models.labelModelProvider">Laboratorio / Creador</label>
+        <input class="modal-input" id="suggest-model-provider" type="text" maxlength="100" placeholder="Ej. DeepSeek, Anthropic, Meta AI" autocomplete="off" />
+
+        <label class="modal-label" for="suggest-model-type" data-i18n="models.labelModelType">Tipo de Modelo</label>
+        <select class="modal-input" id="suggest-model-type">
+          <option value="frontier" data-i18n="models.typeFrontier">Frontera / Propietario (API)</option>
+          <option value="open_weights" data-i18n="models.typeOpenWeights">Open Source / Pesos Abiertos</option>
+        </select>
+
+        <label class="modal-label" for="suggest-model-benchmarks" data-i18n="models.labelModelBenchmarks">Benchmarks o Enlace al Paper/Release (opcional)</label>
+        <textarea class="modal-input modal-textarea" id="suggest-model-benchmarks" rows="3" maxlength="500" placeholder="Ej. Arena ELO: 1390, SWE-bench: 72%, Enlace a Hugging Face o Paper técnico..."></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="btn-cancel-suggest-model" data-i18n="leaderboard.cancel">Cancelar</button>
+        <button class="btn btn-primary" id="btn-confirm-suggest-model">
+          <span data-i18n="models.suggestModelBtn">Enviar Sugerencia</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div id="modal-model-detail" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="model-detail-modal-title">
     <div class="modal-panel" style="max-width: 680px;">
       <div class="modal-header">
