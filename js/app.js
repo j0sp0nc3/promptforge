@@ -209,57 +209,83 @@ const App = (() => {
     const lang = I18n.getLang();
     const feed = getTickerFeed();
 
-    const tags = ['all', ...new Set(feed.map(f => f.tag).filter(Boolean))];
+    const tabs = [
+      { id: 'all', labelKey: 'radar.tabAll' },
+      { id: 'models', labelKey: 'radar.tabModels' },
+      { id: 'agents', labelKey: 'radar.tabAgents' },
+      { id: 'evals', labelKey: 'radar.tabEvals' }
+    ];
 
     if (filterBar) {
-      filterBar.innerHTML = tags.map(tag => `
-        <button class="ticker-filter-chip ${activeTickerFeedCategory === tag ? 'active' : ''}" data-tag="${escapeHtml(tag)}">
-          ${tag === 'all' ? t('radar.allCategories') : escapeHtml(tag)}
+      filterBar.innerHTML = tabs.map(tab => `
+        <button class="editorial-tab-btn ${activeTickerFeedCategory === tab.id ? 'active' : ''}" data-tab="${tab.id}">
+          ${t(tab.labelKey)}
         </button>
       `).join('');
 
       filterBar.onclick = (e) => {
-        const chip = e.target.closest('.ticker-filter-chip');
-        if (!chip) return;
-        activeTickerFeedCategory = chip.dataset.tag;
+        const btn = e.target.closest('.editorial-tab-btn');
+        if (!btn) return;
+        activeTickerFeedCategory = btn.dataset.tab;
         renderTickerFeedModalContent();
       };
     }
 
     const query = tickerModalSearchQuery.toLowerCase().trim();
     const filtered = feed.filter(item => {
-      const matchCat = activeTickerFeedCategory === 'all' || item.tag === activeTickerFeedCategory;
-      const text = (item.text[lang] || item.text.es || '').toLowerCase();
-      const author = (item.author || '').toLowerCase();
-      const tag = (item.tag || '').toLowerCase();
-      const matchQuery = !query || text.includes(query) || author.includes(query) || tag.includes(query);
+      const tagLower = (item.tag || '').toLowerCase();
+      const textLower = (item.text[lang] || item.text.es || '').toLowerCase();
+      const authorLower = (item.author || '').toLowerCase();
+
+      let matchCat = true;
+      if (activeTickerFeedCategory === 'models') {
+        matchCat = /sonnet|o3|r1|flash|llama|qwen|mistral|grok|moe|model|weights|inference|claude|deepseek|openai|gemini|meta|reason/i.test(tagLower + ' ' + textLower);
+      } else if (activeTickerFeedCategory === 'agents') {
+        matchCat = /langgraph|agent|voyager|code|mlx|compound|tool|software|workflow|engineering/i.test(tagLower + ' ' + textLower);
+      } else if (activeTickerFeedCategory === 'evals') {
+        matchCat = /eval|benchmark|helm|seal|safety|security|mmlu|inyeccion|caching|injection|red team|guardrail/i.test(tagLower + ' ' + textLower);
+      }
+
+      const matchQuery = !query || textLower.includes(query) || authorLower.includes(query) || tagLower.includes(query);
       return matchCat && matchQuery;
     });
 
     if (filtered.length === 0) {
       feedList.innerHTML = `
-        <div class="empty-state" style="padding:24px; text-align:center; color:var(--ink-soft); font-size:0.85rem">
-          ${t('radar.noResults')}
+        <div class="editorial-empty-state">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+          <p>${t('radar.noResults')}</p>
         </div>
       `;
       return;
     }
 
-    feedList.innerHTML = filtered.map(item => `
-      <a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer" class="ticker-feed-row">
-        <div class="ticker-feed-row-left">
-          <div class="ticker-feed-row-header">
-            <span class="ticker-feed-author-name">${escapeHtml(item.author)}</span>
-            <span class="ticker-tag">${escapeHtml(item.tag)}</span>
-            <span class="ticker-feed-time">${escapeHtml(item.timestamp)}</span>
+    feedList.innerHTML = filtered.map(item => {
+      const initial = (item.author || 'AI').replace(/^@/, '').charAt(0).toUpperCase();
+      return `
+        <a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer" class="editorial-feed-card">
+          <div class="editorial-card-header">
+            <div class="editorial-author-pill">
+              <span class="editorial-author-avatar">${initial}</span>
+              <span class="editorial-author-name">${escapeHtml(item.author)}</span>
+            </div>
+            <div class="editorial-card-badges">
+              <span class="editorial-tag-badge">${escapeHtml(item.tag)}</span>
+              <span class="editorial-time-badge">${escapeHtml(item.timestamp)}</span>
+            </div>
           </div>
-          <div class="ticker-feed-row-text">${escapeHtml(item.text[lang] || item.text.es)}</div>
-        </div>
-        <div class="ticker-feed-row-right">
-          <span class="ticker-feed-link-icon">↗</span>
-        </div>
-      </a>
-    `).join('');
+          <div class="editorial-card-body">
+            <p class="editorial-card-text">${escapeHtml(item.text[lang] || item.text.es)}</p>
+          </div>
+          <div class="editorial-card-footer">
+            <span class="editorial-read-link">
+              <span>${t('radar.readSource')}</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+            </span>
+          </div>
+        </a>
+      `;
+    }).join('');
   }
 
   // ── Live AI News (from /api/ai-news — Hacker News) ──────

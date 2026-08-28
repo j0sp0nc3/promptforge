@@ -912,35 +912,40 @@
 
   <!-- 📜 Live Radar Feed Log Modal 📜 -->
   <div id="modal-ticker-feed" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="ticker-modal-title">
-    <div class="modal-panel" style="max-width:580px">
-      <div class="modal-header">
-        <h3 class="modal-title" id="ticker-modal-title" data-i18n="radar.modalFeedTitle">📡 Novedades del Radar IA</h3>
+    <div class="modal-panel editorial-radar-modal" style="max-width: 640px;">
+      <div class="modal-header editorial-modal-header">
+        <div class="editorial-modal-title-wrap">
+          <div class="editorial-live-badge">
+            <span class="live-pulse-dot"></span>
+            <span data-i18n="radar.liveBadge">SOTA 2026</span>
+          </div>
+          <h3 class="modal-title" id="ticker-modal-title" data-i18n="radar.modalFeedTitle">Novedades del Radar IA</h3>
+        </div>
         <button class="modal-close-btn" id="btn-close-ticker-modal" aria-label="Cerrar">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
-      <p class="modal-desc" data-i18n="radar.modalFeedDesc">Últimas publicaciones, papers y descubrimientos seleccionados de los principales creadores de Gen AI.</p>
       
       <div class="ticker-modal-toolbar">
-        <div class="ticker-modal-search-wrapper">
-          <input type="text" id="ticker-feed-search-input" class="modal-input modal-input--sm" 
+        <div class="editorial-search-box">
+          <svg class="search-box-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="ticker-feed-search-input" class="editorial-search-input" 
                  data-i18n-placeholder="radar.modalSearchPlaceholder" 
-                 placeholder="Buscar novedad por texto, autor o tema..." autocomplete="off" />
+                 placeholder="Buscar por modelo, creador o tema..." autocomplete="off" />
         </div>
-        <div class="ticker-feed-filter-bar" id="ticker-feed-filter-bar">
-          <!-- Rendered Filter Chips dynamically -->
+        <div class="editorial-tabs-bar" id="ticker-feed-filter-bar">
+          <!-- Rendered Editorial Tabs dynamically -->
         </div>
       </div>
 
       <div class="modal-body ticker-feed-modal-body">
-        <div id="ticker-feed-list" class="ticker-feed-list">
-          <!-- Rendered compact feed items -->
+        <div id="ticker-feed-list" class="editorial-feed-container">
+          <!-- Rendered editorial feed cards -->
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ── Share Link Modal ──────────────────────────────────────── -->
   <div id="modal-share-link" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="share-link-modal-title">
     <div class="modal-panel" style="max-width:520px">
       <div class="modal-header">
