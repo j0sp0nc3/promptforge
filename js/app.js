@@ -174,7 +174,6 @@ const App = (() => {
         }
       }, true);
     }
-    }
 
     const closeFeedBtn = document.getElementById('btn-close-ticker-modal');
     if (closeFeedBtn) {
