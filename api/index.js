@@ -670,7 +670,7 @@ async function _handleAiNews(req, res) {
 
   try {
     const q = encodeURIComponent('AI OR LLM');
-    const hnUrl = `https://hn.algolia.com/api/v1/search_by_date?query=${q}&tags=story&hitsPerPage=30`;
+    const hnUrl = `https://hn.algolia.com/api/v1/search_by_date?query=${q}&tags=story&hitsPerPage=60`;
     const resp = await fetch(hnUrl, { headers: { 'User-Agent': 'promptometer/1.0' } });
     if (!resp.ok) throw new Error('HN status ' + resp.status);
     const data = await resp.json();
@@ -679,8 +679,8 @@ async function _handleAiNews(req, res) {
     // title actually mentions AI/LLM terms.
     const AI_TITLE_RE = /\b(AI|A\.I\.|LLM|LLMs|GPT|ChatGPT|Claude|Gemini|Llama|Mistral|Copilot|agent|agents|agentic|prompt|inference|fine-?tun|transformer|neural|OpenAI|Anthropic|DeepSeek|diffusion|RAG)\b/i;
     const items = (data.hits || [])
-      .filter(h => h.title && (h.points || 0) >= 5 && AI_TITLE_RE.test(h.title))
-      .slice(0, 12)
+      .filter(h => h.title && (h.points || 0) >= 2 && AI_TITLE_RE.test(h.title))
+      .slice(0, 25)
       .map(h => ({
         id: 'hn-' + h.objectID,
         title: h.title,
