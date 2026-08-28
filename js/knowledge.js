@@ -1500,7 +1500,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Pioneering research on Prompt Injection attacks and adversarial security vulnerabilities in LLMs."
         },
         "url": "https://x.com/goodside/status/1569128808308957185",
-        "timestamp": "10m ago"
+        "timestamp": "Sep 2022 · Landmark"
     },
     {
         "id": "feed-2",
@@ -1511,7 +1511,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Video Masterclass: \"Let's build GPT from scratch, in code, spelled out\" with tokenization and self-attention."
         },
         "url": "https://www.youtube.com/watch?v=kCc8FmEb1nY",
-        "timestamp": "45m ago"
+        "timestamp": "Ene 2023 · Masterclass"
     },
     {
         "id": "feed-3",
@@ -1522,7 +1522,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Official Claude Prompting Guide: Structured XML delimiters, Chain-of-Thought, and Few-Shot examples."
         },
         "url": "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview",
-        "timestamp": "1h ago"
+        "timestamp": "2026 · Guía Oficial"
     },
     {
         "id": "feed-4",
@@ -1533,7 +1533,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "\"The Rise of the AI Engineer\" manifesto and technical analysis of the frontier model developer ecosystem."
         },
         "url": "https://www.latent.space/p/decoding-2026",
-        "timestamp": "2h ago"
+        "timestamp": "2026 · AI Engineering"
     },
     {
         "id": "feed-5",
@@ -1544,7 +1544,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Landmark paper \"LLM Powered Autonomous Agents\" detailing planning, memory systems, and tool use."
         },
         "url": "https://lilianweng.github.io/posts/2023-06-23-agent/",
-        "timestamp": "3h ago"
+        "timestamp": "Jun 2023 · Landmark Paper"
     },
     {
         "id": "feed-6",
@@ -1555,7 +1555,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "DeepSeek-R1 technical report: Autonomous reasoning incentivized by pure Reinforcement Learning without SFT."
         },
         "url": "https://github.com/deepseek-ai/DeepSeek-R1",
-        "timestamp": "4h ago"
+        "timestamp": "Ene 2025 · Reporte SOTA"
     },
     {
         "id": "feed-7",
@@ -1566,7 +1566,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Official prompt engineering strategies for GPT-4o and reasoning models (o3-mini)."
         },
         "url": "https://platform.openai.com/docs/guides/prompt-engineering",
-        "timestamp": "5h ago"
+        "timestamp": "2026 · Guía Oficial"
     },
     {
         "id": "feed-8",
@@ -1577,7 +1577,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Gemini 2.0 Flash: Low-latency native multimodal processing with a 2-million-token context window."
         },
         "url": "https://deepmind.google/technologies/gemini/",
-        "timestamp": "6h ago"
+        "timestamp": "Dic 2024 · Release"
     },
     {
         "id": "feed-9",
@@ -1588,7 +1588,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Design patterns for LLM-based systems and evaluation-driven development (Evals)."
         },
         "url": "https://eugeneyan.com/writing/llm-patterns/",
-        "timestamp": "7h ago"
+        "timestamp": "Jul 2023 · Systems Guide"
     },
     {
         "id": "feed-10",
@@ -1599,7 +1599,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "LangGraph: Multi-agent state machines, cyclical control flows, and persistence for production workflows."
         },
         "url": "https://blog.langchain.dev/",
-        "timestamp": "8h ago"
+        "timestamp": "2024 · Agent Architecture"
     },
     {
         "id": "feed-11",
@@ -1610,7 +1610,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "In-depth analysis of Indirect Prompt Injection attacks and context sandboxing in web tools."
         },
         "url": "https://simonwillison.net/tags/prompt-injection/",
-        "timestamp": "9h ago"
+        "timestamp": "2024 · Security Research"
     },
     {
         "id": "feed-12",
@@ -1621,7 +1621,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Practical guide for working with frontier models: Expert persona assignment and bias mitigation."
         },
         "url": "https://www.oneusefulthing.org/",
-        "timestamp": "10h ago"
+        "timestamp": "2024 · Frontier Thinking"
     },
     {
         "id": "feed-13",
@@ -1632,7 +1632,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Your AI product needs rigorous Evals, not just prompts: Battle-tested testing methodology for production."
         },
         "url": "https://hamel.dev/blog/posts/evals/",
-        "timestamp": "11h ago"
+        "timestamp": "Mar 2024 · Evals Guide"
     },
     {
         "id": "feed-14",
@@ -1643,7 +1643,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Production LLM application architecture: Hybrid RAG, semantic caching, and telemetry observability."
         },
         "url": "https://huyenchip.com/blog/",
-        "timestamp": "12h ago"
+        "timestamp": "2023 · Production Architecture"
     },
     {
         "id": "feed-15",
@@ -1654,7 +1654,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Seminal paper \"Chain-of-Thought Prompting\": How step-by-step reasoning unlocks LLM capabilities."
         },
         "url": "https://arxiv.org/abs/2201.11903",
-        "timestamp": "13h ago"
+        "timestamp": "Ene 2022 · Landmark Paper"
     },
     {
         "id": "feed-16",
@@ -1665,7 +1665,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Voyager: Autonomous embodied agent with lifelong learning and iterative code skill library."
         },
         "url": "https://voyager.minedojo.org/",
-        "timestamp": "14h ago"
+        "timestamp": "May 2023 · Landmark Agent"
     },
     {
         "id": "feed-17",
@@ -1676,7 +1676,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Guide to fine-tuning and deploying open-weights models (Llama 3.3, DeepSeek) with Hugging Face TGI."
         },
         "url": "https://www.philschmid.de/",
-        "timestamp": "15h ago"
+        "timestamp": "2024 · Fine-Tuning Guide"
     },
     {
         "id": "feed-18",
@@ -1687,7 +1687,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "QLoRA paper: 4-bit quantization and low-rank adaptation for training massive LLMs on consumer GPUs."
         },
         "url": "https://arxiv.org/abs/2305.14314",
-        "timestamp": "16h ago"
+        "timestamp": "May 2023 · Landmark Paper"
     },
     {
         "id": "feed-19",
@@ -1698,7 +1698,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Mistral Large 2: Advanced architecture with native function calling and multilingual reasoning."
         },
         "url": "https://mistral.ai/news/mistral-large-2407/",
-        "timestamp": "17h ago"
+        "timestamp": "Jul 2024 · Release SOTA"
     },
     {
         "id": "feed-20",
@@ -1709,7 +1709,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Llama 3.3 70B Instruct: 405B-tier capability with 5x compute efficiency for enterprise and local deployments."
         },
         "url": "https://ai.meta.com/blog/meta-llama-3/",
-        "timestamp": "18h ago"
+        "timestamp": "Dic 2024 · Release"
     },
     {
         "id": "feed-21",
@@ -1720,7 +1720,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Spade & Automated Evals: Detecting behavioral regressions in LLM outputs before production release."
         },
         "url": "https://www.sh-reya.com/",
-        "timestamp": "19h ago"
+        "timestamp": "2024 · Research Paper"
     },
     {
         "id": "feed-22",
@@ -1731,7 +1731,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "MMLU-Pro: Next-generation evaluation benchmark designed to address saturation in legacy benchmarks."
         },
         "url": "https://github.com/TIGER-AI-Lab/MMLU-Pro",
-        "timestamp": "20h ago"
+        "timestamp": "Jun 2024 · Benchmark SOTA"
     },
     {
         "id": "feed-23",
@@ -1742,7 +1742,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Adversarial security auditing across SOTA models: Analysis of logical jailbreaks and safety guardrails."
         },
         "url": "https://x.com/elder_plinius",
-        "timestamp": "21h ago"
+        "timestamp": "2025 · Red Teaming"
     },
     {
         "id": "feed-24",
@@ -1753,7 +1753,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "The 4 key design patterns for AI agents: Reflection, Tool Use, Planning, and Multi-agent Collaboration."
         },
         "url": "https://www.deeplearning.ai/the-batch/how-agents-can-improve-llm-performance/",
-        "timestamp": "22h ago"
+        "timestamp": "Mar 2024 · Guía de Arquitectura"
     },
     {
         "id": "feed-25",
@@ -1764,7 +1764,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Qwen 2.5 Coder: Specialized software engineering model with SWE-bench performance rivaling frontier models."
         },
         "url": "https://qwenlm.github.io/blog/qwen2.5-coder/",
-        "timestamp": "23h ago"
+        "timestamp": "Nov 2024 · Release SOTA"
     },
     {
         "id": "feed-26",
@@ -1775,7 +1775,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Holistic Evaluation of Language Models (HELM): Multidimensional evaluation of accuracy, bias, and robustness."
         },
         "url": "https://crfm.stanford.edu/helm/classic/latest/",
-        "timestamp": "1d ago"
+        "timestamp": "2024 · Benchmark Suite"
     },
     {
         "id": "feed-27",
@@ -1786,7 +1786,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Research on emergent capabilities and reasoning distillation into compact models (Phi series)."
         },
         "url": "https://arxiv.org/abs/2303.12712",
-        "timestamp": "1d ago"
+        "timestamp": "Mar 2023 · Research Paper"
     },
     {
         "id": "feed-28",
@@ -1797,7 +1797,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "MLX Framework: Blazing-fast inference and fine-tuning of 70B models on Apple Silicon unified memory."
         },
         "url": "https://github.com/ml-explore/mlx",
-        "timestamp": "1d ago"
+        "timestamp": "Dic 2023 · Local LLM Engine"
     },
     {
         "id": "feed-29",
@@ -1808,7 +1808,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "AI developer tooling design guide: Efficient context window management and prompt caching."
         },
         "url": "https://x.com/OfficialLoganK",
-        "timestamp": "2d ago"
+        "timestamp": "2024 · Dev Tooling"
     },
     {
         "id": "feed-30",
@@ -1819,7 +1819,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Mixture-of-Experts (MoE) architectures: Sparse parameter activation for high-throughput inference."
         },
         "url": "https://mistral.ai/news/mixtral-of-experts/",
-        "timestamp": "2d ago"
+        "timestamp": "Dic 2023 · MoE Architecture"
     }
 ],
 
