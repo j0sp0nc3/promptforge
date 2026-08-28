@@ -308,32 +308,22 @@ module.exports = (req, res) => {
     }
 
     // ── GET /api/models ───────────────────────────────────────────
+    // Single source of truth: js/models.js (static require → traced and
+    // bundled by Vercel; no runtime file reads, no eval).
     if (url.includes('models')) {
-      let modelsList = [];
-      try {
-        const kPath = path.join(__dirname, '../js/knowledge.js');
-        if (fs.existsSync(kPath)) {
-          const knowledgeModule = fs.readFileSync(kPath, 'utf8');
-          const s = { globalThis: {} };
-          s.window = s;
-          (0, eval)(knowledgeModule.replace('const Knowledge =', 'globalThis.Knowledge ='));
-          modelsList = globalThis.Knowledge.models || [];
-        }
-      } catch (e) {}
-
+      const catalog = _getModelsCatalog();
+      if (!catalog) {
+        res.writeHead(503, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, error: 'Catálogo de modelos no disponible.' }));
+      }
       res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
       res.writeHead(200, { 'Content-Type': 'application/json' });
       return res.end(JSON.stringify({
         success: true,
-        updated: '2026-08',
-        total: modelsList.length,
-        models: modelsList,
-        sources: [
-          { name: 'LMSYS Chatbot Arena', url: 'https://lmarena.ai/' },
-          { name: 'BenchLM Leaderboard', url: 'https://benchlm.ai/' },
-          { name: 'Artificial Analysis', url: 'https://artificialanalysis.ai/' },
-          { name: 'OpenRouter Telemetry', url: 'https://openrouter.ai/models' }
-        ]
+        updated: catalog.updated,
+        total: catalog.list.length,
+        models: catalog.list,
+        sources: catalog.sources,
       }));
     }
 
@@ -429,6 +419,12 @@ module.exports = (req, res) => {
         // ── POST /api/suggest-creator ──────────────────────────
         if (url.includes('suggest-creator')) {
           _handleSuggestCreator(req, res, payload);
+          return;
+        }
+
+        // ── POST /api/suggest-model ────────────────────────────
+        if (url.includes('suggest-model')) {
+          _handleSuggestModel(req, res, payload);
           return;
         }
 
@@ -654,6 +650,66 @@ async function _handleSuggestCreator(req, res, payload) {
   return res.end(JSON.stringify({ success: true, id, stored: 'memory' }));
 }
 
+// ── POST /api/suggest-model: community model suggestions ─────────────────
+// Mirrors suggest-creator: sanitization, moderation, per-IP daily rate
+// limit (Upstash) and in-memory fallback.
+async function _handleSuggestModel(req, res, payload) {
+  const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '127.0.0.1';
+
+  const name        = _sanitizeText(payload.name, 100);
+  const provider    = _sanitizeText(payload.provider, 100);
+  const benchmarks  = _sanitizeText(payload.benchmarks, 500);
+
+  if (!name || !provider) {
+    res.writeHead(400, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({ error: 'El nombre del modelo y su laboratorio son obligatorios.' }));
+  }
+
+  const modResult = await Moderation.check({
+    text: `${name} ${provider} ${benchmarks}`,
+    score: 100,
+    ip: clientIp,
+    redis: null,
+  });
+  if (!modResult.allowed) {
+    res.writeHead(400, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({
+      error: modResult.detail || 'La sugerencia fue rechazada por la moderación de contenido.',
+      reason: modResult.reason,
+    }));
+  }
+
+  const id = 'mdl-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7);
+  const entry = { id, name, provider, benchmarks, ip: clientIp, date: new Date().toISOString() };
+
+  if (HAS_UPSTASH) {
+    try {
+      const rateLimitKey = `suggest:rate:${clientIp}`;
+      const currentCount = parseInt(await upstash('GET', rateLimitKey) || '0', 10);
+      if (currentCount >= SUGGEST_RATE_LIMIT) {
+        res.writeHead(429, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ error: 'Has alcanzado el límite de 5 sugerencias por día. Intenta mañana.' }));
+      }
+      if (currentCount === 0) {
+        await upstash('SETEX', rateLimitKey, 86400, '1');
+      } else {
+        await upstash('INCR', rateLimitKey);
+      }
+      await upstash('LPUSH', 'suggestions:models', JSON.stringify(entry));
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ success: true, id, stored: 'upstash' }));
+    } catch (e) { /* fall through to memory */ }
+  }
+
+  _inMemorySuggestions.unshift(entry);
+  if (_inMemorySuggestions.length > SUGGEST_MAX_STORED) {
+    _inMemorySuggestions.length = SUGGEST_MAX_STORED;
+  }
+
+  res.writeHead(200, { 'Content-Type': 'application/json' });
+  return res.end(JSON.stringify({ success: true, id, stored: 'memory' }));
+}
+
 // ── /api/ai-news: live AI news feed (Hacker News via Algolia search) ──────
 // Free, keyless, CORS-open public API. Results are cached in the serverless
 // instance for 10 minutes so the ticker refreshes stay cheap.
@@ -701,6 +757,20 @@ async function _handleAiNews(req, res) {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ source: 'hackernews', cachedAt: _aiNewsCache.at, items: _aiNewsCache.items, degraded: true }));
   }
+}
+
+// ── Models catalog (single source of truth: js/models.js) ─────────────────
+// Static require is traced by Vercel's bundler and shipped inside the
+// function. Cached at module level so warm requests cost nothing.
+let _modelsCatalogCache = null;
+function _getModelsCatalog() {
+  if (_modelsCatalogCache) return _modelsCatalogCache;
+  try {
+    _modelsCatalogCache = require('../js/models.js');
+  } catch (e) {
+    _modelsCatalogCache = null;
+  }
+  return _modelsCatalogCache;
 }
 
 async function _handleAnalyzeIntent(req, res, payload) {
