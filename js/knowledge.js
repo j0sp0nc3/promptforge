@@ -1500,7 +1500,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Claude 3.7 Sonnet Release: First hybrid frontier model with extended thinking mode and adjustable reasoning token budget."
         },
         "url": "https://www.anthropic.com/news/claude-3-7-sonnet",
-        "timestamp": "hace 2h"
+        "timestamp": "Landmark · Feb 2025"
     },
     {
         "id": "feed-2",
@@ -1511,7 +1511,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "DeepSeek-R1 in production: OpenAI o1-level reasoning with open weights and 20x lower inference cost."
         },
         "url": "https://github.com/deepseek-ai/DeepSeek-R1",
-        "timestamp": "hace 4h"
+        "timestamp": "Landmark · Ene 2025"
     },
     {
         "id": "feed-3",
@@ -1522,7 +1522,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "OpenAI o3-mini optimized for STEM and coding with native function calling and structured outputs."
         },
         "url": "https://openai.com/index/openai-o3-mini/",
-        "timestamp": "hace 6h"
+        "timestamp": "Landmark · Ene 2025"
     },
     {
         "id": "feed-4",
@@ -1533,7 +1533,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Gemini 2.0 Flash: 2-million-token native multimodal context window operating at real-time speeds."
         },
         "url": "https://deepmind.google/technologies/gemini/",
-        "timestamp": "hace 8h"
+        "timestamp": "Landmark · Feb 2025"
     },
     {
         "id": "feed-5",
@@ -1544,18 +1544,18 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "LangGraph v0.3: Multi-agent orchestration with state persistence, cyclic ReAct loops, and human-in-the-loop."
         },
         "url": "https://blog.langchain.dev/langgraph-v0-3/",
-        "timestamp": "hace 12h"
+        "timestamp": "Landmark · Ene 2025"
     },
     {
         "id": "feed-6",
         "author": "Hamel Husain",
-        "tag": "LLM Evals 2026",
+        "tag": "LLM Evals",
         "text": {
             "es": "Metodología de Evals para sistemas de IA en producción: Generación sintética y tests de regresión de prompts.",
             "en": "Production AI Evals methodology: Synthetic data generation and automated prompt regression testing."
         },
         "url": "https://hamel.dev/blog/posts/evals/",
-        "timestamp": "hace 14h"
+        "timestamp": "Landmark · Mar 2024"
     },
     {
         "id": "feed-7",
@@ -1566,7 +1566,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Prompt Caching & Contextual Retrieval: 90% API cost reduction and 2x faster TTFT on long-context prompts."
         },
         "url": "https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching",
-        "timestamp": "hace 18h"
+        "timestamp": "Landmark · 2024"
     },
     {
         "id": "feed-8",
@@ -1577,7 +1577,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Llama 3.3 70B Instruct: 405B-tier capability with 5x compute efficiency for enterprise and local deployments."
         },
         "url": "https://ai.meta.com/blog/meta-llama-3/",
-        "timestamp": "hace 1d"
+        "timestamp": "Landmark · Dic 2024"
     },
     {
         "id": "feed-9",
@@ -1588,29 +1588,29 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Qwen 2.5 Coder 32B/72B: The leading open software engineering model on SWE-bench with 128k context."
         },
         "url": "https://qwenlm.github.io/blog/qwen2.5-coder/",
-        "timestamp": "hace 1d"
+        "timestamp": "Landmark · Nov 2024"
     },
     {
         "id": "feed-10",
         "author": "Latent Space",
-        "tag": "AI Engineering 2026",
+        "tag": "AI Engineering",
         "text": {
-            "es": "El estado del AI Engineering en 2026: La transición desde prompts simples hacia Sistemas de IA Compuestos.",
+            "es": "El estado del AI Engineering: La transición desde prompts simples hacia Sistemas de IA Compuestos.",
             "en": "The State of AI Engineering in 2026: The architectural shift from simple prompts to Compound AI Systems."
         },
         "url": "https://www.latent.space/p/decoding-2026",
-        "timestamp": "hace 1d"
+        "timestamp": "Landmark · 2025"
     },
     {
         "id": "feed-11",
         "author": "Simon Willison",
-        "tag": "AI Security 2026",
+        "tag": "AI Security",
         "text": {
             "es": "Arquitectura Dual-LLM: Aislamiento de contexto y sandboxing para neutralizar inyecciones indirectas de prompt.",
             "en": "Dual-LLM Architecture: Context sandboxing and privilege boundaries to neutralize indirect prompt injections."
         },
         "url": "https://simonwillison.net/tags/prompt-injection/",
-        "timestamp": "hace 2d"
+        "timestamp": "Landmark · Mar 2025"
     },
     {
         "id": "feed-12",
@@ -1621,7 +1621,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "MLX v0.22: Local 70B LLM inference at 30+ tokens/sec on Apple Silicon unified memory."
         },
         "url": "https://github.com/ml-explore/mlx",
-        "timestamp": "hace 2d"
+        "timestamp": "Landmark · 2025"
     },
     {
         "id": "feed-13",
@@ -1632,18 +1632,18 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Mistral Large 2: Native parallel function calling and high-precision multilingual reasoning."
         },
         "url": "https://mistral.ai/news/mistral-large-2407/",
-        "timestamp": "hace 2d"
+        "timestamp": "Landmark · Jul 2024"
     },
     {
         "id": "feed-14",
         "author": "Dan Hendrycks",
-        "tag": "MMLU-Pro 2026",
+        "tag": "MMLU-Pro",
         "text": {
             "es": "MMLU-Pro Benchmark: Evaluación de razonamiento multidisciplinario con opciones ampliadas para eliminar saturación.",
             "en": "MMLU-Pro Benchmark: Multidisciplinary reasoning evaluation with expanded options to eliminate saturation."
         },
         "url": "https://github.com/TIGER-AI-Lab/MMLU-Pro",
-        "timestamp": "hace 3d"
+        "timestamp": "Landmark · May 2024"
     },
     {
         "id": "feed-15",
@@ -1654,7 +1654,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Spade: Continuous evaluation framework to catch behavioral regressions in prompt updates before production."
         },
         "url": "https://www.sh-reya.com/",
-        "timestamp": "hace 3d"
+        "timestamp": "Landmark · 2025"
     },
     {
         "id": "feed-16",
@@ -1665,7 +1665,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Security audit on reasoning models with <think> tokens: Guardrail analysis and logical robustness."
         },
         "url": "https://x.com/elder_plinius",
-        "timestamp": "hace 3d"
+        "timestamp": "Landmark · 2025"
     },
     {
         "id": "feed-17",
@@ -1676,18 +1676,18 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "The 4 key design patterns for AI agents: Reflection, Tool Use, Planning, and Multi-agent Collaboration."
         },
         "url": "https://www.deeplearning.ai/the-batch/how-agents-can-improve-llm-performance/",
-        "timestamp": "hace 4d"
+        "timestamp": "Landmark · Mar 2024"
     },
     {
         "id": "feed-18",
         "author": "Stanford CRFM",
         "tag": "HELM Benchmark",
         "text": {
-            "es": "Stanford HELM 2026: Nueva suite de evaluación de alineación, sesgos, precisión y calibración para modelos frontera.",
+            "es": "Stanford HELM: suite de evaluación de alineación, sesgos, precisión y calibración para modelos frontera.",
             "en": "Stanford HELM 2026: Updated evaluation suite for alignment, bias, accuracy, and calibration across frontier models."
         },
         "url": "https://crfm.stanford.edu/helm/classic/latest/",
-        "timestamp": "hace 4d"
+        "timestamp": "Landmark · 2022"
     },
     {
         "id": "feed-19",
@@ -1698,7 +1698,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "DeepSeek-V3: 671B parameter Mixture of Experts activating 37B per token with Multi-head Latent Attention."
         },
         "url": "https://github.com/deepseek-ai/DeepSeek-V3",
-        "timestamp": "hace 5d"
+        "timestamp": "Landmark · Dic 2024"
     },
     {
         "id": "feed-20",
@@ -1709,18 +1709,18 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Practical guide to serving open-weights LLMs with vLLM and FP8 quantization for maximum throughput."
         },
         "url": "https://www.philschmid.de/",
-        "timestamp": "hace 5d"
+        "timestamp": "Landmark · 2024"
     },
     {
         "id": "feed-21",
         "author": "Scale AI",
         "tag": "SEAL Leaderboards",
         "text": {
-            "es": "SEAL Leaderboards 2026: Evaluaciones independientes a ciegas para modelos de razonamiento y codificación avanzada.",
-            "en": "SEAL Leaderboards 2026: Independent blind evaluations for reasoning and advanced coding frontier models."
+            "es": "SEAL Leaderboards: Evaluaciones independientes a ciegas para modelos de razonamiento y codificación avanzada.",
+            "en": "SEAL Leaderboards: Independent blind evaluations for reasoning and advanced coding frontier models."
         },
         "url": "https://scale.com/leaderboard",
-        "timestamp": "hace 6d"
+        "timestamp": "Landmark · 2024"
     },
     {
         "id": "feed-22",
@@ -1731,7 +1731,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Grok 3 Reasoning Engine: Colossus cluster supercomputing for real-time knowledge synthesis and mathematics."
         },
         "url": "https://x.ai/",
-        "timestamp": "hace 6d"
+        "timestamp": "Landmark · Feb 2025"
     },
     {
         "id": "feed-23",
@@ -1742,7 +1742,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Open LLM Leaderboard v2: Hardened benchmarks (GPQA, MuSR, IFEval, MATH) to prevent metric saturation."
         },
         "url": "https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard",
-        "timestamp": "hace 1 sem"
+        "timestamp": "Landmark · Jun 2024"
     },
     {
         "id": "feed-24",
@@ -1753,7 +1753,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "System design patterns for Compound AI Systems: Hierarchical RAG, semantic validation, and model fallback."
         },
         "url": "https://eugeneyan.com/writing/llm-patterns/",
-        "timestamp": "hace 1 sem"
+        "timestamp": "Landmark · 2024"
     },
     {
         "id": "feed-25",
@@ -1764,7 +1764,7 @@ If the query is ambiguous, ask for clarification before recommending.
             "en": "Best practices for AI developers: Context compression strategies and prompt debugging toolkits."
         },
         "url": "https://x.com/OfficialLoganK",
-        "timestamp": "hace 1 sem"
+        "timestamp": "Landmark · 2024"
     }
 ],
 
