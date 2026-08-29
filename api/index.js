@@ -710,53 +710,105 @@ async function _handleSuggestModel(req, res, payload) {
   return res.end(JSON.stringify({ success: true, id, stored: 'memory' }));
 }
 
-// ── /api/ai-news: live AI news feed (Hacker News via Algolia search) ──────
-// Free, keyless, CORS-open public API. Results are cached in the serverless
+// ── /api/ai-news: live AI news feed (Hacker News + arXiv papers) ──────────
+// Free, keyless, CORS-open public APIs. Results are cached in the serverless
 // instance for 10 minutes so the ticker refreshes stay cheap.
 const AI_NEWS_CACHE_TTL_MS = 10 * 60 * 1000;
 const _aiNewsCache = { at: 0, items: [] };
+
+// Parses the arXiv Atom feed (regex-based, zero dependencies).
+function _parseArxiv(xml) {
+  const out = [];
+  const entries = xml.split('<entry>').slice(1);
+  for (const e of entries) {
+    const title = (e.match(/<title>([\s\S]*?)<\/title>/) || [])[1];
+    const id = (e.match(/<id>([\s\S]*?)<\/id>/) || [])[1];
+    const published = (e.match(/<published>([\s\S]*?)<\/published>/) || [])[1];
+    const author = (e.match(/<name>([\s\S]*?)<\/name>/) || [])[1];
+    const category = (e.match(/<category[^>]+term="([^"]+)"/) || [])[1];
+    if (!title || !id) continue;
+    out.push({
+      id: 'arxiv-' + id.split('/abs/').pop(),
+      title: title.replace(/\s+/g, ' ').trim(),
+      url: id.trim(),
+      author: (author || 'arXiv').split(' ').slice(-1)[0], // apellido
+      points: 0,
+      comments: 0,
+      publishedAt: published ? Date.parse(published) : 0,
+      category: category || 'cs.AI',
+      source: 'arxiv',
+    });
+  }
+  return out;
+}
+
+async function _fetchHnItems() {
+  const q = encodeURIComponent('AI OR LLM');
+  const hnUrl = `https://hn.algolia.com/api/v1/search_by_date?query=${q}&tags=story&hitsPerPage=60`;
+  const resp = await fetch(hnUrl, { headers: { 'User-Agent': 'promptometer/1.0' } });
+  if (!resp.ok) throw new Error('HN status ' + resp.status);
+  const data = await resp.json();
+
+  // Quality filter: Algolia's OR query is fuzzy — keep only stories whose
+  // title actually mentions AI/LLM terms.
+  const AI_TITLE_RE = /\b(AI|A\.I\.|LLM|LLMs|GPT|ChatGPT|Claude|Gemini|Llama|Mistral|Copilot|agent|agents|agentic|prompt|inference|fine-?tun|transformer|neural|OpenAI|Anthropic|DeepSeek|diffusion|RAG)\b/i;
+  return (data.hits || [])
+    .filter(h => h.title && (h.points || 0) >= 2 && AI_TITLE_RE.test(h.title))
+    .slice(0, 20)
+    .map(h => ({
+      id: 'hn-' + h.objectID,
+      title: h.title,
+      url: h.url || ('https://news.ycombinator.com/item?id=' + h.objectID),
+      author: h.author || 'hn',
+      points: h.points || 0,
+      comments: h.num_comments || 0,
+      publishedAt: (h.created_at_i || 0) * 1000,
+      source: 'hackernews',
+    }));
+}
+
+async function _fetchArxivItems() {
+  // Fresh AI/ML papers (cs.AI + cs.CL), newest first, last N days.
+  const url = 'https://export.arxiv.org/api/query?search_query='
+    + encodeURIComponent('cat:cs.CL OR cat:cs.AI')
+    + '&sortBy=submittedDate&sortOrder=descending&max_results=20';
+  const resp = await fetch(url, { headers: { 'User-Agent': 'promptometer/1.0' } });
+  if (!resp.ok) throw new Error('arXiv status ' + resp.status);
+  const xml = await resp.text();
+  const now = Date.now();
+  const SEVEN_DAYS = 7 * 24 * 3600 * 1000;
+  return _parseArxiv(xml).filter(p => p.publishedAt && (now - p.publishedAt) < SEVEN_DAYS);
+}
 
 async function _handleAiNews(req, res) {
   const now = Date.now();
   const fresh = _aiNewsCache.items.length > 0 && (now - _aiNewsCache.at) < AI_NEWS_CACHE_TTL_MS;
   if (fresh) {
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    return res.end(JSON.stringify({ source: 'hackernews', cachedAt: _aiNewsCache.at, items: _aiNewsCache.items }));
+    return res.end(JSON.stringify({ source: 'live', cachedAt: _aiNewsCache.at, items: _aiNewsCache.items }));
   }
 
-  try {
-    const q = encodeURIComponent('AI OR LLM');
-    const hnUrl = `https://hn.algolia.com/api/v1/search_by_date?query=${q}&tags=story&hitsPerPage=60`;
-    const resp = await fetch(hnUrl, { headers: { 'User-Agent': 'promptometer/1.0' } });
-    if (!resp.ok) throw new Error('HN status ' + resp.status);
-    const data = await resp.json();
+  // Fetch both sources in parallel; each may fail independently.
+  const [hnRes, arxivRes] = await Promise.allSettled([_fetchHnItems(), _fetchArxivItems()]);
+  const hnItems = hnRes.status === 'fulfilled' ? hnRes.value : [];
+  const arxivItems = arxivRes.status === 'fulfilled' ? arxivRes.value : [];
 
-    // Quality filter: Algolia's OR query is fuzzy — keep only stories whose
-    // title actually mentions AI/LLM terms.
-    const AI_TITLE_RE = /\b(AI|A\.I\.|LLM|LLMs|GPT|ChatGPT|Claude|Gemini|Llama|Mistral|Copilot|agent|agents|agentic|prompt|inference|fine-?tun|transformer|neural|OpenAI|Anthropic|DeepSeek|diffusion|RAG)\b/i;
-    const items = (data.hits || [])
-      .filter(h => h.title && (h.points || 0) >= 2 && AI_TITLE_RE.test(h.title))
-      .slice(0, 25)
-      .map(h => ({
-        id: 'hn-' + h.objectID,
-        title: h.title,
-        url: h.url || ('https://news.ycombinator.com/item?id=' + h.objectID),
-        author: h.author || 'hn',
-        points: h.points || 0,
-        comments: h.num_comments || 0,
-        publishedAt: (h.created_at_i || 0) * 1000,
-      }));
+  // Merge by publication date (newest first) and cap the feed.
+  const items = [...hnItems, ...arxivItems]
+    .sort((a, b) => b.publishedAt - a.publishedAt)
+    .slice(0, 30);
 
+  if (items.length > 0) {
     _aiNewsCache.at = now;
     _aiNewsCache.items = items;
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ source: 'hackernews', cachedAt: now, items }));
-  } catch (e) {
-    // Serve stale cache if available; otherwise an empty list (client falls
-    // back to the curated static feed).
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ source: 'hackernews', cachedAt: _aiNewsCache.at, items: _aiNewsCache.items, degraded: true }));
+    return res.end(JSON.stringify({ source: 'live', cachedAt: now, items }));
   }
+
+  // Both sources failed: serve stale cache if available; otherwise empty
+  // (the client falls back to a connection-lost message).
+  res.writeHead(200, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify({ source: 'live', cachedAt: _aiNewsCache.at, items: _aiNewsCache.items, degraded: true }));
 }
 
 // ── Models catalog (single source of truth: js/models.js) ─────────────────
