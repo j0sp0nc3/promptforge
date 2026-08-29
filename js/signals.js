@@ -118,6 +118,11 @@ const Signals = {
       return years.some(y => y >= currentYear - 1);
     })();
     const assumesCapability = /\b(calculate exactly|calcula exact|live (url|data|price|news)|datos en vivo|precio actual|today'?s|de hoy|browse the web|navega internet|run (this|the) code|ejecuta este código|real.?time data|tiempo real)\b/i.test(lower);
+    // 2026 reality: browsing / code execution / live data ARE standard — but
+    // only when the prompt declares the tools that enable them. Capability
+    // assumptions are fine inside a tool contract.
+    const hasToolContracts = /\b(<tools?>|tool[_ ]?(use|choice|calling|contract|definition)|function calling|available functions|funciones disponibles|tienes acceso a (las )?siguientes herramientas|usa (la|las) herramienta|use the tool|MCP|model context protocol)\b/i.test(lower)
+      || /<\/?[a-z_]*tools?[a-z_]*>/i.test(prompt);
     const hasPII = (lower.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/gi) || []).length > 0
                 || /\b(sk-[a-za-z0-9]{20,}|AKIA[0-9A-Z]{16}|ghp_[a-za-z0-9]{36}|xox[baprs]-[0-9a-z-]+)\b/i.test(prompt)
                 || /\b\d{3}-\d{2}-\d{4}\b/.test(prompt)
@@ -179,6 +184,7 @@ const Signals = {
       factualRequest,
       postCutoffYear,
       assumesCapability,
+      hasToolContracts,
       hasPII,
       // OWASP LLM07 — System Prompt Leakage
       leakageDefense,

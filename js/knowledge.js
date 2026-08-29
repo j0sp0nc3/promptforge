@@ -577,7 +577,83 @@ Level 3 (Execution): Execute each step calculating the involved times and costs.
       },
       crossRefs: ['BP004', 'AP005', 'AP028', 'rewriter._addRole'],
     },
-  ],
+    {
+      id: 't-context-engineering',
+      name: { es: 'Context Engineering', en: 'Context Engineering' },
+      category: 'basics',
+      crossLinkOnly: false,
+      what: {
+        es: 'Disciplina sucesora del prompt engineering en sistemas con LLMs (2025+): en lugar de redactar una instrucción única, se diseña el sistema de contexto completo que el modelo recibe — historial, memoria, recuperación (RAG), herramientas y estado del agente. La tesis: el rendimiento depende más de qué información entra por la ventana que de la redacción del prompt.',
+        en: 'The successor discipline to prompt engineering in LLM systems (2025+): instead of crafting a single instruction, you design the full context system the model receives — history, memory, retrieval (RAG), tools and agent state. The thesis: performance depends more on what information enters the window than on prompt wording.',
+      },
+      when: {
+        es: 'Aplicaciones conversacionales con estado, agentes de larga duración y cualquier sistema donde el prompt aislado ya no explica el rendimiento.',
+        en: 'Stateful conversational apps, long-running agents, and any system where the isolated prompt no longer explains performance.',
+      },
+      example: {
+        es: `<context>\n{{MEMORIA_PERSISTENTE}}\n</context>\n\n<retrieved_docs>\n{{RAG_TOP_K}}\n</retrieved_docs>\n\n<task>Responde usando exclusivamente el contexto anterior.</task>`,
+        en: `<context>\n{{PERSISTENT_MEMORY}}\n</context>\n\n<retrieved_docs>\n{{RAG_TOP_K}}\n</retrieved_docs>\n\n<task>Answer using only the context above.</task>`,
+      },
+      crossRefs: ['t-rag', 't-mcp'],
+    },
+    {
+      id: 't-mcp',
+      name: { es: 'MCP — Model Context Protocol', en: 'MCP — Model Context Protocol' },
+      category: 'agentic',
+      crossLinkOnly: false,
+      what: {
+        es: 'Estándar abierto creado por Anthropic (2024) y adoptado por la industria para conectar LLMs con herramientas y fuentes de datos: un protocolo uniforme (servidores MCP exponen tools, resources y prompts) que reemplaza las integraciones ad-hoc. El prompt declara capacidades vía el contrato del servidor en lugar de asumirlas.',
+        en: 'Open standard created by Anthropic (2024) and adopted industry-wide to connect LLMs with tools and data sources: a uniform protocol (MCP servers expose tools, resources and prompts) replacing ad-hoc integrations. The prompt declares capabilities through the server contract instead of assuming them.',
+      },
+      when: {
+        es: 'Agentes que necesitan búsqueda, ejecución de código, bases de datos o APIs externas sin integración propietaria por proveedor.',
+        en: 'Agents needing search, code execution, databases or external APIs without vendor-specific integration.',
+      },
+      example: {
+        es: `<tools>\n- web_search(query): búsqueda en vivo\n- run_code(code): ejecución sandboxed\n</tools>\n\n<requirements>Usa web_search antes de afirmar datos actuales.</requirements>`,
+        en: `<tools>\n- web_search(query): live search\n- run_code(code): sandboxed execution\n</tools>\n\n<requirements>Use web_search before claiming current data.</requirements>`,
+      },
+      crossRefs: ['t-react', 't-context-engineering'],
+    },
+    {
+      id: 't-test-time-compute',
+      name: { es: 'Test-Time Compute (Razonamiento Extendido)', en: 'Test-Time Compute (Extended Reasoning)' },
+      category: 'reasoning',
+      crossLinkOnly: false,
+      what: {
+        es: 'Paradigma 2024-2026: escalar el esfuerzo de razonamiento en inferencia (más tokens de pensamiento, autoverificación, ramificación) en lugar de escalar el tamaño del modelo. Base de los modelos de razonamiento (o-series, DeepSeek-R1, Claude con thinking configurable). En prompting: pedir presupuesto de razonamiento, autoverificación y múltiples intentos con voto.',
+        en: '2024-2026 paradigm: scaling inference-time reasoning effort (more thinking tokens, self-verification, branching) instead of scaling model size. The basis of reasoning models (o-series, DeepSeek-R1, Claude with configurable thinking). In prompting: request a reasoning budget, self-verification, and multiple attempts with voting.',
+      },
+      when: {
+        es: 'Tareas difíciles (matemáticas, código, análisis) donde importa la corrección más que la latencia.',
+        en: 'Hard tasks (math, code, analysis) where correctness matters more than latency.',
+      },
+      example: {
+        es: `<requirements>\n1. Piensa paso a paso antes de responder (máx. 500 tokens de análisis).\n2. Verifica tu respuesta: si encuentras una contradicción, corrígela.\n</requirements>`,
+        en: `<requirements>\n1. Think step by step before answering (max 500 tokens of analysis).\n2. Verify your answer: if you find a contradiction, fix it.\n</requirements>`,
+      },
+      crossRefs: ['t-cot', 't-self-consistency'],
+    },
+    {
+      id: 't-agentic-patterns',
+      name: { es: 'Patrones de Diseño Agéntico', en: 'Agentic Design Patterns' },
+      category: 'agentic',
+      crossLinkOnly: false,
+      what: {
+        es: 'Los 4 patrones canónicos de Andrew Ng (2024) para workflows agénticos: Reflexión (auto-crítica iterativa), Uso de Herramientas (llamada a funciones), Planificación (descomposición multi-paso) y Multi-agente (roles especializados que colaboran). Combinados multiplican el rendimiento sin modelos mayores.',
+        en: "Andrew Ng's canonical patterns (2024) for agentic workflows: Reflection (iterative self-critique), Tool Use (function calling), Planning (multi-step decomposition) and Multi-agent (specialized collaborating roles). Combined, they multiply performance without larger models.",
+      },
+      when: {
+        es: 'Automatización de tareas complejas de extremo a extremo donde un solo turno no basta.',
+        en: 'End-to-end automation of complex tasks where a single turn is not enough.',
+      },
+      example: {
+        es: `<workflow>\n1. planner: descompone la tarea en sub-tareas numeradas\n2. executor: resuelve cada sub-tarea con las herramientas\n3. critic: revisa el resultado y lista correcciones\n4. executor aplica correcciones y entrega el resultado final\n</workflow>`,
+        en: `<workflow>\n1. planner: decompose the task into numbered subtasks\n2. executor: solve each subtask with tools\n3. critic: review the result and list fixes\n4. executor applies fixes and delivers the final output\n</workflow>`,
+      },
+      crossRefs: ['t-react', 't-reflexion', 't-mcp'],
+    },
+],
 
   /* ── 3. Frameworks: canonical structural schemas ──────────────
      { id, name:{es,en}, acronym?, category, def:{es,en}, structure:{es,en}?, example:{es,en}?, crossRefs:[]? } */
@@ -947,7 +1023,7 @@ If the query is ambiguous, ask for clarification before recommending.
       title: { es: 'Promptometer Web Workbench App', en: 'Promptometer Web Workbench App' },
       type: 'official',
       source: 'GitHub / Vercel',
-      url: 'https://promptforge-beta-ten.vercel.app/',
+      url: 'https://promptometer.tech/',
       desc: {
         es: 'Repositorio oficial y aplicación web en vivo con la suite de evaluación, pruebas adversariales, reescritor y hub educativo.',
         en: 'Official repository and live web app featuring evaluation suite, adversarial testing, rewriter, and learning hub.',
@@ -1072,6 +1148,17 @@ If the query is ambiguous, ask for clarification before recommending.
       desc: {
         es: 'Estándar global de seguridad sobre vulnerabilidades críticas en LLMs (inyección de prompts, fuga de datos, etc.).',
         en: 'Global security standard for critical vulnerabilities in LLM apps (prompt injection, data leakage, etc.).',
+      },
+    },
+    {
+      id: 'ref-mcp-anthropic',
+      title: { es: 'Model Context Protocol (MCP) — Anthropic Spec', en: 'Model Context Protocol (MCP) — Anthropic Spec' },
+      type: 'official',
+      source: 'Model Context Protocol',
+      url: 'https://modelcontextprotocol.io/',
+      desc: {
+        es: 'Especificación abierta de Anthropic para conectar asistentes de IA a sistemas de datos, repositorios, APIs y herramientas de ejecución de forma estandarizada.',
+        en: 'Open specification by Anthropic to connect AI assistants to data systems, repositories, APIs, and execution tools in a standardized way.',
       },
     },
   ],

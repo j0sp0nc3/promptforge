@@ -801,8 +801,10 @@ const Analyzer = {
       suggestions.push(I18n.t('analyzer.safety.piiLeakSugg'));
     }
 
-    // Assumes capabilities the model doesn't have (live URLs, exact math, code exec)
-    if (signals.assumesCapability) {
+    // Assumes capabilities the model doesn't have — only a real issue when
+    // the prompt does NOT declare the tools that enable them (2026: browsing,
+    // code execution and live data are standard under a tool contract).
+    if (signals.assumesCapability && !signals.hasToolContracts) {
       score -= 12;
       findings.push(I18n.t('analyzer.safety.assumesCapability'));
       suggestions.push(I18n.t('analyzer.safety.assumesCapabilitySugg'));

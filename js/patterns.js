@@ -312,7 +312,7 @@ const Patterns = {
         const noInstructions = !/\b(must|should|need|have to|debes|necesitas|tienes que|asegúrate|ensure|make sure|include|incluye|provide|proporciona|describe|describir|explain|explica|list|enumera|write|escribe|create|crea|generate|genera)\b/i.test(lower);
         return isShort && noInstructions;
       },
-      suggestion: 'Sé explícito en lo que necesitas. En vez de "Marketing digital" escribe "Explica las 5 estrategias más efectivas de marketing digital para startups B2B en 2024, con pros y contras de cada una".'
+      suggestion: 'Sé explícito en lo que necesitas. En vez de "Marketing digital" escribe "Explica las 5 estrategias más efectivas de marketing digital para startups B2B este año, con pros y contras de cada una".'
     },
 
     // 19 — No handling for edge cases
@@ -558,26 +558,30 @@ const Patterns = {
       dimension: 'safety',
       detect(prompt) {
         const lower = prompt.toLowerCase();
-        const recentWords = /\b(2024|2025|2026|latest|upcoming|recent news|noticias recientes|últimas noticias|próximo|reciente)\b/i.test(lower);
+        const recentWords = /\b(20[2-9]\d|latest|upcoming|recent news|noticias recientes|últimas noticias|próximo|reciente)\b/i.test(lower);
         const hasContext = /\b(according to|de acuerdo a|based on the following|basado en lo siguiente|here is|aquí tienes|in the text|en el texto)\b/i.test(lower);
         return recentWords && !hasContext;
       },
       suggestion: 'El modelo podría no tener conocimiento de eventos recientes. Proporciona la información actualizada directamente en el prompt usando RAG o incluye los artículos en el texto.'
     },
 
-    // 46 — Assumes capabilities the model doesn't have
+    // 46 — Assumes capabilities without declaring the tools that enable them
     {
       id: 'AP046',
-      name: 'Asume capacidades inexistentes',
-      description: 'El prompt asume que el modelo puede navegar por internet, ejecutar código, o realizar cálculos exactos complejos sin herramientas.',
+      name: 'Asume capacidades sin declarar herramientas',
+      description: 'El prompt asume navegación web, ejecución de código, datos en vivo o cálculo exacto sin declarar el contrato de herramientas (<tools>, function calling o MCP) que las habilita.',
       severity: 'critical',
       dimension: 'safety',
       detect(prompt) {
         const lower = prompt.toLowerCase();
         const invalidCaps = /\b(browse this url|navega a esta url|go to|ve a http|visit http|download|descarga|run this code|ejecuta este código|calculate exactly|calcula exactamente)\b/i.test(lower);
-        return invalidCaps;
+        if (!invalidCaps) return false;
+        // Capability assumptions are valid in 2026 under a tool contract.
+        if (typeof Signals === 'undefined' && typeof globalThis.Signals === 'undefined') return invalidCaps;
+        const S = (typeof Signals !== 'undefined') ? Signals : globalThis.Signals;
+        return !S.extract(prompt, 'es').hasToolContracts;
       },
-      suggestion: 'Los LLMs no pueden navegar por internet libremente, descargar archivos o ejecutar código local. Proporciona el texto de la URL directamente o utiliza herramientas externas.'
+      suggestion: 'Navegación, ejecución de código y datos en vivo requieren herramientas declaradas: define un bloque <tools> (o function calling / MCP) con las funciones disponibles, o pide al modelo que indique explícitamente si carece de la capacidad.'
     },
 
     // 47 — OWASP LLM07: System Prompt Leakage
