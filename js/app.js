@@ -292,8 +292,11 @@ const App = (() => {
   let liveAiNews = [];
 
   function getTickerFeed() {
+    // Freshness-first: the ticker is 100% live (HN news + arXiv papers).
+    // The curated landmark catalog is ONLY an offline fallback for when the
+    // live fetch has never succeeded (e.g. no network).
     const curated = (typeof Knowledge !== 'undefined' && Knowledge.feed) ? Knowledge.feed : [];
-    return liveAiNews.length ? [...liveAiNews, ...curated] : curated;
+    return liveAiNews.length ? liveAiNews : curated;
   }
 
   function _timeAgo(ms, lang) {
@@ -317,11 +320,15 @@ const App = (() => {
         .filter(it => it.title && it.url)
         .map(it => ({
           id: it.id,
-          author: '@' + (it.author || 'hn'),
-          tag: 'HN · ' + (it.points || 0) + ' pts',
+          author: it.source === 'arxiv'
+            ? ('📄 ' + (it.category || 'arXiv'))
+            : ('@' + (it.author || 'hn')),
+          tag: it.source === 'arxiv'
+            ? ('arXiv · ' + _timeAgo(it.publishedAt, lang))
+            : ('HN · ' + (it.points || 0) + ' pts'),
           text: { es: it.title, en: it.title },
           url: it.url,
-          timestamp: it.publishedAt ? _timeAgo(it.publishedAt, lang) : '',
+          timestamp: _timeAgo(it.publishedAt, lang),
         }));
 
       // Re-render so the fresh items show up immediately.
@@ -329,7 +336,8 @@ const App = (() => {
       const modal = document.getElementById('modal-ticker-feed');
       if (modal && !modal.classList.contains('hidden')) renderTickerFeedModalContent();
     } catch (e) {
-      // Network/offline: keep the curated static feed.
+      // Network/offline: keep the last successful live items (or, if none
+      // has ever loaded, the curated fallback via getTickerFeed).
     }
   }
 
