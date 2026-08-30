@@ -216,7 +216,47 @@ const Knowledge = {
       },
       crossRefs: ['BP012', 'AP026', 'BP001'],
     },
-  ],
+    {
+      id: 'g-context-engineering',
+      term: { es: 'Context Engineering', en: 'Context Engineering' },
+      category: 'técnicas',
+      def: {
+        es: 'Diseño del sistema de contexto completo que el modelo recibe (historial, memoria, RAG, herramientas, estado) en lugar de redactar una instrucción aislada. Sucesor práctico del prompt engineering en sistemas en producción (2025+).',
+        en: 'Designing the full context system the model receives (history, memory, RAG, tools, state) instead of crafting an isolated instruction. The practical successor to prompt engineering in production systems (2025+).'
+      },
+      crossRefs: ['t-context-engineering', 'g-context-window', 'g-vector-store']
+    },
+    {
+      id: 'g-mcp',
+      term: { es: 'MCP (Model Context Protocol)', en: 'MCP (Model Context Protocol)' },
+      category: 'agentes',
+      def: {
+        es: 'Estándar abierto (Anthropic, 2024) para conectar LLMs con herramientas y datos: servidores MCP exponen tools, resources y prompts bajo un contrato uniforme, reemplazando integraciones ad-hoc por proveedor.',
+        en: 'Open standard (Anthropic, 2024) for connecting LLMs with tools and data: MCP servers expose tools, resources and prompts under a uniform contract, replacing per-vendor ad-hoc integrations.'
+      },
+      crossRefs: ['t-mcp', 'g-function-calling']
+    },
+    {
+      id: 'g-reasoning-model',
+      term: { es: 'Modelo de Razonamiento (Test-Time Compute)', en: 'Reasoning Model (Test-Time Compute)' },
+      category: 'fundamentos',
+      def: {
+        es: 'Modelo que escala su esfuerzo de razonamiento en inferencia generando tokens de pensamiento intermedios (autoverificación, ramificación) antes de responder. Base de las familias de razonamiento 2024-2026 (o-series, DeepSeek-R1, thinking configurable).',
+        en: 'A model that scales its inference-time reasoning effort by generating intermediate thinking tokens (self-verification, branching) before answering. The basis of 2024-2026 reasoning families (o-series, DeepSeek-R1, configurable thinking).'
+      },
+      crossRefs: ['t-test-time-compute', 'g-cot']
+    },
+    {
+      id: 'g-multimodal',
+      term: { es: 'Multimodalidad', en: 'Multimodality' },
+      category: 'fundamentos',
+      def: {
+        es: 'Capacidad de un modelo de comprender y generar contenido de varias modalidades (texto, imagen, audio, video) dentro de la misma ventana de contexto. Estándar en los modelos frontera desde 2024-2025.',
+        en: 'A model\'s ability to understand and generate content across multiple modalities (text, image, audio, video) within the same context window. Standard in frontier models since 2024-2025.'
+      },
+      crossRefs: ['g-token', 'g-context-window']
+    }
+],
 
   /* ── 2. Técnicas: modern patterns (new + cross-linked) ────────
      { id, name:{es,en}, category, what:{es,en}, when:{es,en}?, example:{es,en}?, crossRefs:[]?, crossLinkOnly:bool }
