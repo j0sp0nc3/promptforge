@@ -138,7 +138,7 @@ promptforge/                    ← App Web (Vercel)
 │   ├── signals.js              ← Extracción de señales compartidas e inteligencia de dominio
 │   ├── patterns.js             ← Detección de anti-patrones (34 APs / 15 BPs)
 │   ├── i18n.js                 ← Diccionarios ES/EN + actualización dinámica de meta tags
-│   ├── knowledge.js            ← Hub de conocimiento (20 términos, 13 técnicas, 6 frameworks, 13 refs, 27 creadores)
+│   ├── knowledge.js            ← Hub de conocimiento (24 términos, 17 técnicas, 6 frameworks, 13 refs, 27 creadores)
 │   ├── leaderboard.js          ← Módulo de ranking Top 10 y persistencia
 │   ├── rewriter.js             ← Mejora automática de prompts y chips de inyección de contexto XML
 │   ├── constellation3d.js      ← Motor del Sistema Solar 3D en Three.js WebGL
