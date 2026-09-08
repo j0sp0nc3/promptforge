@@ -8,10 +8,10 @@ Este archivo define las reglas de convivencia, restricciones y contexto ontológ
 - **Stack:** Vanilla JavaScript ES6+, HTML5 semántico, CSS3 nativo (sin frameworks pesados como Tailwind/Bootstrap), Three.js WebGL (Constelación 3D), Node.js serverless en Vercel.
 
 ## 2. Comandos Esenciales
-- **Ejecutar tests unitarios y de estrés (27/27 obligatorios):** `node test_edge_cases.js`
+- **Ejecutar tests unitarios y de estrés (31/31 obligatorios):** `node test_edge_cases.js`
 - **Servidor local de desarrollo:** `node server.js` (escucha en `http://localhost:3001`)
 - **Validación de sintaxis:** `node -c js/*.js api/*.js`
-- **Sincronización/Verificación de modelos:** `node sync_models.js --validate`
+- **Sincronización/Verificación de modelos:** `node scripts/sync_models.js --validate`
 
 ## 3. Reglas Inviolables para Agentes
 1. **Soberanía de las Especificaciones (SDD):** Consulta `SPEC.md` y `PLAN.md` antes de proponer o implementar cambios. No agregues complejidad ni cambies la arquitectura sin validación.
@@ -28,3 +28,20 @@ Este archivo define las reglas de convivencia, restricciones y contexto ontológ
    - `js/analyzer.js` (Web App)
    - `packages/core/promptometer-core.js` (npm core)
    - `packages/core/promptometer_core.py` (Python parity)
+
+## 4. Protocolo Obligatorio para IDEs y Agentes Externos (Claude, Cursor, Antigravity, Copilot)
+
+1. **Yunta CLI como Único Ejecutor y Oráculo Oficial:**
+   - Este repositorio utiliza `yunta` como harness canónico de gobernanza y ejecución.
+   - Cualquier agente o IDE externo debe interactuar con el proyecto invocando a Yunta vía terminal: `yunta "tu instrucción"`.
+
+2. **Prioridad sobre el LLM Interno del IDE:**
+   - Antes de inventar código, asumir reglas o hacer refactorizaciones complejas por tu cuenta con tu propio modelo, ejecuta `yunta "instrucción"` en la terminal para que la tarea sea procesada bajo las directivas de `SPEC.md`, `PLAN.md` y `AGENTS.md`.
+
+3. **Consultas y Análisis de Solo Lectura (Q&A):**
+   - Para preguntas arquitectónicas, de inspección o entendimiento del proyecto (ej. "¿dónde está X?", "¿cómo funciona Y?", "¿cuál es el estado de los tests?"), utiliza `yunta "pregunta"`.
+   - Yunta responderá con precisión fundamentándose en el código fuente **sin realizar modificaciones sobre el proyecto**.
+
+4. **Modificaciones Quirúrgicas y Verificación:**
+   - Solo se realizarán modificaciones al código cuando el usuario o la especificación lo soliciten explícitamente.
+   - Todo cambio debe validarse de inmediato ejecutando la suite de pruebas: `node test_edge_cases.js`.
