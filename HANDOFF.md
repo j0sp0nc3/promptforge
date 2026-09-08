@@ -148,6 +148,9 @@ promptforge/                    ← App Web (Vercel)
 ├── vercel.json                 ← Configuración de despliegue Vercel (rutas estáticas)
 ├── test_edge_cases.js          ← Suite de 26 tests de estrés (8 Suites, 26/26 PASS)
 ├── test_edge_cases.py          
+├── SPEC.md                     ← Especificación de producto formal (SDD)
+├── PLAN.md                     ← Roadmap por fases incrementales (Fase 4 activa)
+├── AGENTS.md                   ← Guardrails y reglas ontológicas para agentes
 └── package.json                ← Dependencia: promptometer-core@^1.0.0
 ```
 
@@ -155,11 +158,21 @@ promptforge/                    ← App Web (Vercel)
 
 ## 🔄 Última Actualización
 
-- **Fecha:** 2026-08-26
+- **Fecha:** 2026-09-07
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
 - **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
-- **Último commit promptforge:** fixes de scoring (gate sustancia insuficiente), arquetipo por objetivo e i18n del Workbench
-- **Estado:** 26/26 tests en PASS. Paridad de features con `promptometer-core` v1.1.0 lograda en código (commit `3f25c4c` del repo promptometer; falta `npm publish` — sin sesión npm). Merge `dev`→`main` en curso para desplegar a producción.
+- **Último hito:** Inicialización y configuración del harness SDD con Yunta (`yunta init .`), generando y adaptando `SPEC.md`, `PLAN.md` y `AGENTS.md`.
+- **Estado:** 27/27 tests en PASS (9 suites completas). Entorno local configurado con Spec-Driven Development (SDD) para la Fase 4 activa.
+
+> 📌 **RESUMEN DE TRABAJO COMPLETADO (reciente):**
+>
+> **Inicialización SDD con Harness Yunta (Sesión 2026-09-07):**
+> - **Ejecución `yunta init .`:** Creación de los artefactos fundacionales SDD en la raíz (`SPEC.md`, `PLAN.md`, `AGENTS.md`).
+> - **Especificación en `SPEC.md`:** Adaptación completa a la realidad de Promptometer (visión, problemas, actores, 5 casos de uso core, arquitectura 8D + XML canónico, anti-alcance y criterios de aceptación).
+> - **Roadmap en `PLAN.md`:** Fases 1 a 3 marcadas como completadas; Fase 4 activada ("Robustecimiento del Harness, Evaluación Agéntica y Paridad 1.1.0").
+> - **Guardrails en `AGENTS.md`:** Consolidación de reglas inviolables de SDD, sistema de diseño dual, i18n estricto, paridad de motores y prohibición de git push sin consentimiento.
+> - **Verificación:** Suite de estrés completa `test_edge_cases.js` ejecutada con 27/27 PASS en 9 suites.
+>
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (reciente):**
 >

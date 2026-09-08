@@ -255,6 +255,9 @@ promptforge/                    # Web App Repo (Vercel deployment)
 ├── cli.js                      # Node Terminal Executable
 ├── test_edge_cases.js          # JS Test Suite Runner (27/27 PASS across 9 Suites)
 ├── test_edge_cases.py          # Python Test Suite Runner (14/14 PASS)
+├── SPEC.md                     # Formal Product Specification (SDD Standard)
+├── PLAN.md                     # Incremental Development Roadmap (Active Phase 4)
+├── AGENTS.md                   # Ontological Rules & Guardrails for AI Agents
 ├── vercel.json                 # Vercel Deployment Config
 ├── HANDOFF.md                  # Project State & Handoff Document
 ├── SECURITY.md                 # Security Audit & 6-Layer Defense Spec
