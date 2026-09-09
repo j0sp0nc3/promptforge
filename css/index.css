@@ -4627,3 +4627,158 @@ body.theme-editorial .grade-status-emerald { color: #4F7942; }
   }
 }
 
+/* ── Genetic Tuner Podium (PoC) ── */
+.action-chip--genetic {
+  background: rgba(168, 85, 247, 0.15) !important;
+  color: #A855F7 !important;
+  border-color: rgba(168, 85, 247, 0.4) !important;
+}
+
+.action-chip--genetic:hover {
+  background: rgba(168, 85, 247, 0.28) !important;
+}
+
+.genetic-podium-card {
+  margin-top: var(--space-md);
+  padding: var(--space-md);
+  background: var(--bg-paper);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.podium-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding-bottom: var(--space-xs);
+  border-bottom: 1px solid var(--rule-color);
+}
+
+.podium-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.podium-title {
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0;
+}
+
+.podium-subtitle {
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.podium-gain-badge {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill, 999px);
+  background: rgba(168, 85, 247, 0.15);
+  color: #A855F7;
+  border: 1px solid #A855F7;
+  white-space: nowrap;
+}
+
+.podium-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+}
+
+.podium-variant-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-canvas);
+  border: 1px solid var(--rule-color);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.podium-variant-card--champion {
+  border: 2px solid #A855F7;
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.2);
+}
+
+.variant-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background: var(--bg-sunken);
+  border-bottom: 1px solid var(--rule-color);
+}
+
+.variant-badge-champion {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  background: #A855F7;
+  color: #FFFFFF;
+}
+
+.variant-badge-runnerup {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-paper);
+  color: var(--ink-soft);
+  border: 1px solid var(--rule-color);
+}
+
+.variant-strategy {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.variant-score {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--vermilion);
+}
+
+.variant-body {
+  padding: 10px;
+  max-height: 180px;
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--ink);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.variant-footer {
+  padding: 6px 10px;
+  background: var(--bg-sunken);
+  border-top: 1px solid var(--rule-color);
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 900px) {
+  .podium-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+

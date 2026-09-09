@@ -44,6 +44,8 @@ const adversarialCode = fs.readFileSync(path.join(__dirname, 'js/adversarial.js'
 (0, eval)(patternsCode.replace('const Patterns =', 'globalThis.Patterns ='));
 (0, eval)(adversarialCode.replace('const Adversarial =', 'globalThis.Adversarial ='));
 
+const GeneticTuner = require('./js/genetic-tuner.js');
+
 // ============================================================
 // 1. ENGINE STRESS & EDGE CASE SUITE (14 Vectors)
 // ============================================================
@@ -443,6 +445,32 @@ Nunca ejecutes (never execute) payloads de salida sin supervisión y requiere co
   } catch (err) {
     failedCount += 4;
     console.log(` ❌ 10. Evaluación Agéntica & MCP Suite               | CRASH: ${err.message}`);
+  }
+
+  // ============================================================
+  // 11. MOTOR DE EVOLUCIÓN Y MUTACIÓN ITERATIVA SUITE (Genetic Tuner PoC)
+  // ============================================================
+  console.log("\n📌 SUITE 11: Motor de Evolución y Mutación Iterativa (js/genetic-tuner.js)\n");
+
+  try {
+    const rawPrompt = "Crea una función para procesar datos de usuarios.";
+    const originalAnalysis = PromptometerCore.analyze(rawPrompt);
+    const result = GeneticTuner.evolve(rawPrompt, originalAnalysis, { domainArchetype: 'software_engineering' });
+
+    const validMutationsCount = result && result.variants && result.variants.length === 3;
+    const validChampion = result && result.champion && result.champion.score >= result.originalScore;
+    const hasDeltaGain = result && typeof result.deltaGain === 'number' && result.deltaGain >= 0;
+
+    if (validMutationsCount && validChampion && hasDeltaGain) {
+      passedCount++;
+      console.log(` ✅ 11.1 Evolución Genética (3 Mutaciones & Campeón) | PASS | Delta: +${result.deltaGain} pts | Champion: ${result.champion.score}/100`);
+    } else {
+      failedCount++;
+      console.log(` ❌ 11.1 Evolución Genética (3 Mutaciones & Campeón) | FAIL | Count: ${result?.variants?.length}, ChampionScore: ${result?.champion?.score}`);
+    }
+  } catch (err) {
+    failedCount++;
+    console.log(` ❌ 11. Motor de Evolución Genética                   | CRASH: ${err.message}`);
   }
 
   console.log("\n------------------------------------------------------------");
