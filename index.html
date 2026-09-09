@@ -8,7 +8,7 @@
   <title>Promptometer — Evaluador de Prompts y Motor de Scoring Multidimensional</title>
 
   <meta name="description" id="meta-description"
-    content="Analiza, evalúa y mejora tus prompts para LLMs con scoring multidimensional (8D), detección de 35 anti-patrones, reescritura automática XML y laboratorio de seguridad adversarial.">
+    content="Analiza, evalúa y mejora tus prompts para LLMs con scoring multidimensional (8D), detección de 37 anti-patrones, reescritura automática XML y laboratorio de seguridad adversarial.">
   <meta name="keywords"
     content="Promptometer, Prompt Engineering, Prompt Evaluator, LLM Prompt Scoring, Prompt Optimization, OpenAI, Anthropic, Claude, ChatGPT, Gemini, System Prompts, ReAct, CoT, RAG, Prompt Injection Security">
   <meta name="author" content="Jose Ponce (@j0sp0nc3)">
@@ -30,7 +30,7 @@
   <meta property="og:site_name" content="Promptometer">
   <meta property="og:title" content="Promptometer — Evaluador de Prompts y Motor de Scoring Multidimensional">
   <meta property="og:description"
-    content="Evalúa y optimiza prompts para LLMs con scoring en 8 dimensiones, 35 anti-patrones, reescritor automático XML y laboratorio de seguridad.">
+    content="Evalúa y optimiza prompts para LLMs con scoring en 8 dimensiones, 37 anti-patrones, reescritor automático XML y laboratorio de seguridad.">
   <meta property="og:image" content="https://promptometer.tech/og-image.svg">
   <meta property="og:image:type" content="image/svg+xml">
   <meta property="og:image:width" content="1200">
@@ -76,7 +76,7 @@
       "url": "https://promptometer.tech/",
       "logo": "https://promptometer.tech/favicon.svg",
       "image": "https://promptometer.tech/og-image.svg",
-      "description": "Open-source multidimensional prompt evaluation and optimization system for Large Language Models (LLMs) featuring 8-dimension scoring, 35 anti-pattern detections, automated XML prompt rewriting, adversarial security lab, and npm package integration.",
+      "description": "Open-source multidimensional prompt evaluation and optimization system for Large Language Models (LLMs) featuring 8-dimension scoring, 37 anti-pattern detections, automated XML prompt rewriting, adversarial security lab, and npm package integration.",
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "All",
       "browserRequirements": "Requires JavaScript",
@@ -457,6 +457,7 @@
           <button class="tab" data-tab="antipatterns" data-i18n="tabs.antipatterns" role="tab" id="tabbtn-antipatterns" aria-controls="tab-antipatterns" aria-selected="false">Anti-patrones</button>
           <button class="tab" data-tab="adversarial" data-i18n="tabs.adversarial" role="tab" id="tabbtn-adversarial" aria-controls="tab-adversarial" aria-selected="false">Adversarial</button>
           <button class="tab" data-tab="improved" data-i18n="tabs.improved" role="tab" id="tabbtn-improved" aria-controls="tab-improved" aria-selected="false">Mejora</button>
+          <button class="tab" data-tab="ab" data-i18n="tabs.abCompare" role="tab" id="tabbtn-ab" aria-controls="tab-ab" aria-selected="false">Comparar A/B</button>
         </div>
 
         <!-- Tab: Dimensions Breakdown -->
@@ -536,6 +537,8 @@
                   <button class="action-chip" id="chip-cot" data-i18n="workbench.chipCoT">🧠 Add CoT</button>
                   <button class="action-chip" id="chip-json" data-i18n="workbench.chipJson">📐 Enforce JSON</button>
                   <button class="action-chip" id="chip-safety" data-i18n="workbench.chipSafety">🛡️ Guardrails</button>
+                  <button class="action-chip" id="chip-mcp" data-i18n="workbench.chipMcp">🔧 MCP Contract</button>
+                  <button class="action-chip" id="chip-anti-loop" data-i18n="workbench.chipAntiLoop">🛡️ Anti-Loop</button>
                 </div>
                 <div class="primary-actions-group">
                   <span class="improvement-badge" id="improvement-badge">+25 pts</span>
@@ -551,6 +554,50 @@
           </div>
           <div class="top-impact-container" id="top-impact-container"></div>
           <div class="changes-list" id="changes-list"></div>
+        </div>
+
+        <!-- Tab: A/B Comparison Playground -->
+        <div class="tab-content" id="tab-ab" role="tabpanel" aria-labelledby="tabbtn-ab">
+          <div class="ab-playground-card workbench-card">
+            <div class="ab-header">
+              <div class="ab-title-group">
+                <h3 class="ab-title" data-i18n="ab.title">Playground de Comparación A/B</h3>
+                <p class="ab-subtitle" data-i18n="ab.subtitle">Compara el prompt original con la versión calibrada y observa el incremento de calidad.</p>
+              </div>
+              <div class="ab-delta-badge" id="ab-delta-badge">+0 pts</div>
+            </div>
+
+            <div class="ab-comparison-grid">
+              <!-- Panel A: Original -->
+              <div class="ab-panel ab-panel-a">
+                <div class="ab-panel-header">
+                  <span class="ab-badge ab-badge-original" data-i18n="ab.originalLabel">Versión A (Original)</span>
+                  <span class="ab-panel-score" id="ab-score-a">--/100</span>
+                </div>
+                <div class="ab-panel-body">
+                  <pre class="ab-prompt-text" id="ab-prompt-a"></pre>
+                </div>
+                <div class="ab-panel-footer">
+                  <span class="ab-stats" id="ab-stats-a">0 palabras</span>
+                </div>
+              </div>
+
+              <!-- Panel B: Calibrated -->
+              <div class="ab-panel ab-panel-b">
+                <div class="ab-panel-header">
+                  <span class="ab-badge ab-badge-calibrated" data-i18n="ab.calibratedLabel">Versión B (Calibrado ✨)</span>
+                  <span class="ab-panel-score ab-score-boost" id="ab-score-b">--/100</span>
+                </div>
+                <div class="ab-panel-body">
+                  <pre class="ab-prompt-text" id="ab-prompt-b"></pre>
+                </div>
+                <div class="ab-panel-footer">
+                  <span class="ab-stats" id="ab-stats-b">0 palabras</span>
+                  <button class="btn btn-secondary btn-sm" id="btn-copy-ab-b" data-i18n="ab.copyCalibrated">📋 Copiar B</button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
       </section>

@@ -385,8 +385,8 @@
           "contextNum": 1048576,
           "license": "Open weights (MIT-like)",
           "pricing": {
-              "input": "$0.22 / 1M",
-              "output": "$0.66 / 1M",
+              "input": "$0.44 / 1M",
+              "output": "$1.32 / 1M",
               "note": {
                   "es": "Sincronizado en vivo vía OpenRouter",
                   "en": "Live-synced via OpenRouter"
@@ -544,8 +544,8 @@
           "contextNum": 1048576,
           "license": "Open weights",
           "pricing": {
-              "input": "$1.19 / 1M",
-              "output": "$3.74 / 1M",
+              "input": "$0.97 / 1M",
+              "output": "$3.04 / 1M",
               "note": {
                   "es": "Sincronizado en vivo vía OpenRouter",
                   "en": "Live-synced via OpenRouter"

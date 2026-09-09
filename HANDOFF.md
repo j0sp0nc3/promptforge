@@ -103,6 +103,7 @@ interactiva desplegada en Vercel.
 - [x] **Ticker 100% en Vivo — HN + arXiv (2026-08-28, tras feedback del usuario)**: el feed curado de landmarks 2024/25 se eliminó del ticker (presentaba material añejo como fresco); ahora `GET /api/ai-news` fusiona **Hacker News (Algolia)** + **papers de arXiv (cs.AI/cs.CL, últimos 7 días)** en paralelo con `Promise.allSettled`, merge por fecha y tope de 30 items; caché de instancia 10 min. El ticker y el modal muestran SOLO material en vivo (papers etiquetados 📄 arXiv con categoría, noticias 🔵 HN con puntos); el catálogo curado de knowledge.js queda únicamente como fallback de emergencia sin red (`getTickerFeed`). Los landmarks siguen accesibles vía los perfiles de creadores del Radar.
 - [x] **Refactor de Arquitectura Models (fuente única, post-revisión de seguridad — 2026-08-28)**: (1) `js/models.js` es ahora la FUENTE ÚNICA del catálogo (Top 10 ago-2026 verificado: Claude Mythos/Fable/Opus 4.7, GPT-5.6 Sol, Kimi K3, Gemini 3.1 Pro, DeepSeek V4, GPT-5.5 Pro, Qwen 3.6, GLM-5.2) con export UMD (browser global `Models` + `module.exports` para Node). (2) `GET /api/models` usa `require()` estático (trazado y empaquetado por Vercel — antes hacía readFileSync+eval por request y devolvía vacío en producción) + caché a nivel módulo + 503 honesto. (3) Eliminada la sección `models` de `knowledge.js` (el bot jamás toca contenido curado). (4) `auto_sync_models.js`/`sync_models.js` reescritos: require sin eval, matcher genérico por tokens normalizados (escala a modelos nuevos sin editar mapeos), regeneración completa y determinista de `js/models.js` (preserva helpers), `--sync/--validate/--add/--list`. (5) Telemetría live verificada: precios reales de OpenRouter ($0.19–$30/1M) y contextos 1M–1.05M sincronizados para los 10. (6) `POST /api/suggest-model` (sanitización + moderación + rate-limit Upstash, espejo de suggest-creator) y el modal conectado por fetch (antes simulaba éxito sin enviar nada). (7) Vista endurecida: `escapeHtml`/`escapeAttr` en todos los templates, `fmtBench` (null → —) y métricas actualizadas (BenchLM Index, GPQA, Agentic Index). (8) Test 9.1 valida la fuente única (IDs únicos, arenaElo número|null). 27/27 PASS; 170 claves i18n resuelven ES/EN.
 - [x] **Deuda UX menor resuelta (sesión 2026-08-27)**: overrides editoriales para pills semánticas/XML tags/grade badges hardcodeados (paleta paper-friendly), tipografía mínima ≥0.68rem/11px (antes 8.3-10px), line-clamp de 3 líneas en previews del leaderboard, performance móvil (sin `background-attachment: fixed` ni backdrop-filter/blur de prismas a ≤768px) y limpieza de dead markup JS (`renderReferences`, badges `complexity/language` fantasma, animación de `score-ring-fill` inexistente, `btn-submit-to-leaderboard`).
+- [x] **Playground de Comparación A/B en Vivo (`index.html`, `css/index.css`, `js/app.js`, `js/i18n.js` — Sesión 2026-09-09)**: Pestaña interactiva de comparación lado a lado (Side-by-Side A/B) en el Workbench para contrastar el prompt original (Versión A) con el prompt calibrado con bloques XML (Versión B), badge de ganancia de score (`+XX pts`), métricas de palabras/grados y botón de copia directa. Paridad bilingüe ES/EN (0 llaves faltantes en Suite 4).
 
 ---
 
@@ -148,6 +149,9 @@ promptforge/                    ← App Web (Vercel)
 ├── vercel.json                 ← Configuración de despliegue Vercel (rutas estáticas)
 ├── test_edge_cases.js          ← Suite de 26 tests de estrés (8 Suites, 26/26 PASS)
 ├── test_edge_cases.py          
+├── SPEC.md                     ← Especificación de producto formal (SDD)
+├── PLAN.md                     ← Roadmap por fases incrementales (Fase 4 activa)
+├── AGENTS.md                   ← Guardrails y reglas ontológicas para agentes
 └── package.json                ← Dependencia: promptometer-core@^1.0.0
 ```
 
@@ -155,11 +159,63 @@ promptforge/                    ← App Web (Vercel)
 
 ## 🔄 Última Actualización
 
-- **Fecha:** 2026-08-26
+- **Fecha:** 2026-09-09
+- **Último commit:** `50f833f` ("feat: Playground de Comparacion A/B en Vivo (Version A Original vs Version B Calibrada) en Web UI")
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
 - **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
-- **Último commit promptforge:** fixes de scoring (gate sustancia insuficiente), arquetipo por objetivo e i18n del Workbench
-- **Estado:** 26/26 tests en PASS. Paridad de features con `promptometer-core` v1.1.0 lograda en código (commit `3f25c4c` del repo promptometer; falta `npm publish` — sin sesión npm). Merge `dev`→`main` en curso para desplegar a producción.
+- **Último hito:** Playground de Comparación A/B (Versión A Original vs Versión B Calibrada) en la Web UI + Paridad 1.1.0.
+- **Estado:** 31/31 tests JS en PASS (10 suites) | 14/14 tests Python en PASS | 10/10 endpoints y carga en PASS. Entorno local verificado bajo Spec-Driven Development (SDD).
+
+> 📌 **RESUMEN DE TRABAJO COMPLETADO (reciente):**
+>
+> **Playground de Comparación A/B (Original vs. Calibrado) — Sesión 2026-09-09:**
+> - **Vista Side-by-Side (`index.html`, `css/index.css`):** Pestaña `Comparar A/B` (`#tab-ab`) añadida al panel de resultados del Workbench con grid responsivo de 2 columnas para escritorio y apilado para móviles.
+> - **Lógica en Tiempo Real (`js/app.js`):** Integración de `renderABComparison()` en `renderAnalysisResults()` y `updateImprovedView()`. Al inyectar o modificar chips en el Workbench, la comparación A/B se actualiza automáticamente recalculando deltas y estadísticas.
+> - **i18n Paridad Bilingüe (`js/i18n.js`):** Nuevas claves `tabs.abCompare` y espacio de nombres `ab.*` agregados en español y en inglés. 0 llaves faltantes verificadas por la Suite 4.
+> - **Verificación:** `node test_edge_cases.js` pasa con 31/31 PASS (10/10 suites completas).
+>
+>
+> **Fase 4 Hito 2: Endpoints de Producción y Pruebas de Carga (`test_production_endpoints.js`):**
+> - **Simulación Host Producción (`api.promptometer.tech`):** Verificado enrutamiento estricto por cabecera `Host` para `/api/analyze`, `/api/improve`, `/api/adversarial` y `/api/leaderboard` respondiendo 200 OK en formato JSON.
+> - **Carga y Concurrencia:** Ráfaga de 30 solicitudes concurrentes ejecutada en 102ms (promedio 3.4ms/solicitud) con 100% de respuestas válidas.
+> - **Defensas de Seguridad:** Límite de payload de 100KB verificado (retorno limpio HTTP 413 Payload Too Large sin caída de socket) y límite de tasa verificado (retorno HTTP 429 Too Many Requests al exceder 30 req/min por IP).
+> - **Fallback Resiliente:** Comprobada degradación airosa ante indisponibilidad o 503 de LLM externo hacia el sintetizador heurístico local.
+> - **Configuración de Red:** Puerto unificado en 3001 (`server.js`) y `ALLOWED_ORIGINS` actualizado para incluir `http://localhost:3001` y dominios de producción.
+>
+> **Fase 4 Hito 1: Paridad Total de Motores `promptometer-core@1.1.0` (Sesión 2026-09-08):**
+> - **Paridad Core JS (`packages/core/promptometer-core.js`):** Implementada biblioteca universal sin dependencias v1.1.0 con soporte de señales agénticas, AP048, AP049, BP017 y Test #15 Tool Poisoning.
+> - **Paridad Core Python (`packages/core/promptometer_core.py`):** Implementada biblioteca nativa zero-dep v1.1.0 con 100% de paridad lógica, extracción atómica, detección de anti-patrones, reescritura XML y suite adversarial. Soporte dual para claves `camelCase` y `snake_case`.
+> - **Reglas Declarativas (`packages/core/promptometer-rules.json`):** Definidos pesos para nuevo tipo `tool-use` y esquema para AP048, AP049 y BP017.
+> - **Sincronización `node_modules`:** Clonados los artefactos en `node_modules/promptometer-core/` para consumo directo en runtime sin depender de publicación externa.
+> - **Runner Yunta Headless (`scripts/yunta_runner.py`):** Runner no interactivo con auto-confirmación (`confirm=lambda *_: True`) y encoding UTF-8 en stdout/stderr para ejecución sin bloqueos en Windows.
+> - **Verificación Dual:**
+>   - `test_edge_cases.js` ➔ **31/31 PASS** (10 suites completas).
+>   - `test_edge_cases.py` ➔ **14/14 PASS** (14 vectores de estrés).
+>   - `test_production_endpoints.js` ➔ **10/10 PASS** (carga y ruteo).
+>   - `node scripts/sync_models.js --validate` ➔ **Catálogo válido (10 modelos)**.
+>
+> **Fase 4 Bloque 1.1: Evaluación Agéntica & MCP (Sesión 2026-09-08):**
+> - **Señales en `js/signals.js`:** Nuevas señales atómicas `hasAgenticLoop`, `hasLoopGuard`, `hasFormalToolSchema`, `hasUntypedToolCall`, `hasToolUntrustedGuard`.
+> - **Anti-patrones en `js/patterns.js`:** 
+>   - `AP048`: Bucle agéntico autónomo sin condición de parada (detecta loops infinitos sin límite de iteraciones o condición de salida).
+>   - `AP049`: Llamada a herramientas sin contrato tipado (detecta llamadas libres a herramientas/funciones sin tipos ni esquema). Total: 37 anti-patrones.
+> - **Buenas prácticas en `js/patterns.js`:**
+>   - `BP017`: Contrato formal de herramientas y protocolo MCP (valida bloques `<tools>` tipados y protocolos de herramientas). Total: 17 buenas prácticas.
+> - **Test Adversarial #15 en `js/adversarial.js`:**
+>   - `toolPoisoning`: Simula resistencia contra envenenamiento de herramientas e inyección indirecta (4 criterios: validación de esquema, salidas untrusted, no ejecución ciega de payloads y human-in-the-loop). Total: 15 pruebas adversariales.
+> - **i18n en `js/i18n.js`:** Paridad bilingüe ES/EN al 100% para todas las nuevas reglas, tests y chips del Workbench. 0 llaves faltantes verificadas por Suite 4.
+> - **Workbench en `index.html`, `js/rewriter.js`, `js/app.js`:**
+>   - Agregados botones de acción rápida `#chip-mcp` ("🔧 MCP Contract") y `#chip-anti-loop` ("🛡️ Anti-Loop").
+>   - Inyección instantánea de fragmentos canónicos `<tools>` y `<loop_guard>`.
+> - **Suite 10 en `test_edge_cases.js`:** 4 vectores de prueba agéntica/MCP con 31/31 PASS.
+>
+> **Inicialización SDD con Harness Yunta (Sesión 2026-09-07):**
+> - **Ejecución `yunta init .`:** Creación de los artefactos fundacionales SDD en la raíz (`SPEC.md`, `PLAN.md`, `AGENTS.md`).
+> - **Especificación en `SPEC.md`:** Adaptación completa a la realidad de Promptometer (visión, problemas, actores, 5 casos de uso core, arquitectura 8D + XML canónico, anti-alcance y criterios de aceptación).
+> - **Roadmap en `PLAN.md`:** Fases 1 a 3 marcadas como completadas; Fase 4 activada ("Robustecimiento del Harness, Evaluación Agéntica y Paridad 1.1.0").
+> - **Guardrails en `AGENTS.md`:** Consolidación de reglas inviolables de SDD, sistema de diseño dual, i18n estricto, paridad de motores y prohibición de git push sin consentimiento.
+> - **Verificación:** Suite de estrés completa `test_edge_cases.js` ejecutada con 27/27 PASS en 9 suites.
+>
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (reciente):**
 >

@@ -123,6 +123,15 @@ const Signals = {
     // assumptions are fine inside a tool contract.
     const hasToolContracts = /\b(<tools?>|tool[_ ]?(use|choice|calling|contract|definition)|function calling|available functions|funciones disponibles|tienes acceso a (las )?siguientes herramientas|usa (la|las) herramienta|use the tool|MCP|model context protocol)\b/i.test(lower)
       || /<\/?[a-z_]*tools?[a-z_]*>/i.test(prompt);
+
+    // Agentic Loop & Guardrails (2025-2026 SOTA)
+    const hasAgenticLoop = /\b(agent loop|autonomous agent|agente autónomo|keep (trying|iterating|executing)|sigue intentando|itera hasta|repeat until|repite hasta|loop until|bucle hasta|retry until|reintenta hasta|until (solved|resolved|success)|hasta que (resuelvas|termines|funcione)|step-by-step loop|bucle de pasos)\b/i.test(lower);
+    const hasLoopGuard = /\b(max(imum)?_?(iterations?|turns?|steps?|attempts?)|(límite|máximo)\s*(máximo\s*)?(de\s*)?\d+\s*(pasos|iteraciones|intentos|steps|iterations)|no más de \d+|criterio de parada|condición de parada|stop condition|stop (when|if|after)|detén(te)?\s*(\w+\s*){0,3}(si|cuando|tras)|detenerse|detener el proceso|abort (if|when)|si no logras|fallback)\b/i.test(lower);
+    const hasFormalToolSchema = /(<tools?>[\s\S]*?(parameters?|args|properties|required|type:\s*(string|number|object|boolean|array))[\s\S]*?<\/tools?>|mcp\s*tool|tool_choice|tools:\s*\[[\s\S]*?parameters)/i.test(prompt);
+    const hasUntypedToolCall = /\b(call (the )?(tools?|functions?)|usa (las? )?(herramientas?|funciones?)|invoca (las? )?(herramientas?|funciones?)|execute (tools?|functions?)|ejecuta (las? )?(herramientas?|funciones?)|@tool|tool_choice)\b/i.test(lower)
+      && !hasFormalToolSchema && !/\b(parameters?|argumentos|parámetros|inputs?|schema|json)\b/i.test(lower);
+    const hasToolUntrustedGuard = /\b(untrusted (data|output|content|input)|datos no confiables|salida no confiable|tool outputs? (are|is) untrusted|treat tool (output|response) as untrusted|no ejecutes instrucciones (en|de) la herramienta|do not follow instructions inside (tool|function) (outputs?|results?))\b/i.test(lower);
+
     const hasPII = (lower.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/gi) || []).length > 0
                 || /\b(sk-[a-za-z0-9]{20,}|AKIA[0-9A-Z]{16}|ghp_[a-za-z0-9]{36}|xox[baprs]-[0-9a-z-]+)\b/i.test(prompt)
                 || /\b\d{3}-\d{2}-\d{4}\b/.test(prompt)
@@ -185,6 +194,12 @@ const Signals = {
       postCutoffYear,
       assumesCapability,
       hasToolContracts,
+      // Agentic & MCP
+      hasAgenticLoop,
+      hasLoopGuard,
+      hasFormalToolSchema,
+      hasUntypedToolCall,
+      hasToolUntrustedGuard,
       hasPII,
       // OWASP LLM07 — System Prompt Leakage
       leakageDefense,

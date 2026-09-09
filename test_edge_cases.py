@@ -7,6 +7,11 @@ import time
 import json
 import os
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
 try:
     import promptometer_core as promptometer_core
 except ImportError:

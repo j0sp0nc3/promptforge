@@ -29,3 +29,7 @@ Thumbs.db
 
 # Tooling local (no parte del proyecto)
 .zcode/
+
+# Temporary files
+.tmp*
+*.tmp

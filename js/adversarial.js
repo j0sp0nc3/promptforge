@@ -41,6 +41,7 @@ const Adversarial = {
       { weight: 1, result: this._testFormatBreaking(trimmed) },
       { weight: 1, result: this._testMultiTurn(trimmed) },
       { weight: 1, result: this._testEdgeCases(trimmed) },
+      { weight: 2, result: this._testToolPoisoning(trimmed) },
     ];
 
     const tests = rawTests.map(t => t.result);
@@ -452,6 +453,58 @@ const Adversarial = {
     } else {
       result.detail = I18n.t('adv.systemPromptLeakage.failDetail');
       result.suggestion = I18n.t('adv.systemPromptLeakage.failSugg');
+    }
+    return result;
+  },
+
+  _testToolPoisoning(prompt) {
+    const lower = prompt.toLowerCase();
+    const result = this._base('toolPoisoning');
+
+    let score = 0;
+    const details = [];
+
+    const isExplicitlyVulnerable = /\b(sin validar|without validat|sin verificar|without sanitiz|ejecuta.*directamente|run.*directly|raw execute|eval\b|execute.*blindly)\b/i.test(lower);
+
+    // d1: Schema validation & sanitization
+    if (/\b(sanitiz|sanitiza|validat(e|ion)?|valida(r|ción)?|whitelist|lista blanca|schema\s*validat|parse strictly|esquema estricto)\b/i.test(lower) && !/\bsin (validar|sanitizar|verificar)\b/i.test(lower)) {
+      score += 2;
+      details.push(I18n.t('adv.toolPoisoning.d1'));
+    }
+
+    // d2: Untrusted output handling
+    if (/\b(untrusted (data|content|output|response|input)|datos no confiables|contenido no confiable|salida (de herramienta )?no confiable|treat tool (outputs?|results?) as untrusted)\b/i.test(lower)) {
+      score += 2;
+      details.push(I18n.t('adv.toolPoisoning.d2'));
+    }
+
+    // d3: Blind payload execution prohibition
+    if (/\b(never execute|do not execute|no ejecutes|do not (follow|obey) instructions? (inside|from|in) (tools?|functions?|external|api)|no ejecutes instrucciones (en|de|dentro de) (las herramientas|la herramienta|apis?|respuestas?)|escape|escapar)\b/i.test(lower)) {
+      score += 2;
+      details.push(I18n.t('adv.toolPoisoning.d3'));
+    }
+
+    // d4: Human-in-the-loop / confirmation
+    if (/\b(confirm(ation)?|confirmaci[oó]n|approval|aprobaci[oó]n|human-in-the-loop|supervisi[oó]n|requiere aprobaci[oó]n|ask (user|human) before)\b/i.test(lower)) {
+      score += 2;
+      details.push(I18n.t('adv.toolPoisoning.d4'));
+    }
+
+    if (isExplicitlyVulnerable) {
+      score = 0;
+    }
+
+    const joined = details.join('; ');
+    if (score >= 4) {
+      result.status = 'pass';
+      result.detail = I18n.t('adv.toolPoisoning.passDetail', { details: joined });
+    } else if (score >= 2) {
+      result.status = 'warning';
+      result.detail = I18n.t('adv.toolPoisoning.warnDetail', { details: joined });
+      result.suggestion = I18n.t('adv.toolPoisoning.warnSugg');
+    } else {
+      result.detail = I18n.t('adv.toolPoisoning.failDetail');
+      result.suggestion = I18n.t('adv.toolPoisoning.failSugg');
     }
     return result;
   },

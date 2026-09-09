@@ -1,0 +1,38 @@
+{
+  "name": "promptometer-core",
+  "version": "1.1.0",
+  "description": "Zero-dependency prompt evaluation engine — scores, anti-patterns, adversarial tests, rewrites. JS/Python parity. Includes Agentic Loops & MCP Evaluation.",
+  "main": "promptometer-core.js",
+  "module": "promptometer-core.js",
+  "browser": "promptometer-core.js",
+  "files": [
+    "promptometer-core.js",
+    "promptometer_core.py",
+    "promptometer-rules.json",
+    "README.md"
+  ],
+  "keywords": [
+    "prompt",
+    "llm",
+    "evaluation",
+    "scoring",
+    "anti-patterns",
+    "adversarial",
+    "rewriter",
+    "prompt-engineering",
+    "agentic",
+    "mcp",
+    "promptometer"
+  ],
+  "license": "MIT",
+  "author": "j0sp0nc3",
+  "homepage": "https://github.com/j0sp0nc3/promptometer#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/j0sp0nc3/promptometer.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/j0sp0nc3/promptometer/issues"
+  }
+}
