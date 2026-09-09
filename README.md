@@ -178,10 +178,10 @@ node cli.js "Your prompt here"
 ## 🧪 Stress & Edge Case Testing Suite
 
 Promptometer includes automated test runners to verify engine stability against malformed and extreme inputs:
-- **`test_edge_cases.js`**: Automated Node.js runner.
-- **`test_edge_cases.py`**: Automated Python runner.
+- **`test_edge_cases.js`**: Automated Node.js runner (**31/31 PASS** across 10 test suites, including agentic loops, MCP contracts, and tool poisoning).
+- **`test_edge_cases.py`**: Automated Python runner (**14/14 PASS** with 100% engine parity).
 
-Both cover **14/14 edge-case vectors** with 100% pass rates across JS and Python.
+Both verify edge-case robustness, input sanitization, and deterministic scoring across JS and Python.
 
 ### Edge Case Vectors Covered (14/14):
 1. Empty string & whitespace
@@ -255,9 +255,19 @@ promptforge/                    # Web App Repo (Vercel deployment)
 ├── cli.js                      # Node Terminal Executable
 ├── test_edge_cases.js          # JS Test Suite Runner (31/31 PASS across 10 Suites)
 ├── test_edge_cases.py          # Python Test Suite Runner (14/14 PASS)
+├── test_production_endpoints.js# Production Endpoint Routing & Load Suite (10/10 PASS)
 ├── SPEC.md                     # Formal Product Specification (SDD Standard)
-├── PLAN.md                     # Incremental Development Roadmap (Active Phase 4)
+├── PLAN.md                     # Incremental Development Roadmap (Phase 4 Completed ✅)
 ├── AGENTS.md                   # Ontological Rules & Guardrails for AI Agents
+├── packages/
+│   └── core/                   # promptometer-core@1.1.0 (Dual JS/Python engine)
+│       ├── package.json        # v1.1.0 specification & metadata
+│       ├── promptometer-core.js# Universal JS evaluation engine
+│       ├── promptometer_core.py# Native zero-dependency Python port
+│       └── promptometer-rules.json # Declarative rules schema & weights
+├── scripts/
+│   ├── sync_models.js          # Weekly OpenRouter catalog & pricing synchronizer
+│   └── yunta_runner.py         # Automated Yunta governance harness runner
 ├── vercel.json                 # Vercel Deployment Config
 ├── HANDOFF.md                  # Project State & Handoff Document
 ├── SECURITY.md                 # Security Audit & 6-Layer Defense Spec

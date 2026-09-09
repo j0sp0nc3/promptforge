@@ -309,7 +309,7 @@ Final Answer: <final answer>
 
 Question: What is the square root of Tokyo\'s population (approx 37M)?`,
       },
-      crossRefs: ['hasReAct'],
+      crossRefs: ['hasReAct', 'AP048'],
     },
     {
       id: 't-tot',
@@ -653,7 +653,7 @@ Level 3 (Execution): Execute each step calculating the involved times and costs.
         es: `<tools>\n- web_search(query): búsqueda en vivo\n- run_code(code): ejecución sandboxed\n</tools>\n\n<requirements>Usa web_search antes de afirmar datos actuales.</requirements>`,
         en: `<tools>\n- web_search(query): live search\n- run_code(code): sandboxed execution\n</tools>\n\n<requirements>Use web_search before claiming current data.</requirements>`,
       },
-      crossRefs: ['t-react', 't-context-engineering'],
+      crossRefs: ['t-react', 't-context-engineering', 'BP017', 'AP049'],
     },
     {
       id: 't-test-time-compute',

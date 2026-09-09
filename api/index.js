@@ -64,6 +64,8 @@ const ALLOWED_ORIGINS = [
   'https://api.promptometer.tech',
   'http://localhost:3000',
   'http://127.0.0.1:3000',
+  'http://localhost:3001',
+  'http://127.0.0.1:3001',
   'http://localhost:8000',
   'http://127.0.0.1:8000'
 ];
@@ -382,18 +384,19 @@ module.exports = (req, res) => {
     req.on('data', chunk => {
       bodySize += chunk.length;
       if (bodySize > MAX_PAYLOAD_BYTES) {
-        overflow = true;
-        req.destroy();
+        if (!overflow) {
+          overflow = true;
+          res.writeHead(413, { 'Content-Type': 'application/json', 'Connection': 'close' });
+          res.end(JSON.stringify({ error: 'El tamaño de la solicitud excede el límite máximo permitido de 100KB.' }));
+          req.resume();
+        }
       } else {
         body += chunk.toString();
       }
     });
 
     req.on('end', () => {
-      if (overflow) {
-        res.writeHead(413, { 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ error: 'El tamaño de la solicitud excede el límite máximo permitido de 100KB.' }));
-      }
+      if (overflow) return;
 
       try {
         let payload = {};
@@ -951,6 +954,7 @@ Devuelve únicamente un JSON válido con esta estructura exacta:
           source: 'llm_as_a_judge',
           provider: groqKey ? 'groq' : 'openai',
           archetype,
+          domain: archetype,
           inferredGoal: parsed.inferredGoal || localResult.inferredGoal,
           weaknessesIdentified: parsed.weaknessesIdentified || rawFindings,
           justification: parsed.justification || 'Se solucionaron las debilidades detectadas alineando el rol de experto y la estructura del prompt.',
@@ -995,6 +999,7 @@ Devuelve únicamente un JSON válido con esta estructura exacta:
             source: 'llm_as_a_judge',
             provider: 'gemini',
             archetype,
+            domain: archetype,
             inferredGoal: parsed.inferredGoal || localResult.inferredGoal,
             weaknessesIdentified: parsed.weaknessesIdentified || rawFindings,
             justification: parsed.justification || 'Se solucionaron las debilidades detectadas alineando el rol de experto y la estructura del prompt.',
@@ -1018,6 +1023,7 @@ Devuelve únicamente un JSON válido con esta estructura exacta:
     success: true,
     source: 'local_synthesizer',
     archetype,
+    domain: archetype,
     inferredGoal: localResult.inferredGoal,
     implicitAssumptions: gaps.map(g => g.id),
     gapsFixedCount: localResult.gapsFixedCount,

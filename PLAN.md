@@ -3,7 +3,7 @@
 Plan de desarrollo por fases incrementales guiado por Spec-Driven Development (SDD).
 Actualizar este archivo al completar cada fase o hito junto con la suite de verificación.
 
-Estado actual: **Fase 4 — Robustecimiento del Harness, Evaluación Agéntica y Paridad 1.1.0 (Activa)**
+Estado actual: **Fase 4 — Robustecimiento del Harness, Evaluación Agéntica y Paridad 1.1.0 (Completada) ✅**
 
 ---
 
@@ -32,12 +32,12 @@ Estado actual: **Fase 4 — Robustecimiento del Harness, Evaluación Agéntica y
 - [x] Leaderboard dinámico de la comunidad con persistencia opcional en Vercel KV / Upstash Redis.
 - [x] **Criterio de éxito:** Interfaz accesible WCAG AA, cero errores de consola y navegación fluida en desktop/móvil.
 
-### Fase 4: Robustecimiento del Harness, Evaluación Agéntica y Paridad 1.1.0 🚀 (Fase Activa)
+### Fase 4: Robustecimiento del Harness, Evaluación Agéntica y Paridad 1.1.0 ✅
 - [x] Integración de guardrails SDD generados por el harness Yunta (`SPEC.md`, `PLAN.md`, `AGENTS.md`).
 - [x] Incorporación de métricas de validación para prompts orientados a flujos agénticos y MCP (Model Context Protocol): AP048, AP049, BP017, Test Adversarial #15 Tool Poisoning, action chips Workbench y Suite 10.
-- [ ] Certificación de paridad total entre el motor web (`js/analyzer.js`) y el paquete distribuible (`promptometer-core@1.1.0` en JS y Python).
-- [ ] Verificación de endpoints de producción (`api.promptometer.tech`) y pruebas de carga local en `http://localhost:3001`.
-- [ ] **Criterio de éxito:** 31/31 tests PASS, paridad completa en npm/PyPI y validación lista para merge `dev` → `main`.
+- [x] Certificación de paridad total entre el motor web (`js/analyzer.js`) y el paquete distribuible (`promptometer-core@1.1.0` en JS y Python) con 31/31 tests JS y 14/14 tests Python PASS.
+- [x] Verificación de endpoints de producción (`api.promptometer.tech`) y pruebas de carga local en `http://localhost:3001` (10/10 tests PASS, concurrencia 30 reqs @ 3.4ms/req, defensas 413 y 429 verificadas).
+- [x] **Criterio de éxito:** 31/31 tests JS PASS, 14/14 tests Python PASS, 10/10 endpoints/carga PASS y paridad completa en npm/PyPI lista para merge `dev` → `main`.
 
 ---
 

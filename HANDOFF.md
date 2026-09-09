@@ -159,12 +159,32 @@ promptforge/                    ← App Web (Vercel)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-09-08
+- **Último commit:** `a212c58` ("feat: Fase 4 - Evaluacion Agentica/MCP, Paridad Core 1.1.0 (JS/Python) y Endpoints de Produccion")
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
 - **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
-- **Último hito:** Fase 4 Bloque 1.1: Evaluación Agéntica & MCP (AP048, AP049, BP017, Test Adversarial #15 Tool Poisoning, Action Chips Workbench, i18n y Suite 10).
-- **Estado:** 31/31 tests en PASS (10 suites completas). Entorno local verificado bajo Spec-Driven Development (SDD).
+- **Último hito:** Fase 4 Completa: Paridad Total de Motores `promptometer-core@1.1.0` + Verificación de Endpoints de Producción y Pruebas de Carga.
+- **Estado:** 31/31 tests JS en PASS (10 suites) | 14/14 tests Python en PASS | 10/10 endpoints y carga en PASS. Entorno local verificado bajo Spec-Driven Development (SDD).
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (reciente):**
+>
+> **Fase 4 Hito 2: Endpoints de Producción y Pruebas de Carga (`test_production_endpoints.js`):**
+> - **Simulación Host Producción (`api.promptometer.tech`):** Verificado enrutamiento estricto por cabecera `Host` para `/api/analyze`, `/api/improve`, `/api/adversarial` y `/api/leaderboard` respondiendo 200 OK en formato JSON.
+> - **Carga y Concurrencia:** Ráfaga de 30 solicitudes concurrentes ejecutada en 102ms (promedio 3.4ms/solicitud) con 100% de respuestas válidas.
+> - **Defensas de Seguridad:** Límite de payload de 100KB verificado (retorno limpio HTTP 413 Payload Too Large sin caída de socket) y límite de tasa verificado (retorno HTTP 429 Too Many Requests al exceder 30 req/min por IP).
+> - **Fallback Resiliente:** Comprobada degradación airosa ante indisponibilidad o 503 de LLM externo hacia el sintetizador heurístico local.
+> - **Configuración de Red:** Puerto unificado en 3001 (`server.js`) y `ALLOWED_ORIGINS` actualizado para incluir `http://localhost:3001` y dominios de producción.
+>
+> **Fase 4 Hito 1: Paridad Total de Motores `promptometer-core@1.1.0` (Sesión 2026-09-08):**
+> - **Paridad Core JS (`packages/core/promptometer-core.js`):** Implementada biblioteca universal sin dependencias v1.1.0 con soporte de señales agénticas, AP048, AP049, BP017 y Test #15 Tool Poisoning.
+> - **Paridad Core Python (`packages/core/promptometer_core.py`):** Implementada biblioteca nativa zero-dep v1.1.0 con 100% de paridad lógica, extracción atómica, detección de anti-patrones, reescritura XML y suite adversarial. Soporte dual para claves `camelCase` y `snake_case`.
+> - **Reglas Declarativas (`packages/core/promptometer-rules.json`):** Definidos pesos para nuevo tipo `tool-use` y esquema para AP048, AP049 y BP017.
+> - **Sincronización `node_modules`:** Clonados los artefactos en `node_modules/promptometer-core/` para consumo directo en runtime sin depender de publicación externa.
+> - **Runner Yunta Headless (`scripts/yunta_runner.py`):** Runner no interactivo con auto-confirmación (`confirm=lambda *_: True`) y encoding UTF-8 en stdout/stderr para ejecución sin bloqueos en Windows.
+> - **Verificación Dual:**
+>   - `test_edge_cases.js` ➔ **31/31 PASS** (10 suites completas).
+>   - `test_edge_cases.py` ➔ **14/14 PASS** (14 vectores de estrés).
+>   - `test_production_endpoints.js` ➔ **10/10 PASS** (carga y ruteo).
+>   - `node scripts/sync_models.js --validate` ➔ **Catálogo válido (10 modelos)**.
 >
 > **Fase 4 Bloque 1.1: Evaluación Agéntica & MCP (Sesión 2026-09-08):**
 > - **Señales en `js/signals.js`:** Nuevas señales atómicas `hasAgenticLoop`, `hasLoopGuard`, `hasFormalToolSchema`, `hasUntypedToolCall`, `hasToolUntrustedGuard`.
