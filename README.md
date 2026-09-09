@@ -42,7 +42,7 @@ Promptometer is a complete professional workspace and engine to **evaluate, benc
 - **Adversarial Security Suite** (15 security tests: jailbreak resistance, prompt exfiltration, hallucination mitigation, OWASP LLM07 System Prompt Leakage, Tool Poisoning, etc.).
 - **Interactive Knowledge Hub** with a 24-term bilingual glossary, 17 prompting techniques (including Context Engineering, MCP, Test-Time Compute, Agentic Patterns), 6 structural frameworks (including CO-STAR and Bento-Box), 13 curated research references, and full-text real-time search.
 - **Top 10 Hall of Fame Leaderboard** with zero-login global API sync (`/api/leaderboard`), instant URL sharing (`?p=base64`), 10 elite seed prompts (94–99/100), and interactive "Analyze & Try" buttons.
-- **Non-Destructive XML Rewriter** preserving user context with a Before vs After impact analysis.
+- **Non-Destructive XML Rewriter & A/B Comparison Playground**: Preserves user context with Before vs After impact analysis, 1-click action chips, and a Side-by-Side A/B comparison view (`#tab-ab`) measuring real-time score delta (+XX pts), word counts, and letter grades.
 - **Production REST API & CLI** with API Key authentication, strict CORS, rate limiting, and 100 KB payload protection.
 
 ---

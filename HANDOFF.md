@@ -103,6 +103,7 @@ interactiva desplegada en Vercel.
 - [x] **Ticker 100% en Vivo — HN + arXiv (2026-08-28, tras feedback del usuario)**: el feed curado de landmarks 2024/25 se eliminó del ticker (presentaba material añejo como fresco); ahora `GET /api/ai-news` fusiona **Hacker News (Algolia)** + **papers de arXiv (cs.AI/cs.CL, últimos 7 días)** en paralelo con `Promise.allSettled`, merge por fecha y tope de 30 items; caché de instancia 10 min. El ticker y el modal muestran SOLO material en vivo (papers etiquetados 📄 arXiv con categoría, noticias 🔵 HN con puntos); el catálogo curado de knowledge.js queda únicamente como fallback de emergencia sin red (`getTickerFeed`). Los landmarks siguen accesibles vía los perfiles de creadores del Radar.
 - [x] **Refactor de Arquitectura Models (fuente única, post-revisión de seguridad — 2026-08-28)**: (1) `js/models.js` es ahora la FUENTE ÚNICA del catálogo (Top 10 ago-2026 verificado: Claude Mythos/Fable/Opus 4.7, GPT-5.6 Sol, Kimi K3, Gemini 3.1 Pro, DeepSeek V4, GPT-5.5 Pro, Qwen 3.6, GLM-5.2) con export UMD (browser global `Models` + `module.exports` para Node). (2) `GET /api/models` usa `require()` estático (trazado y empaquetado por Vercel — antes hacía readFileSync+eval por request y devolvía vacío en producción) + caché a nivel módulo + 503 honesto. (3) Eliminada la sección `models` de `knowledge.js` (el bot jamás toca contenido curado). (4) `auto_sync_models.js`/`sync_models.js` reescritos: require sin eval, matcher genérico por tokens normalizados (escala a modelos nuevos sin editar mapeos), regeneración completa y determinista de `js/models.js` (preserva helpers), `--sync/--validate/--add/--list`. (5) Telemetría live verificada: precios reales de OpenRouter ($0.19–$30/1M) y contextos 1M–1.05M sincronizados para los 10. (6) `POST /api/suggest-model` (sanitización + moderación + rate-limit Upstash, espejo de suggest-creator) y el modal conectado por fetch (antes simulaba éxito sin enviar nada). (7) Vista endurecida: `escapeHtml`/`escapeAttr` en todos los templates, `fmtBench` (null → —) y métricas actualizadas (BenchLM Index, GPQA, Agentic Index). (8) Test 9.1 valida la fuente única (IDs únicos, arenaElo número|null). 27/27 PASS; 170 claves i18n resuelven ES/EN.
 - [x] **Deuda UX menor resuelta (sesión 2026-08-27)**: overrides editoriales para pills semánticas/XML tags/grade badges hardcodeados (paleta paper-friendly), tipografía mínima ≥0.68rem/11px (antes 8.3-10px), line-clamp de 3 líneas en previews del leaderboard, performance móvil (sin `background-attachment: fixed` ni backdrop-filter/blur de prismas a ≤768px) y limpieza de dead markup JS (`renderReferences`, badges `complexity/language` fantasma, animación de `score-ring-fill` inexistente, `btn-submit-to-leaderboard`).
+- [x] **Playground de Comparación A/B en Vivo (`index.html`, `css/index.css`, `js/app.js`, `js/i18n.js` — Sesión 2026-09-09)**: Pestaña interactiva de comparación lado a lado (Side-by-Side A/B) en el Workbench para contrastar el prompt original (Versión A) con el prompt calibrado con bloques XML (Versión B), badge de ganancia de score (`+XX pts`), métricas de palabras/grados y botón de copia directa. Paridad bilingüe ES/EN (0 llaves faltantes en Suite 4).
 
 ---
 
@@ -158,14 +159,21 @@ promptforge/                    ← App Web (Vercel)
 
 ## 🔄 Última Actualización
 
-- **Fecha:** 2026-09-08
-- **Último commit:** `a212c58` ("feat: Fase 4 - Evaluacion Agentica/MCP, Paridad Core 1.1.0 (JS/Python) y Endpoints de Produccion")
+- **Fecha:** 2026-09-09
+- **Último commit:** `50f833f` ("feat: Playground de Comparacion A/B en Vivo (Version A Original vs Version B Calibrada) en Web UI")
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
 - **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
-- **Último hito:** Fase 4 Completa: Paridad Total de Motores `promptometer-core@1.1.0` + Verificación de Endpoints de Producción y Pruebas de Carga.
+- **Último hito:** Playground de Comparación A/B (Versión A Original vs Versión B Calibrada) en la Web UI + Paridad 1.1.0.
 - **Estado:** 31/31 tests JS en PASS (10 suites) | 14/14 tests Python en PASS | 10/10 endpoints y carga en PASS. Entorno local verificado bajo Spec-Driven Development (SDD).
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (reciente):**
+>
+> **Playground de Comparación A/B (Original vs. Calibrado) — Sesión 2026-09-09:**
+> - **Vista Side-by-Side (`index.html`, `css/index.css`):** Pestaña `Comparar A/B` (`#tab-ab`) añadida al panel de resultados del Workbench con grid responsivo de 2 columnas para escritorio y apilado para móviles.
+> - **Lógica en Tiempo Real (`js/app.js`):** Integración de `renderABComparison()` en `renderAnalysisResults()` y `updateImprovedView()`. Al inyectar o modificar chips en el Workbench, la comparación A/B se actualiza automáticamente recalculando deltas y estadísticas.
+> - **i18n Paridad Bilingüe (`js/i18n.js`):** Nuevas claves `tabs.abCompare` y espacio de nombres `ab.*` agregados en español y en inglés. 0 llaves faltantes verificadas por la Suite 4.
+> - **Verificación:** `node test_edge_cases.js` pasa con 31/31 PASS (10/10 suites completas).
+>
 >
 > **Fase 4 Hito 2: Endpoints de Producción y Pruebas de Carga (`test_production_endpoints.js`):**
 > - **Simulación Host Producción (`api.promptometer.tech`):** Verificado enrutamiento estricto por cabecera `Host` para `/api/analyze`, `/api/improve`, `/api/adversarial` y `/api/leaderboard` respondiendo 200 OK en formato JSON.

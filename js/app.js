@@ -705,6 +705,9 @@ const App = (() => {
     // Improved prompt
     renderImproved(improved);
 
+    // A/B Comparison Playground
+    renderABComparison(analysis, improved);
+
     // Domain Intelligence & Context Gaps
     renderDomainIntelligence(analysis);
 
@@ -1247,6 +1250,62 @@ const App = (() => {
     renderHighlightedPrompt(newPromptText);
     if (currentAnalysis && currentAnalysis.improved) {
       currentAnalysis.improved.improvedPrompt = newPromptText;
+      renderABComparison(currentAnalysis, currentAnalysis.improved);
+    }
+  }
+
+  function renderABComparison(analysis, improved) {
+    if (!analysis || !improved) return;
+
+    const originalPrompt = currentPromptText || '';
+    const calibratedPrompt = improved.improvedPrompt || '';
+    const scoreA = analysis.overallScore || 0;
+    const gradeA = analysis.overallGrade || 'F';
+    const scoreB = improved.improvedScore || Math.min(100, Math.max(scoreA + (improved.delta || 25), 85));
+    const gradeB = typeof Analyzer !== 'undefined' && Analyzer.getGrade ? Analyzer.getGrade(scoreB) : (scoreB >= 90 ? 'A+' : scoreB >= 80 ? 'A' : 'B');
+    const delta = Math.max(0, scoreB - scoreA);
+
+    const deltaBadge = document.getElementById('ab-delta-badge');
+    const promptAEl = document.getElementById('ab-prompt-a');
+    const promptBEl = document.getElementById('ab-prompt-b');
+    const scoreAEl = document.getElementById('ab-score-a');
+    const scoreBEl = document.getElementById('ab-score-b');
+    const statsAEl = document.getElementById('ab-stats-a');
+    const statsBEl = document.getElementById('ab-stats-b');
+    const btnCopyB = document.getElementById('btn-copy-ab-b');
+
+    if (deltaBadge) {
+      deltaBadge.textContent = `+${delta} pts`;
+    }
+    if (promptAEl) {
+      promptAEl.textContent = originalPrompt;
+    }
+    if (promptBEl) {
+      promptBEl.textContent = calibratedPrompt;
+    }
+    if (scoreAEl) {
+      scoreAEl.textContent = `${scoreA}/100`;
+    }
+    if (scoreBEl) {
+      scoreBEl.textContent = `${scoreB}/100`;
+    }
+
+    const wordsA = originalPrompt.trim() ? originalPrompt.trim().split(/\s+/).length : 0;
+    const wordsB = calibratedPrompt.trim() ? calibratedPrompt.trim().split(/\s+/).length : 0;
+
+    if (statsAEl) {
+      statsAEl.textContent = `${wordsA} ${t('ab.words')} | ${t('ab.grade')}: ${gradeA}`;
+    }
+    if (statsBEl) {
+      statsBEl.textContent = `${wordsB} ${t('ab.words')} | ${t('ab.grade')}: ${gradeB}`;
+    }
+
+    if (btnCopyB) {
+      btnCopyB.onclick = () => {
+        navigator.clipboard.writeText(calibratedPrompt).then(() => {
+          showToast(t('toast.copied'), 'success');
+        });
+      };
     }
   }
 

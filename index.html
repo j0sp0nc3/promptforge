@@ -457,6 +457,7 @@
           <button class="tab" data-tab="antipatterns" data-i18n="tabs.antipatterns" role="tab" id="tabbtn-antipatterns" aria-controls="tab-antipatterns" aria-selected="false">Anti-patrones</button>
           <button class="tab" data-tab="adversarial" data-i18n="tabs.adversarial" role="tab" id="tabbtn-adversarial" aria-controls="tab-adversarial" aria-selected="false">Adversarial</button>
           <button class="tab" data-tab="improved" data-i18n="tabs.improved" role="tab" id="tabbtn-improved" aria-controls="tab-improved" aria-selected="false">Mejora</button>
+          <button class="tab" data-tab="ab" data-i18n="tabs.abCompare" role="tab" id="tabbtn-ab" aria-controls="tab-ab" aria-selected="false">Comparar A/B</button>
         </div>
 
         <!-- Tab: Dimensions Breakdown -->
@@ -553,6 +554,50 @@
           </div>
           <div class="top-impact-container" id="top-impact-container"></div>
           <div class="changes-list" id="changes-list"></div>
+        </div>
+
+        <!-- Tab: A/B Comparison Playground -->
+        <div class="tab-content" id="tab-ab" role="tabpanel" aria-labelledby="tabbtn-ab">
+          <div class="ab-playground-card workbench-card">
+            <div class="ab-header">
+              <div class="ab-title-group">
+                <h3 class="ab-title" data-i18n="ab.title">Playground de Comparación A/B</h3>
+                <p class="ab-subtitle" data-i18n="ab.subtitle">Compara el prompt original con la versión calibrada y observa el incremento de calidad.</p>
+              </div>
+              <div class="ab-delta-badge" id="ab-delta-badge">+0 pts</div>
+            </div>
+
+            <div class="ab-comparison-grid">
+              <!-- Panel A: Original -->
+              <div class="ab-panel ab-panel-a">
+                <div class="ab-panel-header">
+                  <span class="ab-badge ab-badge-original" data-i18n="ab.originalLabel">Versión A (Original)</span>
+                  <span class="ab-panel-score" id="ab-score-a">--/100</span>
+                </div>
+                <div class="ab-panel-body">
+                  <pre class="ab-prompt-text" id="ab-prompt-a"></pre>
+                </div>
+                <div class="ab-panel-footer">
+                  <span class="ab-stats" id="ab-stats-a">0 palabras</span>
+                </div>
+              </div>
+
+              <!-- Panel B: Calibrated -->
+              <div class="ab-panel ab-panel-b">
+                <div class="ab-panel-header">
+                  <span class="ab-badge ab-badge-calibrated" data-i18n="ab.calibratedLabel">Versión B (Calibrado ✨)</span>
+                  <span class="ab-panel-score ab-score-boost" id="ab-score-b">--/100</span>
+                </div>
+                <div class="ab-panel-body">
+                  <pre class="ab-prompt-text" id="ab-prompt-b"></pre>
+                </div>
+                <div class="ab-panel-footer">
+                  <span class="ab-stats" id="ab-stats-b">0 palabras</span>
+                  <button class="btn btn-secondary btn-sm" id="btn-copy-ab-b" data-i18n="ab.copyCalibrated">📋 Copiar B</button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
       </section>

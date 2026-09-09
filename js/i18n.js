@@ -236,6 +236,17 @@ const I18n = (() => {
         antipatterns: 'Anti-patrones',
         adversarial: 'Adversarial',
         improved: 'Mejora',
+        abCompare: 'Comparar A/B',
+      },
+
+      ab: {
+        title: 'Playground de Comparación A/B',
+        subtitle: 'Compara el prompt original con la versión calibrada y observa el incremento de calidad.',
+        originalLabel: 'Versión A (Original)',
+        calibratedLabel: 'Versión B (Calibrado ✨)',
+        copyCalibrated: '📋 Copiar B',
+        words: 'palabras',
+        grade: 'Grado',
       },
 
       // ── Section headers ─────────────────────────────────────────────────
@@ -1396,6 +1407,17 @@ const I18n = (() => {
         antipatterns: 'Anti-patterns',
         adversarial: 'Adversarial',
         improved: 'Improve',
+        abCompare: 'A/B Compare',
+      },
+
+      ab: {
+        title: 'A/B Comparison Playground',
+        subtitle: 'Compare the original prompt with the calibrated version and observe quality gains.',
+        originalLabel: 'Version A (Original)',
+        calibratedLabel: 'Version B (Calibrated ✨)',
+        copyCalibrated: '📋 Copy B',
+        words: 'words',
+        grade: 'Grade',
       },
 
       sections: {
