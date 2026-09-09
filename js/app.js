@@ -1243,6 +1243,13 @@ const App = (() => {
         showToast(t('toast.improvementApplied'), 'success');
       };
     }
+
+    const btnGenetic = document.getElementById('chip-genetic');
+    if (btnGenetic) {
+      btnGenetic.onclick = () => {
+        runGeneticEvolution();
+      };
+    }
   }
 
   function updateImprovedView(newPromptText) {
@@ -1307,6 +1314,69 @@ const App = (() => {
         });
       };
     }
+  }
+
+  function runGeneticEvolution() {
+    if (!currentPromptText || typeof GeneticTuner === 'undefined') return;
+
+    const result = GeneticTuner.evolve(currentPromptText, currentAnalysis, {
+      objective: currentObjective,
+      domainArchetype: currentAnalysis?.domainArchetype
+    });
+
+    if (!result || !result.variants.length) return;
+
+    const podiumCard = document.getElementById('genetic-podium-card');
+    const podiumGrid = document.getElementById('genetic-podium-grid');
+    const gainBadge = document.getElementById('genetic-gain-badge');
+
+    if (!podiumCard || !podiumGrid) return;
+
+    if (gainBadge) {
+      gainBadge.textContent = `+${result.deltaGain} pts`;
+    }
+
+    podiumGrid.innerHTML = result.variants.map((v, idx) => {
+      const isChampion = idx === 0;
+      const badgeClass = isChampion ? 'variant-badge-champion' : 'variant-badge-runnerup';
+      const badgeText = isChampion ? (t('genetic.champion') || '🏆 CAMPEÓN') : (t('genetic.runnerUp') || '🥈 SEGUNDO PUESTO');
+      const cardClass = isChampion ? 'podium-variant-card podium-variant-card--champion' : 'podium-variant-card';
+      const strategyName = t(v.nameKey) || v.strategy;
+
+      return `
+        <div class="${cardClass}">
+          <div class="variant-header">
+            <span class="${badgeClass}">${badgeText}</span>
+            <span class="variant-score">${v.score}/100 (${v.grade})</span>
+          </div>
+          <div style="padding: 6px 10px 0; font-weight:600; font-size:0.78rem; color:var(--ink);">
+            ${escapeHtml(strategyName)}
+          </div>
+          <div class="variant-body">
+            <pre style="margin:0; font-family:var(--font-mono); font-size:0.75rem; white-space:pre-wrap; word-break:break-word;">${escapeHtml(v.prompt)}</pre>
+          </div>
+          <div class="variant-footer">
+            <button class="btn btn-primary btn-xs btn-apply-variant" data-prompt="${escapeAttr(v.prompt)}">
+              ${escapeHtml(t('genetic.applyVariant') || '✨ Cargar Variante')}
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    podiumCard.classList.remove('hidden');
+
+    podiumGrid.querySelectorAll('.btn-apply-variant').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const promptToApply = btn.dataset.prompt;
+        if (promptToApply) {
+          updateImprovedView(promptToApply);
+          showToast(t('toast.improvementApplied'), 'success');
+        }
+      });
+    });
+
+    showToast(t('genetic.title') || '🧬 Evolución genéticas completada', 'success');
   }
 
   function showEmptyState() {

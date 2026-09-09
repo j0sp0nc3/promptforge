@@ -539,12 +539,25 @@
                   <button class="action-chip" id="chip-safety" data-i18n="workbench.chipSafety">🛡️ Guardrails</button>
                   <button class="action-chip" id="chip-mcp" data-i18n="workbench.chipMcp">🔧 MCP Contract</button>
                   <button class="action-chip" id="chip-anti-loop" data-i18n="workbench.chipAntiLoop">🛡️ Anti-Loop</button>
+                  <button class="action-chip action-chip--genetic" id="chip-genetic" data-i18n="workbench.chipGenetic">🧬 Auto-Evolucionar</button>
                 </div>
                 <div class="primary-actions-group">
                   <span class="improvement-badge" id="improvement-badge">+25 pts</span>
                   <button class="btn btn-secondary btn-sm" id="btn-copy-improvement" data-i18n="workbench.copy">📋 Copy</button>
                   <button class="btn btn-primary btn-sm" id="btn-apply-improvement" data-i18n="workbench.apply">✨ Apply</button>
                 </div>
+              </div>
+
+              <!-- Genetic Podium Card (PoC) -->
+              <div class="genetic-podium-card hidden" id="genetic-podium-card">
+                <div class="podium-header">
+                  <div class="podium-title-group">
+                    <h4 class="podium-title" data-i18n="genetic.title">🧬 Podio de Mutaciones Genéticas (Local Tuner)</h4>
+                    <p class="podium-subtitle" data-i18n="genetic.subtitle">3 mutaciones generadas y evaluadas en local (<15ms, $0 costo). Variante campeona seleccionada automáticamente.</p>
+                  </div>
+                  <div class="podium-gain-badge" id="genetic-gain-badge">+0 pts</div>
+                </div>
+                <div class="podium-grid" id="genetic-podium-grid"></div>
               </div>
             </div>
           </section>
@@ -1224,6 +1237,7 @@
   <script src="js/analyzer.js"></script>
   <script src="js/adversarial.js"></script>
   <script src="js/rewriter.js"></script>
+  <script src="js/genetic-tuner.js"></script>
   <script src="js/templates.js"></script>
   <script src="js/history.js"></script>
   <script src="js/charts.js"></script>

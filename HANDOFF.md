@@ -219,6 +219,12 @@ promptforge/                    ← App Web (Vercel)
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (reciente):**
 >
+> **Fase 4 Bloque 1.2: PoC Motor de Evolución y Mutación Iterativa (Local Genetic Tuner - Sesión 2026-09-09):**
+> - **Motor Genético (`js/genetic-tuner.js`):** Creado motor heurístico local con 3 estrategias de mutación (*XML Strict*, *Few-Shot CoT*, *Guarded Safety & MCP*) y selección de variante Campeón de mayor puntaje.
+> - **Integración UI (`index.html`, `css/index.css`, `js/app.js`):** Añadido botón `#chip-genetic` ("🧬 Auto-Evolucionar") en la barra de acciones rápidas y contenedor `#genetic-podium-card` para mostrar el podio de variantes con deltas de mejora y aplicación con 1-click.
+> - **Paridad i18n (`js/i18n.js`):** Agregadas claves `workbench.chipGenetic` y `genetic.*` en español e inglés. 0 llaves faltantes verificadas por Suite 4.
+> - **Suite 11 en `test_edge_cases.js`:** Agregada Suite 11 ("Motor de Evolución y Mutación Iterativa") evaluando 3 mutaciones simultáneas y selección del campeón con **32/32 PASS**.
+>
 > **Scoring + Arquetipo + i18n — Sesión 2026-08-26:**
 > - **Gate de sustancia insuficiente (`js/analyzer.js`):** `wordCount < 8` sin verbo de acción, pregunta directa, estructura, few-shot, formato solicitado ni restricción numérica → tope 30 por dimensión y overall ≤ 25 (F). Verificado: "esto es un prompt" 48→25; "Resume este artículo en 3 puntos" (51) y "Qué es la fotosíntesis?" (48) sin cambios.
 > - **Arquetipo por objetivo (`js/domain-analyzer.js`, `js/signals.js`, `js/analyzer.js`):** `inferArchetype(prompt, objectiveHint)` con mapa `coding→software_engineering`, `json_schema→data_extraction`, `safety_rag→rag_knowledge`, `creative→rhetoric_creative` solo cuando el texto no produce señales.

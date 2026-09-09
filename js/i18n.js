@@ -164,6 +164,7 @@ const I18n = (() => {
         chipSafety: '🛡️ Salvaguardas',
         chipMcp: '🔧 Contrato MCP',
         chipAntiLoop: '🛡️ Anti-Loop',
+        chipGenetic: '🧬 Auto-Evolucionar',
         copy: '📋 Copiar',
         apply: '✨ Aplicar',
       },
@@ -247,6 +248,18 @@ const I18n = (() => {
         copyCalibrated: '📋 Copiar B',
         words: 'palabras',
         grade: 'Grado',
+      },
+
+      genetic: {
+        title: '🧬 Podio de Mutaciones Genéticas (Local Tuner)',
+        subtitle: '3 mutaciones generadas y evaluadas en local (<15ms, $0 costo). Variante campeona seleccionada automáticamente.',
+        champion: '🏆 CAMPEÓN',
+        runnerUp: '🥈 SEGUNDO PUESTO',
+        strategyA: 'Anatomía XML Estricta',
+        strategyB: 'Chain of Thought & Few-Shot',
+        strategyC: 'Salvaguardas & Protocolo MCP',
+        applyVariant: '✨ Cargar Variante',
+        deltaGain: '+{n} pts de mejora',
       },
 
       // ── Section headers ─────────────────────────────────────────────────
@@ -1339,6 +1352,7 @@ const I18n = (() => {
         chipSafety: '🛡️ Guardrails',
         chipMcp: '🔧 MCP Contract',
         chipAntiLoop: '🛡️ Anti-Loop Guard',
+        chipGenetic: '🧬 Auto-Evolve',
         copy: '📋 Copy',
         apply: '✨ Apply',
       },
@@ -1418,6 +1432,18 @@ const I18n = (() => {
         copyCalibrated: '📋 Copy B',
         words: 'words',
         grade: 'Grade',
+      },
+
+      genetic: {
+        title: '🧬 Genetic Mutations Podium (Local Tuner)',
+        subtitle: '3 mutations generated and evaluated locally (<15ms, $0 cost). Champion variant automatically selected.',
+        champion: '🏆 CHAMPION',
+        runnerUp: '🥈 RUNNER-UP',
+        strategyA: 'Strict XML Anatomy',
+        strategyB: 'Chain of Thought & Few-Shot',
+        strategyC: 'Safety Guardrails & MCP',
+        applyVariant: '✨ Load Variant',
+        deltaGain: '+{n} pts boost',
       },
 
       sections: {
