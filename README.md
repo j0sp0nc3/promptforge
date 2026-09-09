@@ -35,11 +35,11 @@ Promptometer is a complete professional workspace and engine to **evaluate, benc
 
 - **Multidimensional Score (0–100)** with letter grades (A+ to F) across **8 dimensions**, objective-driven scoring (`options.objective`: Code Generation, Reasoning, JSON Schema, Safety & RAG, Creative Writing), and interactive **Score Scale & Letter Grade Rubric Modal**.
 - **3D Solar System Constellation (Three.js WebGL)**: Real-time 3D orbital system with 2-phase protoplanetary disk accretion kinetics, signature 8D planet geometries, permanent floating 3D score badges, interactive planet hover pause (1.25x scale), 1-click smooth-scroll dimension navigation, and dual themes (Cosmic Black Hole 🗓️ & Editorial Moon Mode 🌙).
-- **Canonical 7-Block XML Structure**: The rewriter, domain synthesizer, and LLM all generate prompts in the same enforced order: `<system_role>` → `<objective>` → `<context>` → `<requirements>` → `<output_format>` → `<examples>` → `<error_handling>`. Color-coded XML highlighting with 1-click action chips (`⚡ Shorten`, `🧠 Add CoT`, `📐 Enforce JSON`, `🛡️ Guardrails`).
+- **Canonical 7-Block XML Structure**: The rewriter, domain synthesizer, and LLM all generate prompts in the same enforced order: `<system_role>` → `<objective>` → `<context>` → `<requirements>` → `<output_format>` → `<examples>` → `<error_handling>`. Color-coded XML highlighting with 1-click action chips (`⚡ Shorten`, `🧠 Add CoT`, `📐 Enforce JSON`, `🛡️ Guardrails`, `🔧 MCP Contract`, `🛡️ Anti-Loop`).
 - **LLM-as-a-Judge with Diagnostic Feedback**: The `/api/analyze-intent` endpoint injects the Promptometer diagnostic (score, grade, weaknesses, suggestions, context gaps) into the LLM system prompt. The LLM solves each identified weakness, assigns a domain-specific expert role (e.g., Geologist for magma topics), and returns a `justification` banner explaining improvements. Supports Gemini, OpenAI, and Groq with automatic heuristic fallback at $0 cost.
 - **Domain Archetype Engine** (`js/domain-analyzer.js`): Classifies prompts into 8 archetypes (Software Engineering, Data Extraction, Marketing Copy, RAG Knowledge, Agentic Tool Use, Financial/Legal, Rhetoric/Creative, General Task), evaluates context gaps, and synthesizes enriched prompts via `synthesizeLocal()` with `inferDynamicRole()` (geology, health, physics, history, etc.).
-- **Anti-Pattern Catalog** (35 anti-patterns) & **Best Practices** (16 strengths, including OWASP LLM07 defense) with expandable `<details>` accordions.
-- **Adversarial Security Suite** (14 security tests: jailbreak resistance, prompt exfiltration, hallucination mitigation, OWASP LLM07 System Prompt Leakage, etc.).
+- **Anti-Pattern Catalog** (37 anti-patterns) & **Best Practices** (17 strengths, including OWASP LLM07 defense and MCP tool contracts) with expandable `<details>` accordions.
+- **Adversarial Security Suite** (15 security tests: jailbreak resistance, prompt exfiltration, hallucination mitigation, OWASP LLM07 System Prompt Leakage, Tool Poisoning, etc.).
 - **Interactive Knowledge Hub** with a 24-term bilingual glossary, 17 prompting techniques (including Context Engineering, MCP, Test-Time Compute, Agentic Patterns), 6 structural frameworks (including CO-STAR and Bento-Box), 13 curated research references, and full-text real-time search.
 - **Top 10 Hall of Fame Leaderboard** with zero-login global API sync (`/api/leaderboard`), instant URL sharing (`?p=base64`), 10 elite seed prompts (94–99/100), and interactive "Analyze & Try" buttons.
 - **Non-Destructive XML Rewriter** preserving user context with a Before vs After impact analysis.
@@ -92,7 +92,7 @@ The **Learn ("Aprender")** and **Top 10** tabs provide an interactive educationa
 - **Top-Level Radar IA Tab (`#nav-radar` & `#view-radar`):** Primary navigation tab uniting 27 curated AI Creators across 5 languages (Riley Goodside, Andrej Karpathy, Lilian Weng, swyx, Yann LeCun, Andrew Ng, plus 🇪🇸 DotCSV & IA en Español, 🇫🇷 Defend Intelligence, 🇩🇪 Everlast AI, 🇧🇷 Didática Tech, 🇯🇵 Ledge.ai, etc.) with instant search, category filtering (Prompting, Architecture, Agents, Security), and 13 Research References & Guides.
 - **Live AI News Ticker (`#news-ticker-bar`):** Header bar displaying 100% live updates — Hacker News stories and fresh arXiv papers (cs.AI/cs.CL, last 7 days) merged by date via `/api/ai-news` with play/pause controls, manual step navigation (‹ / ›), touch pause, and a modal feed log dialog (`#modal-ticker-feed`) to view and filter all live updates statically.
 - **Top 10 Hall of Fame (`js/leaderboard.js` & `/api/leaderboard`):** Global community ranking with zero-login API sync, gold/silver/bronze badges, submission modal, and "Analyze & Try" buttons.
-- **Unified Expandable Library:** Browse 35 anti-patterns, 16 best practices, and 14 adversarial tests as expandable accordions displaying dimension, description, and suggestions.
+- **Unified Expandable Library:** Browse 37 anti-patterns, 17 best practices, and 15 adversarial tests as expandable accordions displaying dimension, description, and suggestions.
 - **Real-Time Interactive Search:** Search bar filtering all terms, techniques, frameworks, references, and library entries dynamically as you type.
 
 ---
@@ -236,9 +236,9 @@ promptforge/                    # Web App Repo (Vercel deployment)
 │   ├── domain-analyzer.js      # Domain Archetype Classifier & Context Gap Synthesizer
 │   ├── signals.js              # Single Source of Truth Signal Extractor
 │   ├── domain-analyzer.js      # 8-Archetype Domain Intelligence & Context Gap Analyzer
-│   ├── patterns.js             # Catalog of 35 Anti-Patterns & 16 Strengths (incl. OWASP LLM07)
+│   ├── patterns.js             # Catalog of 37 Anti-Patterns & 17 Strengths (incl. OWASP LLM07 & MCP)
 │   ├── analyzer.js             # 8-Dimension Scoring Engine with Domain Adaptive Weights
-│   ├── adversarial.js          # Security & Resilience Simulator (14 Adversarial Stress Tests)
+│   ├── adversarial.js          # Security & Resilience Simulator (15 Adversarial Stress Tests)
 │   ├── rewriter.js             # Non-Destructive XML Rewriter & Action Chips
 │   ├── templates.js            # 12 Production-Ready Prompt Templates
 │   ├── knowledge.js            # Knowledge Hub (Glossary, Techniques, Frameworks, References)
@@ -253,7 +253,7 @@ promptforge/                    # Web App Repo (Vercel deployment)
 │   └── moderation.js           # Content moderation & anti-spam filter
 ├── server.js                   # REST API Microservice & Local Dev Server
 ├── cli.js                      # Node Terminal Executable
-├── test_edge_cases.js          # JS Test Suite Runner (27/27 PASS across 9 Suites)
+├── test_edge_cases.js          # JS Test Suite Runner (31/31 PASS across 10 Suites)
 ├── test_edge_cases.py          # Python Test Suite Runner (14/14 PASS)
 ├── SPEC.md                     # Formal Product Specification (SDD Standard)
 ├── PLAN.md                     # Incremental Development Roadmap (Active Phase 4)

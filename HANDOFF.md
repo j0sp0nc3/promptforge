@@ -158,13 +158,28 @@ promptforge/                    ← App Web (Vercel)
 
 ## 🔄 Última Actualización
 
-- **Fecha:** 2026-09-07
+- **Fecha:** 2026-09-08
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
 - **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
-- **Último hito:** Inicialización y configuración del harness SDD con Yunta (`yunta init .`), generando y adaptando `SPEC.md`, `PLAN.md` y `AGENTS.md`.
-- **Estado:** 27/27 tests en PASS (9 suites completas). Entorno local configurado con Spec-Driven Development (SDD) para la Fase 4 activa.
+- **Último hito:** Fase 4 Bloque 1.1: Evaluación Agéntica & MCP (AP048, AP049, BP017, Test Adversarial #15 Tool Poisoning, Action Chips Workbench, i18n y Suite 10).
+- **Estado:** 31/31 tests en PASS (10 suites completas). Entorno local verificado bajo Spec-Driven Development (SDD).
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (reciente):**
+>
+> **Fase 4 Bloque 1.1: Evaluación Agéntica & MCP (Sesión 2026-09-08):**
+> - **Señales en `js/signals.js`:** Nuevas señales atómicas `hasAgenticLoop`, `hasLoopGuard`, `hasFormalToolSchema`, `hasUntypedToolCall`, `hasToolUntrustedGuard`.
+> - **Anti-patrones en `js/patterns.js`:** 
+>   - `AP048`: Bucle agéntico autónomo sin condición de parada (detecta loops infinitos sin límite de iteraciones o condición de salida).
+>   - `AP049`: Llamada a herramientas sin contrato tipado (detecta llamadas libres a herramientas/funciones sin tipos ni esquema). Total: 37 anti-patrones.
+> - **Buenas prácticas en `js/patterns.js`:**
+>   - `BP017`: Contrato formal de herramientas y protocolo MCP (valida bloques `<tools>` tipados y protocolos de herramientas). Total: 17 buenas prácticas.
+> - **Test Adversarial #15 en `js/adversarial.js`:**
+>   - `toolPoisoning`: Simula resistencia contra envenenamiento de herramientas e inyección indirecta (4 criterios: validación de esquema, salidas untrusted, no ejecución ciega de payloads y human-in-the-loop). Total: 15 pruebas adversariales.
+> - **i18n en `js/i18n.js`:** Paridad bilingüe ES/EN al 100% para todas las nuevas reglas, tests y chips del Workbench. 0 llaves faltantes verificadas por Suite 4.
+> - **Workbench en `index.html`, `js/rewriter.js`, `js/app.js`:**
+>   - Agregados botones de acción rápida `#chip-mcp` ("🔧 MCP Contract") y `#chip-anti-loop` ("🛡️ Anti-Loop").
+>   - Inyección instantánea de fragmentos canónicos `<tools>` y `<loop_guard>`.
+> - **Suite 10 en `test_edge_cases.js`:** 4 vectores de prueba agéntica/MCP con 31/31 PASS.
 >
 > **Inicialización SDD con Harness Yunta (Sesión 2026-09-07):**
 > - **Ejecución `yunta init .`:** Creación de los artefactos fundacionales SDD en la raíz (`SPEC.md`, `PLAN.md`, `AGENTS.md`).

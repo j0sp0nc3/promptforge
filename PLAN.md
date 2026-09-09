@@ -34,10 +34,10 @@ Estado actual: **Fase 4 — Robustecimiento del Harness, Evaluación Agéntica y
 
 ### Fase 4: Robustecimiento del Harness, Evaluación Agéntica y Paridad 1.1.0 🚀 (Fase Activa)
 - [x] Integración de guardrails SDD generados por el harness Yunta (`SPEC.md`, `PLAN.md`, `AGENTS.md`).
-- [ ] Incorporación de métricas de validación para prompts orientados a flujos agénticos y MCP (Model Context Protocol).
+- [x] Incorporación de métricas de validación para prompts orientados a flujos agénticos y MCP (Model Context Protocol): AP048, AP049, BP017, Test Adversarial #15 Tool Poisoning, action chips Workbench y Suite 10.
 - [ ] Certificación de paridad total entre el motor web (`js/analyzer.js`) y el paquete distribuible (`promptometer-core@1.1.0` en JS y Python).
 - [ ] Verificación de endpoints de producción (`api.promptometer.tech`) y pruebas de carga local en `http://localhost:3001`.
-- [ ] **Criterio de éxito:** 27/27 tests PASS, paridad completa en npm/PyPI y validación lista para merge `dev` → `main`.
+- [ ] **Criterio de éxito:** 31/31 tests PASS, paridad completa en npm/PyPI y validación lista para merge `dev` → `main`.
 
 ---
 
