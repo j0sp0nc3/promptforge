@@ -34,6 +34,10 @@ and design decisions that MUST be respected.
   - `packages/core/promptometer-core.js` (npm package)
   - `packages/core/promptometer_core.py` (Python parity)
 
+## Data & News Freshness Policy
+- All news publications displayed in the app (AI News Ticker via Hacker News & arXiv), curated landmark feeds, SOTA LLM model directory, telemetry (pricing, context windows), and benchmark metrics MUST be kept strictly fresh and up-to-date (current year 2026).
+- Never allow stale news or outdated model statistics to remain un-synchronized.
+
 ## Before EVERY Commit (not just at session end)
 - Run `node test_edge_cases.js` to verify 22/22 PASS.
 - Update `HANDOFF.md`: move completed items to ✅, add new pending items, and update the "Última Actualización" section (date, latest commit hash, and session summary).

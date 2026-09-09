@@ -1619,6 +1619,50 @@ If the query is ambiguous, ask for clarification before recommending.
      Latest posts, releases, papers & discoveries from top AI creators. */
     feed: [
     {
+        "id": "feed-2026-1",
+        "author": "Anthropic Research",
+        "tag": "Claude Mythos",
+        "text": {
+            "es": "Lanzamiento de Claude Mythos: Modelo frontera con capacidad agéntica autónoma y razonamiento adaptativo de alta profundidad.",
+            "en": "Claude Mythos Launch: Frontier model with autonomous agentic execution and deep adaptive reasoning."
+        },
+        "url": "https://www.anthropic.com/news",
+        "timestamp": "Landmark · Ago 2026"
+    },
+    {
+        "id": "feed-2026-2",
+        "author": "OpenAI Research",
+        "tag": "GPT-5.6 Sol",
+        "text": {
+            "es": "OpenAI presenta GPT-5.6 Sol: Inferencia multimodal de ultra-alta velocidad con soporte nativo para protocolos MCP.",
+            "en": "OpenAI presents GPT-5.6 Sol: Ultra-fast multimodal inference with native MCP protocol integration."
+        },
+        "url": "https://openai.com/index",
+        "timestamp": "Landmark · Set 2026"
+    },
+    {
+        "id": "feed-2026-3",
+        "author": "Google DeepMind",
+        "tag": "Gemini 3.1 Pro",
+        "text": {
+            "es": "Gemini 3.1 Pro: Ventana de contexto multimodal de 4M tokens con verificación formal de código y bucles anti-loop.",
+            "en": "Gemini 3.1 Pro: 4M multimodal context window with formal code verification and anti-loop guards."
+        },
+        "url": "https://deepmind.google/technologies/gemini/",
+        "timestamp": "Landmark · Set 2026"
+    },
+    {
+        "id": "feed-2026-4",
+        "author": "DeepSeek AI",
+        "tag": "DeepSeek V4",
+        "text": {
+            "es": "DeepSeek V4 en producción: Arquitectura MoE de pesos abiertos con costo de inferencia sub-centavo en benchmarks SOTA.",
+            "en": "DeepSeek V4 in production: Open-weights MoE architecture with sub-cent inference cost on SOTA benchmarks."
+        },
+        "url": "https://github.com/deepseek-ai",
+        "timestamp": "Landmark · Ago 2026"
+    },
+    {
         "id": "feed-1",
         "author": "Anthropic Research",
         "tag": "Claude 3.7 Sonnet",

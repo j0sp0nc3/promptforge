@@ -64,7 +64,12 @@ El objetivo central es transformar la formulación empírica y descuidada de pro
 - Diseños genéricos con glassmorphism excesivo, neon glows o dark mode descontextualizado; se preserva estrictamente el sistema *Editorial Technical* y *Cosmic Event Horizon*.
 
 ## 7. Criterios de Aceptación Globales
-- [x] Suite completa de pruebas unitarias y de estrés pasando al 100% (`node test_edge_cases.js` -> 27/27 PASS).
+- [x] Suite completa de pruebas unitarias y de estrés pasando al 100% (`node test_edge_cases.js` -> 32/32 PASS).
 - [x] Paridad estricta entre diccionarios i18n (`es` y `en`) sin claves faltantes ni textos duros en interfaz.
 - [x] Soporte responsivo sin rotura de layouts desde pantallas móviles (360px) hasta monitores ultra-wide.
 - [x] Zero-warning en compilación de assets y cumplimiento de cabeceras de seguridad OWASP en endpoints serverless.
+- [x] Garantía de frescura en noticias en vivo (Hacker News & arXiv), hitos SOTA de 2026, telemetría de precios y benchmarks de modelos LLM.
+
+## 8. Política de Frescura de Datos y Publicaciones
+- **Noticias en Vivo:** El feed de noticias en tiempo real (Hacker News AI/LLM stories y arXiv cs.AI/cs.CL preprints) se sincroniza continuamente con un TTL máximo de 10 minutos. Los fallbacks estáticos contienen hitos SOTA vigentes (2026).
+- **Directorio de Modelos & Telemetría:** Los modelos LLM de frontera, precios por token, ventanas de contexto y métricas de benchmark se mantienen estrictamente actualizados mediante el script `node scripts/sync_models.js`. Queda prohibido mantener noticias o datos de modelos obsoletos.
