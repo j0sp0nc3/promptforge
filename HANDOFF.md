@@ -219,6 +219,11 @@ promptforge/                    ← App Web (Vercel)
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (reciente):**
 >
+> **Directiva de Frescura Obligatoria de Datos y Noticias (Sesión 2026-09-09):**
+> - **Regla 9 en `AGENTS.md` & `.agents/AGENTS.md`:** Incorporada regla inviolable que exige mantener estrictamente frescas todas las publicaciones de noticias (ticker live vía Hacker News & arXiv), hitos SOTA 2026, catálogo de modelos LLM, telemetría y benchmarks.
+> - **Actualización de Feed Curado en `js/knowledge.js`:** Añadidos hitos SOTA de agosto y septiembre de 2026 (Claude Mythos, GPT-5.6 Sol, Gemini 3.1 Pro, DeepSeek V4) en la colección de fallbacks del feed.
+> - **Actualización de Especificación `SPEC.md`:** Registrada la Sección 8 (*Política de Frescura de Datos y Publicaciones*).
+>
 > **Fase 4 Bloque 1.2: PoC Motor de Evolución y Mutación Iterativa (Local Genetic Tuner - Sesión 2026-09-09):**
 > - **Motor Genético (`js/genetic-tuner.js`):** Creado motor heurístico local con 3 estrategias de mutación (*XML Strict*, *Few-Shot CoT*, *Guarded Safety & MCP*) y selección de variante Campeón de mayor puntaje.
 > - **Integración UI (`index.html`, `css/index.css`, `js/app.js`):** Añadido botón `#chip-genetic` ("🧬 Auto-Evolucionar") en la barra de acciones rápidas y contenedor `#genetic-podium-card` para mostrar el podio de variantes con deltas de mejora y aplicación con 1-click.

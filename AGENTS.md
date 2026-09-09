@@ -28,6 +28,7 @@ Este archivo define las reglas de convivencia, restricciones y contexto ontológ
    - `js/analyzer.js` (Web App)
    - `packages/core/promptometer-core.js` (npm core)
    - `packages/core/promptometer_core.py` (Python parity)
+9. **Garantía de Frescura de Noticias y Datos (Data Freshness Policy):** Todas las publicaciones de noticias (ticker en vivo vía Hacker News & arXiv), catálogo de modelos LLM SOTA, telemetría de precios/contexto y benchmarks deben mantenerse estrictamente frescos y actualizados al periodo corriente (2026). No se permiten publicaciones o feeds estancados.
 
 ## 4. Protocolo Obligatorio para IDEs y Agentes Externos (Claude, Cursor, Antigravity, Copilot)
 
