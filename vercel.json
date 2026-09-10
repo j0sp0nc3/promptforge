@@ -1,51 +1,5 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "api/index.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "css/**",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "js/**",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "index.html",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "favicon.svg",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "robots.txt",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "sitemap.xml",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "llms.txt",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "llms-full.txt",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "manifest.json",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "og-image.svg",
-      "use": "@vercel/static"
-    }
-  ],
   "routes": [
     {
       "src": "/api(/.*)?",
