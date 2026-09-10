@@ -613,8 +613,10 @@ const App = (() => {
 
   // ── Analysis Pipeline ───────────────────────────────────
   function runAnalysis() {
-    const prompt = document.getElementById('prompt-input').value.trim();
+    const promptInput = document.getElementById('prompt-input');
+    const prompt = promptInput ? promptInput.value.trim() : '';
     if (!prompt) {
+      if (promptInput) promptInput.focus();
       showToast(t('toast.writePrompt'), 'warning');
       return;
     }
