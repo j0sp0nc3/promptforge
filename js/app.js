@@ -20,6 +20,7 @@ const App = (() => {
     setupTabs();
     setupDimensionAccordion();
     setupExport();
+    setupCodeExportModal();
     setupScoreLegend();
     setupTemplatesView();
     setupHistoryView();
@@ -710,6 +711,9 @@ const App = (() => {
 
     // Domain Intelligence & Context Gaps
     renderDomainIntelligence(analysis);
+
+    // Multi-Model Budget & Latency Simulator (P1.2)
+    renderCostSimulator(currentAnalysis.prompt);
 
     // Radar chart is initialised lazily when the user visits the Radar tab.
     if (document.getElementById('tab-radar').classList.contains('active')) {
@@ -1510,6 +1514,126 @@ const App = (() => {
       }
     });
 
+  }
+
+  // ── Code Export SDK Modal (P1.1) ──────────────────────────
+  let activeCodeExportTab = 'python';
+
+  function setupCodeExportModal() {
+    const btnOpen = document.getElementById('btn-export-code');
+    const btnCloseTop = document.getElementById('btn-close-code-modal');
+    const btnCloseBottom = document.getElementById('btn-close-code-modal-bottom');
+    const tabsContainer = document.getElementById('code-export-tabs');
+    const btnCopy = document.getElementById('btn-copy-code-snippet');
+
+    if (btnOpen) {
+      btnOpen.addEventListener('click', () => {
+        openCodeExportModal();
+      });
+    }
+
+    if (btnCloseTop) btnCloseTop.addEventListener('click', closeCodeExportModal);
+    if (btnCloseBottom) btnCloseBottom.addEventListener('click', closeCodeExportModal);
+
+    if (tabsContainer) {
+      tabsContainer.addEventListener('click', (e) => {
+        const btn = e.target.closest('.editorial-tab-btn');
+        if (!btn) return;
+        tabsContainer.querySelectorAll('.editorial-tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeCodeExportTab = btn.dataset.tab;
+        renderCodeExportSnippet();
+      });
+    }
+
+    if (btnCopy) {
+      btnCopy.addEventListener('click', () => {
+        const pre = document.getElementById('code-snippet-pre');
+        if (pre && pre.textContent) {
+          ExportUtil.toClipboard(pre.textContent);
+          showToast(t('exportModal.copiedToast') || 'Código copiado', 'success');
+        }
+      });
+    }
+
+    setupModalA11y('modal-code-export', closeCodeExportModal);
+  }
+
+  function openCodeExportModal() {
+    const modal = document.getElementById('modal-code-export');
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    renderCodeExportSnippet();
+  }
+
+  function closeCodeExportModal() {
+    const modal = document.getElementById('modal-code-export');
+    if (modal) modal.classList.add('hidden');
+  }
+
+  function renderCodeExportSnippet() {
+    const langLabel = document.getElementById('code-export-lang-label');
+    const codePre = document.getElementById('code-snippet-pre');
+    if (!codePre) return;
+
+    const promptText = currentAnalysis?.improved?.improvedPrompt || currentAnalysis?.prompt || document.getElementById('prompt-input')?.value || '';
+
+    let snippet = '';
+    let label = '';
+
+    if (activeCodeExportTab === 'python') {
+      label = 'Python (openai v2.0+)';
+      snippet = ExportUtil.toPythonCode(promptText);
+    } else if (activeCodeExportTab === 'typescript') {
+      label = 'TypeScript / Node.js (@openai/openai)';
+      snippet = ExportUtil.toTypeScriptCode(promptText);
+    } else if (activeCodeExportTab === 'curl') {
+      label = 'cURL Bash Terminal';
+      snippet = ExportUtil.toCurlCode(promptText);
+    }
+
+    if (langLabel) langLabel.textContent = label;
+    codePre.textContent = snippet;
+  }
+
+  // ── Multi-Model Budget & Latency Simulator (P1.2) ─────────
+  function renderCostSimulator(promptText = '') {
+    const container = document.getElementById('cost-sim-grid');
+    if (!container || typeof Models === 'undefined' || !Models.estimateCostAndLatency) return;
+
+    const { estimates } = Models.estimateCostAndLatency(promptText);
+
+    const per1kLabel = t('costSim.per1k') || '1k Ejecuciones';
+    const per100kLabel = t('costSim.per100k') || '100k Ejecuciones';
+    const estLatencyLabel = t('costSim.estLatency') || 'Latencia TTFT';
+    const ctxLimitLabel = t('costSim.contextLimit') || 'Ventana Contexto';
+
+    container.innerHTML = estimates.map(est => `
+      <div class="cost-card-pill">
+        <div class="cost-pill-header">
+          <span class="cost-pill-model">${escapeHtml(est.modelName)}</span>
+          <span class="cost-pill-provider">${escapeHtml(est.provider)}</span>
+        </div>
+        <div class="cost-pill-metrics">
+          <div class="cost-metric-item">
+            <span class="cost-metric-label">${escapeHtml(per1kLabel)}</span>
+            <span class="cost-metric-value">${escapeHtml(est.cost1kUSD)}</span>
+          </div>
+          <div class="cost-metric-item">
+            <span class="cost-metric-label">${escapeHtml(per100kLabel)}</span>
+            <span class="cost-metric-value cost-highlight">${escapeHtml(est.cost100kUSD)}</span>
+          </div>
+          <div class="cost-metric-item">
+            <span class="cost-metric-label">${escapeHtml(estLatencyLabel)}</span>
+            <span class="cost-metric-value">~${est.ttftMs}ms</span>
+          </div>
+          <div class="cost-metric-item">
+            <span class="cost-metric-label">${escapeHtml(ctxLimitLabel)}</span>
+            <span class="cost-metric-value">${escapeHtml(est.contextWindow)}</span>
+          </div>
+        </div>
+      </div>
+    `).join('');
   }
 
   function setupScoreLegend() {

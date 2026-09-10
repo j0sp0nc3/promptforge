@@ -543,6 +543,7 @@
                 </div>
                 <div class="primary-actions-group">
                   <span class="improvement-badge" id="improvement-badge">+25 pts</span>
+                  <button class="btn btn-secondary btn-sm" id="btn-export-code" data-i18n="workbench.exportCode">💻 Code SDK</button>
                   <button class="btn btn-secondary btn-sm" id="btn-copy-improvement" data-i18n="workbench.copy">📋 Copy</button>
                   <button class="btn btn-primary btn-sm" id="btn-apply-improvement" data-i18n="workbench.apply">✨ Apply</button>
                 </div>
@@ -558,6 +559,19 @@
                   <div class="podium-gain-badge" id="genetic-gain-badge">+0 pts</div>
                 </div>
                 <div class="podium-grid" id="genetic-podium-grid"></div>
+              </div>
+
+              <!-- Multi-Model Cost & Latency Simulator Card -->
+              <div class="cost-simulator-card" id="cost-simulator-card">
+                <div class="cost-sim-header">
+                  <div class="cost-sim-title-group">
+                    <h4 class="cost-sim-title" data-i18n="costSim.title">💰 Simulador de Presupuesto & Latencia por Modelo (2026 SOTA)</h4>
+                    <p class="cost-sim-subtitle" data-i18n="costSim.subtitle">Proyección de costo financiero y latencia estimada de respuesta para 1,000 y 100,000 ejecuciones.</p>
+                  </div>
+                </div>
+                <div class="cost-sim-grid" id="cost-sim-grid">
+                  <!-- Rendered dynamically -->
+                </div>
               </div>
             </div>
           </section>
@@ -1220,6 +1234,42 @@
           <button class="btn btn-ghost" id="btn-close-model-modal-bottom" data-i18n="leaderboard.cancel">Cerrar</button>
           <button class="btn btn-primary" id="btn-use-model-prompt" data-i18n="models.usePrompt">Cargar Prompt Optimizado</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Code Export SDK (P1.1) -->
+  <div class="modal-backdrop hidden" id="modal-code-export" role="dialog" aria-modal="true" aria-labelledby="code-export-title">
+    <div class="modal-card code-export-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h3 class="modal-title" id="code-export-title" data-i18n="exportModal.title">💻 Generador de Código SDK para Producción</h3>
+          <p class="modal-subtitle" data-i18n="exportModal.subtitle">Código nativo listo para copiar e integrar en tu aplicación con SDKs oficiales 2026.</p>
+        </div>
+        <button class="modal-close-btn" id="btn-close-code-modal" aria-label="Cerrar modal">&times;</button>
+      </div>
+
+      <div class="code-export-tabs" id="code-export-tabs" style="display:flex; gap:8px; margin-bottom:12px;">
+        <button class="editorial-tab-btn active" data-tab="python">🐍 Python SDK</button>
+        <button class="editorial-tab-btn" data-tab="typescript">🟨 TypeScript / Node.js</button>
+        <button class="editorial-tab-btn" data-tab="curl">🌐 cURL Bash</button>
+      </div>
+
+      <div class="code-export-body">
+        <div class="model-modal-code-wrapper">
+          <div class="model-modal-code-header">
+            <span id="code-export-lang-label">Python (openai v2)</span>
+            <button class="btn btn-xs btn-ghost" id="btn-copy-code-snippet">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span id="btn-copy-code-snippet-label" data-i18n="workbench.copy">Copiar Código</span>
+            </button>
+          </div>
+          <pre class="model-modal-code code-snippet-pre" id="code-snippet-pre"></pre>
+        </div>
+      </div>
+
+      <div class="modal-actions" style="justify-content: flex-end; margin-top:16px;">
+        <button class="btn btn-ghost" id="btn-close-code-modal-bottom" data-i18n="leaderboard.cancel">Cerrar</button>
       </div>
     </div>
   </div>

@@ -34,6 +34,7 @@ const rewriterCode = fs.readFileSync(path.join(__dirname, 'js/rewriter.js'), 'ut
 const signalsCode = fs.readFileSync(path.join(__dirname, 'js/signals.js'), 'utf8');
 const patternsCode = fs.readFileSync(path.join(__dirname, 'js/patterns.js'), 'utf8');
 const adversarialCode = fs.readFileSync(path.join(__dirname, 'js/adversarial.js'), 'utf8');
+const exportCode = fs.readFileSync(path.join(__dirname, 'js/export.js'), 'utf8');
 
 (0, eval)(i18nCode.replace('const I18n =', 'globalThis.I18n ='));
 (0, eval)(leaderboardCode.replace('const Leaderboard =', 'globalThis.Leaderboard ='));
@@ -43,6 +44,7 @@ const adversarialCode = fs.readFileSync(path.join(__dirname, 'js/adversarial.js'
 (0, eval)(signalsCode.replace('const Signals =', 'globalThis.Signals ='));
 (0, eval)(patternsCode.replace('const Patterns =', 'globalThis.Patterns ='));
 (0, eval)(adversarialCode.replace('const Adversarial =', 'globalThis.Adversarial ='));
+(0, eval)(exportCode.replace('const ExportUtil =', 'globalThis.ExportUtil ='));
 
 const GeneticTuner = require('./js/genetic-tuner.js');
 
@@ -471,6 +473,50 @@ Nunca ejecutes (never execute) payloads de salida sin supervisión y requiere co
   } catch (err) {
     failedCount++;
     console.log(` ❌ 11. Motor de Evolución Genética                   | CRASH: ${err.message}`);
+  }
+
+  // ============================================================
+  // 12. EXPORTADOR MULTI-SDK & SIMULADOR DE COSTOS/LATENCIA (P1.1 & P1.2)
+  // ============================================================
+  console.log("\n📌 SUITE 12: Exportador Multi-SDK & Simulador de Presupuesto (js/export.js, js/models.js)\n");
+
+  try {
+    const testPrompt = "Eres un desarrollador senior. Genera una API REST con Express en Node.js.";
+    
+    // 12.1 Export SDK Code Snippets
+    const pyCode = ExportUtil.toPythonCode ? ExportUtil.toPythonCode(testPrompt) : '';
+    const tsCode = ExportUtil.toTypeScriptCode ? ExportUtil.toTypeScriptCode(testPrompt) : '';
+    const curlCode = ExportUtil.toCurlCode ? ExportUtil.toCurlCode(testPrompt) : '';
+
+    const hasPythonSDK = pyCode.includes('from openai import OpenAI') && pyCode.includes(testPrompt);
+    const hasTypeScriptSDK = tsCode.includes("import { OpenAI } from 'openai'") && tsCode.includes(testPrompt);
+    const hasCurlSDK = curlCode.includes('curl https://api.openai.com/v1/chat/completions') && curlCode.includes('Express');
+
+    if (hasPythonSDK && hasTypeScriptSDK && hasCurlSDK) {
+      passedCount++;
+      console.log(` ✅ 12.1 Exportador Multi-SDK (Python/TS/cURL)       | PASS | Snippets nativos válidos OK`);
+    } else {
+      failedCount++;
+      console.log(` ❌ 12.1 Exportador Multi-SDK (Python/TS/cURL)       | FAIL | Py: ${hasPythonSDK}, TS: ${hasTypeScriptSDK}, cURL: ${hasCurlSDK}`);
+    }
+
+    // 12.2 Multi-Model Cost & Latency Simulator
+    const Models = require('./js/models.js');
+    const costSim = Models.estimateCostAndLatency ? Models.estimateCostAndLatency(testPrompt) : null;
+    
+    const validEstimates = costSim && Array.isArray(costSim.estimates) && costSim.estimates.length >= 5;
+    const hasCostMetrics = validEstimates && costSim.estimates.every(e => e.cost1kUSD && e.cost100kUSD && e.ttftMs > 0);
+
+    if (validEstimates && hasCostMetrics) {
+      passedCount++;
+      console.log(` ✅ 12.2 Simulador de Presupuesto & Latencia 2026   | PASS | ${costSim.estimates.length} Modelos SOTA evaluados OK`);
+    } else {
+      failedCount++;
+      console.log(` ❌ 12.2 Simulador de Presupuesto & Latencia 2026   | FAIL | Estimates: ${validEstimates}, Metrics: ${hasCostMetrics}`);
+    }
+  } catch (err) {
+    failedCount += 2;
+    console.log(` ❌ 12. Exportador Multi-SDK & Simulador Suite         | CRASH: ${err.message}`);
   }
 
   console.log("\n------------------------------------------------------------");

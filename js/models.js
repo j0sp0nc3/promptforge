@@ -596,5 +596,52 @@
     countBy(type) {
       return this.list.filter(m => m.type === type).length;
     },
+
+    /**
+     * Estimate cost and latency for a prompt against models.
+     * @param {string} promptText
+     * @param {string} [modelId]
+     * @returns {Object} Cost and latency metrics
+     */
+    estimateCostAndLatency(promptText = '', modelId = null) {
+      const words = (promptText || '').trim().split(/\s+/).filter(Boolean).length;
+      const inputTokens = Math.max(1, Math.round(words * 1.35));
+      const outputTokens = 350; // standard response length estimation
+
+      const parsePrice = (str) => {
+        if (typeof str === 'number') return str;
+        if (!str) return 0;
+        const match = String(str).match(/\$([0-9.]+)/);
+        return match ? parseFloat(match[1]) : 0;
+      };
+
+      const targetModels = modelId
+        ? this.list.filter(m => m.id === modelId)
+        : this.list.slice(0, 5);
+
+      const estimates = targetModels.map(m => {
+        const inputPrice = parsePrice(m.pricing?.input);
+        const outputPrice = parsePrice(m.pricing?.output);
+        const cost1kUSD = (inputTokens / 1e6 * inputPrice + outputTokens / 1e6 * outputPrice) * 1000;
+        const cost100kUSD = cost1kUSD * 100;
+        return {
+          modelId: m.id,
+          modelName: m.name,
+          provider: m.provider,
+          contextWindow: m.contextWindow || '128k',
+          inputTokens,
+          outputTokens,
+          cost1kUSD: cost1kUSD < 0.0001 ? '< $0.0001' : `$${cost1kUSD.toFixed(4)}`,
+          cost100kUSD: cost100kUSD < 0.01 ? '< $0.01' : `$${cost100kUSD.toFixed(2)}`,
+          ttftMs: m.type === 'frontier' ? 320 : 180,
+        };
+      });
+
+      return {
+        inputTokens,
+        outputTokens,
+        estimates,
+      };
+    },
   };
 }));

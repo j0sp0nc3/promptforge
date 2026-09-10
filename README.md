@@ -254,7 +254,7 @@ promptforge/                    # Web App Repo (Vercel deployment)
 │   └── moderation.js           # Content moderation & anti-spam filter
 ├── server.js                   # REST API Microservice & Local Dev Server
 ├── cli.js                      # Node Terminal Executable
-├── test_edge_cases.js          # JS Test Suite Runner (32/32 PASS across 11 Suites)
+├── test_edge_cases.js          # JS Test Suite Runner (34/34 PASS across 12 Suites)
 ├── test_edge_cases.py          # Python Test Suite Runner (14/14 PASS)
 ├── test_production_endpoints.js# Production Endpoint Routing & Load Suite (10/10 PASS)
 ├── SPEC.md                     # Formal Product Specification (SDD Standard)
