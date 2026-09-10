@@ -168,14 +168,14 @@ Texto:
 </restricciones>
 
 <ejemplos>
-Entrada: "Microsoft contrató a 500 ingenieros en Seattle durante enero de 2024."
+Entrada: "Microsoft contrató a 500 ingenieros en Seattle durante enero de 2026."
 Salida:
 {
   "entidades": [
     {"texto": "Microsoft", "tipo": "ORGANIZACIÓN", "texto_normalizado": "Microsoft Corporation", "posicion_inicio": 0, "posicion_fin": 9, "confianza": 0.99},
     {"texto": "500", "tipo": "CANTIDAD", "texto_normalizado": "500 personas", "posicion_inicio": 22, "posicion_fin": 25, "confianza": 0.95},
     {"texto": "Seattle", "tipo": "LUGAR", "texto_normalizado": "Seattle, Washington, EE.UU.", "posicion_inicio": 40, "posicion_fin": 47, "confianza": 0.98},
-    {"texto": "enero de 2024", "tipo": "FECHA", "texto_normalizado": "2024-01", "posicion_inicio": 56, "posicion_fin": 69, "confianza": 0.97}
+    {"texto": "enero de 2026", "tipo": "FECHA", "texto_normalizado": "2026-01", "posicion_inicio": 56, "posicion_fin": 69, "confianza": 0.97}
   ],
   "relaciones": [
     {"entidad1": "Microsoft", "relacion": "CONTRATÓ_EN", "entidad2": "Seattle"}
@@ -956,7 +956,7 @@ Traduce el siguiente texto respetando el glosario y las restricciones:
       description: 'Extrae datos estructurados de texto libre y los organiza en un esquema JSON definido.',
       tags: ['extracción', 'JSON', 'datos estructurados', 'parsing', 'esquema'],
       variables: [
-        { name: 'texto', description: 'Texto del cual extraer datos', example: 'Factura #4521 - Cliente: María López, NIF: B12345678, Total: $1,250.00 USD, Fecha: 15/03/2024' },
+        { name: 'texto', description: 'Texto del cual extraer datos', example: 'Factura #4521 - Cliente: María López, NIF: B12345678, Total: $1,250.00 USD, Fecha: 15/03/2026' },
         { name: 'esquema', description: 'Esquema JSON deseado', example: '{"numero_factura": "string", "cliente": {"nombre": "string", "nif": "string"}, "total": {"monto": "number", "moneda": "string"}, "fecha": "date ISO"}' },
         { name: 'reglas', description: 'Reglas de normalización', example: 'Fechas en ISO 8601, montos sin símbolo de moneda, nombres en Title Case' }
       ],
@@ -1034,7 +1034,7 @@ Salida:
 </ejemplos>
 
 <manejo_errores>
-- Datos con formato inconsistente (ej: "15-mar-2024" vs "2024/03/15"): normalizar al formato especificado en reglas.
+- Datos con formato inconsistente (ej: "15-mar-2026" vs "2026/03/15"): normalizar al formato especificado en reglas.
 - Texto con múltiples valores para el mismo campo: incluir todos como array y advertir.
 - Si el texto no contiene ningún dato relevante para el esquema: devolver todos los campos como null con confianza 0.0.
 - Caracteres especiales o codificación rota: intentar reparar y señalar en advertencias.

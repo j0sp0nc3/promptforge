@@ -117,14 +117,14 @@ Responde ÚNICAMENTE con un objeto JSON válido con la siguiente estructura:
 </restricciones>
 
 <ejemplos>
-Entrada: "TechCorp adquirió SoftInc por 450 millones de dólares el 15 de marzo de 2025."
+Entrada: "TechCorp adquirió SoftInc por 450 millones de dólares el 15 de marzo de 2026."
 Salida:
 {
   "transaccion": {
     "empresa_compradora": "TechCorp",
     "empresa_adquirida": "SoftInc",
     "monto_usd": 450000000,
-    "fecha_cierre": "2025-03-15",
+    "fecha_cierre": "2026-03-15",
     "sector": "Tecnología"
   },
   "confianza_extraccion": 0.98,

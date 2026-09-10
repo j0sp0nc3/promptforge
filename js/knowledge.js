@@ -221,8 +221,8 @@ const Knowledge = {
       term: { es: 'Context Engineering', en: 'Context Engineering' },
       category: 'técnicas',
       def: {
-        es: 'Diseño del sistema de contexto completo que el modelo recibe (historial, memoria, RAG, herramientas, estado) en lugar de redactar una instrucción aislada. Sucesor práctico del prompt engineering en sistemas en producción (2025+).',
-        en: 'Designing the full context system the model receives (history, memory, RAG, tools, state) instead of crafting an isolated instruction. The practical successor to prompt engineering in production systems (2025+).'
+        es: 'Diseño del sistema de contexto completo que el modelo recibe (historial, memoria, RAG, herramientas, estado) en lugar de redactar una instrucción aislada. Sucesor práctico del prompt engineering en sistemas en producción (2026+).',
+        en: 'Designing the full context system the model receives (history, memory, RAG, tools, state) instead of crafting an isolated instruction. The practical successor to prompt engineering in production systems (2026+).'
       },
       crossRefs: ['t-context-engineering', 'g-context-window', 'g-vector-store']
     },
@@ -251,8 +251,8 @@ const Knowledge = {
       term: { es: 'Multimodalidad', en: 'Multimodality' },
       category: 'fundamentos',
       def: {
-        es: 'Capacidad de un modelo de comprender y generar contenido de varias modalidades (texto, imagen, audio, video) dentro de la misma ventana de contexto. Estándar en los modelos frontera desde 2024-2025.',
-        en: 'A model\'s ability to understand and generate content across multiple modalities (text, image, audio, video) within the same context window. Standard in frontier models since 2024-2025.'
+        es: 'Capacidad de un modelo de comprender y generar contenido de varias modalidades (texto, imagen, audio, video) dentro de la misma ventana de contexto. Estándar en los modelos frontera desde 2025-2026.',
+        en: 'A model\'s ability to understand and generate content across multiple modalities (text, image, audio, video) within the same context window. Standard in frontier models since 2025-2026.'
       },
       crossRefs: ['g-token', 'g-context-window']
     }
@@ -623,8 +623,8 @@ Level 3 (Execution): Execute each step calculating the involved times and costs.
       category: 'basics',
       crossLinkOnly: false,
       what: {
-        es: 'Disciplina sucesora del prompt engineering en sistemas con LLMs (2025+): en lugar de redactar una instrucción única, se diseña el sistema de contexto completo que el modelo recibe — historial, memoria, recuperación (RAG), herramientas y estado del agente. La tesis: el rendimiento depende más de qué información entra por la ventana que de la redacción del prompt.',
-        en: 'The successor discipline to prompt engineering in LLM systems (2025+): instead of crafting a single instruction, you design the full context system the model receives — history, memory, retrieval (RAG), tools and agent state. The thesis: performance depends more on what information enters the window than on prompt wording.',
+        es: 'Disciplina sucesora del prompt engineering en sistemas con LLMs (2026+): en lugar de redactar una instrucción única, se diseña el sistema de contexto completo que el modelo recibe — historial, memoria, recuperación (RAG), herramientas y estado del agente. La tesis: el rendimiento depende más de qué información entra por la ventana que de la redacción del prompt.',
+        en: 'The successor discipline to prompt engineering in LLM systems (2026+): instead of crafting a single instruction, you design the full context system the model receives — history, memory, retrieval (RAG), tools and agent state. The thesis: performance depends more on what information enters the window than on prompt wording.',
       },
       when: {
         es: 'Aplicaciones conversacionales con estado, agentes de larga duración y cualquier sistema donde el prompt aislado ya no explica el rendimiento.',
