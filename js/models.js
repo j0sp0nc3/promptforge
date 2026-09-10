@@ -25,7 +25,7 @@
 }(typeof self !== 'undefined' ? self : this, function () {
 
   return {
-    updated: "2026-08",
+    updated: "2026-09",
 
     sources: [
       {

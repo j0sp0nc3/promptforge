@@ -261,7 +261,7 @@ Estructura tu respuesta así:
 
 <ejemplos>
 Si el tema es "beneficios del trabajo remoto", un buen título sería:
-"7 Beneficios del Trabajo Remoto que las Empresas No Pueden Ignorar en 2025"
+"7 Beneficios del Trabajo Remoto que las Empresas No Pueden Ignorar en 2026"
 NO: "El Trabajo Remoto: Una Guía Completa" (demasiado genérico)
 </ejemplos>
 
