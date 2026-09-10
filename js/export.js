@@ -390,5 +390,89 @@ const ExportUtil = {
     if (n >= 40) return I18n.t('scoreEmoji.improvable');
     if (n >= 20) return I18n.t('scoreEmoji.needsWork');
     return I18n.t('scoreEmoji.critical');
+  },
+
+  /**
+   * Generate native 2026 Python SDK code for the current prompt.
+   * @param {string} promptText
+   * @param {string} [modelId]
+   * @returns {string} Python snippet
+   */
+  toPythonCode(promptText, modelId = 'gpt-4o') {
+    const safePrompt = (promptText || '').replace(/"""/g, '\\"\\"\\"');
+    return `# Promptometer 2026 — Production Code Snippet (Python SDK)
+import os
+from openai import OpenAI
+
+# Initialize client with environment API key
+client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+
+prompt = """${safePrompt}"""
+
+response = client.chat.completions.create(
+    model="${modelId}",
+    messages=[
+        {"role": "user", "content": prompt}
+    ],
+    temperature=0.2,
+)
+
+print(response.choices[0].message.content)`;
+  },
+
+  /**
+   * Generate native TypeScript / Node.js code for the current prompt.
+   * @param {string} promptText
+   * @param {string} [modelId]
+   * @returns {string} TypeScript snippet
+   */
+  toTypeScriptCode(promptText, modelId = 'gpt-4o') {
+    const safePrompt = (promptText || '').replace(/`/g, '\\`').replace(/\${/g, '\\${');
+    return `// Promptometer 2026 — Production Code Snippet (TypeScript SDK)
+import { OpenAI } from 'openai';
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+async function runPrompt() {
+  const prompt = \`${safePrompt}\`;
+
+  const completion = await openai.chat.completions.create({
+    model: '${modelId}',
+    messages: [
+      { role: 'user', content: prompt }
+    ],
+    temperature: 0.2,
+  });
+
+  console.log(completion.choices[0].message.content);
+}
+
+runPrompt().catch(console.error);`;
+  },
+
+  /**
+   * Generate cURL terminal snippet for the current prompt.
+   * @param {string} promptText
+   * @param {string} [modelId]
+   * @returns {string} cURL snippet
+   */
+  toCurlCode(promptText, modelId = 'gpt-4o') {
+    const jsonEscaped = JSON.stringify(promptText || '');
+    return `# Promptometer 2026 — Production Code Snippet (cURL)
+curl https://api.openai.com/v1/chat/completions \\
+  -H "Content-Type: application/json" \\
+  -H "Authorization: Bearer $OPENAI_API_KEY" \\
+  -d '{
+    "model": "${modelId}",
+    "messages": [
+      {
+        "role": "user",
+        "content": ${jsonEscaped}
+      }
+    ],
+    "temperature": 0.2
+  }'`;
   }
 };

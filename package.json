@@ -10,7 +10,7 @@
     "test": "node test_edge_cases.js"
   },
   "dependencies": {
-    "promptometer-core": "^1.1.0"
+    "promptometer-core": "file:packages/core"
   },
   "license": "MIT"
 }

@@ -167,6 +167,27 @@ const I18n = (() => {
         chipGenetic: '🧬 Auto-Evolucionar',
         copy: '📋 Copiar',
         apply: '✨ Aplicar',
+        exportCode: '💻 Código SDK',
+      },
+
+      // ── Cost & Latency Simulator ─────────────────────────────────────────
+      costSim: {
+        title: '💰 Simulador de Presupuesto & Latencia por Modelo (2026 SOTA)',
+        subtitle: 'Proyección de costo financiero y latencia estimada de respuesta para 1,000 y 100,000 ejecuciones.',
+        per1k: '1k Ejecuciones',
+        per100k: '100k Ejecuciones',
+        estLatency: 'Latencia TTFT',
+        contextLimit: 'Ventana Contexto',
+      },
+
+      // ── Code Export Modal ────────────────────────────────────────────────
+      exportModal: {
+        title: '💻 Generador de Código SDK para Producción',
+        subtitle: 'Código nativo listo para copiar e integrar en tu aplicación con SDKs oficiales 2026.',
+        pythonTab: '🐍 Python SDK',
+        typescriptTab: '🟨 TypeScript / Node.js',
+        curlTab: '🌐 cURL Bash',
+        copiedToast: '¡Código copiado al portapapeles!',
       },
 
       // ── Stats ───────────────────────────────────────────────────────────
@@ -1355,6 +1376,27 @@ const I18n = (() => {
         chipGenetic: '🧬 Auto-Evolve',
         copy: '📋 Copy',
         apply: '✨ Apply',
+        exportCode: '💻 SDK Code',
+      },
+
+      // ── Cost & Latency Simulator ─────────────────────────────────────────
+      costSim: {
+        title: '💰 Multi-Model Budget & Latency Simulator (2026 SOTA)',
+        subtitle: 'Financial cost projection and estimated response latency for 1,000 and 100,000 executions.',
+        per1k: '1k Executions',
+        per100k: '100k Executions',
+        estLatency: 'TTFT Latency',
+        contextLimit: 'Context Window',
+      },
+
+      // ── Code Export Modal ────────────────────────────────────────────────
+      exportModal: {
+        title: '💻 Production SDK Code Generator',
+        subtitle: 'Native code ready to copy and integrate into your app using official 2026 SDKs.',
+        pythonTab: '🐍 Python SDK',
+        typescriptTab: '🟨 TypeScript / Node.js',
+        curlTab: '🌐 cURL Bash',
+        copiedToast: 'Code copied to clipboard!',
       },
 
       stats: {

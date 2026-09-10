@@ -4781,4 +4781,88 @@ body.theme-editorial .grade-status-emerald { color: #4F7942; }
   }
 }
 
+/* ── Multi-Model Cost & Latency Simulator (P1.2) ── */
+.cost-simulator-card {
+  background: var(--bg-paper);
+  border: var(--rule);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-top: 16px;
+}
+
+.cost-sim-header {
+  margin-bottom: 12px;
+}
+
+.cost-sim-title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--vermilion);
+  margin: 0 0 4px 0;
+}
+
+.cost-sim-subtitle {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.cost-sim-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.cost-card-pill {
+  background: var(--bg-sunken);
+  border: 1px solid var(--rule-color);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cost-pill-model {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.cost-pill-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--ink-soft);
+}
+
+.cost-pill-val {
+  font-weight: 700;
+  color: var(--vermilion);
+}
+
+.code-export-card {
+  max-width: 680px;
+  width: 92%;
+}
+
+.code-snippet-pre {
+  max-height: 340px;
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: #0d1117;
+  color: #c9d1d9;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  margin: 0;
+}
+
+
 
