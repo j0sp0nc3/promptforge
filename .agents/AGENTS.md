@@ -10,14 +10,19 @@ and design decisions that MUST be respected.
 - The npm package is `promptometer-core`.
 - The web app repo is `promptforge` (deployment name only).
 
-## Git Workflow
-- Active development branch is `dev`. All code changes and commits must be pushed to `origin dev`.
-- Production branch is `main`. Merge `dev` → `main` only when ready to release to production.
+## Git Workflow & Regla Estricta de Promoción a Producción
+- **Desarrollo en Rama `dev`:** Toda modificación, feature o bugfix debe iniciarse, commitearse y pushearse exclusivamente a la rama `dev` (`origin dev`).
+- **PROHIBIDO PUSH DIRECTO A `main`:** Queda estrictamente prohibido commitear o pushear directo a `main` sin haber pasado previamente por `dev` y completado las validaciones.
+- **Workflow de Puertas de Calidad:**
+  1. **Local:** Probar localmente en `http://localhost:3001` y ejecutar `node test_edge_cases.js` (34/34 PASS obligatorios).
+  2. **Staging / Dev:** Commit y push a `dev` → verificar despliegue preview en `https://promptometer.vercel.app/`.
+  3. **Producción (`main`):** Únicamente tras confirmar que el entorno `dev` funciona de forma impecable y sin errores en runtime ni en build de Vercel, se realiza la fusión de `dev` a `main` (`git checkout main && git merge dev && git push origin main`) para actualizar `https://promptometer.tech/`.
+  4. **No Bypasses:** Los hotfixes de emergencia deben seguir exactamente el mismo flujo (`dev` → validación → `main`).
 
 ## Deployment Environments & API Separation
 - **Development (dev branch):** `https://promptometer.vercel.app/` — auto-deploys from every push to `dev`. Dev uses relative `/api/*` endpoints (same-origin, no separate subdomain or env variable needed).
 - **Production (main branch):** `https://promptometer.tech/` — auto-deploys from every push to `main`. In production ONLY, API calls route to `https://api.promptometer.tech/api/*` via `js/api-config.js` (requires DNS CNAME setup in Vercel/Cloudflare when releasing to main).
-- Workflow: commit on `dev` → verify on `promptometer.vercel.app` → merge `dev` → `main` → live on `promptometer.tech`.
+- Strict Workflow: commit on `dev` → verify on `promptometer.vercel.app` → validate 0 errors → merge `dev` → `main` → live on `promptometer.tech`.
 
 ## Design System: Editorial Technical
 - Background: Cream Paper `#F7F3EC`
