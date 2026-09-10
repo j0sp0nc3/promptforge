@@ -139,6 +139,7 @@ const I18n = (() => {
         clear: 'Limpiar',
         analyze: 'Analizar Prompt',
         analyzing: 'Analizando...',
+        aiEvaluateBtn: '✨ Evaluación IA (LLM Judge)',
         placeholder: 'Escribe o pega tu prompt aquí para analizarlo...\n\nEjemplo:\nEres un experto en marketing digital. Analiza el siguiente texto y extrae las 5 ideas principales. Presenta los resultados en formato de lista numerada con una breve explicación de cada punto.',
       },
 
@@ -1350,6 +1351,7 @@ const I18n = (() => {
         clear: 'Clear',
         analyze: 'Analyze Prompt',
         analyzing: 'Analyzing...',
+        aiEvaluateBtn: '✨ AI Evaluation (LLM Judge)',
         placeholder: 'Type or paste your prompt here to analyze it...\n\nExample:\nYou are a digital marketing expert. Analyze the following text and extract the 5 main ideas. Present the results as a numbered list with a brief explanation of each point.',
       },
 
