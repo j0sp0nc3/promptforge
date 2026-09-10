@@ -66,6 +66,22 @@ interactiva desplegada en Vercel.
 
 ---
 
+## 📋 Backlog de Funcionalidades Pendientes (Priorizado 2026)
+
+### 📌 Prioridad 1: ALTA (Innovación Core & DX de Producción)
+- [ ] **P1.1 — Exportador Multi-SDK Native Code Snippets (Python / TS / Curl):** Botón en Workbench que convierte cualquier prompt calibrado en código listo para producción usando SDKs oficiales 2026 (OpenAI Python v2, Anthropic TS SDK, Google GenAI SDK, Curl con headers MCP).
+- [ ] **P1.2 — Multi-Model Cost & Token Latency Simulator:** Calculadora en tiempo real en Workbench que estima el costo exacto (por 1k / 100k ejecuciones) y latencia en el Top 10 de modelos (Claude Mythos, GPT-5.6 Sol, Gemini 3.1 Pro, DeepSeek V4, Llama 4).
+
+### 📌 Prioridad 2: MEDIA (Seguridad & MCP)
+- [ ] **P2.1 — MCP Schema Inspector & Auto-Validator:** Inspector interactivo para pegar esquemas JSON/YAML de servidores MCP y auditar si el prompt declara correctamente las herramientas (`<tools>`) y guardrails (`<loop_guard>`).
+- [ ] **P2.2 — Playground de Inyección Adversarial Personalizada & Fuzzing local:** Generador interactivo para ingresar vectores de ataque propios y testear resistencia contra OWASP LLM07.
+
+### 📌 Prioridad 3: MANTENIMIENTO & PERMITIVIDAD
+- [ ] **P3.1 — Streaming SSE de Noticias en Vivo (`/api/ai-news`):** Sustitución de polling por Server-Sent Events (SSE) para noticias e investigaciones.
+- [ ] **P3.2 — PWA Offline First & Service Worker Cache:** Soporte 100% offline para el motor de scoring, tuner genético y hub de conocimiento.
+
+---
+
 ## ✅ Tareas Completadas
 
 - [x] Renombrar proyecto de PromptQuill → Promptometer (código, UI, repos)
