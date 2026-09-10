@@ -1268,7 +1268,7 @@ const App = (() => {
   function renderABComparison(analysis, improved) {
     if (!analysis || !improved) return;
 
-    const originalPrompt = currentPromptText || '';
+    const originalPrompt = currentAnalysis?.prompt || document.getElementById('prompt-input')?.value || '';
     const calibratedPrompt = improved.improvedPrompt || '';
     const scoreA = analysis.overallScore || 0;
     const gradeA = analysis.overallGrade || 'F';
@@ -1321,11 +1321,13 @@ const App = (() => {
   }
 
   function runGeneticEvolution() {
-    if (!currentPromptText || typeof GeneticTuner === 'undefined') return;
+    const promptText = currentAnalysis?.prompt || document.getElementById('prompt-input')?.value || '';
+    if (!promptText || typeof GeneticTuner === 'undefined') return;
 
-    const result = GeneticTuner.evolve(currentPromptText, currentAnalysis, {
-      objective: currentObjective,
-      domainArchetype: currentAnalysis?.domainArchetype
+    const objective = currentAnalysis?.objective || document.getElementById('prompt-objective-select')?.value || 'general';
+    const result = GeneticTuner.evolve(promptText, currentAnalysis, {
+      objective,
+      domainArchetype: currentAnalysis?.analysis?.domainArchetype
     });
 
     if (!result || !result.variants.length) return;
