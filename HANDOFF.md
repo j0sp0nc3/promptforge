@@ -277,3 +277,10 @@ promptforge/                    ← App Web (Vercel)
 >
 > **Commit `cb28095` — Orden Canónico de 7 Bloques XML:**
 > - Set único de etiquetas canónicas (`<system_role>` → `<objective>` → `<context>` → `<requirements>` → `<output_format>` → `<examples>` → `<error_handling>`) en toda la cadena.
+>
+> **Sesión 2026-09-10 — Regla Estricta de Promoción a Producción & Bugfix ReferenceError:**
+> - **Establecimiento de Regla Inviolable de Promoción:** Se actualizó `AGENTS.md` y `.agents/AGENTS.md` con la regla de Puertas de Calidad obligatoria: todo cambio DEBE probarse en local (`http://localhost:3001`), validar `34/34 PASS` en `node test_edge_cases.js`, commitearse únicamente a `dev`, verificarse libre de errores en `https://promptometer.vercel.app/`, y SOLO TRAS VALIDACIÓN COMPLETA ser fusionado a `main` (`https://promptometer.tech/`). PROHIBIDO bypass directo a `main`.
+> - **Resolución Bug ReferenceError `currentPromptText` (`js/app.js`):** Corregido fallo de runtime en `renderABComparison` y `runGeneticEvolution` al cambiar de idioma (`onLangChange`). Reemplazada variable no declarada por lectura segura de `currentAnalysis?.prompt`.
+> - **Multi-SDK Export (P1.1) & Simulador de Presupuesto (P1.2):** Implementados `toPythonCode()`, `toTypeScriptCode()`, `toCurlCode()` en `js/export.js` y `estimateCostAndLatency()` en `js/models.js`.
+> - **Vercel Static Serving Fix (`vercel.json`):** Restaurada matriz explícita de builds `@vercel/static` y `@vercel/node` para resolver fallos 404 MIME type (`text/html`) en producción.
+> - **Verificación:** 34/34 tests PASS en `node test_edge_cases.js`. Commits en `dev` y `main` completamente sincronizados.
