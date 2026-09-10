@@ -213,32 +213,6 @@ let globalLeaderboard = [
 ];
 
 
-function _handleSuggestModel(req, res, payload) {
-  const name = String(payload.name || '').trim();
-  const provider = String(payload.provider || '').trim();
-  const type = String(payload.type || 'frontier').trim();
-  const benchmarks = String(payload.benchmarks || '').trim();
-
-  if (!name || !provider) {
-    res.writeHead(400, { 'Content-Type': 'application/json' });
-    return res.end(JSON.stringify({ error: 'El nombre y proveedor del modelo son obligatorios.' }));
-  }
-
-  // Sanitize
-  const cleanName = name.replace(/[<>]/g, '').slice(0, 100);
-  const cleanProvider = provider.replace(/[<>]/g, '').slice(0, 100);
-  const cleanBenchmarks = benchmarks.replace(/[<>]/g, '').slice(0, 500);
-
-  console.log(`[Model Suggestion] ${cleanName} by ${cleanProvider} (${type}) - ${cleanBenchmarks}`);
-
-  res.writeHead(200, { 'Content-Type': 'application/json' });
-  return res.end(JSON.stringify({
-    success: true,
-    message: 'Sugerencia de modelo recibida con éxito para verificación automática en el Observatorio.',
-    model: { name: cleanName, provider: cleanProvider, type }
-  }));
-}
-
 module.exports = (req, res) => {
   const origin = req.headers.origin || '';
   const clientIp = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '127.0.0.1';
