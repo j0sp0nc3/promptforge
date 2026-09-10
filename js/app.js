@@ -518,6 +518,20 @@ const App = (() => {
           showToast(t('toast.pasteError'), 'error');
         }
       });
+    const btnAiMain = document.getElementById('btn-ai-evaluate-main');
+    if (btnAiMain) {
+      btnAiMain.addEventListener('click', async () => {
+        const promptInput = document.getElementById('prompt-input');
+        const prompt = promptInput ? promptInput.value.trim() : '';
+        if (!prompt) {
+          showToast(t('toast.emptyPrompt') || 'Por favor ingresa un prompt', 'error');
+          return;
+        }
+        const btnDeepAi = document.getElementById('btn-deep-domain-ai');
+        if (btnDeepAi) {
+          btnDeepAi.click();
+        }
+      });
     }
 
     const btnDeepAi = document.getElementById('btn-deep-domain-ai');
