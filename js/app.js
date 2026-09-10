@@ -518,6 +518,8 @@ const App = (() => {
           showToast(t('toast.pasteError'), 'error');
         }
       });
+    }
+
     const btnAiMain = document.getElementById('btn-ai-evaluate-main');
     if (btnAiMain) {
       btnAiMain.addEventListener('click', async () => {
