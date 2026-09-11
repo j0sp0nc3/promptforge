@@ -245,16 +245,17 @@ promptforge/                    # Web App Repo (Vercel deployment)
 │   ├── leaderboard.js          # Top 10 Hall of Fame & Persistence Module
 │   ├── history.js              # Persistence & Evolution Charts
 │   ├── charts.js               # Chart.js Radar & Line Wrapper
-│   ├── export.js               # JSON, Markdown, Clipboard & URL Exporters
+│   ├── export.js               # JSON, Markdown, Clipboard & Multi-SDK Exporters (Python/TS/cURL)
 │   ├── constellation3d.js      # 3D Solar System Constellation Engine (Three.js WebGL)
-│   ├── genetic-tuner.js        # Local Genetic Algorithm & Iterative Mutation Engine (PoC)
+│   ├── genetic-tuner.js        # Local Genetic Algorithm & Iterative Mutation Engine
+│   ├── mcp-inspector.js        # MCP Schema Inspector & Auto-Validator (P2.1)
 │   └── app.js                  # Main UI Orchestrator
 ├── api/
 │   ├── index.js                # Secured Vercel Serverless API wrapper (including /api/analyze-intent)
 │   └── moderation.js           # Content moderation & anti-spam filter
 ├── server.js                   # REST API Microservice & Local Dev Server
 ├── cli.js                      # Node Terminal Executable
-├── test_edge_cases.js          # JS Test Suite Runner (34/34 PASS across 12 Suites)
+├── test_edge_cases.js          # JS Test Suite Runner (37/37 PASS across 13 Suites)
 ├── test_edge_cases.py          # Python Test Suite Runner (14/14 PASS)
 ├── test_production_endpoints.js# Production Endpoint Routing & Load Suite (10/10 PASS)
 ├── SPEC.md                     # Formal Product Specification (SDD Standard)

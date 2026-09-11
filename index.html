@@ -278,6 +278,11 @@
         <button class="lang-btn active" data-lang="es" type="button">ES</button>
         <button class="lang-btn" data-lang="en" type="button">EN</button>
       </div>
+      <button class="btn-icon" id="btn-mcp-inspector" data-i18n-title="mcpInspector.btnTitle" title="Inspector de Esquemas MCP" aria-label="Inspector de Esquemas MCP" data-i18n-aria="mcpInspector.btnTitle">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+        </svg>
+      </button>
       <button class="btn-icon" id="btn-export-menu" data-i18n-title="nav.export" title="Exportar" aria-label="Exportar" data-i18n-aria="nav.export">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"
           stroke-linecap="round" stroke-linejoin="round">
@@ -1295,6 +1300,55 @@
     </div>
   </div>
 
+  <!-- ── Modal: MCP Schema Inspector & Auto-Validator (P2.1) ── -->
+  <div class="modal-backdrop hidden" id="modal-mcp-inspector" role="dialog" aria-modal="true" aria-labelledby="mcp-modal-title">
+    <div class="modal-card modal-card--lg">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-icon">🔧</span>
+          <h3 class="modal-title" id="mcp-modal-title" data-i18n="mcpInspector.modalTitle">Inspector de Esquemas MCP & Contrato de Herramientas</h3>
+        </div>
+        <button class="btn-icon modal-close" id="btn-close-mcp-modal" aria-label="Cerrar modal">&times;</button>
+      </div>
+
+      <p class="modal-subtitle" data-i18n="mcpInspector.modalSubtitle">Pega la definición JSON de tus herramientas MCP para auditar la cobertura y generar contratos XML formalizados.</p>
+
+      <div class="mcp-inspector-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px;">
+        <!-- Input Column -->
+        <div class="mcp-inspector-col">
+          <div class="mcp-col-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <label for="mcp-schema-input" class="mcp-label" style="font-weight:600; font-size:0.85rem;" data-i18n="mcpInspector.inputLabel">Esquema de Herramientas MCP (JSON / Tools):</label>
+            <button class="btn-sm btn-ghost" id="btn-mcp-sample-schema" data-i18n="mcpInspector.sampleBtn">Cargar Ejemplo MCP</button>
+          </div>
+          <textarea id="mcp-schema-input" class="prompt-textarea mcp-textarea" style="height: 220px; font-family: var(--font-mono); font-size: 0.8rem;" placeholder='{ "tools": [ { "name": "query_database", ... } ] }'></textarea>
+          <button class="btn btn-primary btn-sm" id="btn-mcp-audit" style="margin-top:10px; width:100%;">
+            <span data-i18n="mcpInspector.auditBtn">🔍 Auditar Cobertura contra Prompt Activo</span>
+          </button>
+        </div>
+
+        <!-- Audit Results Column -->
+        <div class="mcp-inspector-col" style="display: flex; flex-direction: column;">
+          <label class="mcp-label" style="font-weight:600; font-size:0.85rem; margin-bottom: 6px;" data-i18n="mcpInspector.resultsLabel">Resultado de Auditoría & Cobertura Agéntica:</label>
+          <div id="mcp-audit-results" class="mcp-audit-results-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px; font-size: 0.85rem; flex: 1;">
+            <div class="mcp-empty-audit" style="color: var(--ink-soft); text-align: center; padding: 20px 0;" data-i18n="mcpInspector.awaitingInput">Ingresa un esquema MCP y haz clic en Auditar para ver la cobertura.</div>
+          </div>
+          
+          <div class="mcp-contract-output hidden" id="mcp-contract-container" style="margin-top:12px;">
+            <label class="mcp-label" style="font-weight:600; font-size:0.8rem; display:block; margin-bottom:4px;" data-i18n="mcpInspector.generatedContractLabel">Contrato XML &lt;tools&gt; Generado:</label>
+            <pre class="mcp-code-preview" id="mcp-contract-xml" style="background: #0d1117; color: #e6edf3; padding: 10px; border-radius: 6px; max-height: 120px; overflow-y: auto; font-family: var(--font-mono); font-size: 0.75rem; margin:0;"></pre>
+            <button class="btn btn-emerald btn-sm" id="btn-mcp-inject" style="margin-top:8px; width:100%;">
+              <span data-i18n="mcpInspector.injectBtn">✨ Inyectar Contrato XML en 1-Click</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions" style="justify-content: flex-end; margin-top:16px;">
+        <button class="btn btn-ghost" id="btn-close-mcp-bottom" data-i18n="leaderboard.cancel">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- 3D Visualization Engine (Three.js & OrbitControls) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -1308,6 +1362,7 @@
   <script src="js/analyzer.js"></script>
   <script src="js/adversarial.js"></script>
   <script src="js/rewriter.js"></script>
+  <script src="js/mcp-inspector.js"></script>
   <script src="js/genetic-tuner.js"></script>
   <script src="js/templates.js"></script>
   <script src="js/history.js"></script>

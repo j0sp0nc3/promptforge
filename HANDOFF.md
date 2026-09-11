@@ -73,7 +73,7 @@ interactiva desplegada en Vercel.
 - [x] **P1.2 — Multi-Model Cost & Token Latency Simulator:** Calculadora en tiempo real en Workbench que estima el costo exacto (por 1k / 100k ejecuciones) y latencia en el Top 10 de modelos (Claude Mythos, GPT-5.6 Sol, Gemini 3.1 Pro, DeepSeek V4, Llama 4).
 
 ### 📌 Prioridad 2: MEDIA (Seguridad & MCP)
-- [ ] **P2.1 — MCP Schema Inspector & Auto-Validator:** Inspector interactivo para pegar esquemas JSON/YAML de servidores MCP y auditar si el prompt declara correctamente las herramientas (`<tools>`) y guardrails (`<loop_guard>`).
+- [x] **P2.1 — MCP Schema Inspector & Auto-Validator (`js/mcp-inspector.js`, `#modal-mcp-inspector`):** Inspector interactivo para pegar esquemas JSON/YAML de servidores MCP y auditar la cobertura de herramientas (`<tools>`), argumentos tipados y guardrails (`<loop_guard>`).
 - [ ] **P2.2 — Playground de Inyección Adversarial Personalizada & Fuzzing local:** Generador interactivo para ingresar vectores de ataque propios y testear resistencia contra OWASP LLM07.
 
 ### 📌 Prioridad 3: MANTENIMIENTO & PERMITIVIDAD
@@ -283,15 +283,21 @@ promptforge/                    ← App Web (Vercel)
 > - **Resolución Bug ReferenceError `currentPromptText` (`js/app.js`):** Corregido fallo de runtime en `renderABComparison` y `runGeneticEvolution` al cambiar de idioma (`onLangChange`). Reemplazada variable no declarada por lectura segura de `currentAnalysis?.prompt`.
 > - **Multi-SDK Export (P1.1) & Simulador de Presupuesto (P1.2):** Implementados `toPythonCode()`, `toTypeScriptCode()`, `toCurlCode()` en `js/export.js` y `estimateCostAndLatency()` en `js/models.js`.
 > - **Vercel Static Serving Fix (`vercel.json`):** Restaurada matriz explícita de builds `@vercel/static` y `@vercel/node` para resolver fallos 404 MIME type (`text/html`) en producción.
-> - **Verificación:** 34/34 tests PASS en `node test_edge_cases.js`. Commits en `dev` y `main` completamente sincronizados.
+> - **Verificación:** 34/34 tests PASS en `node test_edge_cases.js`.
 >
 > **Sistema de Diseño Promptometer DS v3.8 (2026-09-10):**
 > - **Archivos fuente (`dev`, no tocados por la suite del motor):**
 >   - `css/ds/tokens.css` — L1 primitivas zinc `--pm-*` → L2 semánticos light/dark → L3 componente + **paletas conmutables** (`body[data-accent]`: coral·volt·cyan·magenta·amber·iris; **default coral eléctrico #FF5200**) + craft layer (grad ambient, dots, grad text, numerales fantasma, featured) + legacy compat `theme-cosmic/theme-editorial` (deprecar en U-1 real).
 >   - `css/ds/base.css` — reset, roles tipográficos Inter ( jerarquía por peso 550–640, tracking −0.03 a −0.05), ritmo de headings (¡todo h1/h2/h3 con `margin-block-end`!), skip-link, focus-ring AA, **Phosphor `.ph` + `.icon-btn`**, utilidades.
 >   - `css/ds/components.css` — registro canónico BT/IB/CH/TB/BA/SD/DM/PC/TO/MD/SR/EM/CR; paneles sin cajas (hairline groups), featured única por vista (superficie gradiente + aura accent), modal canónico con header 80px/icon/lista/footer.
->   - `design-system.html` — playground vivo (9 secciones, hero Apple/Linear, switch tema + 6 acentos, coreografía de score, Phosphor activo, sección 08 con IN-1/SE-2/DA-1/DD-1).
+>   - `design-system.html` — playground vivo (9 sections, hero Apple/Linear, switch tema + 6 acentos, coreografía de score, Phosphor activo, sección 08 con IN-1/SE-2/DA-1/DD-1).
 > - **Fix stacking v3.8 (crítico, aplicar en U-4):** la regla `.pg-section > :not(.craft-numeral) { z-index:1 }` aplanaba todos los hermanos a z-1; el último del DOM (tabla posterior al listbox) pintaba ENCIMA del menú z900 atrapado en un contexto z1. Solución: numeral fantasma a `z-index:-1` (nunca empujar hermanos arriba); overlays nunca dependen de `:not()` que suba a todos los hermanos.
 > - **Iconos:** Phosphor (`.ph`) via CDN en playground; **en U-4 self-hostear subset** usado con `font-display: swap`.
 > - **Lecciones fijadas (no repetir):** `--s-5: 20px` debe existir (tokens fantasma rompen silencioso); headings necesitan `margin-block-end` post-reset; máx 1 panel featured por vista; glows/zuecos sin causa física prohibidos; score idle `···` en opacity 0.6 (nunca `--` a 0.35).
 > - **Doc completa:** `tasks/ui-redesign-plan.md` §5/§5.b (gap: IN-1 textarea, SE-1 select, DA-1 tabla modelos, DD-1 dropdown, FT-1 footer, FR-1 forms, CT-1 search, LB-1, TP-1, SW-1) + ADRs §13.
+>
+> **Sesión 2026-09-11 — Feature P2.1 MCP Schema Inspector & Auto-Validator:**
+> - **Módulo Core `js/mcp-inspector.js`:** Creado analizador de esquemas JSON/YAML de herramientas MCP (Model Context Protocol, OpenAI tools, Anthropic tools). Evalúa 5 criterios agénticos (`hasToolsContract`, `hasLoopGuard`, `toolCoverage`, `typedParameters`, `errorHandling`) y genera el contrato XML `<tools>` formalizado.
+> - **Modal Interactivo `#modal-mcp-inspector` (`index.html`, `css/index.css`, `js/app.js`):** Interfaz para pegar definiciones MCP, botón *"Cargar Ejemplo MCP"*, tarjeta con el reporte de la auditoría y botón de *"Inyectar Contrato XML en 1-Click"* al prompt activo del editor.
+> - **Paridad i18n (`js/i18n.js`):** Agregado objeto `mcpInspector` en español e inglés con 0 llaves faltantes verificadas en Suite 4.
+> - **Suite 13 de Pruebas (`test_edge_cases.js`):** Añadida Suite 13 evaluando parseo de esquemas MCP, auditoría de 5 vectores agénticos y generación de contratos XML con **37/37 PASS**.

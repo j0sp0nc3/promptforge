@@ -28,6 +28,7 @@ const App = (() => {
     setupRadarView();
     setupModelsView();
     setupLeaderboardView();
+    setupMcpInspectorHandlers();
     setupTickerControls();
     renderNewsTicker();
     // Live AI news: fetch on load, then refresh every 5 minutes (and when the
@@ -1875,8 +1876,115 @@ const App = (() => {
     }
   }
 
-  function closeScoreLegendModal() {
-    document.getElementById('modal-score-legend')?.classList.add('hidden');
+  // ── MCP Schema Inspector & Auto-Validator (P2.1) ───────────────
+  function openMcpInspectorModal() {
+    const modal = document.getElementById('modal-mcp-inspector');
+    if (modal) {
+      modal.classList.remove('hidden');
+      focusModal(modal);
+    }
+  }
+
+  function closeMcpInspectorModal() {
+    document.getElementById('modal-mcp-inspector')?.classList.add('hidden');
+  }
+
+  function setupMcpInspectorHandlers() {
+    const btnOpen = document.getElementById('btn-mcp-inspector');
+    const btnCloseTop = document.getElementById('btn-close-mcp-modal');
+    const btnCloseBottom = document.getElementById('btn-close-mcp-bottom');
+    const btnSample = document.getElementById('btn-mcp-sample-schema');
+    const btnAudit = document.getElementById('btn-mcp-audit');
+    const btnInject = document.getElementById('btn-mcp-inject');
+
+    if (btnOpen) btnOpen.addEventListener('click', openMcpInspectorModal);
+    if (btnCloseTop) btnCloseTop.addEventListener('click', closeMcpInspectorModal);
+    if (btnCloseBottom) btnCloseBottom.addEventListener('click', closeMcpInspectorModal);
+
+    if (btnSample) {
+      btnSample.addEventListener('click', () => {
+        const input = document.getElementById('mcp-schema-input');
+        if (input && typeof McpInspector !== 'undefined') {
+          input.value = McpInspector.getSampleSchema();
+        }
+      });
+    }
+
+    if (btnAudit) {
+      btnAudit.addEventListener('click', () => {
+        const schemaInput = document.getElementById('mcp-schema-input');
+        const promptInput = document.getElementById('prompt-input');
+        const schemaText = schemaInput ? schemaInput.value.trim() : '';
+        const promptText = promptInput ? promptInput.value.trim() : '';
+
+        if (!schemaText) {
+          showToast(t('mcpInspector.invalidSchema'), 'error');
+          return;
+        }
+
+        if (typeof McpInspector === 'undefined') return;
+
+        const audit = McpInspector.inspect(schemaText, promptText);
+        renderMcpAuditResults(audit);
+      });
+    }
+
+    if (btnInject) {
+      btnInject.addEventListener('click', () => {
+        const schemaInput = document.getElementById('mcp-schema-input');
+        const promptInput = document.getElementById('prompt-input');
+        if (!schemaInput || !promptInput || typeof McpInspector === 'undefined') return;
+
+        const tools = McpInspector.parseSchema(schemaInput.value);
+        if (!tools.length) return;
+
+        const xmlContract = McpInspector.generateXmlContract(tools);
+        if (!xmlContract) return;
+
+        promptInput.value = Rewriter.injectSnippet(promptInput.value, xmlContract);
+        updateEditorStats();
+        closeMcpInspectorModal();
+        showToast(t('mcpInspector.contractInjected'), 'success');
+        runAnalysis();
+      });
+    }
+  }
+
+  function renderMcpAuditResults(audit) {
+    const container = document.getElementById('mcp-audit-results');
+    const contractContainer = document.getElementById('mcp-contract-container');
+    const xmlPreview = document.getElementById('mcp-contract-xml');
+
+    if (!container) return;
+
+    if (!audit || !audit.isValidSchema) {
+      container.innerHTML = `<div class="mcp-empty-audit" style="color: var(--accent-red);">${escapeHtml(t('mcpInspector.invalidSchema'))}</div>`;
+      contractContainer?.classList.add('hidden');
+      return;
+    }
+
+    const scoreClass = audit.score >= 75 ? 'badge-emerald' : audit.score >= 50 ? 'badge-amber' : 'badge-red';
+
+    let html = `
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+        <span style="font-weight:600;">${escapeHtml(t('mcpInspector.scoreLabel'))}:</span>
+        <span class="card-score-badge ${scoreClass}" style="font-size:0.9rem; padding: 2px 8px;">${audit.score}/100</span>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:6px; font-size:0.8rem;">
+        <div>${audit.hasToolsContract ? '✅' : '❌'} ${escapeHtml(audit.hasToolsContract ? t('mcpInspector.hasContract') : t('mcpInspector.missingContract'))}</div>
+        <div>${audit.hasLoopGuard ? '✅' : '❌'} ${escapeHtml(audit.hasLoopGuard ? t('mcpInspector.hasLoopGuard') : t('mcpInspector.missingLoopGuard'))}</div>
+        <div>ℹ️ ${escapeHtml(t('mcpInspector.coverageStat', { pct: audit.toolCoverage }))} (${audit.toolDetails.filter(t=>t.isMentioned).length}/${audit.toolsCount})</div>
+        <div>${audit.hasTypedParams ? '✅' : '⚠️'} ${escapeHtml(audit.hasTypedParams ? t('mcpInspector.typedParams') : t('mcpInspector.untypedParams'))}</div>
+      </div>
+    `;
+
+    container.innerHTML = html;
+
+    if (contractContainer && xmlPreview) {
+      const xml = McpInspector.generateXmlContract(audit.tools);
+      xmlPreview.textContent = xml;
+      contractContainer.classList.remove('hidden');
+    }
   }
 
   function checkShareURL() {

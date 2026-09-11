@@ -1243,6 +1243,30 @@ const I18n = (() => {
         contact: 'Contacto (promptometer@gmail.com)',
       },
 
+      // ── MCP Schema Inspector & Auto-Validator (P2.1) ──────────────────────
+      mcpInspector: {
+        btnTitle: 'Inspector de Esquemas MCP & Contrato de Herramientas',
+        modalTitle: 'Inspector de Esquemas MCP & Contrato de Herramientas',
+        modalSubtitle: 'Pega la definición JSON de tus herramientas MCP para auditar la cobertura y generar contratos XML formalizados.',
+        inputLabel: 'Esquema de Herramientas MCP (JSON / Tools):',
+        sampleBtn: 'Cargar Ejemplo MCP',
+        auditBtn: '🔍 Auditar Cobertura contra Prompt Activo',
+        resultsLabel: 'Resultado de Auditoría & Cobertura Agéntica:',
+        awaitingInput: 'Ingresa un esquema MCP y haz clic en Auditar para ver la cobertura.',
+        generatedContractLabel: 'Contrato XML <tools> Generado:',
+        injectBtn: '✨ Inyectar Contrato XML en 1-Click',
+        invalidSchema: 'El texto ingresado no es un esquema JSON válido de herramientas MCP.',
+        contractInjected: '¡Contrato XML de herramientas MCP inyectado en el prompt!',
+        scoreLabel: 'Puntaje de Cobertura Agéntica MCP',
+        hasContract: 'Bloque <tools> presente en el prompt',
+        missingContract: 'Falta bloque <tools> en el prompt',
+        hasLoopGuard: 'Protección <loop_guard> presente',
+        missingLoopGuard: 'Falta salvaguarda anti-bucle <loop_guard>',
+        coverageStat: '{pct}% de las herramientas del esquema están mencionadas',
+        typedParams: 'Parámetros con tipos de datos especificados',
+        untypedParams: 'Parámetros sin tipos de datos explícitos',
+      },
+
       // ── Toast Messages ──────────────────────────────────────────────────
       toast: {
         writePrompt: 'Por favor ingresa o pega un prompt para analizar.',
@@ -2425,6 +2449,30 @@ const I18n = (() => {
         linkedin: 'LinkedIn profile',
         x: 'X (Twitter) profile',
         contact: 'Contact (promptometer@gmail.com)',
+      },
+
+      // ── MCP Schema Inspector & Auto-Validator (P2.1) ──────────────────────
+      mcpInspector: {
+        btnTitle: 'MCP Schema Inspector & Tool Contract',
+        modalTitle: 'MCP Schema Inspector & Tool Contract',
+        modalSubtitle: 'Paste JSON definitions of your MCP tools to audit coverage and generate canonical XML contracts.',
+        inputLabel: 'MCP Tool Schema (JSON / Tools):',
+        sampleBtn: 'Load Sample MCP Schema',
+        auditBtn: '🔍 Audit Coverage Against Active Prompt',
+        resultsLabel: 'Audit Results & Agentic Coverage:',
+        awaitingInput: 'Enter an MCP schema and click Audit to view coverage.',
+        generatedContractLabel: 'Generated XML <tools> Contract:',
+        injectBtn: '✨ Inject XML Contract in 1-Click',
+        invalidSchema: 'The entered text is not a valid JSON MCP tool schema.',
+        contractInjected: 'MCP tool XML contract injected into prompt!',
+        scoreLabel: 'MCP Agentic Coverage Score',
+        hasContract: '<tools> block present in prompt',
+        missingContract: 'Missing <tools> block in prompt',
+        hasLoopGuard: '<loop_guard> protection present',
+        missingLoopGuard: 'Missing anti-loop safeguard <loop_guard>',
+        coverageStat: '{pct}% of schema tools are mentioned in prompt',
+        typedParams: 'Parameters have specified data types',
+        untypedParams: 'Parameters missing explicit data types',
       },
 
       // ── Toast Messages ──────────────────────────────────────────────────

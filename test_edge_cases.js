@@ -519,6 +519,55 @@ Nunca ejecutes (never execute) payloads de salida sin supervisión y requiere co
     console.log(` ❌ 12. Exportador Multi-SDK & Simulador Suite         | CRASH: ${err.message}`);
   }
 
+  // ── SUITE 13: Inspector & Validador de Esquemas MCP (js/mcp-inspector.js) ─
+  console.log("\n📌 SUITE 13: Inspector & Validador de Esquemas MCP (js/mcp-inspector.js)\n");
+  try {
+    const McpInspector = require('./js/mcp-inspector.js');
+    const sampleSchema = McpInspector.getSampleSchema();
+    const tools = McpInspector.parseSchema(sampleSchema);
+    
+    // 13.1 Parseo de Esquema JSON MCP
+    if (Array.isArray(tools) && tools.length === 2 && tools[0].name === 'query_database') {
+      passedCount++;
+      console.log(` ✅ 13.1 Parseo de Esquema JSON MCP (2 Herramientas) | PASS | Tools parseadas: ${tools.map(t=>t.name).join(', ')}`);
+    } else {
+      failedCount++;
+      console.log(` ❌ 13.1 Parseo de Esquema JSON MCP (2 Herramientas) | FAIL | Count: ${tools.length}`);
+    }
+
+    // 13.2 Auditoría de Cobertura Agéntica
+    const testPromptAgentico = `<tools>
+  <tool name="query_database">
+    <parameters><param name="query" type="string" required="true">SQL query</param></parameters>
+  </tool>
+</tools>
+<loop_guard>Máximo 5 iteraciones</loop_guard>`;
+
+    const audit = McpInspector.inspect(sampleSchema, testPromptAgentico);
+    if (audit.isValidSchema && audit.hasToolsContract && audit.hasLoopGuard && audit.score >= 70) {
+      passedCount++;
+      console.log(` ✅ 13.2 Auditoría de Cobertura & Salvaguardas     | PASS | Score: ${audit.score}/100, Contract: ${audit.hasToolsContract}, LoopGuard: ${audit.hasLoopGuard}`);
+    } else {
+      failedCount++;
+      console.log(` ❌ 13.2 Auditoría de Cobertura & Salvaguardas     | FAIL | Score: ${audit.score}, Valid: ${audit.isValidSchema}`);
+    }
+
+    // 13.3 Generación de Contrato XML <tools>
+    const xmlContract = McpInspector.generateXmlContract(tools);
+    const isValidXml = xmlContract.includes('<tools>') && xmlContract.includes('<tool name="query_database">') && xmlContract.includes('</tools>');
+
+    if (isValidXml) {
+      passedCount++;
+      console.log(` ✅ 13.3 Generación de Contrato XML <tools>       | PASS | Bloque XML canónico generado OK`);
+    } else {
+      failedCount++;
+      console.log(` ❌ 13.3 Generación de Contrato XML <tools>       | FAIL | Valid: ${isValidXml}`);
+    }
+  } catch (err) {
+    failedCount += 3;
+    console.log(` ❌ 13. Inspector & Validador MCP Suite             | CRASH: ${err.message}`);
+  }
+
   console.log("\n------------------------------------------------------------");
   console.log(`Resumen Total: ${passedCount + failedCount} Pruebas | ✅ Éxito: ${passedCount} | ❌ Fallos/Crashes: ${failedCount}`);
   console.log("------------------------------------------------------------\n");
