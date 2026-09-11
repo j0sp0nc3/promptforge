@@ -5244,3 +5244,29 @@ body.theme-editorial .orbital-constellation-container {
 .footer-avatar { border-radius: var(--r-full); }
 .site-footer a { color: var(--ink-faint); }
 .site-footer a:hover { color: var(--ink); }
+
+/* ── U-5.1 · Hero DS v3.5 (manifiesto tipográfico + métricas) ──── */
+.hero-header-content { text-align: center; max-width: 62ch; margin-inline: auto; }
+.hero-header-content .t-micro { display: inline-block; margin-bottom: var(--s-3); color: var(--ink-soft); letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.78rem; font-weight: 600; }
+.hero-main-title {
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  font-weight: 640;
+  letter-spacing: -0.05em;
+  line-height: 1.04;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.hero-main-subtitle { color: var(--ink-soft); max-width: 52ch; margin: var(--s-4) auto 0; font-size: 0.95rem; }
+.hero-metrics-strip {
+  display: flex; justify-content: center; gap: var(--s-12);
+  margin-top: var(--s-10);
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--rule-color);
+}
+.hero-metrics-strip > div { display: flex; flex-direction: column; gap: 2px; min-width: 72px; }
+.hero-metrics-strip strong {
+  font-family: var(--font-mono); font-variant-numeric: tabular-nums;
+  font-size: 1.4rem; font-weight: 650; letter-spacing: -0.04em; color: var(--ink);
+}
+.hero-metrics-strip span { font-size: 0.72rem; color: var(--ink-faint); letter-spacing: 0.02em; }
+@media (max-width: 560px) { .hero-metrics-strip { gap: var(--s-6); flex-wrap: wrap; } }

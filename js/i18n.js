@@ -145,8 +145,13 @@ const I18n = (() => {
 
       // ── Analyzer hero header ─────────────────────────────────────────────
       hero: {
-        title: 'Comparación & Calibración de Prompts',
-        subtitle: 'Optimización de Prompts & Espacio de Calibración Orbital 8D',
+        kicker: 'Motor de evaluación · 8 dimensiones · 100% local',
+        title: 'Ingeniería de prompts,<br />con estándar de producto.',
+        subtitle: 'Scoring multidimensional 8D, 37 anti-patrones y laboratorio adversarial. Determinista, auditable, 100% local.',
+        metricDims: 'dimensiones',
+        metricAntis: 'anti-patrones',
+        metricAdv: 'tests adversariales',
+        metricLocal: 'latencia local',
       },
 
       // ── Workbench cards, pills & action chips ──────────────────────────
@@ -1367,8 +1372,13 @@ const I18n = (() => {
       },
 
       hero: {
-        title: 'Prompt Comparison & Calibration',
-        subtitle: 'Prompt Optimization & 8D Orbital Calibration Workspace',
+        kicker: 'Evaluation engine · 8 dimensions · 100% local',
+        title: 'Prompt engineering,<br />product grade.',
+        subtitle: '8D multidimensional scoring, 37 anti-patterns and an adversarial lab. Deterministic, auditable, 100% local.',
+        metricDims: 'dimensions',
+        metricAntis: 'anti-patterns',
+        metricAdv: 'adversarial tests',
+        metricLocal: 'local latency',
       },
 
       workbench: {
