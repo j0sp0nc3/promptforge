@@ -4984,3 +4984,263 @@ background: var(--bg-sunken);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
+
+/* ── U-4.2 · Editor & Select → DS skin ─────────────────────────── */
+.prompt-textarea {
+  background: var(--bg-sunken);
+  border: 1px solid var(--rule-color);
+  border-radius: var(--r-2);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  letter-spacing: -0.011em;
+  padding: var(--s-4) var(--s-4);
+  transition: border-color var(--dur-fast) var(--ease-standard), background var(--dur-fast) var(--ease-standard);
+}
+.prompt-textarea::placeholder { color: var(--ink-faint); font-style: normal; }
+.prompt-textarea:hover:not(:focus) { border-color: var(--pm-w200); }
+.prompt-textarea:focus { border-color: var(--accent); outline: none; box-shadow: none; }
+
+.objective-selector-bar { background: transparent; border: none; padding: 0 0 var(--s-2) 0; }
+.objective-label { font-size: 0.78rem; font-weight: 550; color: var(--ink-soft); letter-spacing: 0.02em; }
+.objective-select {
+  background: var(--bg-sunken);
+  border: 1px solid var(--rule-color);
+  border-radius: var(--r-1);
+  padding: 6px 10px;
+  font-size: 0.8125rem;
+  font-family: var(--font-sans);
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-standard);
+}
+.objective-select:focus, .objective-select:hover { border-color: var(--accent); }
+.objective-select option { background: var(--bg-raised); color: var(--ink); }
+body.theme-editorial .objective-selector-bar { background: transparent; border: none; }
+body.theme-editorial .objective-select { background: var(--bg-sunken); border-color: var(--rule-color); color: var(--ink); }
+
+.editor-stats { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.stat { color: var(--ink-soft); font-size: 0.78rem; }
+.stat-divider { color: var(--ink-faint); opacity: 0.35; }
+
+/* ── U-4.2 · Dark cards (legacy) → morir cuando toque dom ─────── */
+.warning-pill {
+  font-size: 0.72rem;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  letter-spacing: 0;
+  border-radius: var(--r-full);
+  padding: 3px 8px;
+  background: var(--err-bg);
+  color: var(--err);
+  border: none;
+}
+.calibrated-pill-tag {
+  border-radius: var(--r-full);
+  font-size: 0.72rem;
+  font-weight: 500;
+  font-family: var(--font-mono);
+  background: var(--ok-bg);
+  color: var(--ok);
+  border: 1px solid transparent;
+}
+
+/* ── U-4.2 · Constellation stage → DS room (spotlight suave) ──── */
+.orbital-constellation-container {
+  background: radial-gradient(ellipse 60% 50% at 50% 45%, rgba(255,255,255,0.045), transparent 70%);
+  border: 1px solid var(--rule-color);
+  border-radius: var(--r-3);
+  height: auto;
+  min-height: 380px;
+}
+body.theme-editorial .orbital-constellation-container {
+  background: radial-gradient(ellipse 60% 50% at 50% 45%, rgba(0,0,0,0.04), transparent 70%);
+}
+.central-score-box .central-score-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+  letter-spacing: -0.045em;
+}
+.eval-dim-card .eval-dim-name { font-family: var(--font-sans); font-weight: 550; }
+
+/* ── U-4.3 · Modals → DS MD-1 (surface plana, hairline, footer) ── */
+.modal-overlay { background: var(--bg-modal-overlay); backdrop-filter: blur(4px); }
+.modal-card, .modal {
+  background: var(--bg-raised);
+  border: 1px solid var(--rule-color);
+  border-radius: var(--r-3);
+  box-shadow: var(--shadow-modal);
+}
+.modal-title {
+  font-family: var(--font-sans);
+  font-weight: 610;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  font-size: 1.1rem;
+}
+.modal-input {
+  background: var(--bg-sunken);
+  border: 1px solid var(--rule-color);
+  border-radius: var(--r-1);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  transition: border-color var(--dur-fast) var(--ease-standard);
+}
+.modal-input:focus { border-color: var(--accent); outline: none; box-shadow: none; }
+.modal-footer { border-top: 1px solid var(--rule-color); background: transparent; }
+
+/* ── Ticker → DS NK-2 (mono, hairline, sin glows) ──────────────── */
+.news-ticker-bar { background: var(--bg-raised); border-bottom: 1px solid var(--rule-color); }
+.news-ticker-track .ticker-item { font-family: var(--font-mono); }
+.news-ticker-track .ticker-author { color: var(--accent-text); }
+.news-ticker-track .ticker-tag { color: var(--ink-faint); }
+.news-ticker-track .ticker-text { color: var(--ink-soft); }
+.news-ticker-track .ticker-time { color: var(--ink-faint); opacity: 0.7; }
+.ticker-badge { background: var(--accent-soft); color: var(--accent-text); border-radius: var(--r-full); }
+.ticker-badge-icon { color: var(--accent); }
+.ticker-ctrl-btn { background: transparent; color: var(--ink-faint); border-radius: var(--r-1); }
+.ticker-ctrl-btn:hover { background: var(--bg-sunken); color: var(--ink); }
+
+/* ── Toasts → DS TO-1 (surface + hairline, semántica intacta) ─── */
+.toast {
+  background: var(--bg-raised);
+  color: var(--ink);
+  border: 1px solid var(--rule-color);
+  border-radius: var(--r-2);
+  box-shadow: var(--shadow-modal);
+  backdrop-filter: none;
+}
+.toast-icon { color: var(--accent); }
+.toast-success .toast-icon { color: var(--ok); }
+.toast-warning .toast-icon { color: var(--warn); }
+.toast-error .toast-icon { color: var(--err); }
+
+/* ── Empty states → DS EM-1 ───────────────────────────────────── */
+.empty-title { font-family: var(--font-sans); font-weight: 600; letter-spacing: -0.02em; color: var(--ink-soft); }
+.empty-text { color: var(--ink-faint); }
+
+/* ── U-4.4 · Vistas secundarias → DS (models, templates, history, learn, radar, leaderboard) ── */
+.view-title { font-family: var(--font-sans); font-weight: 610; letter-spacing: -0.03em; color: var(--ink); }
+.view-subtitle { font-family: var(--font-sans); color: var(--ink-soft); font-weight: 400; }
+.view-subtitle, .templates-subtitle { max-width: 52ch; }
+
+/* Template cards → hairline, hover elevación DS */
+.template-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--rule-color);
+  border-radius: var(--r-2);
+  box-shadow: none;
+  transition: border-color var(--dur-fast) var(--ease-standard), transform var(--dur-fast) var(--ease-standard), box-shadow var(--dur-fast) var(--ease-standard);
+}
+.template-card:hover { border-color: var(--pm-w300); box-shadow: var(--shadow-2); }
+.template-name { font-family: var(--font-sans); font-weight: 600; letter-spacing: -0.02em; }
+.template-desc { color: var(--ink-soft); }
+.template-tags .tag { font-family: var(--font-mono); font-size: 0.72rem; background: var(--bg-sunken); color: var(--ink-soft); border-radius: var(--r-full); }
+
+/* History → mono score + hairline rows */
+.history-item {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--rule-color);
+  border-radius: 0;
+  padding: var(--s-3) 0;
+}
+.history-item:last-child { border-bottom: none; }
+.history-score-value { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 650; letter-spacing: -0.02em; }
+.history-preview { color: var(--ink-soft); }
+.history-date { font-family: var(--font-mono); font-size: 0.78rem; color: var(--ink-faint); }
+
+/* Learn cards → DS panel hairline */
+.learn-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--rule-color);
+  border-radius: var(--r-2);
+  box-shadow: none;
+}
+.learn-card:hover { border-color: var(--pm-w300); }
+.learn-term-name { font-family: var(--font-sans); font-weight: 600; letter-spacing: -0.02em; color: var(--ink); }
+.learn-term-def, .learn-term-example { color: var(--ink-soft); }
+.learn-example-block { background: var(--bg-sunken); border-left: 2px solid var(--accent); border-radius: 0 var(--r-1) var(--r-1) 0; }
+.learn-example-code { font-family: var(--font-mono); font-size: 0.8125rem; }
+.learn-subnav-btn {
+  font-family: var(--font-sans); font-weight: 500; border-radius: var(--r-1);
+  color: var(--ink-faint); background: transparent;
+}
+.learn-subnav-btn.active { background: var(--accent-soft); color: var(--accent-text); }
+.learn-search-input {
+  background: var(--bg-sunken); border: 1px solid var(--rule-color); border-radius: var(--r-1);
+  color: var(--ink); font-family: var(--font-sans);
+}
+.learn-search-input:focus { border-color: var(--accent); outline: none; }
+
+/* Radar cards → hairline + avatar ring */
+.radar-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--rule-color);
+  border-radius: var(--r-2);
+  box-shadow: none;
+}
+.radar-card:hover { border-color: var(--pm-w300); }
+.radar-name { font-family: var(--font-sans); font-weight: 600; }
+.radar-handle { font-family: var(--font-mono); color: var(--ink-faint); }
+.platform-pill { background: var(--bg-sunken); color: var(--ink-soft); border-radius: var(--r-full); font-family: var(--font-mono); font-size: 0.72rem; }
+
+/* Leaderboard → rank medal DS (accent soft, nada brillante) */
+.leaderboard-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--rule-color);
+  border-radius: var(--r-2);
+  box-shadow: none;
+}
+.leaderboard-rank { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.leaderboard-rank.rank-1 { color: var(--accent); }
+.leaderboard-rank.rank-2 { color: var(--ink-soft); }
+.leaderboard-rank.rank-3 { color: var(--pm-z400); }
+.leaderboard-prompt-preview { color: var(--ink-soft); }
+
+/* Models → MO-1 grid + MO-2 podium */
+.model-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--rule-color);
+  border-radius: var(--r-2);
+  box-shadow: none;
+  transition: border-color var(--dur-fast) var(--ease-standard), box-shadow var(--dur-fast) var(--ease-standard);
+}
+.model-card:hover { border-color: var(--accent); box-shadow: var(--shadow-2); }
+.model-card-name { font-family: var(--font-sans); font-weight: 600; letter-spacing: -0.02em; }
+.model-card-provider { font-family: var(--font-mono); color: var(--ink-faint); }
+.model-type-tag { border-radius: var(--r-full); font-family: var(--font-mono); font-size: 0.72rem; }
+.model-type-tag--frontier { background: var(--accent-soft); color: var(--accent-text); }
+.model-type-tag--open_weights { background: var(--bg-sunken); color: var(--ink-soft); }
+.model-metrics-grid .metric-item { background: var(--bg-sunken); border-radius: var(--r-1); }
+.metric-item .metric-label { font-family: var(--font-mono); font-size: 0.7rem; color: var(--ink-faint); }
+.metric-item .metric-value { font-family: var(--font-mono); font-weight: 600; font-variant-numeric: tabular-nums; }
+.podium-card { background: var(--bg-raised); border: 1px solid var(--rule-color); border-radius: var(--r-2); box-shadow: none; }
+.podium-card--gold { border-color: color-mix(in srgb, var(--accent) 35%, transparent); }
+.filter-chip { font-family: var(--font-sans); font-weight: 500; border-radius: var(--r-full); }
+.filter-chip.active { background: var(--accent-soft); color: var(--accent-text); }
+
+/* Finding cards → DA-4 (sin gradiente, semántica por severidad intacta via badge) */
+.finding-card {
+  background: var(--bg-sunken);
+  border: 1px solid var(--rule-color);
+  border-left: 3px solid var(--pm-w200);
+  border-radius: var(--r-1);
+  box-shadow: none;
+}
+.finding-card-critical { border-left-color: var(--sev-critical); }
+.finding-card-high { border-left-color: var(--sev-high); }
+.finding-card-medium { border-left-color: var(--sev-medium); }
+.finding-card-low { border-left-color: var(--sev-low); }
+.finding-card-strength { border-left-color: var(--ok); }
+.change-item { background: var(--bg-sunken); border-radius: var(--r-1); }
+.change-type { font-family: var(--font-mono); font-size: 0.72rem; }
+
+/* ── U-4.5 · Footer FT-1 + viewport audit ──────────────────────── */
+.site-footer { background: transparent; border-top: 1px solid var(--rule-color); }
+.footer-author-text { color: var(--ink-soft); }
+.footer-avatar { border-radius: var(--r-full); }
+.site-footer a { color: var(--ink-faint); }
+.site-footer a:hover { color: var(--ink); }
