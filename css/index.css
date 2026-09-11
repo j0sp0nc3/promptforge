@@ -4866,3 +4866,121 @@ body.theme-editorial .grade-status-emerald { color: #4F7942; }
 
 
 
+
+/* ╚════════════════════════════════════════════════════════════════
+   U-4 · DS OVERRIDE LAYER (v3.8) — Tanda 1
+   Traduce las clases legacy de fricción al DS (Inter+zinc+accent).
+   Carga DESPUÉS de css/ds/*.css (orden del <head>): gana cascada.
+   NO usa !important; especificidad igual o mayor que legacy.
+   ╚════════════════════════════════════════════════════════════════ */
+
+/* ── Fondo plano del tema (mata radiales neon legacy) ─────────── */
+body.theme-editorial,
+body.theme-cosmic {
+  background: var(--bg-body);
+  background-image: none;
+}
+
+/* ── Workbench cards → DS panels (hairline, sin glass) ─────────── */
+.workbench-card {
+  background: var(--bg-raised) !important;
+  border: 1px solid var(--rule-color);
+  border-radius: var(--r-2);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* ── Header → plano, hairline zinc (sin glass) ────────────────── */
+.app-header {
+  background: transparent !important;
+  border-bottom: 1px solid var(--rule-color);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* ── Nav Btns → DS tab underline fino + typografía Inter ──────── */
+.nav-btn {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: -0.011em;
+  color: var(--ink-faint);
+  border-bottom: 2px solid transparent;
+  transition: color var(--dur-fast) var(--ease-standard);
+}
+.nav-btn:hover { color: var(--ink-soft); }
+.nav-btn.active { color: var(--ink); border-bottom-color: var(--accent); }
+
+/* ── Hero del analyzer → manifest typográfico (Inter 610) ─────── */
+.analyzer-hero-header { text-align: center; padding-block: var(--s-12) var(--s-10); border-block-end: 1px solid var(--rule-color); }
+.hero-main-title {
+  font-family: var(--font-sans);
+  font-size: var(--fs-h2);
+  font-weight: 610;
+  letter-spacing: -0.032em;
+  color: var(--ink);
+}
+.hero-main-subtitle {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  letter-spacing: -0.011em;
+  margin-top: var(--s-2);
+}
+
+/* ── Score badges → DS mono tabular ───────────────────────────── */
+.card-score-badge {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  border-radius: var(--r-full);
+  padding: 4px 10px;
+background: var(--bg-sunken);
+  color: var(--ink-soft);
+  border: 1px solid var(--rule-color);
+}
+
+/* ── Badge semánticos → tokens DS (sev-*) ─────────────────────── */
+.badge-red { background: var(--err-bg); color: var(--err); }
+.badge-emerald { background: var(--ok-bg); color: var(--ok); }
+.badge-neutral { background: var(--bg-sunken); color: var(--ink-soft); }
+.badge { border-radius: var(--r-full); }
+
+/* ── Tab bar → hairline zinc + underline fino accent ──────────── */
+.tab-bar { border-bottom: 1px solid var(--rule-color); gap: var(--s-5); }
+.tab {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ink-faint);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.tab:hover { color: var(--ink-soft); }
+.tab.active { color: var(--ink); border-bottom-color: var(--accent); }
+
+/* ── Botones → DS BT-1 (zinc flat, sin gradient) ──────────────── */
+.btn { font-family: var(--font-sans); font-weight: 500; letter-spacing: -0.011em; border-radius: var(--r-1); }
+.btn-primary { background: var(--accent); color: var(--accent-ink); border: none; }
+.btn-primary:hover:not(:disabled) { background: var(--accent-hover); }
+.btn-secondary { background: var(--bg-raised); color: var(--ink); border: 1px solid var(--rule-color); }
+.btn-secondary:hover:not(:disabled) { background: var(--bg-sunken); }
+.btn-ghost { background: transparent; color: var(--ink-soft); border: none; }
+.btn-ghost:hover:not(:disabled) { background: var(--bg-sunken); color: var(--ink); }
+
+/* ── Chips/badges de calibrated → DS CH-1/BA-1 ────────────────── */
+.action-chip { font-family: var(--font-sans); font-weight: 500; border-radius: var(--r-full); background: var(--bg-sunken); color: var(--ink-soft); border: 1px solid transparent; }
+.action-chip:hover { background: var(--accent-soft); color: var(--accent-text); }
+.action-chip--genetic { background: var(--accent-soft); color: var(--accent-text); }
+
+/* ── Panels/section groupingsDS .panel (sin cajas dobles) ────── */
+.panel {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}

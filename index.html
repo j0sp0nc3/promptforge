@@ -65,6 +65,15 @@
   <!-- Styles -->
   <link rel="stylesheet" href="css/index.css">
 
+  <!-- Design System v3.8 (después de index.css: gana cascada sin !important) -->
+  <link rel="stylesheet" href="css/ds/tokens.css">
+  <link rel="stylesheet" href="css/ds/base.css">
+  <link rel="stylesheet" href="css/ds/components.css">
+
+  <!-- Phosphor Icons (regular + bold) -->
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
+
   <!-- JSON-LD Structured Data for Search Engines & AI Crawlers (Schema.org) -->
   <script type="application/ld+json">
   [
@@ -145,7 +154,7 @@
 </head>
 
 
-<body>
+<body class="theme-cosmic" data-accent="coral">
   <!-- Toast container -->
   <div id="toast-container" class="toast-container" aria-live="polite"></div>
 
