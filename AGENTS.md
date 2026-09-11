@@ -25,8 +25,8 @@ Este archivo define las reglas de convivencia, restricciones y contexto ontológ
      b) Ejecutar y aprobar la suite de pruebas (`node test_edge_cases.js`).
      c) Hacer commit y push **EXCLUSIVAMENTE a la rama `dev`** (`git push origin dev`).
      d) **DETENERSE Y PEDIR VALIDACIÓN:** El agente debe avisar al usuario que el despliegue está listo en `dev` (`https://promptometer.vercel.app/`) y DETENERSE por completo.
-     e) **Aprobación del Usuario:** ÚNICAMENTE cuando el USUARIO pruebe en `dev` y dé la orden explícita en el chat ("pasa a prod" / "haz merge a main"), se podrá realizar el merge `dev` → `main`. NUNCA promover a `main` de forma automática.
-   - **Prohibición de Bypass:** Ningún parche de emergencia o hotfix puede tocar `main` sin pasar por la aprobación explícita del usuario en `dev`.
+     e) **Aprobación del Usuario y Promoción vía PR:** ÚNICAMENTE cuando el USUARIO pruebe en `dev` y dé la orden explícita en el chat ("pasa a prod" / "haz merge a main"), se abrirá un **Pull Request de `dev` → `main`** (nunca merge directo ni push automático). El PR queda abierto al usuario como puerta de revisión final.
+   - **Prohibición de Bypass:** Ningún parche de emergencia o hotfix puede tocar `main` sin pasar por PR y aprobación explícita del usuario en el chat.
 6. **Sistema de Diseño Sagrado:**
    - Modo Dual: *Cosmic Event Horizon* (`#08090E`, `#FF9E00`) y *Editorial Technical* (`#F7F3EC`, `#C73E2D`, `#1A1612`).
    - Tipografía: Fraunces / Space Grotesk (títulos), IBM Plex Mono / JetBrains Mono (datos/código), Inter (cuerpo).
