@@ -312,3 +312,10 @@ promptforge/                    ← App Web (Vercel)
 > - **Streaming SSE (`/api/ai-news`, `js/app.js`):** Implementada transmisión en tiempo real vía Server-Sent Events (SSE) en `/api/ai-news?sse=true` (`text/event-stream`) con eventos `news_init`, `news_update` y `ping` heartbeat, con fallback automático.
 > - **PWA Offline First (`sw.js`, `manifest.json`):** Creado Service Worker `sw.js` con estrategia Stale-While-Revalidate para los 29 assets estáticos del core y Network-First para llamados API, permitiendo ejecución 100% offline del motor de scoring y herramientas.
 > - **Suite 15 de Pruebas (`test_edge_cases.js`):** Añadida Suite 15 validando la integridad del SW/PWA Manifest y la transmisión del endpoint SSE con **42/42 PASS**.
+>
+> **Sesión 2026-09-11 — Sincronización `dev` & Bugfix ReferenceError / HTML Meta Deprecation:**
+> - **Sincronización Git `dev`:** Ejecutada verificación y sincronización `git pull origin dev` (rama en la versión más reciente `b7bcbcb`).
+> - **Bugfix `closeScoreLegendModal` (`js/app.js`):** Definida la función `closeScoreLegendModal()` faltante en `js/app.js` para ocultar `#modal-score-legend`, resolviendo la excepción de JavaScript `Uncaught ReferenceError: closeScoreLegendModal is not defined` durante la inicialización de la app.
+> - **Eliminación de Deprecation Warning PWA (`index.html`):** Añadido `<meta name="mobile-web-app-capable" content="yes">` en el `<head>` de `index.html` para cumplir con las especificaciones modernas de navegadores web y PWA.
+> - **Verificación Total:** 42/42 pruebas unitarias y de integración PASS en `node test_edge_cases.js`.
+

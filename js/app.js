@@ -1923,6 +1923,13 @@ const App = (() => {
     }
   }
 
+  function closeScoreLegendModal() {
+    const modal = document.getElementById('modal-score-legend');
+    if (modal) {
+      modal.classList.add('hidden');
+    }
+  }
+
   // ── MCP Schema Inspector & Auto-Validator (P2.1) ───────────────
   function openMcpInspectorModal() {
     const modal = document.getElementById('modal-mcp-inspector');
