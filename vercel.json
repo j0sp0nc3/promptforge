@@ -125,6 +125,10 @@
       "dest": "/js/$1"
     },
     {
+      "src": "/design-system.html",
+      "dest": "/design-system.html"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
