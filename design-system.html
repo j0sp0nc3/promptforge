@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Promptometer — Design System v3 · Modern Product</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/bold/style.css">
+  <link rel="stylesheet" href="css/ds/tokens.css">
+  <link rel="stylesheet" href="css/ds/base.css">
+  <link rel="stylesheet" href="css/ds/components.css">
+  <style>
+    /* playground chrome — not part of the DS */
+    .pg-wrap { max-width: 1080px; margin-inline: auto; padding-inline: var(--s-8); }
+    .pg-nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; gap: var(--s-6);
+      padding: var(--s-4) var(--s-8);
+      background: color-mix(in srgb, var(--bg-body) 82%, transparent);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--rule-color);
+    }
+    .pg-brand {
+      display: inline-flex; align-items: center; gap: 10px;
+    }
+    .pg-brand strong { font-size: 0.95rem; font-weight: 650; letter-spacing: -0.02em; }
+    .pg-nav .seg .tab { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 28px; padding: 0; }
+    .pg-nav .seg .tab [data-icon] { display: inline-flex; }
+    .pg-row { display: flex; flex-wrap: wrap; gap: var(--s-3); align-items: center; }
+    .pg-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--s-8); }
+    .pg-hero { margin-top: var(--s-16); padding-block: var(--s-16) var(--s-12); }
+    /* v3.5 Apple/Linear hero: sin glows, luz solo tipográfica */
+    .pg-hero-copy { text-align: center; margin-inline: auto; }
+    .pg-hero-copy .t-micro {
+      display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
+      padding: 5px 14px; border-radius: 9999px;
+      background: var(--bg-sunken); color: var(--ink-soft);
+      letter-spacing: 0.08em; margin-bottom: var(--s-8);
+    }
+    .pg-hero-copy .t-manifesto { font-size: clamp(2.9rem, 6.5vw, 4.6rem); max-width: none; }
+    body.theme-dark .pg-hero-copy .t-manifesto { color: #F4F5F7; }
+    .pg-hero .pg-lead { margin-inline: auto; max-width: 46ch; }
+    .pg-hero-cta { justify-content: center; margin-top: var(--s-10); display: flex; gap: var(--s-3); }
+    .pg-hero-stats {
+      margin-top: var(--s-16);
+      display: flex; justify-content: center; gap: var(--s-2);
+      border-top: none; padding-top: 0;
+    }
+    .pg-hero-stats > div { padding: 0 var(--s-6); display: flex; align-items: baseline; gap: 10px; }
+    .pg-hero-stats > div + div { border-left: 1px solid var(--rule-color); }
+    .pg-hero-stats strong { font-size: 1.3rem; font-weight: 640; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+    .pg-hero-stats span { font-size: var(--fs-micro); color: var(--ink-faint); }
+    /* score module centrado, estilo keynote */
+    .pg-hero-stage {
+      margin-top: var(--s-24);
+      max-width: 520px; margin-inline: auto;
+      text-align: center;
+      padding: var(--s-16) var(--s-8) var(--s-12);
+      border-radius: var(--r-3);
+      background: var(--grad-surface);
+      border: 1px solid var(--rule-color);
+      box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+    }
+    body.theme-dark .pg-hero-stage { border-color: transparent; }
+    .pg-hero-grid { display: block; }
+    .pg-section { padding-block: var(--s-16); border-top: 1px solid var(--rule-color); position: relative; overflow: clip; }
+    /* numeral al FONDO con z negativo — los hermanos quedan static y los
+       overlays (listbox/dropdown z900) no quedan atrapados en sub-árbols z1 */
+    .pg-section .craft-numeral { position: absolute; top: var(--s-8); right: var(--s-6); z-index: -1; }
+    .pg-section:last-of-type { padding-bottom: var(--s-24); }
+    html, body { overflow-x: clip; }
+    .pg-section-num { margin-bottom: var(--s-3); }
+    .pg-section h2 { max-width: 26ch; }
+    .pg-lead { color: var(--ink-soft); max-width: 58ch; margin-bottom: var(--s-10); font-size: 1rem; }
+    .spec {
+      display: flex; justify-content: space-between; gap: var(--s-6);
+      font-family: var(--font-mono); font-size: 0.72rem; font-weight: 500;
+      color: var(--ink-soft); padding: 9px 0;
+      border-bottom: 1px solid var(--rule-color);
+    }
+    .spec:last-child { border-bottom: none; }
+    .spec span:last-child { color: var(--ink-faint); }
+    ::backdrop { background: var(--bg-modal-overlay); }
+    /* accent switcher swatches */
+    .pg-accents { display: inline-flex; gap: 6px; padding: 4px; background: var(--bg-sunken); border-radius: 9999px; }
+    .acc-swatch {
+      width: 24px; height: 24px; border-radius: 50%;
+      display: grid; place-items: center;
+      border: 2px solid transparent;
+      transition: border-color var(--dur-fast) var(--ease-standard), transform var(--dur-inst) var(--ease-standard);
+    }
+    .acc-swatch span { width: 16px; height: 16px; border-radius: 50%; display: block; }
+    .acc-swatch:hover { transform: scale(1.12); }
+    .acc-swatch.active { border-color: var(--ink); }
+  </style>
+</head>
+
+<body class="theme-light">
+  <a href="#pg-main" class="skip-link">Saltar al contenido</a>
+
+  <div class="pg-nav">
+    <div class="pg-brand">
+      <span class="craft-blip" style="background:var(--accent)"></span>
+      <strong>Promptometer DS</strong>
+    </div>
+    <span class="t-micro">v3.8 · electric accents</span>
+    <div style="margin-left:auto" class="u-row u-gap-3">
+      <div class="pg-accents" role="toolbar" aria-label="Acento eléctrico">
+        <button class="acc-swatch" data-accent="coral" title="Coral eléctrico" aria-label="Acento coral"><span style="background:#FF5200"></span></button>
+        <button class="acc-swatch" data-accent="volt" title="Volt lima" aria-label="Acento volt"><span style="background:#A3E635"></span></button>
+        <button class="acc-swatch" data-accent="cyan" title="Cian eléctrico" aria-label="Acento cian"><span style="background:#00CFFF"></span></button>
+        <button class="acc-swatch" data-accent="magenta" title="Magenta nocturno" aria-label="Acento magenta"><span style="background:#E23AA5"></span></button>
+        <button class="acc-swatch" data-accent="amber" title="Ámbar herencia" aria-label="Acento ámbar"><span style="background:#FF9E00"></span></button>
+        <button class="acc-swatch" data-accent="iris" title="Iris (indigo cliché)" aria-label="Acento iris"><span style="background:#6366F1"></span></button>
+      </div>
+      <div class="seg" role="tablist" aria-label="Tema">
+        <button class="tab active" role="tab" aria-selected="true" id="pg-t-light" title="Tema claro"><span data-icon="sun" data-icon-size="s"></span></button>
+        <button class="tab" role="tab" aria-selected="false" id="pg-t-dark" title="Tema oscuro"><span data-icon="moon" data-icon-size="s"></span></button>
+      </div>
+      <button class="btn btn--ghost btn--sm" id="pg-open-modal">Modal</button>
+      <button class="btn btn--ghost btn--sm" id="pg-toast-demo">Toast</button>
+    </div>
+  </div>
+
+  <main id="pg-main" class="pg-wrap">
+
+    <!-- HERO — v3.5 Apple/Linear: centro tipográfico puro, sin glows -->
+    <header class="pg-hero">
+      <div class="pg-hero-copy">
+        <p class="t-micro">Promptometer Design System <span style="color:var(--accent-text)">· v3.5</span></p>
+        <h1 class="t-manifesto">Ingeniería de prompts,<br>con estándar de producto.</h1>
+        <p class="pg-lead">
+          Scoring multidimensional 8D, 37 anti-patrones y laboratorio adversarial.
+          Determinista, auditable, 100% local.
+        </p>
+        <div class="pg-row pg-hero-cta">
+          <button class="btn btn--primary" id="pg-run"><span data-icon="bolt" data-icon-size="s"></span>Evaluar prompt</button>
+          <button class="btn btn--ghost">Ver el motor →</button>
+        </div>
+        <div class="pg-hero-stats" aria-label="Métricas del motor">
+          <div><strong>8</strong><span>dimensiones</span></div>
+          <div><strong>37</strong><span>anti-patrones</span></div>
+          <div><strong>15</strong><span>tests adversariales</span></div>
+          <div><strong>$0</strong><span>latencia local</span></div>
+        </div>
+      </div>
+      <!-- Score stage — keynote module -->
+      <div class="pg-hero-stage score-hero score-hero--idle" id="pg-hero">
+        <p class="t-micro" style="margin-bottom:var(--s-6)">Score engine · live</p>
+        <div class="score-ring">
+          <svg viewBox="0 0 120 120">
+            <circle class="ring-track" cx="60" cy="60" r="52" fill="none" stroke-width="5"/>
+            <circle id="pg-ring" cx="60" cy="60" r="52" fill="none" stroke="var(--accent)" stroke-width="5"
+              stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7" transform="rotate(-90 60 60)"/>
+          </svg>
+        </div>
+        <div class="score-value" id="pg-score">···</div>
+        <div class="score-grade" id="pg-grade">sin evaluar</div>
+      </div>
+    </header>
+
+    <!-- 01 Color -->
+    <section class="pg-section" id="sec-color"><span class="craft-numeral" aria-hidden="true">01</span>
+      <p class="t-micro" style="margin-bottom:var(--s-2)">01 · Color</p>
+      <h2 class="t-h2">Una rampa que no compite con el contenido.</h2>
+      <p class="pg-lead">Rampa zinc para todo lo neutro. Indigo como único color de acción. Estados solo en feedback real.</p>
+      <div class="pg-cols">
+        <div class="panel">
+          <p class="t-micro" style="margin-bottom:var(--s-4)">Superficies</p>
+          <div class="pg-row" style="margin-bottom:var(--s-6)">
+            <div style="width:72px;height:72px;border-radius:var(--r-2);background:var(--accent)" title="accent"></div>
+            <div style="width:72px;height:72px;border-radius:var(--r-2);background:var(--accent-soft)" title="accent-soft"></div>
+            <div style="width:72px;height:72px;border-radius:var(--r-2);background:var(--bg-sunken)" title="sunken"></div>
+            <div style="width:72px;height:72px;border-radius:var(--r-2);background:var(--bg-surface);border:1px solid var(--rule-color)" title="surface"></div>
+            <div style="width:72px;height:72px;border-radius:var(--r-2);background:var(--ink)" title="ink"></div>
+          </div>
+          <p class="t-faint" style="font-size:var(--fs-small)">Feedback: ok verde · warn ámbar · err rojo — siempre con fondo suave, nunca sólido.</p>
+        </div>
+        <div class="panel panel--section">
+          <p class="t-micro" style="margin-bottom:var(--s-4)">Token · valor real</p>
+          <div class="spec"><span>--bg-body</span><span id="v-bg">—</span></div>
+          <div class="spec"><span>--bg-surface</span><span id="v-surface">—</span></div>
+          <div class="spec"><span>--ink</span><span id="v-ink">—</span></div>
+          <div class="spec"><span>--accent</span><span id="v-acc">—</span></div>
+          <div class="spec"><span>--rule</span><span>1px · alpha .08–.14</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 Typography -->
+    <section class="pg-section" id="sec-type"><span class="craft-numeral" aria-hidden="true">02</span>
+      <p class="t-micro" style="margin-bottom:var(--s-2)">02 · Tipografía</p>
+      <h2 class="t-h2">Una familia. Peso y tamaño hacen la jerarquía.</h2>
+      <div class="pg-cols">
+        <div class="u-stack u-stack-6">
+          <p class="t-instrument" style="font-size:var(--fs-h1);font-size:clamp(2.4rem,4.5vw,3.2rem)">Manifiesto · 650 · −0.042em</p>
+          <p class="t-h2">Heading 620 · −0.03em</p>
+          <p class="t-h3">Heading 600 · −0.02em</p>
+          <p class="t-body">Body 400 — lectura continua, tracking −0.011em.</p>
+          <p class="t-micro">Micro label · 550 · ink-soft</p>
+        </div>
+        <div class="u-stack u-stack-6">
+          <p class="score-value" style="font-size:var(--fs-mega)">87.4</p>
+          <p class="t-micro">display · 650 · tabular-nums · −0.055em</p>
+          <pre class="t-mono t-faint" style="background:var(--bg-sunken);padding:var(--s-4);border-radius:var(--r-2);overflow:auto">const score = PromptometerCore.analyze(prompt);
+// → { score: 87, grade: "A", dimensions: {...} }</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 Buttons -->
+    <section class="pg-section" id="sec-buttons"><span class="craft-numeral" aria-hidden="true">03</span>
+      <p class="t-micro" style="margin-bottom:var(--s-2)">03 · Botones</p>
+      <h2 class="t-h2">Una acción primaria por vista.</h2>
+      <p class="pg-lead">Dos estilos llenos para acción incierta, siempre a la izquierda.</p>
+      <div class="panel">
+        <p class="t-micro" style="margin-bottom:var(--s-4)">Jerarquía</p>
+        <div class="pg-row">
+          <button class="btn btn--primary">Evaluar</button>
+          <button class="btn btn--secondary">Exportar</button>
+          <button class="btn btn--ghost">Pegar</button>
+          <button class="btn btn--dark">Instalar CLI</button>
+          <button class="btn btn--primary" disabled>deshabilitado</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 Chips & tabs -->
+    <section class="pg-section" id="sec-chips"><span class="craft-numeral" aria-hidden="true">04</span>
+      <p class="t-micro" style="margin-bottom:var(--s-2)">04 · Controles</p>
+      <h2 class="t-h2">Entradas puntuales, una familia cada panel.</h2>
+      <div class="pg-cols">
+        <div class="panel">
+          <p class="t-micro" style="margin-bottom:var(--s-4)">Acción</p>
+          <div class="pg-row" style="margin-bottom:var(--s-6)">
+            <button class="chip">system_role</button>
+            <button class="chip chip--accent">output_format</button>
+            <button class="chip chip--injected"><span data-icon="check" data-icon-size="s"></span>context</button>
+          </div>
+          <p class="t-micro" style="margin-bottom:var(--s-4)">Veredicto</p>
+          <div class="pg-row" style="margin-bottom:var(--s-6)">
+            <span class="badge badge--success">A+</span>
+            <span class="badge badge--warning">B</span>
+            <span class="badge badge--critical">F</span>
+          </div>
+          <p class="t-micro" style="margin-bottom:var(--s-4)">Métrica compacta</p>
+          <div class="pg-row">
+            <span class="score-pill score-pill--ok">87<span>/100</span></span>
+            <span class="score-pill">54<span>/100</span></span>
+          </div>
+        </div>
+        <div class="panel">
+          <p class="t-micro" style="margin-bottom:var(--s-4)">Pestañas</p>
+          <div class="tab-bar" role="tablist">
+            <button class="tab active" role="tab" aria-selected="true">Dimensiones</button>
+            <button class="tab" role="tab" aria-selected="false">Radar</button>
+            <button class="tab" role="tab" aria-selected="false">Adversarial</button>
+          </div>
+          <p class="t-micro" style="margin-bottom:var(--s-4);margin-top:var(--s-6)">Segmented</p>
+          <div class="seg" role="tablist">
+            <button class="tab active" role="tab" aria-selected="true">Día</button>
+            <button class="tab" role="tab" aria-selected="false">Semana</button>
+            <button class="tab" role="tab" aria-selected="false">Mes</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 Dimensions -->
+    <section class="pg-section" id="sec-dims"><span class="craft-numeral" aria-hidden="true">05</span>
+      <p class="t-micro" style="margin-bottom:var(--s-2)">05 · Dimensiones 8D</p>
+      <h2 class="t-h2">Densa pero respirable.</h2>
+      <div class="panel" style="padding:var(--s-4)" id="pg-dims"></div>
+    </section>
+
+    <!-- 06 States -->
+    <section class="pg-section" id="sec-states"><span class="craft-numeral" aria-hidden="true">06</span>
+      <p class="t-micro" style="margin-bottom:var(--s-2)">06 · Carga y vacío</p>
+      <h2 class="t-h2">Estados honestos.</h2>
+      <div class="pg-cols">
+        <div class="panel u-stack u-stack-4">
+          <p class="t-micro">Carga</p>
+          <div class="skeleton skeleton--title"></div>
+          <div class="skeleton skeleton--line" style="width:88%"></div>
+          <div class="skeleton skeleton--line" style="width:62%"></div>
+          <div class="skeleton skeleton--block"></div>
+        </div>
+        <div class="panel panel--ghost empty-state">
+          <p class="t-micro" style="margin-bottom:var(--s-4)">Estado vacío</p>
+          <span data-icon="orbit" data-icon-size="xl"></span>
+          <p class="empty-state__title">Sin evaluaciones aún</p>
+          <p class="empty-state__hint">Pega un prompt y ejecuta el análisis para poblar el historial.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 Motion & ticker -->
+    <section class="pg-section" id="sec-motion"><span class="craft-numeral" aria-hidden="true">07</span>
+      <p class="t-micro" style="margin-bottom:var(--s-2)">07 · Movimiento y signal</p>
+      <h2 class="t-h2">Microfeedback, no coreografía.</h2>
+      <div style="margin-bottom:var(--s-8)">
+        <div class="ticker">
+          <span class="ticker__label ticker__label--live">Live</span>
+          <div class="ticker__viewport"><div class="ticker__track">
+            <span class="ticker__item">arXiv 2609.04217 — Test-Time Compute 2.4×</span>
+            <span class="ticker__item">HN — MCP 2.0 adoptado por 3 proveedores</span>
+            <span class="ticker__item">arXiv 2609.04001 — Speculative Decoding realloc</span>
+            <span class="ticker__item">HN — Llama 4 405B lidera humans eval</span>
+            <span class="ticker__item" aria-hidden="true">arXiv 2609.04217 — Test-Time Compute 2.4×</span>
+            <span class="ticker__item" aria-hidden="true">HN — MCP 2.0 adoptado por 3 proveedores</span>
+            <span class="ticker__item" aria-hidden="true">arXiv 2609.04001 — Speculative Decoding realloc</span>
+            <span class="ticker__item" aria-hidden="true">HN — Llama 4 405B lidera humans eval</span>
+          </div></div>
+          <span class="stat">hover = −40%</span>
+        </div>
+      </div>
+      <div class="pg-cols">
+        <div class="panel panel--flat">
+          <p class="t-micro" style="margin-bottom:var(--s-4)">Tokens de movimiento</p>
+          <div class="spec"><span>dur-fast</span><span>150ms</span></div>
+          <div class="spec"><span>dur-base</span><span>220ms</span></div>
+          <div class="spec"><span>dur-slow</span><span>380ms</span></div>
+          <div class="spec"><span>ease</span><span>cubic-bezier(.2 0 .1 1)</span></div>
+        </div>
+        <div class="panel">
+          <p class="t-micro" style="margin-bottom:var(--s-4)">Stagger · 28ms por pieza</p>
+          <div class="pg-row" id="pg-stagger-zone" style="min-height:36px"></div>
+          <button class="btn btn--ghost btn--sm" id="pg-chips-stagger" style="margin-top:var(--s-3)">Disparar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 08 Inputs & data (P1 components) -->
+    <section class="pg-section" id="sec-inputs" style="padding-bottom:var(--s-24)">
+      <span class="craft-numeral" aria-hidden="true">08</span>
+      <p class="t-micro" style="margin-bottom:var(--s-2)">08 · Inputs y datos</p>
+      <h2 class="t-h2">El Workbench, en su gramática final.</h2>
+      <p class="pg-lead">Editor con focus ring, select objetivo, tabla de modelos y dropdown de export — los cuatro componentes P1 del producto real.</p>
+
+      <!-- IN-1 editor + SE-1 select -->
+      <div class="u-stack u-stack-6">
+        <div class="editor">
+          <div class="editor__toolbar">
+            <button class="editor__tool" title="Pegar" aria-label="Pegar"><i class="ph ph-clipboard-text"></i></button>
+            <button class="editor__tool" title="Ejemplo" aria-label="Insertar ejemplo"><i class="ph ph-sparkle"></i></button>
+            <button class="editor__tool" title="Bloque XML" aria-label="Insertar bloque XML"><i class="ph ph-brackets-angle"></i></button>
+            <span class="editor__sep" aria-hidden="true"></span>
+            <button class="editor__tool" title="Reformatear" aria-label="Reformatear"><i class="ph ph-text-aa"></i></button>
+            <span class="editor__count" id="pg-ed-count">0 chars · 0 palabras · ~0 tok</span>
+          </div>
+          <textarea class="editor__input" id="pg-ed" rows="5" placeholder="Escribe o pega tu prompt… El análisis corre localmente a medida que escribes."></textarea>
+        </div>
+        <div class="u-row u-gap-3">
+          <div class="listbox" id="pg-lb">
+            <button class="listbox__btn" id="pg-lb-btn" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="pg-lb-val">
+              <i class="ph ph-code lb-ic" aria-hidden="true"></i>
+              <span class="lb-val" id="pg-lb-val">Coding</span>
+              <i class="ph ph-caret-down lb-cv" aria-hidden="true"></i>
+            </button>
+            <div class="listbox__menu" id="pg-lb-menu" hidden role="listbox" aria-label="Objetivo del prompt">
+              <p class="listbox__label">Objetivo</p>
+              <button class="listbox__opt" role="option" data-val="general" aria-selected="false"><span class="o-ic"><i class="ph ph-target"></i></span><span class="o-txt"><span class="o-title">General</span><span class="o-desc">Uso cotidiano, chat y asistentes</span></span><i class="ph ph-check o-chk"></i></button>
+              <button class="listbox__opt" role="option" data-val="coding" aria-selected="true"><span class="o-ic"><i class="ph ph-code"></i></span><span class="o-txt"><span class="o-title">Coding</span><span class="o-desc">Generación y refactor de código</span></span><i class="ph ph-check o-chk"></i></button>
+              <button class="listbox__opt" role="option" data-val="json" aria-selected="false"><span class="o-ic"><i class="ph ph-brackets-curly"></i></span><span class="o-txt"><span class="o-title">JSON Schema</span><span class="o-desc">Salida estructurada validable</span></span><i class="ph ph-check o-chk"></i></button>
+              <button class="listbox__opt" role="option" data-val="rag" aria-selected="false"><span class="o-ic"><i class="ph ph-shield-check"></i></span><span class="o-txt"><span class="o-title">Safety · RAG</span><span class="o-desc">Retrieval con guardrails</span></span><i class="ph ph-check o-chk"></i></button>
+              <button class="listbox__opt" role="option" data-val="creative" aria-selected="false"><span class="o-ic"><i class="ph ph-pencil-circle"></i></span><span class="o-txt"><span class="o-title">Creative</span><span class="o-desc">Narrativa e ideación</span></span><i class="ph ph-check o-chk"></i></button>
+            </div>
+          </div>
+          <button class="btn btn--primary" id="pg-run-table"><i class="ph ph-lightning ph-s"></i>Analizar</button>
+          <button class="btn btn--ghost" disabled><i class="ph ph-eraser ph-s"></i>Limpiar</button>
+        </div>
+      </div>
+      <hr class="craft-hairline" style="margin-block:var(--s-12)">
+
+      <!-- DD-1 dropdown demo + DA-1 table -->
+      <div class="u-row u-gap-3" style="margin-bottom:var(--s-6)">
+        <div class="dropdown" id="pg-dd">
+          <button class="btn btn--secondary" id="pg-dd-btn" aria-haspopup="menu" aria-expanded="false"><i class="ph ph-download-simple ph-s"></i>Exportar<i class="ph ph-caret-down ph-s"></i></button>
+          <div class="dropdown__menu" id="pg-dd-menu" hidden role="menu" aria-label="Formatos de export">
+            <button class="dropdown__item" role="menuitem"><i class="ph ph-brackets-curly"></i>JSON<kbd>⌘E</kbd></button>
+            <button class="dropdown__item" role="menuitem"><i class="ph ph-file-md"></i>Markdown<kbd>⌘M</kbd></button>
+            <button class="dropdown__item" role="menuitem"><i class="ph ph-clipboard"></i>Clipboard<kbd>⌘C</kbd></button>
+            <div class="dropdown__sep" role="separator"></div>
+            <button class="dropdown__item" role="menuitem"><i class="ph ph-share-network"></i>Compartir URL<kbd>⌘S</kbd></button>
+          </div>
+        </div>
+        <span class="stat">dropdown con Escape · outside-click · kbd hints</span>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Modelo</th>
+            <th class="num">Score</th>
+            <th class="num">Contexto</th>
+            <th class="num">Costo /1M</th>
+            <th>Badge</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="model-name"><span class="m-dot"></span>Claude Mythos 4.6</span></td><td class="num">98.4</td><td class="num">1M</td><td class="num price">$12.00</td><td><span class="badge badge--success">SOTA</span></td></tr>
+          <tr><td><span class="model-name"><span class="m-dot"></span>GPT-5.6 Sol</span></td><td class="num">96.1</td><td class="num">512K</td><td class="num price">$9.00</td><td><span class="badge badge--high">frontera</span></td></tr>
+          <tr><td><span class="model-name"><span class="m-dot"></span>Gemini 3.1 Pro</span></td><td class="num">94.8</td><td class="num">2M</td><td class="num price">$6.00</td><td><span class="badge badge--medium">estable</span></td></tr>
+          <tr><td><span class="model-name"><span class="m-dot"></span>DeepSeek V4</span></td><td class="num">91.2</td><td class="num">256K</td><td class="num price">$1.20</td><td><span class="badge badge--neutral">open</span></td></tr>
+        </tbody>
+      </table>
+      <p class="stat" style="margin-top:var(--s-2)">bay row hover · dot de modelo · precios mono · badges semánticos</p>
+    </section>
+  </main>
+
+  <div class="modal-overlay u-hidden" id="pg-modal-overlay">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="pg-modal-title">
+      <div class="modal__header">
+        <div class="u-row u-gap-3">
+          <span class="modal__icon" aria-hidden="true"><i class="ph ph-export"></i></span>
+          <h2 class="modal__title" id="pg-modal-title">Exportar evaluación</h2>
+        </div>
+        <button class="icon-btn" id="pg-modal-close" aria-label="Cerrar modal"><i class="ph ph-x"></i></button>
+      </div>
+      <div class="modal__body">
+        <p class="t-body t-soft" style="margin-bottom:var(--s-6)">Elige el formato de salida para tu evaluación 8D calibrada:</p>
+        <div class="modal__list" role="list">
+          <button class="modal__item" role="listitem" data-format="markdown"><i class="ph ph-file-md" aria-hidden="true"></i><div><strong>Markdown</strong><span>Reporte con dimensiones y nota</span></div><i class="ph ph-caret-right ph-s" aria-hidden="true"></i></button>
+          <button class="modal__item" role="listitem" data-format="json"><i class="ph ph-brackets-curly" aria-hidden="true"></i><div><strong>JSON</strong><span>Schema completo para pipelines</span></div><i class="ph ph-caret-right ph-s" aria-hidden="true"></i></button>
+          <button class="modal__item" role="listitem" data-format="python"><i class="ph ph-file-py" aria-hidden="true"></i><div><strong>Python SDK</strong><span>Snippet promptometer-core listo</span></div><i class="ph ph-caret-right ph-s" aria-hidden="true"></i></button>
+          <button class="modal__item" role="listitem" data-format="typescript"><i class="ph ph-file-ts" aria-hidden="true"></i><div><strong>TypeScript SDK</strong><span>Snippet promptometer-core listo</span></div><i class="ph ph-caret-right ph-s" aria-hidden="true"></i></button>
+        </div>
+      </div>
+      <div class="modal__footer">
+        <span class="t-micro"><i class="ph ph-lock-key ph-s" aria-hidden="true"></i>100% local · sin telemetría</span>
+        <button class="btn btn--primary btn--sm" data-copy-all><i class="ph ph-copy ph-s"></i>Copiar Markdown</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="pg-toast-zone" aria-live="polite"></div>
+
+  <script src="js/icons.js"></script>
+  <script>
+    (function () {
+      'use strict';
+      if (window.PMIcons) PMIcons.mount(document);
+
+      /* accent palette switcher (v3.3) */
+      const swatches = [...document.querySelectorAll('.acc-swatch')];
+      function setAccent(name) {
+        if (name) document.body.dataset.accent = name;
+        const current = document.body.dataset.accent || 'coral';
+        swatches.forEach(s => {
+          const on = s.dataset.accent === current;
+          s.classList.toggle('active', on);
+          s.setAttribute('aria-pressed', String(on));
+        });
+        readTokens();
+      }
+      swatches.forEach(s => s.addEventListener('click', () => setAccent(s.dataset.accent)));
+      setAccent('coral');
+
+      /* theme */
+      const tl = document.getElementById('pg-t-light'), td = document.getElementById('pg-t-dark');
+      function setTheme(t) {
+        document.body.classList.toggle('theme-dark', t === 'dark');
+        document.body.classList.toggle('theme-light', t === 'light');
+        tl.classList.toggle('active', t === 'light');
+        td.classList.toggle('active', t === 'dark');
+        tl.setAttribute('aria-selected', String(t === 'light'));
+        td.setAttribute('aria-selected', String(t === 'dark'));
+        readTokens();
+      }
+      tl.addEventListener('click', () => setTheme('light'));
+      td.addEventListener('click', () => setTheme('dark'));
+
+      function readTokens() {
+        const g = n => getComputedStyle(document.body).getPropertyValue(n).trim();
+        document.getElementById('v-bg').textContent = g('--bg-body');
+        document.getElementById('v-surface').textContent = g('--bg-surface');
+        document.getElementById('v-ink').textContent = g('--ink');
+        document.getElementById('v-acc').textContent = g('--accent');
+      }
+      readTokens();
+
+      /* dims */
+      const DIMS = [['Estructura', 88], ['Claridad', 92], ['Especificidad', 76], ['Robustez', 71], ['Contexto', 83], ['CoT / ReAct', 64], ['Tokens', 90], ['Seguridad', 95]];
+      document.getElementById('pg-dims').innerHTML =
+        '<p class="t-micro" style="margin:var(--s-2) var(--s-4) var(--s-4)">Las 8 dimensiones del scoring</p>' +
+        DIMS.map(([name, pct]) => `
+        <div class="dim-card is-active" style="--dim-pct:${pct / 100}">
+          <div class="u-row u-between"><span class="dim-card__name">${name}</span><span class="dim-card__score">${pct}</span></div>
+          <div class="dim-card__bar"><div class="dim-card__bar-fill"></div></div>
+        </div>`).join('');
+
+      /* score reveal — fired from hero CTA */
+      let rolling = false;
+      document.getElementById('pg-run').addEventListener('click', () => {
+        if (rolling) return;
+        rolling = true;
+        const hero = document.getElementById('pg-hero');
+        const ring = document.getElementById('pg-ring');
+        const num = document.getElementById('pg-score');
+        const grade = document.getElementById('pg-grade');
+        hero.classList.remove('score-hero--idle');
+        const C = 2 * Math.PI * 52;
+        const score = 87;
+        ring.style.transition = 'none';
+        ring.style.strokeDashoffset = C;
+        void ring.getBoundingClientRect();
+        ring.style.transition = '';
+        ring.style.strokeDashoffset = String(C * (1 - score / 100));
+        const t0 = performance.now();
+        const tick = () => {
+          const p = Math.min(1, (performance.now() - t0) / 650);
+          num.textContent = Math.round(score * (1 - Math.pow(1 - p, 3)));
+          if (p < 1) setTimeout(tick, 16);
+          else { num.textContent = score; grade.textContent = 'A · calibrado'; rolling = false; }
+        };
+        setTimeout(tick, 16);
+        hero.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+
+      /* chips stagger */
+      document.getElementById('pg-chips-stagger').addEventListener('click', () => {
+        document.getElementById('pg-stagger-zone').innerHTML =
+          ['system_role', 'objective', 'context', 'requirements', 'output_format', 'examples', 'error_handling']
+            .map((b, i) => `<button class="chip" style="animation:ds-toast-in 220ms var(--ease-standard) ${i * 28}ms backwards">${b}</button>`).join('');
+      });
+
+      /* toast */
+      document.getElementById('pg-toast-demo').addEventListener('click', () => {
+        const t = document.createElement('div');
+        t.className = 'toast toast--success';
+        t.textContent = 'Bloque context inyectado';
+        document.getElementById('pg-toast-zone').appendChild(t);
+        setTimeout(() => { t.classList.add('toast--exit'); setTimeout(() => t.remove(), 180); }, 2400);
+      });
+
+      /* IN-1 editor live counter */
+      const ed = document.getElementById('pg-ed');
+      if (ed) {
+        const cnt = document.getElementById('pg-ed-count');
+        const upd = () => {
+          const words = ed.value.trim() ? ed.value.trim().split(/\s+/).length : 0;
+          cnt.textContent = `${ed.value.length} chars · ${words} palabras · ~${Math.ceil(ed.value.length / 4)} tok`;
+        };
+        ed.addEventListener('input', upd);
+      }
+
+      /* reduced-motion: skip pop-in animations entirely (respects user + capture envs) */
+      const PM_ANIM = matchMedia('(prefers-reduced-motion: reduce)').matches
+        ? (el) => {} : (el, kf, opt) => el.animate(kf, opt);
+      const PM_MS = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 100;
+
+      /* DD-1 dropdown open/close (WAAPI pop, transform-only) */
+      const ddBtn = document.getElementById('pg-dd-btn');
+      const ddMenu = document.getElementById('pg-dd-menu');
+      if (ddBtn && ddMenu) {
+        let ddT;
+        const closeDD = () => {
+          ddBtn.setAttribute('aria-expanded', 'false');
+          ddT = setTimeout(() => { ddMenu.hidden = true; }, PM_MS);
+        };
+        const openDD = () => {
+          clearTimeout(ddT);
+          ddMenu.hidden = false;
+          PM_ANIM(ddMenu, [{transform: 'translateY(4px) scale(0.98)'}, {transform: 'none'}], {duration: 140, easing: 'cubic-bezier(.2, 0, 0, 1)'});
+          ddBtn.setAttribute('aria-expanded', 'true');
+        };
+        ddBtn.addEventListener('click', () => ddMenu.hidden ? openDD() : closeDD());
+        document.addEventListener('click', e => { if (!e.target.closest('#pg-dd')) closeDD(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDD(); });
+        ddMenu.querySelectorAll('.dropdown__item').forEach(i => i.addEventListener('click', closeDD));
+      }
+
+      /* SE-2 listbox open/select (transition-based) */
+      const lbBtn = document.getElementById('pg-lb-btn');
+      const lbMenu = document.getElementById('pg-lb-menu');
+      if (lbBtn && lbMenu) {
+        let lbT;
+        const closeLB = () => {
+          lbBtn.setAttribute('aria-expanded', 'false');
+          lbT = setTimeout(() => { lbMenu.hidden = true; }, PM_MS);
+        };
+        const openLB = () => {
+          clearTimeout(lbT);
+          lbMenu.hidden = false;
+          PM_ANIM(lbMenu, [{transform: 'translateY(4px) scale(0.98)'}, {transform: 'none'}], {duration: 140, easing: 'cubic-bezier(.2, 0, 0, 1)'});
+          lbBtn.setAttribute('aria-expanded', 'true');
+        };
+        lbBtn.addEventListener('click', () => lbMenu.hidden ? openLB() : closeLB());
+        document.addEventListener('click', e => { if (!e.target.closest('#pg-lb')) closeLB(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLB(); });
+        lbMenu.querySelectorAll('.listbox__opt').forEach(o => o.addEventListener('click', () => {
+          lbMenu.querySelectorAll('.listbox__opt').forEach(x => x.setAttribute('aria-selected', 'false'));
+          o.setAttribute('aria-selected', 'true');
+          document.getElementById('pg-lb-val').textContent = o.querySelector('.o-title').textContent;
+          const btnIc = lbBtn.querySelector('.lb-ic');
+          btnIc.className = 'ph lb-ic ' + o.querySelector('.o-ic .ph').className.replace('ph ph-', 'ph-');
+          closeLB();
+        }));
+      }
+
+      /* modal */
+      const overlay = document.getElementById('pg-modal-overlay');
+      function openModal() { overlay.classList.remove('u-hidden'); document.getElementById('pg-modal-close').focus(); }
+      function closeModal() { overlay.classList.add('u-hidden'); }
+      document.getElementById('pg-open-modal').addEventListener('click', openModal);
+      document.getElementById('pg-modal-close').addEventListener('click', closeModal);
+      overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+      document.addEventListener('keydown', e => { if (e.key === 'Escape' && !overlay.classList.contains('u-hidden')) closeModal(); });
+      // export items → toast feedback (iconos phosphor viven en el DOM estático)
+      overlay.querySelectorAll('.modal__item').forEach(item => {
+        item.addEventListener('click', () => {
+          const fmt = item.dataset.format;
+          const t = document.createElement('div');
+          t.className = 'toast toast--success';
+          t.innerHTML = '<i class="ph ph-check-circle"></i>Exportado como ' + fmt;
+          document.getElementById('pg-toast-zone').appendChild(t);
+          setTimeout(() => { t.classList.add('toast--exit'); setTimeout(() => t.remove(), 180); }, 2400);
+          closeModal();
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

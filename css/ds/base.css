@@ -1,0 +1,158 @@
+/* ============================================================
+   Promptometer DS v3 — BASE · Modern Product
+   Reset Inter-first, tracking negativo, jerarquía por peso 600
+   ============================================================ */
+
+/* ── Reset ─────────────────────────────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-body);
+  color: var(--ink);
+  line-height: 1.55;
+  min-height: 100vh;
+  letter-spacing: -0.011em;
+}
+
+img, svg, canvas { display: block; max-width: 100%; }
+button, select, input, textarea { font: inherit; color: inherit; }
+button { background: none; border: 0; cursor: pointer; }
+
+::selection { background: var(--accent-soft); color: var(--ink); }
+
+/* ── Type roles — hierarchy by weight & size, Inter only ─────── */
+h1, h2, h3, h4 { letter-spacing: -0.025em; line-height: 1.15; }
+
+/* Heading rhythm — systemic fix: reset strips margins, so give
+   headings an explicit below-gap or they collide with content */
+h2 { margin-block-end: var(--s-6); }
+h3 { margin-block-end: var(--s-3); }
+h1 { margin-block-end: var(--s-6); }
+
+.t-manifesto {
+  font-size: var(--fs-h1);
+  line-height: 1.04;
+  font-weight: 640;
+  letter-spacing: -0.05em;
+  max-width: 18ch;
+  text-wrap: balance;
+}
+.t-h2 { font-size: var(--fs-h2); font-weight: 610; letter-spacing: -0.032em; text-wrap: balance; }
+.t-h3 { font-size: var(--fs-h3); font-weight: 600; letter-spacing: -0.02em; }
+
+.t-instrument, .numeral {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+  font-weight: 650;
+}
+
+.t-mono, code, pre, kbd {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  font-variant-numeric: tabular-nums;
+}
+
+.t-micro {
+  font-size: var(--fs-micro);
+  font-weight: 550;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  text-transform: none;
+}
+
+.t-body { font-size: var(--fs-body); color: var(--ink); }
+.t-soft  { color: var(--ink-soft); }
+.t-faint { color: var(--ink-faint); }
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* ── Focus / skip (AA contract) ────────────────────────────────── */
+:focus-visible { outline: none; box-shadow: var(--focus-ring); border-radius: var(--r-1); }
+
+.skip-link {
+  position: absolute; left: var(--s-4); top: calc(-1 * var(--s-12));
+  z-index: 1000;
+  padding: var(--s-2) var(--s-4);
+  background: var(--bg-inverse); color: var(--bg-body);
+  border-radius: var(--r-1);
+  font-size: var(--fs-small); font-weight: 550;
+  transition: top var(--dur-fast) var(--ease-standard);
+}
+.skip-link:focus { top: var(--s-4); }
+
+/* ── Utilities ─────────────────────────────────────────────────── */
+.u-measure { max-width: 62ch; }
+.u-hidden { display: none !important; }
+.u-sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.u-scroll-x { overflow-x: auto; scrollbar-width: thin; }
+.u-select-none { user-select: none; }
+.u-row { display: flex; align-items: center; }
+.u-gap-2 { gap: var(--s-2); } .u-gap-3 { gap: var(--s-3); }
+.u-gap-4 { gap: var(--s-4); } .u-gap-6 { gap: var(--s-6); }
+.u-between { justify-content: space-between; }
+.u-wrap { flex-wrap: wrap; }
+.u-stack { display: flex; flex-direction: column; }
+.u-stack-4 { gap: var(--s-4); } .u-stack-6 { gap: var(--s-6); } .u-stack-12 { gap: var(--s-12); }
+.u-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--s-6); }
+
+/* ── Reduced motion ────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   v3.6 · PHOSPHOR ICONS INTEGRATION
+   Phosphor (phosphoricons.com) via webfont CDN + local fallback.
+   Usage: <i class="ph ph-x"></i> · weight variants: ph-light,
+   ph-regular, ph-bold. Size via .ph-s/.ph-m/.ph-l helpers.
+   ============================================================ */
+
+.ph {
+  font-family: 'Phosphor' !important;
+  font-weight: 400;            /* regular weight default */
+  font-style: normal;
+  display: inline-block;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  speak: never;
+  -webkit-font-smoothing: antialiased;
+  font-variant: normal;
+  direction: ltr;
+  vertical-align: -0.125em;
+  flex-shrink: 0;
+}
+.ph-light { font-weight: 300; }
+.ph-bold  { font-weight: 700; }
+.ph-s { font-size: 13px; }
+.ph-m { font-size: 17px; }
+.ph-l { font-size: 21px; }
+
+/* icon button canónico ( remplaça los "Cerrar" textuales ) */
+.icon-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px;
+  border-radius: var(--r-1);
+  color: var(--ink-faint);
+  transition: color var(--dur-fast) var(--ease-standard), background var(--dur-fast) var(--ease-standard);
+}
+.icon-btn:hover { color: var(--ink); background: var(--bg-sunken); }
+.icon-btn .ph { font-size: 16px; }

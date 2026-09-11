@@ -1237,6 +1237,17 @@ const I18n = (() => {
         x: 'Perfil de X (Twitter)',
         contact: 'Contacto (promptometer@gmail.com)',
       },
+
+      // ── Toast Messages ──────────────────────────────────────────────────
+      toast: {
+        writePrompt: 'Por favor ingresa o pega un prompt para analizar.',
+        analysisComplete: 'Análisis completado exitosamente.',
+        analysisError: 'Error al analizar el prompt.',
+        improvementApplied: 'Mejora aplicada al prompt.',
+        copied: 'Copiado al portapapeles.',
+        pasteError: 'No se pudo leer del portapapeles.',
+        emptyPrompt: 'Ingresa un prompt antes de solicitar evaluación con IA.',
+      },
     },
 
     // ========================================================================
@@ -2404,6 +2415,17 @@ const I18n = (() => {
         linkedin: 'LinkedIn profile',
         x: 'X (Twitter) profile',
         contact: 'Contact (promptometer@gmail.com)',
+      },
+
+      // ── Toast Messages ──────────────────────────────────────────────────
+      toast: {
+        writePrompt: 'Please enter or paste a prompt to analyze.',
+        analysisComplete: 'Analysis completed successfully.',
+        analysisError: 'Error analyzing prompt.',
+        improvementApplied: 'Improvement applied to prompt.',
+        copied: 'Copied to clipboard.',
+        pasteError: 'Could not read from clipboard.',
+        emptyPrompt: 'Enter a prompt before requesting AI evaluation.',
       },
     },
   };

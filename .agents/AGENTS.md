@@ -10,19 +10,20 @@ and design decisions that MUST be respected.
 - The npm package is `promptometer-core`.
 - The web app repo is `promptforge` (deployment name only).
 
-## Git Workflow & Regla Estricta de Promoción a Producción
-- **Desarrollo en Rama `dev`:** Toda modificación, feature o bugfix debe iniciarse, commitearse y pushearse exclusivamente a la rama `dev` (`origin dev`).
-- **PROHIBIDO PUSH DIRECTO A `main`:** Queda estrictamente prohibido commitear o pushear directo a `main` sin haber pasado previamente por `dev` y completado las validaciones.
-- **Workflow de Puertas de Calidad:**
+## Git Workflow & Regla Inviolable de Puerta de Validación Humana
+- **Desarrollo Exclusivo en `dev`:** Toda modificación, feature o bugfix debe iniciarse, commitearse y pushearse EXCLUSIVAMENTE a la rama `dev` (`origin dev`).
+- **PROHIBICIÓN TOTAL DE AUTO-MERGE O PUSH A `main`:** Queda estrictamente prohibido que el agente fusione o pushee a `main` de forma automática.
+- **Workflow de Puertas de Calidad (Human-in-the-Loop):**
   1. **Local:** Probar localmente en `http://localhost:3001` y ejecutar `node test_edge_cases.js` (34/34 PASS obligatorios).
-  2. **Staging / Dev:** Commit y push a `dev` → verificar despliegue preview en `https://promptometer.vercel.app/`.
-  3. **Producción (`main`):** Únicamente tras confirmar que el entorno `dev` funciona de forma impecable y sin errores en runtime ni en build de Vercel, se realiza la fusión de `dev` a `main` (`git checkout main && git merge dev && git push origin main`) para actualizar `https://promptometer.tech/`.
-  4. **No Bypasses:** Los hotfixes de emergencia deben seguir exactamente el mismo flujo (`dev` → validación → `main`).
+  2. **Staging / Dev:** Commit y push únicamente a `dev` (`git push origin dev`).
+  3. **Pausa Obligatoria & Validación del Usuario:** El agente debe notificar al usuario que los cambios están en `https://promptometer.vercel.app/` y **DETENERSE**.
+  4. **Producción (`main`):** ÚNICAMENTE cuando el USUARIO apruebe en el chat y ordene la promoción ("pasa a prod" / "haz merge a main"), el agente abrirá un **Pull Request de `dev` → `main`** y se detendrá. Nunca merge directo ni push automático a `main`.
+  5. **No Bypasses:** Los hotfixes de emergencia deben seguir exactamente el mismo flujo (`dev` → validación humana → `main`).
 
 ## Deployment Environments & API Separation
 - **Development (dev branch):** `https://promptometer.vercel.app/` — auto-deploys from every push to `dev`. Dev uses relative `/api/*` endpoints (same-origin, no separate subdomain or env variable needed).
 - **Production (main branch):** `https://promptometer.tech/` — auto-deploys from every push to `main`. In production ONLY, API calls route to `https://api.promptometer.tech/api/*` via `js/api-config.js` (requires DNS CNAME setup in Vercel/Cloudflare when releasing to main).
-- Strict Workflow: commit on `dev` → verify on `promptometer.vercel.app` → validate 0 errors → merge `dev` → `main` → live on `promptometer.tech`.
+- Strict Workflow: commit on `dev` → notify user on `promptometer.vercel.app` → WAIT for user approval → open PR `dev` → `main` → live on `promptometer.tech`.
 
 ## Design System: Editorial Technical
 - Background: Cream Paper `#F7F3EC`

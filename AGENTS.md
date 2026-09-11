@@ -18,15 +18,15 @@ Este archivo define las reglas de convivencia, restricciones y contexto ontológ
 2. **TDD / Verificación Obligatoria:** Todo cambio debe verificarse con `node test_edge_cases.js`. Nunca declares una tarea terminada sin haber demostrado su éxito con herramientas reales.
 3. **Mínimo Código Necesario:** No añadas dependencias npm ni bibliotecas innecesarias si JavaScript nativo resuelve el problema de forma óptima.
 4. **Frontera de Ejecución:** Respeta la fase activa definida en `PLAN.md`.
-5. **Desarrollo Exclusivamente Local y Regla de Promoción Estricta a Producción:**
-   - Queda ESTRICTAMENTE PROHIBIDO hacer `git push` o merge directo a `main` (Producción) sin haber pasado previamente por la rama `dev` y completado la validación en el entorno de desarrollo (`https://promptometer.vercel.app/` o local `http://localhost:3001`).
-   - **Flujo Obligatorio:** 
-     a) Desarrollar y probar en local.
+5. **Desarrollo Exclusivamente en `dev` y Regla Inviolable de Puerta de Validación Humana:**
+   - **PROHIBICIÓN TOTAL DE PUSH/MERGE AUTOMÁTICO A `main`:** Queda ESTRICTAMENTE PROHIBIDO que el agente realice `git push` o `git merge` a la rama `main` (Producción) por su cuenta.
+   - **Flujo Obligatorio (Human-in-the-Loop):** 
+     a) Desarrollar y probar en entorno local (`http://localhost:3001`).
      b) Ejecutar y aprobar la suite de pruebas (`node test_edge_cases.js`).
-     c) Hacer commit y push exclusivamente a la rama `dev`.
-     d) Verificar el despliegue en `https://promptometer.vercel.app/`.
-     e) Solo tras validar que no existen errores en `dev`, realizar el merge `dev` → `main` y publicar en producción (`https://promptometer.tech/`).
-   - **Prohibición de Bypass de Prod:** Ningún parche de emergencia o hotfix puede saltarse la rama `dev`. Todo cambio debe pasar y ser validado en `dev` primero.
+     c) Hacer commit y push **EXCLUSIVAMENTE a la rama `dev`** (`git push origin dev`).
+     d) **DETENERSE Y PEDIR VALIDACIÓN:** El agente debe avisar al usuario que el despliegue está listo en `dev` (`https://promptometer.vercel.app/`) y DETENERSE por completo.
+     e) **Aprobación del Usuario y Promoción vía PR:** ÚNICAMENTE cuando el USUARIO pruebe en `dev` y dé la orden explícita en el chat ("pasa a prod" / "haz merge a main"), se abrirá un **Pull Request de `dev` → `main`** (nunca merge directo ni push automático). El PR queda abierto al usuario como puerta de revisión final.
+   - **Prohibición de Bypass:** Ningún parche de emergencia o hotfix puede tocar `main` sin pasar por PR y aprobación explícita del usuario en el chat.
 6. **Sistema de Diseño Sagrado:**
    - Modo Dual: *Cosmic Event Horizon* (`#08090E`, `#FF9E00`) y *Editorial Technical* (`#F7F3EC`, `#C73E2D`, `#1A1612`).
    - Tipografía: Fraunces / Space Grotesk (títulos), IBM Plex Mono / JetBrains Mono (datos/código), Inter (cuerpo).

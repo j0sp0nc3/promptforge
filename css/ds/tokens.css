@@ -1,0 +1,413 @@
+/* ============================================================
+   Promptometer DS v3.2 — MODERN PRODUCT + CRAFT LAYER
+   Inter + zinc + indigo · Linear/Vercel/Figma grammar
+   Claro por defecto · dark de primera clase
+   L1 primitivos → L2 semánticos → L3 componente → craft (opt-in)
+   ============================================================ */
+
+/* ── L1 · PRIMITIVES ───────────────────────────────────────────── */
+:root {
+  /* zinc ramp */
+  --pm-w000: #FFFFFF;
+  --pm-w025: #FCFCFD;
+  --pm-w050: #F9FAFB;
+  --pm-w100: #F2F3F5;
+  --pm-w150: #E9EAEC;
+  --pm-w200: #D9DBDF;
+  --pm-w300: #B8BBC1;
+
+  --pm-z400: #8A8D93;
+  --pm-z500: #6B6E76;
+  --pm-z600: #5A5D66;
+  --pm-z700: #43464E;
+  --pm-z800: #282B32;
+  --pm-z900: #1B1D22;
+  --pm-z950: #121317;
+
+  /* indigo accent */
+  --pm-ind500: #6366F1;
+  --pm-ind600: #5457E8;
+  --pm-ind700: #4649D8;
+  --pm-ind050: #EEF0FE;
+
+  /* feedback-muted */
+  --pm-ok: #16A34A;
+  --pm-ok-bg: #ECFDF3;
+  --pm-warn: #D97706;
+  --pm-warn-bg: #FFFAEB;
+  --pm-err: #DC2626;
+  --pm-err-bg: #FEF3F2;
+}
+
+/* ── L2 · SEMANTIC — Light (default) ─────────────────────────── */
+:root,
+body.theme-light {
+  --bg-body: var(--pm-w050);
+  --bg-surface: var(--pm-w000);
+  --bg-raised: var(--pm-w000);
+  --bg-sunken: var(--pm-w100);
+  --bg-inverse: var(--pm-z950);
+  --bg-modal-overlay: rgba(18, 19, 23, 0.4);
+
+  --ink: var(--pm-z950);
+  --ink-soft: var(--pm-z500);
+  --ink-faint: var(--pm-z400);
+
+  --accent: var(--pm-ind500);
+  --accent-hover: var(--pm-ind600);
+  --accent-soft: var(--pm-ind050);
+
+  --ok: var(--pm-ok);
+  --ok-bg: var(--pm-ok-bg);
+  --warn: var(--pm-warn);
+  --warn-bg: var(--pm-warn-bg);
+  --err: var(--pm-err);
+  --err-bg: var(--pm-err-bg);
+
+  --font-serif: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'Geist Mono', 'JetBrains Mono', 'IBM Plex Mono', monospace;
+
+  --rule: 1px solid var(--pm-w150);
+  --rule-color: var(--pm-w150);
+
+  --shadow-1: 0 1px 2px rgba(16, 24, 40, 0.05);
+  --shadow-2: 0 1px 3px rgba(16, 24, 40, 0.1), 0 1px 2px rgba(16, 24, 40, 0.06);
+  --shadow-modal: 0 12px 32px rgba(16, 24, 40, 0.16), 0 2px 8px rgba(16, 24, 40, 0.08);
+}
+
+/* ── L2 · SEMANTIC — Dark ──────────────────────────────────────── */
+body.theme-dark {
+  --bg-body: var(--pm-z950);
+  --bg-surface: rgba(255, 255, 255, 0.035);
+  --bg-raised: #1B1F28;
+  --bg-sunken: rgba(255, 255, 255, 0.06);
+  --bg-inverse: var(--pm-w050);
+  --bg-modal-overlay: rgba(4, 5, 8, 0.7);
+
+  --ink: #F4F5F7;
+  --ink-soft: #A2A6AE;
+  --ink-faint: #6F737C;
+
+  --accent: #818CF8;
+  --accent-hover: #9BA3F9;
+  --accent-soft: rgba(129, 140, 248, 0.14);
+
+  --ok: #34D399;
+  --ok-bg: rgba(52, 211, 153, 0.12);
+  --warn: #FBBF24;
+  --warn-bg: rgba(251, 191, 36, 0.12);
+  --err: #F87171;
+  --err-bg: rgba(248, 113, 113, 0.12);
+
+  --rule: 1px solid rgba(255, 255, 255, 0.08);
+  --rule-color: rgba(255, 255, 255, 0.08);
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --shadow-modal: 0 12px 32px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* ── L3 · COMPONENT TOKENS · v3.2 ──────────────────────────────── */
+:root {
+  /* spacing — extended air */
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px;
+  --s-5: 20px; --s-6: 24px; --s-8: 32px; --s-10: 40px; --s-12: 48px;
+  --s-16: 64px; --s-20: 80px; --s-24: 96px;
+  --s-32: 128px; --s-40: 160px;
+  --space-xs: 4px; --space-sm: 8px; --space-md: 16px;
+  --space-lg: 24px; --space-xl: 32px; --space-2xl: 48px;
+
+  /* motion */
+  --dur-inst: 100ms;
+  --dur-fast: 150ms;
+  --dur-base: 220ms;
+  --dur-slow: 380ms;
+  --ease-standard: cubic-bezier(.2, 0, .1, 1);
+  --ease-emph: cubic-bezier(.2, 0, 0, 1);
+
+  /* radii — roomier product geometry */
+  --r-1: 8px;
+  --r-2: 10px;
+  --r-3: 16px;
+  --r-full: 9999px;
+
+  /* type — v3.1 scale */
+  --fs-micro: 0.8rem;
+  --fs-small: 0.875rem;
+  --fs-base: 1rem;
+  --fs-body: 1.075rem;
+  --fs-h3: 1.3rem;
+  --fs-h2: 1.85rem;
+  --fs-h1: clamp(2.8rem, 6vw, 4.2rem);
+  --fs-mega: clamp(4.5rem, 13vw, 10rem);
+
+  /* focus */
+  --focus-ring: 0 0 0 2px var(--bg-body), 0 0 0 4px var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-inst: 1ms; --dur-fast: 1ms; --dur-base: 1ms; --dur-slow: 1ms; }
+}
+
+/* ============================================================
+   LEGACY COMPAT (index.html theme names → modern system)
+   Deprecated — remove at U-1.
+   ============================================================ */
+body.theme-cosmic {
+  --bg-body: #0D0E12;
+  --bg-paper: #171921;
+  --bg-sunken: rgba(255, 255, 255, 0.04);
+  --bg-inverse: #F4F5F7;
+  --ink: #F4F5F7;
+  --ink-soft: #A2A6AE;
+  --ink-faint: #6F737C;
+  --accent: #818CF8;
+  --accent-secondary: #22D3EE;
+  --accent-soft: rgba(129, 140, 248, 0.14);
+  --accent-bg: rgba(129, 140, 248, 0.10);
+  --vermilion: #818CF8;
+  --font-serif: 'Inter', sans-serif;
+  --font-sans: 'Inter', sans-serif;
+  --font-mono: 'Geist Mono', 'JetBrains Mono', monospace;
+  --rule: 1px solid rgba(255, 255, 255, 0.08);
+  --rule-strong: 1px solid rgba(255, 255, 255, 0.15);
+  --rule-accent: 2px solid var(--accent);
+  --rule-color: rgba(255, 255, 255, 0.08);
+  --glow-accent: none;
+  --glow-cyan: none;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+  --sev-critical: #F87171; --sev-high: #FB923C;
+  --sev-medium: #FBBF24;  --sev-low: #22D3EE;
+  --ok: #34D399; --ok-bg: rgba(52, 211, 153, 0.12);
+  --warn: #FBBF24; --warn-bg: rgba(251, 191, 36, 0.12);
+  --err: #F87171; --err-bg: rgba(248, 113, 113, 0.12);
+  --info: #22D3EE; --info-bg: rgba(34, 211, 238, 0.12);
+}
+
+body.theme-editorial {
+  --bg-body: var(--pm-w050);
+  --bg-paper: var(--pm-w000);
+  --bg-sunken: var(--pm-w100);
+  --bg-inverse: var(--pm-z950);
+  --ink: var(--pm-z950);
+  --ink-soft: var(--pm-z500);
+  --ink-faint: var(--pm-z400);
+  --accent: var(--pm-ind500);
+  --accent-secondary: #0EA5E9;
+  --accent-soft: var(--pm-ind050);
+  --accent-bg: var(--pm-ind050);
+  --vermilion: var(--pm-ind500);
+  --font-serif: 'Inter', sans-serif;
+  --font-sans: 'Inter', sans-serif;
+  --font-mono: 'Geist Mono', 'JetBrains Mono', monospace;
+  --rule: 1px solid var(--pm-w150);
+  --rule-strong: 1px solid var(--pm-z400);
+  --rule-accent: 2px solid var(--accent);
+  --rule-color: var(--pm-w150);
+  --glow-accent: none;
+  --glow-cyan: none;
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.05);
+  --shadow-lg: 0 12px 32px rgba(16, 24, 40, 0.16);
+  --sev-critical: #DC2626; --sev-high: #E11D48;
+  --sev-medium: #D97706;  --sev-low: #0EA5E9;
+  --ok: #16A34A; --ok-bg: #ECFDF3;
+  --warn: #D97706; --warn-bg: #FFFAEB;
+  --err: #DC2626; --err-bg: #FEF3F2;
+  --info: #0EA5E9; --info-bg: #E0F2FE;
+}
+
+/* ============================================================
+   CRAFT LAYER (v3.2) — optional decoration, opt-in classes
+   ============================================================ */
+
+/* ambient gradients */
+:root {
+  --grad-surface: linear-gradient(180deg, #FFFFFF 0%, rgba(250, 250, 252, 0.86) 100%);
+  --grad-sky: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.10), transparent);
+}
+
+body.theme-dark {
+  --grad-surface: linear-gradient(180deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.03) 100%);
+  --grad-sky: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(129, 140, 248, 0.13), transparent);
+}
+
+body {
+  background-image: var(--grad-sky);
+  background-repeat: no-repeat;
+  background-size: 100% 720px;
+  background-position: top center;
+}
+
+/* dot-grid texture */
+.craft-dots {
+  background-image: radial-gradient(circle, var(--pm-w300) 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.5;
+}
+body.theme-dark .craft-dots {
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+}
+
+/* gradient text (data highlights) */
+.craft-grad {
+  background: linear-gradient(135deg, var(--ink) 30%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* ghost section numerals */
+.craft-numeral {
+  font-family: var(--font-mono);
+  font-size: clamp(4.5rem, 11vw, 8rem);
+  font-weight: 600;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--pm-w200);
+  opacity: 0.5;
+  pointer-events: none;
+  user-select: none;
+  position: absolute;
+  top: var(--s-8);
+  right: var(--s-6);
+  z-index: -1;   /* detrás del contenido de la sección — nunca atrapa overlays */
+}
+body.theme-dark .craft-numeral { -webkit-text-stroke: 1px rgba(255, 255, 255, 0.10); }
+
+/* gradient hairline */
+.craft-hairline {
+  height: 1px; width: 100%;
+  background: linear-gradient(90deg, transparent, var(--pm-w300), transparent);
+}
+body.theme-dark .craft-hairline {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+}
+
+/* featured panel with soft indigo lift */
+.panel--featured {
+  background-image: var(--grad-surface);
+  border-color: color-mix(in srgb, var(--accent) 24%, transparent);
+  box-shadow:
+    0 1px 2px rgba(16, 24, 40, 0.04),
+    0 8px 28px rgba(99, 102, 241, 0.06);
+}
+body.theme-dark .panel--featured {
+  border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 8px 28px rgba(129, 140, 248, 0.08);
+}
+
+/* live breathing dot */
+.craft-blip {
+  display: inline-block;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--accent);
+  animation: ds-blip 1.8s ease-in-out infinite;
+}
+@keyframes ds-blip { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+/* ============================================================
+   ACCENT PALETTES (v3.3) — electric, non-AI-blue
+   Each palette: surfaces use vivid --accent; small text uses
+   --accent-text (AA-safe on light bg). Swap via body[data-accent].
+   Default: coral (Promptometer heritage vermilion, electrified).
+   ============================================================ */
+
+:root {
+  --accent-text: var(--accent);
+  --accent-ink: #ffffff;
+}
+
+/* ── CORAL eléctrico (default) ─────────────────────────────────── */
+body[data-accent="coral"] {
+  --accent: #FF5200;
+  --accent-hover: #FF6A1F;
+  --accent-soft: rgba(255, 82, 0, 0.10);
+  --accent-text: #C22F00;
+  --accent-ink: #ffffff;
+}
+body.theme-dark[data-accent="coral"] {
+  --accent: #FF6A33;
+  --accent-hover: #FF7E4D;
+  --accent-soft: rgba(255, 106, 51, 0.16);
+  --accent-text: #FF8A5C;
+}
+
+/* ── VOLT · lima ácido ────────────────────────────────────────── */
+body[data-accent="volt"] {
+  --accent: #A3E635;
+  --accent-hover: #B4F04A;
+  --accent-soft: rgba(163, 230, 53, 0.14);
+  --accent-text: #3F6212;
+  --accent-ink: #131A04;
+}
+body.theme-dark[data-accent="volt"] {
+  --accent: #A3E635;
+  --accent-hover: #B9F04E;
+  --accent-soft: rgba(163, 230, 53, 0.15);
+  --accent-text: #C6FF66;
+}
+
+/* ── CYAN eléctrico ───────────────────────────────────────────── */
+body[data-accent="cyan"] {
+  --accent: #00CFFF;
+  --accent-hover: #1ADBFF;
+  --accent-soft: rgba(0, 207, 255, 0.10);
+  --accent-text: #0E7490;
+  --accent-ink: #04222B;
+}
+body.theme-dark[data-accent="cyan"] {
+  --accent: #22D3EE;
+  --accent-hover: #3DE0FF;
+  --accent-soft: rgba(34, 211, 238, 0.14);
+  --accent-text: #7DE8F7;
+}
+
+/* ── MAGENTA nocturno ─────────────────────────────────────────── */
+body[data-accent="magenta"] {
+  --accent: #E23AA5;
+  --accent-hover: #EC4DB2;
+  --accent-soft: rgba(226, 58, 165, 0.10);
+  --accent-text: #A21CAF;
+  --accent-ink: #ffffff;
+}
+body.theme-dark[data-accent="magenta"] {
+  --accent: #F472D0;
+  --accent-hover: #F980DA;
+  --accent-soft: rgba(244, 114, 208, 0.15);
+  --accent-text: #F9A8E4;
+}
+
+/* ── AMBER · herencia Promptometer ────────────────────────────── */
+body[data-accent="amber"] {
+  --accent: #FF9E00;
+  --accent-hover: #FFB118;
+  --accent-soft: rgba(255, 158, 0, 0.12);
+  --accent-text: #B45309;
+  --accent-ink: #231500;
+}
+body.theme-dark[data-accent="amber"] {
+  --accent: #FFB742;
+  --accent-hover: #FFC863;
+  --accent-soft: rgba(255, 183, 66, 0.15);
+  --accent-text: #FFCE73;
+}
+
+/* ── IRIS · indigo (comparación contra el cliché) ─────────────── */
+body[data-accent="iris"] {
+  --accent: #6366F1;
+  --accent-hover: #5457E8;
+  --accent-soft: rgba(99, 102, 241, 0.10);
+  --accent-text: #4F46E5;
+  --accent-ink: #ffffff;
+}
+body.theme-dark[data-accent="iris"] {
+  --accent: #818CF8;
+  --accent-hover: #9BA3F9;
+  --accent-soft: rgba(129, 140, 248, 0.14);
+  --accent-text: #A5B4FC;
+}
