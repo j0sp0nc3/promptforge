@@ -77,8 +77,8 @@ interactiva desplegada en Vercel.
 - [x] **P2.2 — Playground de Inyección Adversarial Personalizada & Fuzzing local (`js/adversarial-fuzzer.js`, `#modal-adversarial-lab`):** Generador interactivo para ingresar vectores de ataque propios, ejecutar 20 mutaciones de fuzzing contra OWASP LLM07 e inyectar guardrails de seguridad en 1-Click.
 
 ### 📌 Prioridad 3: MANTENIMIENTO & PERMITIVIDAD
-- [ ] **P3.1 — Streaming SSE de Noticias en Vivo (`/api/ai-news`):** Sustitución de polling por Server-Sent Events (SSE) para noticias e investigaciones.
-- [ ] **P3.2 — PWA Offline First & Service Worker Cache:** Soporte 100% offline para el motor de scoring, tuner genético y hub de conocimiento.
+- [x] **P3.1 — Streaming SSE de Noticias en Vivo (`/api/ai-news`, `js/app.js`):** Sustitución de polling por Server-Sent Events (SSE) con conexión persistente en vivo y pings de liveness.
+- [x] **P3.2 — PWA Offline First & Service Worker Cache (`sw.js`, `manifest.json`):** Estrategia Stale-While-Revalidate para assets estáticos y soporte 100% offline para el motor de scoring, tuner genético y laboratorio de fuzzing.
 
 ---
 
@@ -307,3 +307,8 @@ promptforge/                    ← App Web (Vercel)
 > - **Modal Interactivo `#modal-adversarial-lab` (`index.html`, `js/app.js`):** Interfaz para probar vectores personalizados, chips de ataques preset OWASP LLM07, auditoría de 20 mutaciones de fuzzing y botón de *"Inyectar Guardrails OWASP LLM07 (1-Click)"*.
 > - **Paridad i18n (`js/i18n.js`):** Diccionario `adversarialLab` con paridad 100% en español e inglés.
 > - **Suite 14 de Pruebas (`test_edge_cases.js`):** Añadida Suite 14 evaluando fuzzing local de 20 mutaciones, vectores personalizados y guardrails OWASP LLM07 con **40/40 PASS**.
+>
+> **Sesión 2026-09-11 — Features P3.1 Streaming SSE de Noticias & P3.2 PWA Offline First:**
+> - **Streaming SSE (`/api/ai-news`, `js/app.js`):** Implementada transmisión en tiempo real vía Server-Sent Events (SSE) en `/api/ai-news?sse=true` (`text/event-stream`) con eventos `news_init`, `news_update` y `ping` heartbeat, con fallback automático.
+> - **PWA Offline First (`sw.js`, `manifest.json`):** Creado Service Worker `sw.js` con estrategia Stale-While-Revalidate para los 29 assets estáticos del core y Network-First para llamados API, permitiendo ejecución 100% offline del motor de scoring y herramientas.
+> - **Suite 15 de Pruebas (`test_edge_cases.js`):** Añadida Suite 15 validando la integridad del SW/PWA Manifest y la transmisión del endpoint SSE con **42/42 PASS**.

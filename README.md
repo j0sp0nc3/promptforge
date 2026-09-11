@@ -229,6 +229,7 @@ promptforge/                    # Web App Repo (Vercel deployment)
 ├── llms.txt                    # Machine-Readable AI Spec (Answer.ai / Jeremy Howard Standard)
 ├── llms-full.txt               # Extended Technical API & Core Specification for LLMs
 ├── manifest.json               # Web App Manifest & PWA Metadata
+├── sw.js                       # PWA Offline-First Service Worker (Feature P3.2)
 ├── css/
 │   └── index.css               # Editorial Technical Design System
 ├── js/
@@ -256,7 +257,7 @@ promptforge/                    # Web App Repo (Vercel deployment)
 │   └── moderation.js           # Content moderation & anti-spam filter
 ├── server.js                   # REST API Microservice & Local Dev Server
 ├── cli.js                      # Node Terminal Executable
-├── test_edge_cases.js          # JS Test Suite Runner (40/40 PASS across 14 Suites)
+├── test_edge_cases.js          # JS Test Suite Runner (42/42 PASS across 15 Suites)
 ├── test_edge_cases.py          # Python Test Suite Runner (14/14 PASS)
 ├── test_production_endpoints.js# Production Endpoint Routing & Load Suite (10/10 PASS)
 ├── SPEC.md                     # Formal Product Specification (SDD Standard)

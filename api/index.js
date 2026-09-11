@@ -758,7 +758,54 @@ async function _fetchArxivItems() {
 }
 
 async function _handleAiNews(req, res) {
+  const isSse = (req.headers.accept && req.headers.accept.includes('text/event-stream')) || (req.url && req.url.includes('sse=true'));
   const now = Date.now();
+
+  if (isSse) {
+    res.writeHead(200, {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache, no-transform',
+      'Connection': 'keep-alive',
+      'X-Accel-Buffering': 'no'
+    });
+
+    // Send immediate initial event from cache or empty list
+    res.write(`event: news_init\ndata: ${JSON.stringify({ source: 'live', cachedAt: _aiNewsCache.at || now, items: _aiNewsCache.items })}\n\n`);
+
+    // Fetch fresh news if cache expired
+    const fresh = _aiNewsCache.items.length > 0 && (now - _aiNewsCache.at) < AI_NEWS_CACHE_TTL_MS;
+    if (!fresh) {
+      try {
+        const [hnRes, arxivRes] = await Promise.allSettled([_fetchHnItems(), _fetchArxivItems()]);
+        const hnItems = hnRes.status === 'fulfilled' ? hnRes.value : [];
+        const arxivItems = arxivRes.status === 'fulfilled' ? arxivRes.value : [];
+        const items = [...hnItems, ...arxivItems].sort((a, b) => b.publishedAt - a.publishedAt).slice(0, 30);
+
+        if (items.length > 0) {
+          _aiNewsCache.at = now;
+          _aiNewsCache.items = items;
+          res.write(`event: news_update\ndata: ${JSON.stringify({ source: 'live', cachedAt: now, items })}\n\n`);
+        }
+      } catch (e) {
+        // Keep initial stream intact
+      }
+    }
+
+    // Keep SSE connection alive with ping heartbeat every 15s
+    const pingInterval = setInterval(() => {
+      try {
+        res.write('event: ping\ndata: {}\n\n');
+      } catch (e) {
+        clearInterval(pingInterval);
+      }
+    }, 15000);
+
+    req.on('close', () => {
+      clearInterval(pingInterval);
+    });
+    return;
+  }
+
   const fresh = _aiNewsCache.items.length > 0 && (now - _aiNewsCache.at) < AI_NEWS_CACHE_TTL_MS;
   if (fresh) {
     res.writeHead(200, { 'Content-Type': 'application/json' });

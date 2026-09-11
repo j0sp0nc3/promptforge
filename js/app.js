@@ -39,6 +39,17 @@ const App = (() => {
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) refreshAiNews();
     });
+    // PWA Offline-First Service Worker (Feature P3.2)
+    if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').then(reg => {
+          console.log('[PWA] ServiceWorker registered with scope:', reg.scope);
+        }).catch(err => {
+          console.warn('[PWA] ServiceWorker registration failed:', err.message);
+        });
+      });
+    }
+
     checkShareURL();
     updateEditorStats();
 
@@ -311,36 +322,71 @@ const App = (() => {
     return lang === 'es' ? `hace ${diffD}d` : `${diffD}d ago`;
   }
 
+  function _processLiveNewsData(items) {
+    if (!Array.isArray(items)) return;
+    const lang = I18n.getLang();
+    liveAiNews = items
+      .filter(it => it && it.title && it.url)
+      .map(it => ({
+        id: it.id,
+        author: it.source === 'arxiv'
+          ? ('📄 ' + (it.category || 'arXiv'))
+          : ('@' + (it.author || 'hn')),
+        tag: it.source === 'arxiv'
+          ? ('arXiv · ' + _timeAgo(it.publishedAt, lang))
+          : ('HN · ' + (it.points || 0) + ' pts'),
+        text: { es: it.title, en: it.title },
+        url: it.url,
+        timestamp: _timeAgo(it.publishedAt, lang),
+      }));
+
+    // Re-render so fresh items show up immediately.
+    renderNewsTicker();
+    const modal = document.getElementById('modal-ticker-feed');
+    if (modal && !modal.classList.contains('hidden')) renderTickerFeedModalContent();
+  }
+
+  let newsEventSource = null;
+
   async function refreshAiNews() {
+    // Try SSE stream first if available and not already connected (Feature P3.1)
+    if (typeof EventSource !== 'undefined' && !newsEventSource) {
+      try {
+        const sseUrl = API_CONFIG.getUrl('/api/ai-news?sse=true');
+        newsEventSource = new EventSource(sseUrl);
+
+        const handleStreamData = (e) => {
+          try {
+            const data = JSON.parse(e.data);
+            if (data && Array.isArray(data.items)) {
+              _processLiveNewsData(data.items);
+            }
+          } catch (_) {}
+        };
+
+        newsEventSource.addEventListener('news_init', handleStreamData);
+        newsEventSource.addEventListener('news_update', handleStreamData);
+        newsEventSource.addEventListener('ping', () => {});
+
+        newsEventSource.onerror = () => {
+          if (newsEventSource) {
+            newsEventSource.close();
+            newsEventSource = null;
+          }
+        };
+      } catch (e) {
+        newsEventSource = null;
+      }
+    }
+
     try {
       const res = await fetch(API_CONFIG.getUrl('/api/ai-news'));
       if (!res.ok) return;
       const data = await res.json();
       if (!data || !Array.isArray(data.items)) return;
-
-      const lang = I18n.getLang();
-      liveAiNews = data.items
-        .filter(it => it.title && it.url)
-        .map(it => ({
-          id: it.id,
-          author: it.source === 'arxiv'
-            ? ('📄 ' + (it.category || 'arXiv'))
-            : ('@' + (it.author || 'hn')),
-          tag: it.source === 'arxiv'
-            ? ('arXiv · ' + _timeAgo(it.publishedAt, lang))
-            : ('HN · ' + (it.points || 0) + ' pts'),
-          text: { es: it.title, en: it.title },
-          url: it.url,
-          timestamp: _timeAgo(it.publishedAt, lang),
-        }));
-
-      // Re-render so the fresh items show up immediately.
-      renderNewsTicker();
-      const modal = document.getElementById('modal-ticker-feed');
-      if (modal && !modal.classList.contains('hidden')) renderTickerFeedModalContent();
+      _processLiveNewsData(data.items);
     } catch (e) {
-      // Network/offline: keep the last successful live items (or, if none
-      // has ever loaded, the curated fallback via getTickerFeed).
+      // Network/offline: keep the last successful live items
     }
   }
 
