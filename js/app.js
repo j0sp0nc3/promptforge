@@ -29,6 +29,7 @@ const App = (() => {
     setupModelsView();
     setupLeaderboardView();
     setupMcpInspectorHandlers();
+    setupAdversarialLabHandlers();
     setupTickerControls();
     renderNewsTicker();
     // Live AI news: fetch on load, then refresh every 5 minutes (and when the
@@ -1985,6 +1986,156 @@ const App = (() => {
       xmlPreview.textContent = xml;
       contractContainer.classList.remove('hidden');
     }
+  }
+
+  // ── Custom Adversarial Injection & Local Fuzzing Lab (P2.2) ───────
+  function openAdversarialLabModal() {
+    const modal = document.getElementById('modal-adversarial-lab');
+    if (modal) {
+      modal.classList.remove('hidden');
+      focusModal(modal);
+      renderAdversarialLabPresets();
+    }
+  }
+
+  function closeAdversarialLabModal() {
+    document.getElementById('modal-adversarial-lab')?.classList.add('hidden');
+  }
+
+  function renderAdversarialLabPresets() {
+    const container = document.getElementById('advlab-presets-container');
+    if (!container || typeof AdversarialFuzzer === 'undefined') return;
+
+    const lang = I18n.getLang();
+    const presets = AdversarialFuzzer.PRESET_VECTORS;
+
+    container.innerHTML = presets.map(p => {
+      const name = lang === 'en' ? p.nameEn : p.nameEs;
+      return `<button class="action-chip advlab-preset-chip" data-id="${p.id}" style="font-size:0.75rem;">⚡ ${escapeHtml(name)}</button>`;
+    }).join('');
+
+    container.querySelectorAll('.advlab-preset-chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        const preset = presets.find(x => x.id === id);
+        if (preset) {
+          const input = document.getElementById('advlab-custom-input');
+          if (input) input.value = preset.payload;
+        }
+      });
+    });
+  }
+
+  function setupAdversarialLabHandlers() {
+    const btnOpen = document.getElementById('btn-adversarial-lab');
+    const btnCloseTop = document.getElementById('btn-close-advlab-modal');
+    const btnCloseBottom = document.getElementById('btn-close-advlab-bottom');
+    const btnTestCustom = document.getElementById('btn-advlab-test-custom');
+    const btnRunFuzzing = document.getElementById('btn-advlab-run-fuzzing');
+    const btnInjectGuardrails = document.getElementById('btn-advlab-inject-guardrails');
+
+    if (btnOpen) btnOpen.addEventListener('click', openAdversarialLabModal);
+    if (btnCloseTop) btnCloseTop.addEventListener('click', closeAdversarialLabModal);
+    if (btnCloseBottom) btnCloseBottom.addEventListener('click', closeAdversarialLabModal);
+    setupModalA11y('modal-adversarial-lab', closeAdversarialLabModal);
+
+    if (btnTestCustom) {
+      btnTestCustom.addEventListener('click', () => {
+        const customInput = document.getElementById('advlab-custom-input');
+        const promptInput = document.getElementById('prompt-input');
+        const customPayload = customInput ? customInput.value.trim() : '';
+        const promptText = promptInput ? promptInput.value.trim() : '';
+
+        if (!customPayload) {
+          showToast(t('adversarialLab.customPlaceholder'), 'warning');
+          return;
+        }
+
+        if (typeof AdversarialFuzzer === 'undefined') return;
+
+        const res = AdversarialFuzzer.evaluateCustomPayload(promptText, customPayload);
+        const resultCard = document.getElementById('advlab-custom-result');
+        const lang = I18n.getLang();
+
+        if (resultCard) {
+          resultCard.classList.remove('hidden');
+          const badgeClass = res.resilient ? 'badge-success' : 'badge-danger';
+          const statusText = res.resilient ? t('adversarialLab.pass') : t('adversarialLab.fail');
+          const detail = lang === 'en' ? res.detailEn : res.detailEs;
+
+          resultCard.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <strong>${escapeHtml(t('adversarialLab.customLabel'))}</strong>
+              <span class="badge ${badgeClass}">${escapeHtml(statusText)} (${res.score}/100)</span>
+            </div>
+            <p style="margin:0; color:var(--ink-soft);">${escapeHtml(detail)}</p>
+          `;
+        }
+      });
+    }
+
+    if (btnRunFuzzing) {
+      btnRunFuzzing.addEventListener('click', () => {
+        const promptInput = document.getElementById('prompt-input');
+        const promptText = promptInput ? promptInput.value.trim() : '';
+
+        if (typeof AdversarialFuzzer === 'undefined') return;
+
+        const audit = AdversarialFuzzer.fuzzPrompt(promptText);
+        renderAdversarialFuzzingResults(audit);
+      });
+    }
+
+    if (btnInjectGuardrails) {
+      btnInjectGuardrails.addEventListener('click', () => {
+        const promptInput = document.getElementById('prompt-input');
+        if (!promptInput || typeof AdversarialFuzzer === 'undefined') return;
+
+        const guardrailsXml = AdversarialFuzzer.generateHardenedGuardrails(promptInput.value);
+        promptInput.value = Rewriter.injectSnippet(promptInput.value, guardrailsXml);
+        updateEditorStats();
+        closeAdversarialLabModal();
+        showToast(t('adversarialLab.guardrailsInjected'), 'success');
+        runAnalysis();
+      });
+    }
+  }
+
+  function renderAdversarialFuzzingResults(audit) {
+    const summaryCard = document.getElementById('advlab-fuzzing-summary');
+    const container = document.getElementById('advlab-transcripts-container');
+    if (!summaryCard || !container) return;
+
+    const lang = I18n.getLang();
+    const riskBadgeClass = audit.riskLevel === 'critical' ? 'badge-danger' : audit.riskLevel === 'high' ? 'badge-warning' : 'badge-success';
+    const riskKey = audit.riskLevel === 'critical' ? 'riskCritical' : audit.riskLevel === 'high' ? 'riskHigh' : audit.riskLevel === 'medium' ? 'riskMedium' : 'riskLow';
+    const riskLabel = t(`adversarialLab.${riskKey}`);
+    const summaryText = lang === 'en' ? audit.summaryEn : audit.summaryEs;
+
+    summaryCard.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <strong>${escapeHtml(t('adversarialLab.resilienceScore'))} <span style="font-size:1.1rem; color:var(--accent);">${audit.overallResilience}%</span></strong>
+        <span class="badge ${riskBadgeClass}">${escapeHtml(riskLabel)}</span>
+      </div>
+      <p style="margin:0; color:var(--ink-soft); font-size:0.8rem;">${escapeHtml(summaryText)}</p>
+    `;
+
+    container.innerHTML = audit.transcripts.map(t => {
+      const name = lang === 'en' ? t.nameEn : t.nameEs;
+      const statusIcon = t.resilient ? '✅' : '❌';
+      const statusClass = t.resilient ? 'color:var(--emerald);' : 'color:var(--vermilion);';
+      const reason = lang === 'en' ? t.reasonEn : t.reasonEs;
+
+      return `
+        <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:4px; padding:6px 8px; margin-bottom:4px;">
+          <div style="display:flex; justify-content:space-between;">
+            <strong style="font-size:0.76rem;">${statusIcon} #${t.id} ${escapeHtml(name)}</strong>
+            <span style="${statusClass} font-weight:600; font-size:0.72rem;">${t.resilient ? 'PASS' : 'FAIL'}</span>
+          </div>
+          <p style="margin:2px 0 0 0; color:var(--ink-soft); font-size:0.73rem;">${escapeHtml(reason)}</p>
+        </div>
+      `;
+    }).join('');
   }
 
   function checkShareURL() {

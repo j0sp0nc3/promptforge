@@ -39,7 +39,7 @@ Promptometer is a complete professional workspace and engine to **evaluate, benc
 - **LLM-as-a-Judge with Diagnostic Feedback**: The `/api/analyze-intent` endpoint injects the Promptometer diagnostic (score, grade, weaknesses, suggestions, context gaps) into the LLM system prompt. The LLM solves each identified weakness, assigns a domain-specific expert role (e.g., Geologist for magma topics), and returns a `justification` banner explaining improvements. Supports Gemini, OpenAI, and Groq with automatic heuristic fallback at $0 cost.
 - **Domain Archetype Engine** (`js/domain-analyzer.js`): Classifies prompts into 8 archetypes (Software Engineering, Data Extraction, Marketing Copy, RAG Knowledge, Agentic Tool Use, Financial/Legal, Rhetoric/Creative, General Task), evaluates context gaps, and synthesizes enriched prompts via `synthesizeLocal()` with `inferDynamicRole()` (geology, health, physics, history, etc.).
 - **Anti-Pattern Catalog** (37 anti-patterns) & **Best Practices** (17 strengths, including OWASP LLM07 defense and MCP tool contracts) with expandable `<details>` accordions.
-- **Adversarial Security Suite** (15 security tests: jailbreak resistance, prompt exfiltration, hallucination mitigation, OWASP LLM07 System Prompt Leakage, Tool Poisoning, etc.).
+- **Adversarial Security & Fuzzing Lab**: 15 security tests (jailbreak resistance, prompt exfiltration, hallucination mitigation, OWASP LLM07 System Prompt Leakage, Tool Poisoning, etc.) plus an interactive **Custom Adversarial Injection & Local Fuzzing Lab** (`js/adversarial-fuzzer.js`) running 20 automated attack vector mutations and 1-click OWASP LLM07 XML guardrail hardening.
 - **Interactive Knowledge Hub** with a 24-term bilingual glossary, 17 prompting techniques (including Context Engineering, MCP, Test-Time Compute, Agentic Patterns), 6 structural frameworks (including CO-STAR and Bento-Box), 13 curated research references, and full-text real-time search.
 - **Top 10 Hall of Fame Leaderboard** with zero-login global API sync (`/api/leaderboard`), instant URL sharing (`?p=base64`), 10 elite seed prompts (94–99/100), and interactive "Analyze & Try" buttons.
 - **Non-Destructive XML Rewriter & A/B Comparison Playground**: Preserves user context with Before vs After impact analysis, 1-click action chips, and a Side-by-Side A/B comparison view (`#tab-ab`) measuring real-time score delta (+XX pts), word counts, and letter grades.
@@ -249,13 +249,14 @@ promptforge/                    # Web App Repo (Vercel deployment)
 │   ├── constellation3d.js      # 3D Solar System Constellation Engine (Three.js WebGL)
 │   ├── genetic-tuner.js        # Local Genetic Algorithm & Iterative Mutation Engine
 │   ├── mcp-inspector.js        # MCP Schema Inspector & Auto-Validator (P2.1)
+│   ├── adversarial-fuzzer.js   # Custom Adversarial Injection & Local Fuzzing Engine (P2.2)
 │   └── app.js                  # Main UI Orchestrator
 ├── api/
 │   ├── index.js                # Secured Vercel Serverless API wrapper (including /api/analyze-intent)
 │   └── moderation.js           # Content moderation & anti-spam filter
 ├── server.js                   # REST API Microservice & Local Dev Server
 ├── cli.js                      # Node Terminal Executable
-├── test_edge_cases.js          # JS Test Suite Runner (37/37 PASS across 13 Suites)
+├── test_edge_cases.js          # JS Test Suite Runner (40/40 PASS across 14 Suites)
 ├── test_edge_cases.py          # Python Test Suite Runner (14/14 PASS)
 ├── test_production_endpoints.js# Production Endpoint Routing & Load Suite (10/10 PASS)
 ├── SPEC.md                     # Formal Product Specification (SDD Standard)

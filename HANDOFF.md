@@ -74,7 +74,7 @@ interactiva desplegada en Vercel.
 
 ### 📌 Prioridad 2: MEDIA (Seguridad & MCP)
 - [x] **P2.1 — MCP Schema Inspector & Auto-Validator (`js/mcp-inspector.js`, `#modal-mcp-inspector`):** Inspector interactivo para pegar esquemas JSON/YAML de servidores MCP y auditar la cobertura de herramientas (`<tools>`), argumentos tipados y guardrails (`<loop_guard>`).
-- [ ] **P2.2 — Playground de Inyección Adversarial Personalizada & Fuzzing local:** Generador interactivo para ingresar vectores de ataque propios y testear resistencia contra OWASP LLM07.
+- [x] **P2.2 — Playground de Inyección Adversarial Personalizada & Fuzzing local (`js/adversarial-fuzzer.js`, `#modal-adversarial-lab`):** Generador interactivo para ingresar vectores de ataque propios, ejecutar 20 mutaciones de fuzzing contra OWASP LLM07 e inyectar guardrails de seguridad en 1-Click.
 
 ### 📌 Prioridad 3: MANTENIMIENTO & PERMITIVIDAD
 - [ ] **P3.1 — Streaming SSE de Noticias en Vivo (`/api/ai-news`):** Sustitución de polling por Server-Sent Events (SSE) para noticias e investigaciones.
@@ -301,3 +301,9 @@ promptforge/                    ← App Web (Vercel)
 > - **Modal Interactivo `#modal-mcp-inspector` (`index.html`, `css/index.css`, `js/app.js`):** Interfaz para pegar definiciones MCP, botón *"Cargar Ejemplo MCP"*, tarjeta con el reporte de la auditoría y botón de *"Inyectar Contrato XML en 1-Click"* al prompt activo del editor.
 > - **Paridad i18n (`js/i18n.js`):** Agregado objeto `mcpInspector` en español e inglés con 0 llaves faltantes verificadas en Suite 4.
 > - **Suite 13 de Pruebas (`test_edge_cases.js`):** Añadida Suite 13 evaluando parseo de esquemas MCP, auditoría de 5 vectores agénticos y generación de contratos XML con **37/37 PASS**.
+>
+> **Sesión 2026-09-11 — Feature P2.2 Playground de Inyección Adversarial & Fuzzing Local:**
+> - **Módulo Core `js/adversarial-fuzzer.js`:** Motor de fuzzing local con 20 mutaciones de ataques OWASP LLM07 (Leakage, Delimiter Hijack, Roleplay Jailbreak, Tool Poisoning, Obfuscation), evaluador de vectores personalizados y generador de guardrails XML de seguridad.
+> - **Modal Interactivo `#modal-adversarial-lab` (`index.html`, `js/app.js`):** Interfaz para probar vectores personalizados, chips de ataques preset OWASP LLM07, auditoría de 20 mutaciones de fuzzing y botón de *"Inyectar Guardrails OWASP LLM07 (1-Click)"*.
+> - **Paridad i18n (`js/i18n.js`):** Diccionario `adversarialLab` con paridad 100% en español e inglés.
+> - **Suite 14 de Pruebas (`test_edge_cases.js`):** Añadida Suite 14 evaluando fuzzing local de 20 mutaciones, vectores personalizados y guardrails OWASP LLM07 con **40/40 PASS**.
