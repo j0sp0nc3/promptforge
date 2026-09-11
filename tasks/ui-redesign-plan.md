@@ -182,9 +182,65 @@ Dimensiones     → lista 8D en tab de detalle + fila de chips
 | TP-1 | Tooltip informed | legend pills | ⬜ P2 |
 | SW-1 | Switch (radar/theme) | toggle radar live | ⬜ P3 |
 
-### 5.c Documentación verificada (2026-09-10 · v3.7)
+#### 5.b.1 Componentes dinámicos JS (audit 2026-09-10 · v3.8)
 
-- Playground: 9 secciones, 10 paneles 100% con captions, temas claro/oscuro, 6 paletas conmutables, Phosphor cargado (12 iconos en modal), coreografía score 0→87 funcional.
+> **Auditoría completa de la deuda de mapeo.** `js/app.js` renderiza 100% del DOM de
+> las vistas (template literals) — el other JS (history/leaderboard/templates/
+> knowledge/models/domain-analyzer/adversarial/signals/rewriter) NO genera DOM.
+> Familias nuevas de clases creadas dinámicamente que el registro §5 no cubría:
+> **30 familias**, sin ninguna de las cuales el workbench "se ve viejo".
+
+| ID propuesto | Componente (clases dinámicas JS) | Contenedor estático en `index.html` | Prioridad |
+|:---|:---|:---|:---|
+| DA-2 | Acordeón dimensión 8D (`.dimension-card{-header/-icon/-name/-bar/-bar-fill/-body/-section}`, `.finding-item`, `.suggestion-item`, `.dim-empty`; est. `.expanded`/`.highlight-pulse`) | `#dimensions-list` | P1 |
+| NV-1 | Nodo orbital SVG (`.orbital-node-group`, diamante+rayo, `.orbital-node-label/-score`) | `#orbital-constellation-svg` | P1 |
+| DA-3 | Mini-card dimensión evaluada (`.eval-dim-card{-name/-score}`, click→detalle) | `#evaluation-dimensions-row` | P1 |
+| DA-4 | Finding card (`.finding-card{-{severity}/-strength}`, `.adversarial-card`, `.adversarial-status-{status}`) | `#antipatterns-list`, `#strengths-list`, `#adversarial-list` | P1 |
+| DA-6 | Píldora XML semántica (`.xml-tag-pill` + `-role/context/task/format/constraints/examples/error`) | `#improved-prompt-highlighted` | P1 |
+| DA-5 | Item de cambio (`.change-item .change-{added/modified/restructured}`, `-type/-desc`) | `#changes-list` | P1 |
+| DD-2 | Score badge dinámico de workbench (`badge-emerald/red/neutral` sobre `.card-score-badge`) | `#unoptimized-score-badge`, `#calibrated-score-badge` | P1 |
+| AC-1 | Chip injectable + gap item (`.action-chip--inject`, `.gap-item`) — extiende CH-1 | `#domain-gaps-list`, `#domain-action-chips` | P1 |
+| NK-3 | Ticker item (`.ticker-item`, `-author/-tag/-text/-time`; est. `.paused`) — extiende NK-2 | `#news-ticker-track` | P1 |
+| DA-9 | Clases de estado score/grade (`grade-aplus…f`, `good/warning/bad`) compartidas con HL-1 | `#score-grade`, `animateScore` JS | P2 |
+| DA-7 | Podio genético (`.podium-variant-card{,--champion}`, `-header/-body/-footer`, `.variant-badge-champion/runnerup`) | `#genetic-podium-grid` | P2 |
+| DA-8 | Píldora coste/latencia (`.cost-card-pill`, `.cost-pill-header/model/provider`, `.cost-metric-item`, `.cost-highlight`) | `#cost-sim-grid` | P2 |
+| ED-1 | Editorial feed card (`.editorial-feed-card`, `-author-pill/-avatar/-name`, `-tag/-time-badge`, `-body/-text`, `-read-link`; `.editorial-tab-btn`, `.editorial-empty-state`) | `#ticker-feed-list`, `#ticker-feed-filter-bar` | P2 |
+| TP-2 | Template card (`.template-card{-header}`, `-category/-name/-desc`, `-tags .tag`, `-use-btn`) | `#templates-grid` | P2 |
+| CT-2 | Filtro-píldora categoría (`.filter-btn` + est `.active`) compartida | `#category-filters`, `#leaderboard-filters` | P2 |
+| HL-1 | Entrada historial (`.history-item`, `-score-value good/warning/bad`, `-score-grade`, `-preview/-date/-actions-group`) | `#history-list` | P2 |
+| LL-1 | Learn card base (`.learn-card{-glossary/-technique/-framework/-template/-reference/-linked}`, `-term-name/-def/-example`, `.learn-example-block/-code`, `.learn-analyze-btn`) — también usada por radar refs | `#learn-glossary/-techniques/-frameworks` | P2 |
+| LL-2 | Item expandible biblioteca (`.learn-list-item.learn-expandable`, `-summary`, `-detail-row/-label/-value`) | `#learn-library` | P2 |
+| RC-1 | Radar creator card (`.radar-card`, `-avatar/-name/-handle/-role/-desc`, `.platform-pill`) | `#radar-creators-panel` | P2 |
+| LB-2 | Hall-of-Fame card (`.leaderboard-card`, `.leaderboard-rank .rank-1/2/3` + medallas, `-prompt-preview`, `-load/-copy-btn`) — concreta LB-1 | `#leaderboard-grid` | P2 |
+| MO-1 | Card modelo grid (`.model-card`, `.model-rank-badge`, `-name/provider/-footer/-action`, `.model-metrics-grid`, `.metric-item`) | `#models-grid` | P2 |
+| MO-2 | Podio SOTA top-3 (`.podium-card{,--gold/--silver/--bronze}`, `-badge-top`, `.model-type-tag--frontier/open_weights`) | `#models-podium-section` | P2 |
+| TO-1x | Toast dinámico JS (`.toast-{type}`, `-icon`, `-msg`, est `.toast-show`) — extiende TO-1 | `#toast-container` | P2 |
+| LL-3 | Panel learn header (`.learn-panel-header`, `.section-title` + `.count-badge`) | contenedores `#learn-*` | P3 |
+| LL-4 | Cross-ref chips + tags (`.cross-ref.tag`, `.learn-term-tag.tag`, `.learn-example-label`) | dentro de LL-1 | P3 |
+| MO-3 | Métricas modal modelo (`.metric-item` + `li` strengths) | `#model-modal-metrics-grid` | P3 |
+| MO-4 | Chip filtro modelos (`.filter-chip` + `.active`) | `#models-filter-pills` | P3 |
+| ST-1 | Loader spin (`.spin` swap durante análisis) | `#btn-analyze` | P3 |
+| EM-2 | Estados vacíos dinámicos (`.editorial-empty-state`, `.learn-empty-search`, `.empty-findings`) | multi-vista | P3 |
+| FR-2 | Feedback modal suggest (`.suggest-status{,--error}`, preview `#modal-score-preview`) | modales suggest-* | P3 |
+
+**Familias fuera de `index.html` (JS puro, añadir al registro igual):**
+
+| ID | Componente | Dónde | Nota |
+|:---|:---|:---|:---|
+| NV-2 | Etiqueta 3D siempre-visible (`planet-3d-always-label`) | `constellation3d.js` L362–458 | badge color+score por planeta |
+| NV-3 | Tooltip HUD 3D (`constellation-3d-tooltip`) | `constellation3d.js` L462–516 | candidata a unificar con TP-1 |
+| TO-2 | Toast duplicado `export.js` (`.promptometer-toast`) | `export.js` L306 | 2ª impl. sin alinear — consolidar en TO-1 |
+| ST-2 | Estado de página `body.modal-open` | app.js modales | token de estado junto a MD-1 |
+
+### 5.c Documentación verificada (2026-09-10 · v3.8)
+
+- Playground: 9 secciones + sección 08 con los 4 P1 (IN-1 editor con contador,
+  SE-2 listbox custom rich, DA-1 tabla modelos reales 2026, DD-1 dropdown con kbd),
+  10 paneles 100% con captions, temas claro/oscuro, 6 paletas conmutables,
+  Phosphor cargado, coreografía score 0→87 funcional.
+- **Fix stacking v3.8 (crítico, aplica a U-4):** `.pg-section > :not(.craft-numeral)
+  { z-index:1 }` aplanaba hermanos y la tabla posterior pintaba encima del menú
+  z900 atrapado. Solución canónica: numeral a `z-index:-1`, hermanos static.
 - Suite: **34/34 JS PASS** · paridad npm/py intacta (lógica no tocada).
 - A11y: skip-link, focus-ring token, `:focus-visible` global, focus automático en modal, Escape, `aria-modal`, toasts `aria-live`.
 - Presto valores verificados por computed style: accent `#FF5200` (claro) / `#FF6A33` (oscuro), bg `#F9FAFB` / `#121317`, header modal 80px, sin overflow horizontal.
