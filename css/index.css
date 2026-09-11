@@ -4893,7 +4893,7 @@ body.theme-cosmic {
 
 /* ── Header → plano, hairline zinc (sin glass) ────────────────── */
 .app-header {
-  background: transparent !important;
+  background: var(--bg-body) !important;
   border-bottom: 1px solid var(--rule-color);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
