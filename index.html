@@ -293,7 +293,7 @@
   <div class="news-ticker-bar" id="news-ticker-bar" role="region" aria-label="Radar de Noticias IA">
     <div class="news-ticker-label" id="news-ticker-badge-btn" role="button" tabindex="0" title="Ver Radar de Noticias IA" aria-label="Abrir radar de noticias IA">
       <span class="ticker-badge">
-        <span class="ticker-badge-icon" aria-hidden="true">⚡</span>
+        <span class="ticker-badge-icon ph ph-bolt" aria-hidden="true"></span>
         <span class="ticker-badge-text" data-i18n="ticker.badgeText">LIVE AI RADAR</span>
       </span>
     </div>
@@ -402,10 +402,8 @@
                   <span data-i18n="editor.analyze">Calibrate & Optimize</span>
                 </button>
                 <button class="btn btn-secondary btn-ai-evaluate" id="btn-ai-evaluate-main" title="Evaluación e inferencia profunda con LLM-as-a-Judge">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-                  </svg>
-                  <span id="btn-ai-evaluate-main-text" data-i18n="editor.aiEvaluateBtn">✨ Evaluación IA (LLM Judge)</span>
+                  <i class="ph ph-sparkle" aria-hidden="true"></i>
+                  <span id="btn-ai-evaluate-main-text" data-i18n="editor.aiEvaluateBtn">Evaluación IA (LLM Judge)</span>
                 </button>
               </div>
             </div>
@@ -432,7 +430,8 @@
               </div>
               <div class="domain-ai-actions" style="margin-top: 10px;">
                 <button class="btn btn-secondary btn-sm" id="btn-deep-domain-ai">
-                  <span id="btn-deep-domain-ai-text" data-i18n="contextGaps.deepAiBtn">✨ Optimizar Contexto Profundo con IA</span>
+                  <i class="ph ph-sparkle" aria-hidden="true"></i>
+                  <span id="btn-deep-domain-ai-text" data-i18n="contextGaps.deepAiBtn">Optimizar Contexto Profundo con IA</span>
                 </button>
               </div>
             </div>
@@ -524,7 +523,7 @@
           <section class="workbench-card calibrated-card" id="results-panel" style="margin-bottom: 1.5rem;">
             <div class="workbench-card-header">
               <div class="card-title-group">
-                <h3 class="card-title" data-i18n="workbench.calibratedTitle">Promptometer Calibrated ✨</h3>
+                <h3 class="card-title" data-i18n="workbench.calibratedTitle">Promptometer Calibrated</h3>
                 <div class="calibrated-badges-row">
                   <span class="calibrated-pill-tag tag-objective" id="calibrated-objective-pill">[Goal: General]</span>
                   <span class="calibrated-pill-tag tag-role" data-i18n="workbench.pillRoleDefined">[Role Defined]</span>
@@ -555,19 +554,19 @@
               <!-- Action Chips Bar -->
               <div class="calibrated-actions-row">
                 <div class="action-chips-group">
-                  <button class="action-chip" id="chip-shorten" data-i18n="workbench.chipShorten">⚡ Shorten</button>
-                  <button class="action-chip" id="chip-cot" data-i18n="workbench.chipCoT">🧠 Add CoT</button>
-                  <button class="action-chip" id="chip-json" data-i18n="workbench.chipJson">📐 Enforce JSON</button>
-                  <button class="action-chip" id="chip-safety" data-i18n="workbench.chipSafety">🛡️ Guardrails</button>
-                  <button class="action-chip" id="chip-mcp" data-i18n="workbench.chipMcp">🔧 MCP Contract</button>
-                  <button class="action-chip" id="chip-anti-loop" data-i18n="workbench.chipAntiLoop">🛡️ Anti-Loop</button>
-                  <button class="action-chip action-chip--genetic" id="chip-genetic" data-i18n="workbench.chipGenetic">🧬 Auto-Evolucionar</button>
+                  <button class="action-chip" id="chip-shorten"><i class="ph ph-scissors" aria-hidden="true"></i><span data-i18n="workbench.chipShorten">Acortar</span></button>
+                  <button class="action-chip" id="chip-cot"><i class="ph ph-brain" aria-hidden="true"></i><span data-i18n="workbench.chipCoT">Añadir CoT</span></button>
+                  <button class="action-chip" id="chip-json"><i class="ph ph-brackets-curly" aria-hidden="true"></i><span data-i18n="workbench.chipJson">Forzar JSON</span></button>
+                  <button class="action-chip" id="chip-safety"><i class="ph ph-shield-check" aria-hidden="true"></i><span data-i18n="workbench.chipSafety">Salvaguardas</span></button>
+                  <button class="action-chip" id="chip-mcp"><i class="ph ph-plugs" aria-hidden="true"></i><span data-i18n="workbench.chipMcp">Contrato MCP</span></button>
+                  <button class="action-chip" id="chip-anti-loop"><i class="ph ph-arrow-counter-clockwise" aria-hidden="true"></i><span data-i18n="workbench.chipAntiLoop">Anti-Loop</span></button>
+                  <button class="action-chip action-chip--genetic" id="chip-genetic"><i class="ph ph-dna" aria-hidden="true"></i><span data-i18n="workbench.chipGenetic">Auto-Evolucionar</span></button>
                 </div>
                 <div class="primary-actions-group">
                   <span class="improvement-badge" id="improvement-badge">+25 pts</span>
-                  <button class="btn btn-secondary btn-sm" id="btn-export-code" data-i18n="workbench.exportCode">💻 Code SDK</button>
-                  <button class="btn btn-secondary btn-sm" id="btn-copy-improvement" data-i18n="workbench.copy">📋 Copy</button>
-                  <button class="btn btn-primary btn-sm" id="btn-apply-improvement" data-i18n="workbench.apply">✨ Apply</button>
+                  <button class="btn btn-secondary btn-sm" id="btn-export-code"><i class="ph ph-code" aria-hidden="true"></i><span data-i18n="workbench.exportCode">Código SDK</span></button>
+                  <button class="btn btn-secondary btn-sm" id="btn-copy-improvement"><i class="ph ph-copy" aria-hidden="true"></i><span data-i18n="workbench.copy">Copy</span></button>
+                  <button class="btn btn-primary btn-sm" id="btn-apply-improvement"><i class="ph ph-sparkle" aria-hidden="true"></i><span data-i18n="workbench.apply">Aplicar</span></button>
                 </div>
               </div>
 
@@ -642,7 +641,7 @@
                 </div>
                 <div class="ab-panel-footer">
                   <span class="ab-stats" id="ab-stats-b">0 palabras</span>
-                  <button class="btn btn-secondary btn-sm" id="btn-copy-ab-b" data-i18n="ab.copyCalibrated">📋 Copiar B</button>
+                  <button class="btn btn-secondary btn-sm" id="btn-copy-ab-b"><i class="ph ph-copy" aria-hidden="true"></i><span data-i18n="ab.copyCalibrated">Copiar B</span></button>
                 </div>
               </div>
             </div>

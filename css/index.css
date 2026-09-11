@@ -5270,3 +5270,17 @@ body.theme-editorial .orbital-constellation-container {
 }
 .hero-metrics-strip span { font-size: 0.72rem; color: var(--ink-faint); letter-spacing: 0.02em; }
 @media (max-width: 560px) { .hero-metrics-strip { gap: var(--s-6); flex-wrap: wrap; } }
+
+/* ── U-5.2 · Phosphor en chips/botones legacy ──────────────────── */
+.action-chip .ph, .btn .ph, .ticker-badge-icon.ph {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.95em;
+  line-height: 1;
+}
+.action-chip { display: inline-flex; align-items: center; gap: 6px; }
+.action-chip .ph { color: var(--accent-text); }
+.action-chip--genetic .ph { color: var(--accent-text); }
+.btn .ph { color: inherit; opacity: 0.9; }
+.btn-primary .ph { color: var(--accent-ink); }
+.ticker-badge-icon.ph { color: var(--accent); font-size: 0.85rem; }
