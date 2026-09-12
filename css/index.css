@@ -83,7 +83,10 @@
 body.theme-editorial {
   --bg-body:          #F7F3EC;
   --bg-paper:         #FBF8F2;
+  --bg-surface:       #FFFFFF;
+  --bg-raised:        #FFFFFF;
   --bg-sunken:        #EFE9DD;
+  --bg-hover:         #F2ECE1;
   --bg-inverse:       #1A1612;
   --bg-modal-overlay: rgba(26, 22, 18, 0.55);
 
@@ -5314,6 +5317,7 @@ body.theme-editorial .orbital-constellation-container {
 .btn-primary .ph { color: var(--accent-ink); }
 .ticker-badge-icon.ph { color: var(--accent); font-size: 0.85rem; }
 
+<<<<<<< Updated upstream
 /* ── U-5.3 · Accordion dimensiones: icono Phosphor DS ──────────── */
 .dimension-icon .ph { font-size: 1.05rem; color: var(--dim-color, var(--accent)); display: inline-flex; }
 .dimension-icon {
@@ -5447,3 +5451,69 @@ body:not(.theme-editorial) .hero-metrics-strip { border-color: rgba(255, 255, 25
   padding-inline: 0;
 }
 .spectral-prism { display: none; }
+
+/* ── Modo Luna (Editorial Clásico) — Polishing & Harmonic Theme System ── */
+body.theme-editorial .modal-panel,
+body.theme-editorial .modal-card,
+body.theme-editorial .modal-content,
+body.theme-editorial .code-export-card {
+  background: var(--bg-paper) !important;
+  border: 1px solid var(--rule-color);
+  box-shadow: 0 12px 32px rgba(26, 22, 18, 0.12);
+}
+
+body.theme-editorial .code-snippet-pre,
+body.theme-editorial .model-modal-code,
+body.theme-editorial .editorial-feed-card,
+body.theme-editorial .ticker-feed-row,
+body.theme-editorial .ticker-feed-card {
+  background: #F3EDE2 !important;
+  color: #1A1612 !important;
+  border: 1px solid #E2DACB;
+}
+
+body.theme-editorial .ticker-ctrl-btn {
+  background: #EFE9DD;
+  color: #4A4239;
+  border-color: #D9D2C4;
+}
+
+body.theme-editorial .ticker-ctrl-btn:hover {
+  background: #F2ECE1;
+  color: #C73E2D;
+  border-color: #C73E2D;
+}
+
+body.theme-editorial .ticker-filter-chip {
+  background: #EFE9DD;
+  color: #4A4239;
+  border-color: #D9D2C4;
+}
+
+body.theme-editorial .ticker-filter-chip:hover,
+body.theme-editorial .ticker-filter-chip.active {
+  background: #C73E2D;
+  color: #FFFFFF;
+  border-color: #C73E2D;
+}
+
+body.theme-editorial .editorial-tab-btn.active {
+  background: #C73E2D;
+  color: #FFFFFF;
+  border-color: #C73E2D;
+}
+
+body.theme-editorial .editorial-search-input,
+body.theme-editorial .modal-input,
+body.theme-editorial .modal-textarea {
+  background: #EFE9DD !important;
+  color: #1A1612 !important;
+  border: 1px solid #D9D2C4;
+}
+
+body.theme-editorial .editorial-search-input:focus,
+body.theme-editorial .modal-input:focus,
+body.theme-editorial .modal-textarea:focus {
+  border-color: #C73E2D !important;
+  background: #FBF8F2 !important;
+}

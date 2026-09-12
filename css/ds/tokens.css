@@ -202,8 +202,12 @@ body.theme-editorial {
   --bg-raised: #FBF8F2;
   --bg-surface: #FBF8F2;
   --bg-paper: var(--pm-w000);
+  --bg-surface: var(--pm-w000);
+  --bg-raised: var(--pm-w000);
   --bg-sunken: var(--pm-w100);
+  --bg-hover: #F2ECE1;
   --bg-inverse: var(--pm-z950);
+  --bg-modal-overlay: rgba(26, 22, 18, 0.55);
   --ink: var(--pm-z950);
   --ink-soft: var(--pm-z500);
   --ink-faint: var(--pm-z400);
