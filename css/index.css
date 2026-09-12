@@ -5335,22 +5335,16 @@ body:not(.theme-editorial) .listbox__opt { color: var(--ink); }
 body:not(.theme-editorial) .listbox__opt .o-desc,
 body:not(.theme-editorial) .listbox__label { color: var(--ink-faint); }
 
-/* ── U-6 · Craft layer en vistas del Workbench ────────────────── */
-/* Numerales fantasma 01–06 anclados al header de cada vista.
-   Regla de stacking (lección v3.8): numeral z-index:-1 DENTRO de un
-   contexto propio; los hermanos permanecen static — ningún overlay
-   depende de :not() que empuje a todos los hijos. */
+/* ── U-6 · Craft layer en vistas (U-9.1: numerales retirados) ──── */
+/* Numerales fantasma 01–06 retirados a petición del usuario (U-9.1):
+   no aplicaban al workbench. `.view .craft-numeral { display: none; }`
+   como salvaguarda por si algún span residual sobrevive en el DOM. */
 .templates-header, .history-header, .learn-header-bar,
 .radar-header-panel, .models-header-panel, .leaderboard-header-panel {
   position: relative;
 }
 /* tamaño/posición calibrado para headers compactos de vista (no secciones altas del playground) */
-.view .craft-numeral {
-  top: calc(var(--s-2) * -1);
-  right: var(--s-4);
-  font-size: clamp(3.2rem, 7vw, 5.4rem);
-  opacity: 0.45;
-}
+.view .craft-numeral { display: none; }
 /* override puntual: search wrapper interno mantiene su contexto relative */
 .learn-header-bar .learn-search-wrapper { position: relative; z-index: 1; }
 
