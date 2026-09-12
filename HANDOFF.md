@@ -364,6 +364,15 @@ promptforge/                    ← App Web (Vercel)
 > - **Score idle calibrated:** `···/100` opacity .6 (consistente con U-6.1).
 > - **Verificación:** suite 42/42; screenshots vivos: hero→editor-focus-within coral→constelación flat→mini-cards border-top 2px→acordeón hairline neutra→footer plano; diffuse border-top en `.dimension-card` corregido tras typo-malform comment (verificable con `grep "border-left: none"`).
 >
+> **Sesión 2026-09-12 — U-11 Pulido capa 2 (feedback «aún falta, pulir el diseño»):**
+> - **Método:** segunda pasada de diff computado (probes playground vs app sobre editor/chips/tabs/ticker/footer/manifiesto).
+> - **Chips → CH-1 pill:** `.action-chip` fondo opaco + radius-sm + shadow → transparente + hairline `--rule-color` + `--r-full` + 500 `--ink-soft` (hover via tokens).
+> - **Tab-bar → seg SE-0:** la innen L1014 se declaró seg; el invasor era **TB-1 de `css/ds/components.css`** (`display:flex + border-bottom + gap s-6`) que carga DESPUÉS de index.css y ganaba por orden de fuente — el walker de CSSOM del navegador lo identificó y neutralizado con `body .tab-bar` (0-1-1 > 0-1-0, especificidad sobre orden). Además retirados: L4971 underline `.tab` huérfano (`border-bottom: 2px` + margin -1px) y editorial hardcode #D9D2C4. Resultado exacto: seg `padding 3px/gap 2px/r-full/bg-sunken, border-bottom 0`; tab activo `bg-raised + shadow-1` (playground canónico).
+> - **Título hero → manifiesto exacto del playground:** `clamp(2.9rem, 6.5vw, 4.6rem)` (antes 3.6) con tracking -0.042em — el manifiesto del playground a 73.6px reales. `line-height 1.05`.
+> - **Ticker → DS:** barra `--bg-body` (antes bg-paper) + hairline + altura 44px del `.ticker` canon; label sin fondo (transparent; separador hairline).
+> - **Footer → superficie DS:** `--bg-sunken` + padding 32/40 → muestra el fondo igual que el fin del playground; `footer-inner` → 1080px (medida unificada).
+> - **Verificación:** suite 42/42; probes vivos post-reload: tab-bar seg con tab activo bg-raised, chip pill, título 73.6px, ticker 44px bg-body, footer-inner 1080px.
+>
 > **Sesión 2026-09-12 — U-10 Espíritu DS: medida, ritmo y chrome del playground (feedback «sigue feísimo, no logra tener el espíritu»):**
 > - **Diagnóstico por diff computado 1:1 (probes playground vs app):** la brecha era ESTRUCTURAL, no cosmética: (1) contenido full-bleed sin medida de columna, (2) métricas del hero con regla superior + columnas apiladas, (3) kicker sin geometría pill, (4) numerales de datos pintados accent, (5) header plano donde el canon es translúcido.
 > - **Medida DS (la corrección madre):** `.view` → `max-width: 1080px` (pg-wrap) + `padding-inline: 32px`. Todas las vistas heredan la medida exacta del playground; se eliminó la regla top y apilado del strip.

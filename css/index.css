@@ -269,7 +269,7 @@ body.theme-editorial .action-chip:hover {
 }
 
 body.theme-editorial .tab-bar {
-  border-bottom: 1px solid #D9D2C4;
+  /* sin hairline propia: la seg hereda el token del tema */
 }
 body.theme-editorial .tab {
   color: #8B8275;
@@ -1012,27 +1012,48 @@ body.theme-editorial .score-ring-bg { stroke: #D9D2C4; }
    RESULTS TABS
    ============================================================ */
 .tab-bar {
-  display: flex; gap: 0;
-  border-bottom: var(--rule-strong);
-  margin-bottom: var(--space-lg);
+  display: inline-flex; gap: 2px;
+  padding: 3px;
+  background: var(--bg-sunken);
+  border-radius: var(--r-full, 9999px);
+  border: none;
+  margin-bottom: var(--s-6, 24px);
   overflow-x: auto;
 }
 .tab-bar .tab {
-  flex: 1; min-width: max-content;
-  padding: 10px 16px;
-  font-family: var(--font-sans); font-size: 0.82rem; font-weight: 500;
-  text-align: center; color: var(--ink-faint);
+  flex: 0 0 auto; min-width: max-content;
+  padding: 6px 14px;
+  font-family: var(--font-sans); font-size: 0.78rem; font-weight: 550;
+  text-align: center; color: var(--ink-soft);
   background: transparent; border: none;
-  border-bottom: 2px solid transparent;
+  border-radius: var(--r-full, 9999px);
   cursor: pointer; white-space: nowrap;
-  transition: color var(--transition-fast), border-color var(--transition-fast);
-  margin-bottom: -1px;
+  transition: color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+  margin-bottom: 0;
 }
-.tab-bar .tab:hover { color: var(--ink); }
-.tab-bar .tab.active { color: var(--ink); border-bottom-color: var(--accent); font-weight: 600; }
+.tab-bar .tab:hover { color: var(--ink); background: transparent; }
+.tab-bar .tab.active {
+  color: var(--ink); background: var(--bg-raised);
+  box-shadow: var(--shadow-1);
+  font-weight: 550;
+}
 
 .tab-content { display: none; }
 .tab-content.active { display: block; animation: fadeIn 0.25s ease; }
+
+/* U-11: el DS envía el TB-1 underline en css/ds/components.css (carga después
+   de index.css — gana por orden); el app decide SE-0 (seg), así que el override
+   usa especificidad superior (body .tab-bar = 0-1-1 > 0-1-0) */
+body .tab-bar {
+  display: inline-flex; gap: 2px;
+  padding: 3px;
+  background: var(--bg-sunken);
+  border-radius: var(--r-full, 9999px);
+  border: none;
+  border-bottom: none;
+  margin-bottom: var(--s-6, 24px);
+  overflow-x: auto;
+}
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
@@ -1797,12 +1818,12 @@ body.theme-editorial .score-ring-bg { stroke: #D9D2C4; }
 /* ── Site Footer ─────────────────────────────────────────── */
 .site-footer {
   margin-top: var(--space-2xl);
-  border-top: var(--rule);
+  border-top: 1px solid var(--rule-color);
   background: var(--bg-sunken);
-  padding: var(--space-lg) var(--space-xl);
+  padding: var(--s-8, 32px) var(--s-8, 32px) var(--s-10, 40px);
 }
 .footer-inner {
-  max-width: var(--maxw-app, 1280px);
+  max-width: var(--maxw-ds, 1080px);
   margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
@@ -2254,20 +2275,20 @@ body.theme-editorial .score-ring-bg { stroke: #D9D2C4; }
 }
 
 .action-chip {
-  background: var(--bg-paper);
-  border: var(--rule);
-  border-radius: var(--radius-sm);
-  padding: 6px 12px;
+  background: transparent;
+  border: 1px solid var(--rule-color);
+  border-radius: var(--r-full, 9999px);
+  padding: 8px 16px;
   font-family: var(--font-sans);
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--ink);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--ink-soft);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  transition: all 0.15s ease;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  box-shadow: none;
 }
 
 .action-chip:hover {
@@ -2728,9 +2749,9 @@ body.theme-editorial .score-ring-bg { stroke: #D9D2C4; }
   right: 0;
   display: flex;
   align-items: center;
-  background: var(--bg-paper);
-  border-bottom: var(--rule);
-  height: 38px;
+  background: var(--bg-body);
+  border-bottom: 1px solid var(--rule-color);
+  height: 44px;
   overflow: hidden;
   font-family: var(--font-sans);
   font-size: 0.82rem;
@@ -2741,8 +2762,8 @@ body.theme-editorial .score-ring-bg { stroke: #D9D2C4; }
   align-items: center;
   padding: 0 var(--space-md);
   height: 100%;
-  background: var(--bg-sunken);
-  border-right: var(--rule);
+  background: transparent;
+  border-right: 1px solid var(--rule-color);
   flex-shrink: 0;
 }
 .ticker-badge {
@@ -4960,18 +4981,8 @@ background: var(--bg-sunken);
 .badge-neutral { background: var(--bg-sunken); color: var(--ink-soft); }
 .badge { border-radius: var(--r-full); }
 
-/* ── Tab bar → hairline zinc + underline fino accent ──────────── */
-.tab-bar { border-bottom: 1px solid var(--rule-color); gap: var(--s-5); }
-.tab {
-  font-family: var(--font-sans);
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--ink-faint);
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
-}
-.tab:hover { color: var(--ink-soft); }
-.tab.active { color: var(--ink); border-bottom-color: var(--accent); }
+/* ── Tab bar: todo el control vive en L1014 (seg SE-0, U-11) ───── */
+/* (bloque de underline .tab retirado — pisaba el seg con border-bottom) */
 
 /* ── Botones → DS BT-1 (zinc flat, sin gradient) ──────────────── */
 .btn { font-family: var(--font-sans); font-weight: 500; letter-spacing: -0.011em; border-radius: var(--r-1); }
@@ -5264,10 +5275,10 @@ body.theme-editorial .orbital-constellation-container {
 .hero-header-content { text-align: center; max-width: 62ch; margin-inline: auto; }
 .hero-header-content .t-micro { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; padding: 5px 14px; border-radius: var(--r-full, 9999px); background: var(--bg-sunken); color: var(--ink-soft); letter-spacing: 0.08em; text-transform: none; font-size: var(--fs-micro, 0.8rem); font-weight: 550; margin-bottom: var(--s-8, 32px); }
 .hero-main-title {
-  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  font-size: clamp(2.9rem, 6.5vw, 4.6rem);
   font-weight: 640;
-  letter-spacing: -0.05em;
-  line-height: 1.04;
+  letter-spacing: -0.042em;
+  line-height: 1.05;
   color: var(--ink);
   text-wrap: balance;
 }
