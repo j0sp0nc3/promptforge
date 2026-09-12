@@ -221,7 +221,7 @@ const I18n = (() => {
       // ── Score hero ──────────────────────────────────────────────────────
       score: {
         label: 'Puntuación General',
-        centralLabel: 'PUNTUACIÓN DEL PROMPT',
+        centralLabel: 'Puntuación del prompt',
         max: '/100',
       },
 
@@ -358,9 +358,9 @@ const I18n = (() => {
 
       // ── Adversarial status labels ───────────────────────────────────────
       status: {
-        pass: 'PASA',
-        warning: 'ADVERTENCIA',
-        fail: 'FALLA',
+        pass: 'Pasa',
+        warning: 'Advertencia',
+        fail: 'Falla',
       },
       adversarialCategory: {
         validation: 'validación',
@@ -1187,8 +1187,8 @@ const I18n = (() => {
         visitLink: 'Visitar recurso',
       },
           ticker: {
-        badge: 'RADAR EN VIVO',
-        badgeText: 'RADAR EN VIVO',
+        badge: 'Radar en vivo',
+        badgeText: 'Radar en vivo',
       },
 
       // ── Prompt Target Objectives ───────────────────────────────────────
@@ -1299,13 +1299,13 @@ const I18n = (() => {
         injectGuardrailsBtn: 'Inyectar Guardrails OWASP LLM07 (1-Click)',
         guardrailsInjected: '¡Guardrails OWASP LLM07 inyectados exitosamente en el prompt!',
         resilienceScore: 'Resistencia Adversarial:',
-        riskCritical: 'RIESGO CRÍTICO',
-        riskHigh: 'RIESGO ALTO',
-        riskMedium: 'RIESGO MEDIO',
-        riskLow: 'RIESGO BAJO',
-        pass: 'BLOQUEADO',
-        fail: 'VULNERABLE',
-        warn: 'ADVERTENCIA',
+        riskCritical: 'Riesgo crítico',
+        riskHigh: 'Riesgo alto',
+        riskMedium: 'Riesgo medio',
+        riskLow: 'Riesgo bajo',
+        pass: 'Bloqueado',
+        fail: 'Vulnerable',
+        warn: 'Advertencia',
       },
 
       // ── Toast Messages ──────────────────────────────────────────────────
@@ -1509,7 +1509,7 @@ const I18n = (() => {
 
       score: {
         label: 'Overall Score',
-        centralLabel: 'PROMPT SCORE',
+        centralLabel: 'Prompt score',
         max: '/100',
       },
 
@@ -1640,9 +1640,9 @@ const I18n = (() => {
       },
 
       status: {
-        pass: 'PASS',
-        warning: 'WARNING',
-        fail: 'FAIL',
+        pass: 'Pass',
+        warning: 'Warning',
+        fail: 'Fail',
       },
       adversarialCategory: {
         validation: 'validation',
@@ -2447,8 +2447,8 @@ const I18n = (() => {
       },
 
       ticker: {
-        badge: '⚡ LIVE AI RADAR',
-        badgeText: 'LIVE AI RADAR',
+        badge: '⚡ Live AI Radar',
+        badgeText: 'Live AI Radar',
       },
 
       leaderboard: {
@@ -2540,13 +2540,13 @@ const I18n = (() => {
         injectGuardrailsBtn: 'Inject OWASP LLM07 Guardrails (1-Click)',
         guardrailsInjected: 'OWASP LLM07 Guardrails successfully injected into prompt!',
         resilienceScore: 'Adversarial Resilience:',
-        riskCritical: 'CRITICAL RISK',
-        riskHigh: 'HIGH RISK',
-        riskMedium: 'MEDIUM RISK',
-        riskLow: 'LOW RISK',
-        pass: 'BLOCKED',
-        fail: 'VULNERABLE',
-        warn: 'WARNING',
+        riskCritical: 'Critical risk',
+        riskHigh: 'High risk',
+        riskMedium: 'Medium risk',
+        riskLow: 'Low risk',
+        pass: 'Blocked',
+        fail: 'Vulnerable',
+        warn: 'Warning',
       },
 
       // ── Toast Messages ──────────────────────────────────────────────────

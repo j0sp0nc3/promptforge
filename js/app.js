@@ -1079,7 +1079,7 @@ const App = (() => {
       apList.innerHTML = antiPatterns.map(ap => `
         <div class="finding-card finding-card-${ap.severity}">
           <div class="finding-card-header">
-            <span class="badge badge-${ap.severity}">${ap.severity.toUpperCase()}</span>
+            <span class="badge badge-${ap.severity}">${t('learn.sev_' + (ap.severity || 'low'))}</span>
             <strong>${escapeHtml(ap.name)}</strong>
           </div>
           <p class="finding-card-desc">${escapeHtml(ap.description)}</p>
