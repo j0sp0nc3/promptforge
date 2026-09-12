@@ -154,7 +154,11 @@ body.theme-dark {
    LEGACY COMPAT (index.html theme names → modern system)
    Deprecated — remove at U-1.
    ============================================================ */
-body.theme-cosmic {
+/* U-5.4: `:not(.theme-editorial)` — el toggle REAL del app añade
+   theme-editorial sin quitar theme-cosmic (conviven). Sin esta guard,
+   el mapping dark de cosmic pisa el light de editorial por orden de
+   carga de tokens.css (ambos 0-2-0). Dark efectivo = NO editorial. */
+body.theme-cosmic:not(.theme-editorial) {
   /* L2 dark mappings (U-4.6): legacy theme del app = DS dark */
   --bg-body: #0D0E12;
   --bg-paper: #171921;
@@ -190,7 +194,11 @@ body.theme-cosmic {
 }
 
 body.theme-editorial {
-  --bg-body: var(--pm-w050);
+  /* U-5.4: convive con theme-cosmic (el toggle real añade editorial sin quitar
+     cosmic), así los tokens dark de cosmic pisan los light. raised/surface al
+     cream DS editorial; gana por orden fuente (L192 > L157 de LEGACY COMPAT) */
+  --bg-raised: #FBF8F2;
+  --bg-surface: #FBF8F2;
   --bg-paper: var(--pm-w000);
   --bg-sunken: var(--pm-w100);
   --bg-inverse: var(--pm-z950);

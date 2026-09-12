@@ -5292,3 +5292,32 @@ body.theme-editorial .orbital-constellation-container {
   width: 28px; height: 28px; border-radius: 8px;
   background: color-mix(in srgb, var(--dim-color, var(--accent)) 12%, transparent);
 }
+
+/* ── U-5.4 · SE-2 listbox de objetivos ────────────────────────── */
+/* Estado-holder oculto (contrato .value intacto para runAnalysis et al) */
+.u-hidden-select {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.objective-listbox { flex: 1; min-width: 0; }
+.objective-listbox .listbox__btn {
+  width: 100%; justify-content: flex-start; padding: 7px 12px;
+  font-size: 0.8125rem; font-family: var(--font-sans); color: var(--ink);
+}
+.objective-listbox .lb-val {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  flex: 1; min-width: 0;
+}
+.objective-listbox .lb-cv { margin-left: auto; flex-shrink: 0; }
+/* La card del editor recorta con overflow:hidden — el menú flotante necesita salir */
+.workbench-card:has(#objective-lb-menu:not([hidden])) { overflow: visible; }
+/* El menú cosmeta sutil del DS levemente más compacto dentro del editor */
+.objective-listbox .listbox__menu { min-width: max(300px, 100%); font-family: var(--font-sans); }
+.objective-listbox .listbox__opt { padding: 9px 10px; }
+/* El toggle real AÑADE theme-editorial SIN quitar theme-cosmic: conviven.
+   Dark efectivo = NO editorial (cubre cosmic puro y dark puro del DS) */
+body:not(.theme-editorial) .listbox__menu { background: #1B1F28; border-color: rgba(255, 255, 255, 0.08); }
+body:not(.theme-editorial) .listbox__opt { color: var(--ink); }
+body:not(.theme-editorial) .listbox__opt .o-desc,
+body:not(.theme-editorial) .listbox__label { color: var(--ink-faint); }

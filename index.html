@@ -337,7 +337,7 @@
       <div class="analyzer-hero-header">
         <div class="hero-header-content">
           <p class="t-micro" data-i18n="hero.kicker">Motor de evaluación · 8 dimensions · local</p>
-          <h2 class="hero-main-title" data-i18n="hero.title">Ingeniería de prompts,<br />con estándar de producto.</h2>
+          <h2 class="hero-main-title" data-i18n-html="hero.title">Ingeniería de prompts,<br />con estándar de producto.</h2>
           <p class="hero-main-subtitle" data-i18n="hero.subtitle">Scoring multidimensional 8D, 37 anti-patrones y laboratorio adversarial. Determinista, auditable, 100% local.</p>
           <div class="hero-metrics-strip" aria-label="Métricas del motor">
             <div><strong>8</strong><span data-i18n="hero.metricDims">dimensiones</span></div>
@@ -390,14 +390,32 @@
                 </svg>
                 <span data-i18n="objectives.label">Objetivo del Prompt</span>:
               </label>
-              <select id="prompt-objective-select" class="objective-select">
-                <option value="general" data-i18n="objectives.general">🎯 General / Conversacional</option>
-                <option value="coding" data-i18n="objectives.coding">💻 Generación de Código & Repos</option>
-                <option value="reasoning" data-i18n="objectives.reasoning">🧠 Análisis & Razonamiento (CoT)</option>
-                <option value="json_schema" data-i18n="objectives.json_schema">📐 Datos & Esquema JSON Estructurado</option>
-                <option value="safety_rag" data-i18n="objectives.safety_rag">🛡️ Seguridad & Contexto RAG</option>
-                <option value="creative" data-i18n="objectives.creative">✍️ Redacción Creativa & Copywriting</option>
+              <!-- U-5.4 · SE-2 listbox custom (DS) espejando un <select> oculto
+                   state-holder: el contrato .value de los lectores JS no cambia. -->
+              <select id="prompt-objective-select" class="u-hidden-select" aria-hidden="true" tabindex="-1">
+                <option value="general" selected>General / Conversacional</option>
+                <option value="coding">Generación de Código &amp; Repos</option>
+                <option value="reasoning">Análisis &amp; Razonamiento (CoT)</option>
+                <option value="json_schema">Datos &amp; Esquema JSON Estructurado</option>
+                <option value="safety_rag">Seguridad &amp; Contexto RAG</option>
+                <option value="creative">Redacción Creativa &amp; Copywriting</option>
               </select>
+              <div class="listbox objective-listbox" id="objective-listbox">
+                <button type="button" class="listbox__btn" id="objective-lb-btn" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="objective-lb-val">
+                  <i class="ph ph-target lb-ic" aria-hidden="true"></i>
+                  <span class="lb-val" id="objective-lb-val">General / Conversacional</span>
+                  <i class="ph ph-caret-down lb-cv" aria-hidden="true"></i>
+                </button>
+                <div class="listbox__menu" id="objective-lb-menu" hidden role="listbox" aria-label="Objetivo del prompt">
+                  <p class="listbox__label" data-i18n="objectives.label">Objetivo del Prompt</p>
+                  <button type="button" class="listbox__opt" role="option" data-val="general" aria-selected="true"><span class="o-ic"><i class="ph ph-target"></i></span><span class="o-txt"><span class="o-title" data-i18n="objectives.items.general.title">General / Conversacional</span><span class="o-desc" data-i18n="objectives.items.general.desc">Chat, asistentes y uso cotidiano</span></span><i class="ph ph-check o-chk"></i></button>
+                  <button type="button" class="listbox__opt" role="option" data-val="coding" aria-selected="false"><span class="o-ic"><i class="ph ph-code"></i></span><span class="o-txt"><span class="o-title" data-i18n="objectives.items.coding.title">Generación de Código</span><span class="o-desc" data-i18n="objectives.items.coding.desc">Repositorios, refactors y tooling</span></span><i class="ph ph-check o-chk"></i></button>
+                  <button type="button" class="listbox__opt" role="option" data-val="reasoning" aria-selected="false"><span class="o-ic"><i class="ph ph-brain"></i></span><span class="o-txt"><span class="o-title" data-i18n="objectives.items.reasoning.title">Análisis &amp; Razonamiento</span><span class="o-desc" data-i18n="objectives.items.reasoning.desc">Cadena de pensamiento paso a paso</span></span><i class="ph ph-check o-chk"></i></button>
+                  <button type="button" class="listbox__opt" role="option" data-val="json_schema" aria-selected="false"><span class="o-ic"><i class="ph ph-brackets-curly"></i></span><span class="o-txt"><span class="o-title" data-i18n="objectives.items.json_schema.title">JSON Estructurado</span><span class="o-desc" data-i18n="objectives.items.json_schema.desc">Esquemas y salida validable</span></span><i class="ph ph-check o-chk"></i></button>
+                  <button type="button" class="listbox__opt" role="option" data-val="safety_rag" aria-selected="false"><span class="o-ic"><i class="ph ph-shield-check"></i></span><span class="o-txt"><span class="o-title" data-i18n="objectives.items.safety_rag.title">Seguridad &amp; RAG</span><span class="o-desc" data-i18n="objectives.items.safety_rag.desc">Guardrails y contexto recuperado</span></span><i class="ph ph-check o-chk"></i></button>
+                  <button type="button" class="listbox__opt" role="option" data-val="creative" aria-selected="false"><span class="o-ic"><i class="ph ph-pencil-circle"></i></span><span class="o-txt"><span class="o-title" data-i18n="objectives.items.creative.title">Redacción Creativa</span><span class="o-desc" data-i18n="objectives.items.creative.desc">Narrativa, ideación y copywriting</span></span><i class="ph ph-check o-chk"></i></button>
+                </div>
+              </div>
             </div>
             <textarea id="prompt-input" class="prompt-textarea"
               placeholder="Write or paste your prompt here to evaluate and calibrate..." data-i18n-placeholder="editor.placeholder"

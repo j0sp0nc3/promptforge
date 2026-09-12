@@ -17,6 +17,7 @@ const App = (() => {
     setupThemeSwitcher();
     setupNavigation();
     setupEditor();
+    setupObjectiveListbox();
     setupTabs();
     setupDimensionAccordion();
     setupExport();
@@ -527,6 +528,74 @@ const App = (() => {
   function getActiveLearnSub() {
     const active = document.querySelector('.learn-subnav-btn.active');
     return active ? active.dataset.sub : 'glossary';
+  }
+
+  // ── U-5.4 · SE-2 objective listbox — espeja un <select> oculto ────
+  // El select nativo (oculto) sigue siendo el state-holder único: runAnalysis,
+  // deep-domain-AI y genetic tuner leen .value sin cambiar contrato.
+  const OBJECTIVE_ICONS = {
+    general: 'ph-target',
+    coding: 'ph-code',
+    reasoning: 'ph-brain',
+    json_schema: 'ph-brackets-curly',
+    safety_rag: 'ph-shield-check',
+    creative: 'ph-pencil-circle',
+  };
+
+  function refreshObjectiveTrigger() {
+    const select = document.getElementById('prompt-objective-select');
+    if (!select) return;
+    const val = select.value || 'general';
+    const item = I18n.t(`objectives.items.${val}`) || {};
+    const title = (item && item.title) || I18n.t(`objectives.${val}`) || val;
+    const lbBtn = document.getElementById('objective-lb-btn');
+    const lbVal = document.getElementById('objective-lb-val');
+    if (lbVal) lbVal.textContent = (typeof title === 'string') ? title : val;
+    if (lbBtn) {
+      const icon = lbBtn.querySelector('.lb-ic');
+      if (icon) icon.className = `ph ${OBJECTIVE_ICONS[val] || 'ph-target'} lb-ic`;
+    }
+    // aria-selected + check de cada opción
+    document.querySelectorAll('#objective-lb-menu .listbox__opt').forEach(opt => {
+      opt.setAttribute('aria-selected', String(opt.dataset.val === val));
+    });
+  }
+
+  function setupObjectiveListbox() {
+    const lb = document.getElementById('objective-listbox');
+    const lbBtn = document.getElementById('objective-lb-btn');
+    const lbMenu = document.getElementById('objective-lb-menu');
+    const hiddenSelect = document.getElementById('prompt-objective-select');
+    if (!lb || !lbBtn || !lbMenu || !hiddenSelect) return;
+    let closeTimer = null;
+    const closeMenu = () => {
+      lbBtn.setAttribute('aria-expanded', 'false');
+      closeTimer = setTimeout(() => { lbMenu.hidden = true; }, 120);
+    };
+    const openMenu = () => {
+      clearTimeout(closeTimer);
+      lbMenu.hidden = false;
+      if (lbMenu.animate) {
+        lbMenu.animate(
+          [{ transform: 'translateY(4px) scale(0.98)' }, { transform: 'none' }],
+          { duration: 140, easing: 'cubic-bezier(.2, 0, 0, 1)' }
+        );
+      }
+      lbBtn.setAttribute('aria-expanded', 'true');
+    };
+    lbBtn.addEventListener('click', () => (lbMenu.hidden ? openMenu() : closeMenu()));
+    document.addEventListener('click', (e) => { if (!e.target.closest('#objective-listbox')) closeMenu(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+    lbMenu.querySelectorAll('.listbox__opt').forEach(opt => {
+      opt.addEventListener('click', () => {
+        hiddenSelect.value = opt.dataset.val;
+        refreshObjectiveTrigger();
+        closeMenu();
+      });
+    });
+    // Estado inicial + re-sync al cambiar idioma (trigger/títulos i18n)
+    refreshObjectiveTrigger();
+    document.addEventListener('langchange', refreshObjectiveTrigger);
   }
 
   // ── Editor ──────────────────────────────────────────────

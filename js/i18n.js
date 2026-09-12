@@ -72,12 +72,21 @@ const I18n = (() => {
       // ── Prompt Target Objectives ───────────────────────────────────────
       objectives: {
         label: 'Objetivo del Prompt',
-        general: '🎯 General / Conversacional',
-        coding: '💻 Generación de Código & Repos',
-        reasoning: '🧠 Análisis & Razonamiento (CoT)',
-        json_schema: '📐 Datos & Esquema JSON Estructurado',
-        safety_rag: '🛡️ Seguridad & Contexto RAG',
-        creative: '✍️ Redacción Creativa & Copywriting',
+        general: 'General / Conversacional',
+        coding: 'Generación de Código & Repos',
+        reasoning: 'Análisis & Razonamiento (CoT)',
+        json_schema: 'Datos & Esquema JSON Estructurado',
+        safety_rag: 'Seguridad & Contexto RAG',
+        creative: 'Redacción Creativa & Copywriting',
+        // SE-2 listbox (U-5.4): fila rica {title, desc} por objetivo, sin emojis
+        items: {
+          general: { title: 'General / Conversacional', desc: 'Chat, asistentes y uso cotidiano' },
+          coding: { title: 'Generación de Código', desc: 'Repositorios, refactors y tooling' },
+          reasoning: { title: 'Análisis & Razonamiento', desc: 'Cadena de pensamiento paso a paso' },
+          json_schema: { title: 'JSON Estructurado', desc: 'Esquemas y salida validable' },
+          safety_rag: { title: 'Seguridad & RAG', desc: 'Guardrails y contexto recuperado' },
+          creative: { title: 'Redacción Creativa', desc: 'Narrativa, ideación y copywriting' },
+        },
       },
 
       // ── Domain Archetypes & Context Gaps ────────────────────────────────
@@ -1185,12 +1194,20 @@ const I18n = (() => {
       // ── Prompt Target Objectives ───────────────────────────────────────
       objectives: {
         label: 'Objetivo del Prompt',
-        general: '🎯 General / Conversacional',
-        coding: '💻 Generación de Código y Repos',
-        reasoning: '🧠 Análisis y Razonamiento (CoT)',
-        json_schema: '📐 JSON Estructurado y Esquemas',
-        safety_rag: '🛡️ Guardrails y Contexto RAG',
-        creative: '✍️ Escritura Creativa y Copywriting',
+        general: 'General / Conversacional',
+        coding: 'Generación de Código y Repos',
+        reasoning: 'Análisis y Razonamiento (CoT)',
+        json_schema: 'JSON Estructurado y Esquemas',
+        safety_rag: 'Guardrails y Contexto RAG',
+        creative: 'Escritura Creativa y Copywriting',
+        items: {
+          general: { title: 'General / Conversacional', desc: 'Chat, asistentes y uso cotidiano' },
+          coding: { title: 'Generación de Código', desc: 'Repositorios, refactors y tooling' },
+          reasoning: { title: 'Análisis y Razonamiento', desc: 'Cadena de pensamiento paso a paso' },
+          json_schema: { title: 'JSON Estructurado', desc: 'Esquemas y salida validable' },
+          safety_rag: { title: 'Seguridad & RAG', desc: 'Guardrails y contexto recuperado' },
+          creative: { title: 'Escritura Creativa', desc: 'Narrativa, ideación y copywriting' },
+        },
       },
 
       leaderboard: {
@@ -1349,12 +1366,21 @@ const I18n = (() => {
       // ── Prompt Target Objectives ───────────────────────────────────────
       objectives: {
         label: 'Prompt Objective',
-        general: '🎯 General / Conversational',
-        coding: '💻 Code Generation & Repos',
-        reasoning: '🧠 Analysis & Reasoning (CoT)',
-        json_schema: '📐 Structured JSON & Data Schema',
-        safety_rag: '🛡️ Guardrails & RAG Context',
-        creative: '✍️ Creative Writing & Copywriting',
+        general: 'General / Conversational',
+        coding: 'Code Generation & Repos',
+        reasoning: 'Analysis & Reasoning (CoT)',
+        json_schema: 'Structured JSON & Data Schema',
+        safety_rag: 'Guardrails & RAG Context',
+        creative: 'Creative Writing & Copywriting',
+        // SE-2 listbox (U-5.4): rich row {title, desc} per objective, no emojis
+        items: {
+          general: { title: 'General / Conversational', desc: 'Chat, assistants and everyday prompts' },
+          coding: { title: 'Code Generation', desc: 'Repositories, refactors and tooling' },
+          reasoning: { title: 'Analysis & Reasoning', desc: 'Step-by-step chain of thought' },
+          json_schema: { title: 'Structured JSON', desc: 'Schemas and validable output' },
+          safety_rag: { title: 'Safety & RAG', desc: 'Guardrails and retrieved context' },
+          creative: { title: 'Creative Writing', desc: 'Narrative, ideation and copywriting' },
+        },
       },
 
       // ── Domain Archetypes & Context Gaps ────────────────────────────────
