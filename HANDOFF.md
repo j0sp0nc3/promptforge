@@ -175,12 +175,12 @@ promptforge/                    ← App Web (Vercel)
 
 ## 🔄 Última Actualización
 
-- **Fecha:** 2026-09-09
-- **Último commit:** `50f833f` ("feat: Playground de Comparacion A/B en Vivo (Version A Original vs Version B Calibrada) en Web UI")
+- **Fecha:** 2026-09-12
+- **Último commit:** `2da631e` ("docs: backup task roadmap and domain intelligence engine completion")
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
 - **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
-- **Último hito:** Playground de Comparación A/B (Versión A Original vs Versión B Calibrada) en la Web UI + Paridad 1.1.0.
-- **Estado:** 31/31 tests JS en PASS (10 suites) | 14/14 tests Python en PASS | 10/10 endpoints y carga en PASS. Entorno local verificado bajo Spec-Driven Development (SDD).
+- **Último hito:** Motor Híbrido de Análisis de Intención y Enriquecimiento de Contexto de Dominio (Opción 3) + Fallback Transparente + Backup de Plan y Roadmap.
+- **Estado:** 42/42 tests JS en PASS (15 suites) | 14/14 tests Python en PASS | 10/10 endpoints y carga en PASS. Entorno local verificado bajo Spec-Driven Development (SDD).
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (reciente):**
 >
