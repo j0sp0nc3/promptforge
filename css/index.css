@@ -5284,3 +5284,11 @@ body.theme-editorial .orbital-constellation-container {
 .btn .ph { color: inherit; opacity: 0.9; }
 .btn-primary .ph { color: var(--accent-ink); }
 .ticker-badge-icon.ph { color: var(--accent); font-size: 0.85rem; }
+
+/* ── U-5.3 · Accordion dimensiones: icono Phosphor DS ──────────── */
+.dimension-icon .ph { font-size: 1.05rem; color: var(--dim-color, var(--accent)); display: inline-flex; }
+.dimension-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 8px;
+  background: color-mix(in srgb, var(--dim-color, var(--accent)) 12%, transparent);
+}

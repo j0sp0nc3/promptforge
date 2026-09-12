@@ -859,21 +859,34 @@ const App = (() => {
   function renderDimensions(dimensions) {
     const container = document.getElementById('dimensions-list');
     if (!container) return;
+    // DS v3.8: paleta de dimensiones por tokens CSS (dark-safe, sin hex legacy)
+    const _dk = document.body.classList.contains('theme-editorial');
+    const dimPalette = {
+      clarity:        _dk ? '#6366F1' : '#818CF8',  // iris (indigo DS)
+      specificity:    _dk ? '#00B7D4' : '#22D3EE',  // cyan DS
+      structure:      _dk ? '#B45309' : '#FBBF24',  // amber DS
+      robustness:     _dk ? '#16A34A' : '#34D399',  // ok DS
+      context:        _dk ? '#0284C7' : '#38BDF8',  // sky DS
+      outputFormat:   _dk ? '#A21CAF' : '#E879B9',  // fuchsia suavizada
+      chainOfThought: _dk ? '#9333EA' : '#B39AF8',  // violet DS
+      safety:         _dk ? '#DC2626' : '#F87171',  // err DS
+    };
+    // U-5.3: iconos Phosphor (ADR ID-6 — emojis fuera de la UI)
     const dimConfig = {
-      clarity:        { icon: '🎯', name: t('dimensions.clarity'),        color: '#00e5ff' },
-      specificity:    { icon: '📐', name: t('dimensions.specificity'),    color: '#7c3aed' },
-      structure:      { icon: '🏗️', name: t('dimensions.structure'),      color: '#f59e0b' },
-      robustness:     { icon: '🛡️', name: t('dimensions.robustness'),     color: '#10b981' },
-      context:        { icon: '🧩', name: t('dimensions.context'),        color: '#ec4899' },
-      outputFormat:   { icon: '📝', name: t('dimensions.outputFormat'),   color: '#38bdf8' },
-      chainOfThought: { icon: '🔗', name: t('dimensions.chainOfThought'), color: '#f97316' },
-      safety:         { icon: '⚠️', name: t('dimensions.safety'),         color: '#ef4444' },
+      clarity:        { icon: 'ph-focus',            ph: true, name: t('dimensions.clarity'),        color: dimPalette.clarity },
+      specificity:    { icon: 'ph-brackets-angle',   ph: true, name: t('dimensions.specificity'),    color: dimPalette.specificity },
+      structure:      { icon: 'ph-structure',        ph: true, name: t('dimensions.structure'),      color: dimPalette.structure },
+      robustness:     { icon: 'ph-shield-check',     ph: true, name: t('dimensions.robustness'),     color: dimPalette.robustness },
+      context:        { icon: 'ph-puzzle-piece',     ph: true, name: t('dimensions.context'),        color: dimPalette.context },
+      outputFormat:   { icon: 'ph-list-numbers',     ph: true, name: t('dimensions.outputFormat'),   color: dimPalette.outputFormat },
+      chainOfThought: { icon: 'ph-link',             ph: true, name: t('dimensions.chainOfThought'), color: dimPalette.chainOfThought },
+      safety:         { icon: 'ph-warning',          ph: true, name: t('dimensions.safety'),         color: dimPalette.safety },
     };
 
     container.innerHTML = '';
 
     for (const [key, dim] of Object.entries(dimensions)) {
-      const config = dimConfig[key] || { icon: '🔍', name: key, color: '#00e5ff' };
+      const config = dimConfig[key] || { icon: 'ph-magnifying-glass', ph: true, name: key, color: _dk ? '#6366F1' : '#818CF8' };
       const card = document.createElement('div');
       card.className = 'dimension-card';
       card.dataset.dim = key;
@@ -884,7 +897,7 @@ const App = (() => {
       card.innerHTML = `
         <div class="dimension-header" role="button" tabindex="0" aria-expanded="false">
           <div class="dimension-left">
-            <span class="dimension-icon">${config.icon}</span>
+            <span class="dimension-icon"><i class="ph ${config.icon}" aria-hidden="true"></i></span>
             <span class="dimension-name">${escapeHtml(config.name)}</span>
           </div>
           <div class="dimension-right">
@@ -1073,15 +1086,30 @@ const App = (() => {
     const centerY = 225;
     const orbits = [110, 160, 200];
 
+    // DS v3.8: paleta por tokens (misma rampa que renderDimensions, dark-safe)
+    const _dkOrb = document.body.classList.contains('theme-editorial');
+    const _pal = {
+      clarity:        _dkOrb ? '#6366F1' : '#818CF8',
+      specificity:    _dkOrb ? '#00B7D4' : '#22D3EE',
+      structure:      _dkOrb ? '#B45309' : '#FBBF24',
+      robustness:     _dkOrb ? '#16A34A' : '#34D399',
+      context:        _dkOrb ? '#0284C7' : '#38BDF8',
+      outputFormat:   _dkOrb ? '#A21CAF' : '#E879B9',
+      chainOfThought: _dkOrb ? '#9333EA' : '#B39AF8',
+      safety:         _dkOrb ? '#DC2626' : '#F87171',
+      role:           _dkOrb ? '#6366F1' : '#818CF8',
+      constraints:    _dkOrb ? '#9333EA' : '#B39AF8',
+    };
+
     const dimList = [
-      { key: 'clarity',        label: 'Clarity',     color: '#00e5ff', angle: 270, orbitIdx: 1 },
-      { key: 'role',           label: 'Role',        color: '#fbbf24', angle: 30,  orbitIdx: 1 },
-      { key: 'outputFormat',   label: 'Output',      color: '#38bdf8', angle: 90,  orbitIdx: 1 },
-      { key: 'constraints',    label: 'Constraints', color: '#a78bfa', angle: 150, orbitIdx: 1 },
-      { key: 'context',        label: 'Context',     color: '#f472b6', angle: 210, orbitIdx: 1 },
-      { key: 'chainOfThought', label: 'CoT',         color: '#f97316', angle: 330, orbitIdx: 2 },
-      { key: 'safety',         label: 'Safety',      color: '#f87171', angle: 120, orbitIdx: 2 },
-      { key: 'robustness',     label: 'Robustness',  color: '#34d399', angle: 240, orbitIdx: 2 },
+      { key: 'clarity',        label: 'Clarity',     color: _pal.clarity,        angle: 270, orbitIdx: 1 },
+      { key: 'role',           label: 'Role',        color: _pal.role,           angle: 30,  orbitIdx: 1 },
+      { key: 'outputFormat',   label: 'Output',      color: _pal.outputFormat,   angle: 90,  orbitIdx: 1 },
+      { key: 'constraints',    label: 'Constraints', color: _pal.constraints,    angle: 150, orbitIdx: 1 },
+      { key: 'context',        label: 'Context',     color: _pal.context,        angle: 210, orbitIdx: 1 },
+      { key: 'chainOfThought', label: 'CoT',         color: _pal.chainOfThought, angle: 330, orbitIdx: 2 },
+      { key: 'safety',         label: 'Safety',      color: _pal.safety,         angle: 120, orbitIdx: 2 },
+      { key: 'robustness',     label: 'Robustness',  color: _pal.robustness,     angle: 240, orbitIdx: 2 },
     ];
 
     const isEditorial = document.body.classList.contains('theme-editorial');
@@ -1136,15 +1164,17 @@ const App = (() => {
     const container = document.getElementById('evaluation-dimensions-row');
     if (!container || !dimensions) return;
 
+    // DS v3.8: paleta semántica compartida (dark-safe)
+    const _dkC = document.body.classList.contains('theme-editorial');
     const dimList = [
-      { key: 'clarity',        label: t('dimensions.clarity'),        color: '#00e5ff' },
-      { key: 'specificity',    label: t('dimensions.specificity'),    color: '#7c3aed' },
-      { key: 'structure',      label: t('dimensions.structure'),      color: '#f59e0b' },
-      { key: 'robustness',     label: t('dimensions.robustness'),     color: '#10b981' },
-      { key: 'context',        label: t('dimensions.context'),        color: '#ec4899' },
-      { key: 'outputFormat',   label: t('dimensions.outputFormat'),   color: '#38bdf8' },
-      { key: 'chainOfThought', label: t('dimensions.chainOfThought'), color: '#f97316' },
-      { key: 'safety',         label: t('dimensions.safety'),         color: '#ef4444' },
+      { key: 'clarity',        label: t('dimensions.clarity'),        color: _dkC ? '#6366F1' : '#818CF8' },
+      { key: 'specificity',    label: t('dimensions.specificity'),    color: _dkC ? '#00B7D4' : '#22D3EE' },
+      { key: 'structure',      label: t('dimensions.structure'),      color: _dkC ? '#B45309' : '#FBBF24' },
+      { key: 'robustness',     label: t('dimensions.robustness'),     color: _dkC ? '#16A34A' : '#34D399' },
+      { key: 'context',        label: t('dimensions.context'),        color: _dkC ? '#0284C7' : '#38BDF8' },
+      { key: 'outputFormat',   label: t('dimensions.outputFormat'),   color: _dkC ? '#A21CAF' : '#E879B9' },
+      { key: 'chainOfThought', label: t('dimensions.chainOfThought'), color: _dkC ? '#9333EA' : '#B39AF8' },
+      { key: 'safety',         label: t('dimensions.safety'),         color: _dkC ? '#DC2626' : '#F87171' },
     ];
 
     container.innerHTML = dimList.map(d => {
