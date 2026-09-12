@@ -316,6 +316,18 @@ promptforge/                    ← App Web (Vercel)
 > - **CSS (`css/index.css` bloque U-5.4):** `.u-hidden-select` (clip), trigger full-width, overflow visible de `.workbench-card` vía `:has()` cuando el menú está abierto, y reglas dark `body:not(.theme-editorial)` para el menú del listbox (mismo principio de la guard de tokens).
 > - **Verificación:** suite 42/42 PASS (`node test_edge_cases.js`); smoke E2E en vivo (localhost:3001): selección coding → análisis → píldora calibrada `[Meta: Generación de Código y Repos]` sin emojis, score 51/100; computed styles por tema (cosmic: menú/trigger `#1B1F28`, editorial: menú blanco + trigger cream `#FBF8F2`, body `#F7F3EC`); i18n ES↔EN en vivo.
 > - **Pendiente siguiente tanda (U-5.5):** emojis residuales JS — arquetipos de dominio `domain.*` (badge `#domain-archetype-badge` aún renderiza 📊💻📣…), `⚠️💡` en strings de hallazgos/cambios de `app.js`, `justification-icon 💡` en `index.html`, y badges de modelos en `js/models.js`.
+
+> **Sesión 2026-09-11 — U-5.5 Iconografía Phosphor de flags de UI dinámica (0 emojis en UI):**
+> - **Inventario limpiado (patrón icono-fuera-del-span / iconos estáticos `<i class="ph">`):**
+>   - **Badge de arquetipo de dominio `#domain-archetype-badge`** — nuevo mapa `DOMAIN_ICONS` en `renderDomainIntelligence` (Phosphor por arquetipo: `ph-cursor-text/table/megaphone/pencil-circle/book-open-text/robot/scales/target`); claves `domain.*` de i18n limpiadas (es+en).
+>   - **Badges del modal MCP** (`mcp-*`: check/x/info/warn con color `--ok/--err/--info/--warn`), icono del modal a `ph-wrench`, botones audit (`ph-magnifying-glass`) e inject (`ph-sparkle`).
+>   - **Modal Adversarial Lab** (icono a `ph-shield-warning`, botones `ph-lightning`/`ph-shield-check`); presets `⚡`→`ph-lightning`.
+>   - **Estados adversariales** `✅⚠️❌`→`ph-check-circle/warning-circle/x-circle`; **sugerencias** `💡`→`ph-lightbulb` (2 render sites); **brechas de dominio** `⚠️`→`ph-warning-circle` en `.gap-item`.
+>   - **Cambio-item** `➕✏️🔄`→`ph-plus-circle/pencil-simple/arrows-counter-clockwise`; **toasts** `✅❌⚠️ℹ️`→Phosphor por tipo con firma extendida `showToast(msg, type, duration, iconOverride)`; **transcripts del fuzzer** → `ph-check-circle`/`ph-x-circle`.
+>   - **AB badge calibrado** `✨`→`ph-sparkle` estático fuera del span; `justification-icon 💡` → `ph-lightbulb` estático en HTML.
+>   - **i18n es+en limpiado de emojis** en claves UI migradas (changes.*, adversarialLab.botones, mcpInspector.*, ab.calibratedLabel).
+> - **Fix toast en dark (regresión U-4.3 detectada):** la regla TO-1 de `css/ds/components.css` (`.toast { background: var(--bg-inverse) }`) gana por orden de carga a la U-4.3 de index.css y pintaba toasts blancos sobre cosmic. Fix: subida de especificidad en index.css (`.toast-container .toast` con `--bg-raised` + hairline). Verificado: cosmic `#1B1F28`/ink claro, editorial `#FBF8F2`.
+> - **Verificación:** suite 42/42 PASS; live probes: análisis legal → badge `ph-scales` + "Cumplimiento Legal & Financiero" (0 emoji), change-items con icono por tipo, sugerencias con `ph-lightbulb`, modal MCP audit OK/miss/info/warn Phosphor (0 emoji), toasts success/warning/info con check/warn/info Phosphor en ambos temas.
 >
 > **Sesión 2026-09-11 — Features P3.1 Streaming SSE de Noticias & P3.2 PWA Offline First:**
 > - **Streaming SSE (`/api/ai-news`, `js/app.js`):** Implementada transmisión en tiempo real vía Server-Sent Events (SSE) en `/api/ai-news?sse=true` (`text/event-stream`) con eventos `news_init`, `news_update` y `ping` heartbeat, con fallback automático.

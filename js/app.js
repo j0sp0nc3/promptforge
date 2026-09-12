@@ -696,8 +696,8 @@ const App = (() => {
               justBanner.classList.remove('hidden');
             }
 
-            const toastMsg = result.justification ? `✨ ${result.justification}` : t('contextGaps.deepAiSuccess');
-            showToast(toastMsg, 'success', 6000);
+            const toastMsg = result.justification ? result.justification : t('contextGaps.deepAiSuccess');
+            showToast(toastMsg, 'success', 6000, 'ph-sparkle');
           }
         } catch (e) {
           const arch = currentAnalysis?.analysis?.domainArchetype || 'general_task';
@@ -874,12 +874,23 @@ const App = (() => {
 
     const archetypeKey = analysis.domainArchetype || 'general_task';
     const translatedArchetype = t(`domain.${archetypeKey}`) || t(`domain.archetypes.${archetypeKey}`) || archetypeKey;
-    badge.textContent = translatedArchetype;
+    // U-5.5 · icono Phosphor por arquetipo (mapa JS; las claves i18n domain.* quedaron limpias de emojis)
+    const DOMAIN_ICONS = {
+      software_engineering: 'ph-cursor-text',
+      data_extraction: 'ph-table',
+      marketing_copy: 'ph-megaphone',
+      rhetoric_creative: 'ph-pencil-circle',
+      rag_knowledge: 'ph-book-open-text',
+      agentic_tool_use: 'ph-robot',
+      financial_legal: 'ph-scales',
+      general_task: 'ph-target',
+    };
+    badge.innerHTML = `<i class="ph ${DOMAIN_ICONS[archetypeKey] || 'ph-target'}" aria-hidden="true"></i> ${escapeHtml(translatedArchetype)}`;
     panel.classList.remove('hidden');
 
     const gaps = analysis.contextGaps || [];
     if (gaps.length > 0 && card && gapsList && chipsContainer) {
-      gapsList.innerHTML = gaps.map(g => `<div class="gap-item">⚠️ ${escapeHtml(t(g.key) || g.id)}</div>`).join('');
+      gapsList.innerHTML = gaps.map(g => `<div class="gap-item"><i class="ph ph-warning-circle gap-item-icon" aria-hidden="true"></i> ${escapeHtml(t(g.key) || g.id)}</div>`).join('');
       chipsContainer.innerHTML = gaps.map(g => `<button class="action-chip action-chip--inject" data-snippet="${escapeAttr(g.snippetToInject)}">${escapeHtml(t(g.actionChipKey) || '+ Inyectar Contexto')}</button>`).join('');
       card.classList.remove('hidden');
 
@@ -1056,7 +1067,7 @@ const App = (() => {
             <strong>${escapeHtml(ap.name)}</strong>
           </div>
           <p class="finding-card-desc">${escapeHtml(ap.description)}</p>
-          <p class="finding-card-suggestion">💡 ${escapeHtml(ap.suggestion)}</p>
+          <p class="finding-card-suggestion"><i class="ph ph-lightbulb" aria-hidden="true"></i> ${escapeHtml(ap.suggestion)}</p>
         </div>
       `).join('');
     }
@@ -1082,17 +1093,19 @@ const App = (() => {
 
     list.innerHTML = adversarial.tests.map(test => {
       const statusLabel = t(`status.${test.status}`);
-      const icon = test.status === 'pass' ? '✅' : test.status === 'warning' ? '⚠️' : '❌';
+      // U-5.5 · icono Phosphor por estado (antes: emoji ✅⚠️❌ inline)
+      const statusIcon = test.status === 'pass' ? 'ph-check-circle'
+        : test.status === 'warning' ? 'ph-warning-circle' : 'ph-x-circle';
       return `
         <div class="finding-card adversarial-card adversarial-${test.status}">
           <div class="finding-card-header">
             <span class="adversarial-status adversarial-status-${test.status}">
-              ${icon} ${escapeHtml(statusLabel)}
+              <i class="ph ${statusIcon}" aria-hidden="true"></i> ${escapeHtml(statusLabel)}
             </span>
             <strong>${escapeHtml(test.name)}</strong>
           </div>
           <p class="finding-card-desc">${escapeHtml(test.detail)}</p>
-          ${test.suggestion ? `<p class="finding-card-suggestion">💡 ${escapeHtml(test.suggestion)}</p>` : ''}
+          ${test.suggestion ? `<p class="finding-card-suggestion"><i class="ph ph-lightbulb" aria-hidden="true"></i> ${escapeHtml(test.suggestion)}</p>` : ''}
         </div>
       `;
     }).join('');
@@ -1119,9 +1132,12 @@ const App = (() => {
     const changesList = document.getElementById('changes-list');
     if (changesList && improved.changes) {
       const typeLabel = (type) => t(`changes.${type === 'added' ? 'added' : type === 'modified' ? 'modified' : 'restructured'}`);
+      // U-5.5 · icono Phosphor por tipo de cambio (antes: emoji en la clave i18n)
+      const typeIcon = (type) => type === 'added' ? 'ph-plus-circle'
+        : type === 'modified' ? 'ph-pencil-simple' : 'ph-arrows-counter-clockwise';
       changesList.innerHTML = improved.changes.map(c => `
         <div class="change-item change-${c.type}">
-          <span class="change-type">${escapeHtml(typeLabel(c.type))}</span>
+          <span class="change-type"><i class="ph ${typeIcon(c.type)}" aria-hidden="true"></i> ${escapeHtml(typeLabel(c.type))}</span>
           <span class="change-desc">${escapeHtml(c.description)}</span>
         </div>
       `).join('');
@@ -1528,7 +1544,7 @@ const App = (() => {
           </div>
           <div class="variant-footer">
             <button class="btn btn-primary btn-xs btn-apply-variant" data-prompt="${escapeAttr(v.prompt)}">
-              ${escapeHtml(t('genetic.applyVariant') || '✨ Cargar Variante')}
+              ${escapeHtml(t('genetic.applyVariant') || 'Cargar Variante')}
             </button>
           </div>
         </div>
@@ -2124,10 +2140,10 @@ const App = (() => {
         <span class="card-score-badge ${scoreClass}" style="font-size:0.9rem; padding: 2px 8px;">${audit.score}/100</span>
       </div>
       <div style="display:flex; flex-direction:column; gap:6px; font-size:0.8rem;">
-        <div>${audit.hasToolsContract ? '✅' : '❌'} ${escapeHtml(audit.hasToolsContract ? t('mcpInspector.hasContract') : t('mcpInspector.missingContract'))}</div>
-        <div>${audit.hasLoopGuard ? '✅' : '❌'} ${escapeHtml(audit.hasLoopGuard ? t('mcpInspector.hasLoopGuard') : t('mcpInspector.missingLoopGuard'))}</div>
-        <div>ℹ️ ${escapeHtml(t('mcpInspector.coverageStat', { pct: audit.toolCoverage }))} (${audit.toolDetails.filter(t=>t.isMentioned).length}/${audit.toolsCount})</div>
-        <div>${audit.hasTypedParams ? '✅' : '⚠️'} ${escapeHtml(audit.hasTypedParams ? t('mcpInspector.typedParams') : t('mcpInspector.untypedParams'))}</div>
+        <div>${audit.hasToolsContract ? '<i class="ph ph-check-circle mcp-ok" aria-hidden="true"></i>' : '<i class="ph ph-x-circle mcp-miss" aria-hidden="true"></i>'} ${escapeHtml(audit.hasToolsContract ? t('mcpInspector.hasContract') : t('mcpInspector.missingContract'))}</div>
+        <div>${audit.hasLoopGuard ? '<i class="ph ph-check-circle mcp-ok" aria-hidden="true"></i>' : '<i class="ph ph-x-circle mcp-miss" aria-hidden="true"></i>'} ${escapeHtml(audit.hasLoopGuard ? t('mcpInspector.hasLoopGuard') : t('mcpInspector.missingLoopGuard'))}</div>
+        <div><i class="ph ph-info mcp-info" aria-hidden="true"></i> ${escapeHtml(t('mcpInspector.coverageStat', { pct: audit.toolCoverage }))} (${audit.toolDetails.filter(t=>t.isMentioned).length}/${audit.toolsCount})</div>
+        <div>${audit.hasTypedParams ? '<i class="ph ph-check-circle mcp-ok" aria-hidden="true"></i>' : '<i class="ph ph-warning-circle mcp-warn" aria-hidden="true"></i>'} ${escapeHtml(audit.hasTypedParams ? t('mcpInspector.typedParams') : t('mcpInspector.untypedParams'))}</div>
       </div>
     `;
 
@@ -2163,7 +2179,7 @@ const App = (() => {
 
     container.innerHTML = presets.map(p => {
       const name = lang === 'en' ? p.nameEn : p.nameEs;
-      return `<button class="action-chip advlab-preset-chip" data-id="${p.id}" style="font-size:0.75rem;">⚡ ${escapeHtml(name)}</button>`;
+      return `<button class="action-chip advlab-preset-chip" data-id="${p.id}" style="font-size:0.75rem;"><i class="ph ph-lightning" aria-hidden="true"></i> ${escapeHtml(name)}</button>`;
     }).join('');
 
     container.querySelectorAll('.advlab-preset-chip').forEach(btn => {
@@ -2274,7 +2290,7 @@ const App = (() => {
 
     container.innerHTML = audit.transcripts.map(t => {
       const name = lang === 'en' ? t.nameEn : t.nameEs;
-      const statusIcon = t.resilient ? '✅' : '❌';
+      const statusIcon = t.resilient ? '<i class="ph ph-check-circle" style="color:var(--ok);" aria-hidden="true"></i>' : '<i class="ph ph-x-circle" style="color:var(--err);" aria-hidden="true"></i>';
       const statusClass = t.resilient ? 'color:var(--emerald);' : 'color:var(--vermilion);';
       const reason = lang === 'en' ? t.reasonEn : t.reasonEs;
 
@@ -2301,21 +2317,24 @@ const App = (() => {
   }
 
   // ── Toast Notifications ────────────────────────────────
-  function showToast(message, type = 'info') {
+  function showToast(message, type = 'info', duration = null, iconOverride = null) {
     const container = document.getElementById('toast-container');
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
 
+    // U-5.5 · icono Phosphor por tipo (antes: emoji ✅❌⚠️ℹ️)
     const icons = {
-      success: '✅',
-      error: '❌',
-      warning: '⚠️',
-      info: 'ℹ️'
+      success: 'ph-check-circle',
+      error: 'ph-x-circle',
+      warning: 'ph-warning-circle',
+      info: 'ph-info'
     };
 
     const iconSpan = document.createElement('span');
     iconSpan.className = 'toast-icon';
-    iconSpan.textContent = icons[type] || icons.info;
+    iconSpan.innerHTML = iconOverride
+      ? `<i class="ph ${iconOverride}" aria-hidden="true"></i>`
+      : `<i class="ph ${icons[type] || icons.info}" aria-hidden="true"></i>`;
 
     const msgSpan = document.createElement('span');
     msgSpan.className = 'toast-msg';

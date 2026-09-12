@@ -447,7 +447,7 @@
             <div id="domain-intelligence-panel" class="domain-intelligence-panel hidden">
               <div class="domain-badge-bar">
                 <span class="domain-label" data-i18n="domain.title">Arquetipo de Dominio</span>:
-                <span id="domain-archetype-badge" class="domain-archetype-badge">🎯 General</span>
+                <span id="domain-archetype-badge" class="domain-archetype-badge"><i class="ph ph-target" aria-hidden="true"></i> General</span>
               </div>
               <div id="domain-context-gaps-card" class="domain-context-gaps-card hidden">
                 <div class="gaps-card-header">
@@ -458,7 +458,7 @@
               </div>
               <div id="domain-justification-banner" class="domain-justification-banner hidden">
                 <div class="justification-header">
-                  <span class="justification-icon">💡</span>
+                  <i class="ph ph-lightbulb justification-icon" aria-hidden="true"></i>
                   <span class="justification-title" data-i18n="domain.justificationTitle">Justificación de la Mejora IA:</span>
                 </div>
                 <div id="domain-justification-text" class="domain-justification-text"></div>
@@ -668,7 +668,7 @@
               <!-- Panel B: Calibrated -->
               <div class="ab-panel ab-panel-b">
                 <div class="ab-panel-header">
-                  <span class="ab-badge ab-badge-calibrated" data-i18n="ab.calibratedLabel">Versión B (Calibrado ✨)</span>
+                  <span class="ab-badge ab-badge-calibrated"><i class="ph ph-sparkle" aria-hidden="true"></i> <span data-i18n="ab.calibratedLabel">Versión B (Calibrado)</span></span>
                   <span class="ab-panel-score ab-score-boost" id="ab-score-b">--/100</span>
                 </div>
                 <div class="ab-panel-body">
@@ -1299,7 +1299,7 @@
     <div class="modal-card code-export-card">
       <div class="modal-header">
         <div class="modal-title-group">
-          <h3 class="modal-title" id="code-export-title" data-i18n="exportModal.title">💻 Generador de Código SDK para Producción</h3>
+          <h3 class="modal-title" id="code-export-title" data-i18n="exportModal.title">Generador de Código SDK para Producción</h3>
           <p class="modal-subtitle" data-i18n="exportModal.subtitle">Código nativo listo para copiar e integrar en tu aplicación con SDKs oficiales 2026.</p>
         </div>
         <button class="modal-close-btn" id="btn-close-code-modal" aria-label="Cerrar modal">&times;</button>
@@ -1335,7 +1335,7 @@
     <div class="modal-card modal-card--lg">
       <div class="modal-header">
         <div class="modal-title-group">
-          <span class="modal-icon">🔧</span>
+          <span class="modal-icon"><i class="ph ph-wrench" aria-hidden="true"></i></span>
           <h3 class="modal-title" id="mcp-modal-title" data-i18n="mcpInspector.modalTitle">Inspector de Esquemas MCP & Contrato de Herramientas</h3>
         </div>
         <button class="btn-icon modal-close" id="btn-close-mcp-modal" aria-label="Cerrar modal">&times;</button>
@@ -1352,7 +1352,8 @@
           </div>
           <textarea id="mcp-schema-input" class="prompt-textarea mcp-textarea" style="height: 220px; font-family: var(--font-mono); font-size: 0.8rem;" placeholder='{ "tools": [ { "name": "query_database", ... } ] }'></textarea>
           <button class="btn btn-primary btn-sm" id="btn-mcp-audit" style="margin-top:10px; width:100%;">
-            <span data-i18n="mcpInspector.auditBtn">🔍 Auditar Cobertura contra Prompt Activo</span>
+            <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+            <span data-i18n="mcpInspector.auditBtn">Auditar Cobertura contra Prompt Activo</span>
           </button>
         </div>
 
@@ -1367,7 +1368,8 @@
             <label class="mcp-label" style="font-weight:600; font-size:0.8rem; display:block; margin-bottom:4px;" data-i18n="mcpInspector.generatedContractLabel">Contrato XML &lt;tools&gt; Generado:</label>
             <pre class="mcp-code-preview" id="mcp-contract-xml" style="background: #0d1117; color: #e6edf3; padding: 10px; border-radius: 6px; max-height: 120px; overflow-y: auto; font-family: var(--font-mono); font-size: 0.75rem; margin:0;"></pre>
             <button class="btn btn-emerald btn-sm" id="btn-mcp-inject" style="margin-top:8px; width:100%;">
-              <span data-i18n="mcpInspector.injectBtn">✨ Inyectar Contrato XML en 1-Click</span>
+              <i class="ph ph-sparkle" aria-hidden="true"></i>
+              <span data-i18n="mcpInspector.injectBtn">Inyectar Contrato XML en 1-Click</span>
             </button>
           </div>
         </div>
@@ -1384,7 +1386,7 @@
     <div class="modal-card modal-card--lg">
       <div class="modal-header">
         <div class="modal-title-group">
-          <span class="modal-icon">🛡️</span>
+          <span class="modal-icon"><i class="ph ph-shield-warning" aria-hidden="true"></i></span>
           <h3 class="modal-title" id="advlab-modal-title" data-i18n="adversarialLab.modalTitle">Laboratorio de Inyección Adversarial & Fuzzing Local</h3>
         </div>
         <button class="btn-icon modal-close" id="btn-close-advlab-modal" aria-label="Cerrar modal">&times;</button>
@@ -1408,10 +1410,12 @@
           
           <div style="display:flex; gap:8px; margin-top:10px;">
             <button class="btn btn-secondary btn-sm" id="btn-advlab-test-custom" style="flex:1;">
-              <span data-i18n="adversarialLab.testCustomBtn">⚡ Probar Vector Personalizado</span>
+              <i class="ph ph-lightning" aria-hidden="true"></i>
+              <span data-i18n="adversarialLab.testCustomBtn">Probar Vector Personalizado</span>
             </button>
             <button class="btn btn-primary btn-sm" id="btn-advlab-run-fuzzing" style="flex:1;">
-              <span data-i18n="adversarialLab.runFuzzingBtn">🛡️ Fuzzing (20 Mutaciones)</span>
+              <i class="ph ph-shield-check" aria-hidden="true"></i>
+              <span data-i18n="adversarialLab.runFuzzingBtn">Fuzzing (20 Mutaciones)</span>
             </button>
           </div>
           
@@ -1432,7 +1436,7 @@
           </div>
 
           <button class="btn btn-emerald btn-sm" id="btn-advlab-inject-guardrails" style="margin-top:10px; width:100%;">
-            <span data-i18n="adversarialLab.injectGuardrailsBtn">✨ Inyectar Guardrails OWASP LLM07 (1-Click)</span>
+            <span data-i18n="adversarialLab.injectGuardrailsBtn">Inyectar Guardrails OWASP LLM07 (1-Click)</span>
           </button>
         </div>
       </div>

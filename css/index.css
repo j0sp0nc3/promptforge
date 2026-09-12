@@ -1163,6 +1163,19 @@ body.theme-editorial .score-ring-bg { stroke: #D9D2C4; }
 .finding-card-header strong { font-size: 0.88rem; color: var(--ink); }
 .finding-card-desc { font-size: 0.84rem; color: var(--ink-soft); line-height: 1.55; }
 .finding-card-suggestion { margin-top: var(--space-sm); font-size: 0.82rem; color: var(--accent); line-height: 1.55; }
+.finding-card-suggestion .ph { font-size: 0.95em; display: inline-flex; margin-right: 4px; }
+
+/* ── U-5.5 · Iconografía Phosphor semántica en findings/changes/toasts ── */
+.gap-item { display: inline-flex; align-items: center; gap: 5px; }
+.gap-item .ph { font-size: 0.95em; color: var(--warn); display: inline-flex; flex-shrink: 0; }
+.change-type .ph { font-size: 0.95em; display: inline-flex; vertical-align: -1px; }
+.adversarial-status .ph { font-size: 0.95em; display: inline-flex; }
+.toast-icon .ph { font-size: 1.15em; display: inline-flex; }
+.justification-icon { font-size: 1.1rem; color: var(--accent); display: inline-flex; }
+.mcp-ok  { color: var(--ok); display: inline-flex; margin-right: 5px; font-size: 0.95em; }
+.mcp-miss { color: var(--err); display: inline-flex; margin-right: 5px; font-size: 0.95em; }
+.mcp-warn { color: var(--warn); display: inline-flex; margin-right: 5px; font-size: 0.95em; }
+.mcp-info { color: var(--info); display: inline-flex; margin-right: 5px; font-size: 0.95em; }
 
 /* ── Adversarial ────────────────────────────────────────────────── */
 .resistance-badge {
@@ -5104,6 +5117,10 @@ body.theme-editorial .orbital-constellation-container {
 .ticker-ctrl-btn:hover { background: var(--bg-sunken); color: var(--ink); }
 
 /* ── Toasts → DS TO-1 (surface + hairline, semántica intacta) ─── */
+/* U-5.5: el DS components.css trae su propia regla .toast (TO-1 inverse) que
+   carga después y ganaba por orden. Subo especificidad (0-2-0) para que el
+   skin workbench (raised + hairline) prevalezca sobre ambos. */
+.toast-container .toast,
 .toast {
   background: var(--bg-raised);
   color: var(--ink);
