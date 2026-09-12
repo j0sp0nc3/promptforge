@@ -5382,3 +5382,17 @@ body:not(.theme-editorial) .hero-metrics-strip { border-color: rgba(255, 255, 25
 @media (prefers-reduced-motion: reduce) {
   .view-title, .view-subtitle { transition: none; }
 }
+
+/* ── U-6.1 · Restos legacy → patrón DS ────────────────────────── */
+/* Score idle: "···" opacity 0.6 (lección DS v3.8 — nunca "--" plano) */
+.score-idle { opacity: 0.6; }
+/* Título de la constelación: kicker DS (sans 620 tracking), no mono-neón */
+.constellation-title {
+  font-family: var(--font-sans);
+  font-size: 1.02rem;
+  font-weight: 620;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  color: var(--ink);
+}
+.constellation-subtitle { font-size: 0.82rem; color: var(--ink-faint); }

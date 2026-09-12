@@ -913,6 +913,7 @@ const App = (() => {
   function animateScore(targetScore, grade) {
     const numberEl = document.getElementById('score-number');
     const gradeEl = document.getElementById('score-grade');
+    numberEl?.classList.remove('score-idle');
 
     let current = 0;
     const duration = 1200;
@@ -1241,6 +1242,7 @@ const App = (() => {
     const scoreNumEl = document.getElementById('score-number');
     if (scoreNumEl && overallScore !== undefined) {
       scoreNumEl.textContent = overallScore;
+      scoreNumEl.classList.remove('score-idle');
     }
   }
 
@@ -1577,15 +1579,16 @@ const App = (() => {
     }
 
     // Reset central score display
+    // U-6.1 · lección DS v3.8: score idle = "···" (opacity 0.6), NUNCA "--"
     const scoreNum = document.getElementById('score-number');
     const scoreGrade = document.getElementById('score-grade');
-    if (scoreNum) scoreNum.textContent = '--';
+    if (scoreNum) { scoreNum.textContent = '···'; scoreNum.classList.add('score-idle'); }
     if (scoreGrade) scoreGrade.textContent = t('constellation.awaitingEvaluation');
 
     const unoptBadge = document.getElementById('unoptimized-score-badge');
     if (unoptBadge) {
-      unoptBadge.innerHTML = `--<span>/100</span>`;
-      unoptBadge.className = 'card-score-badge badge-neutral';
+      unoptBadge.innerHTML = `···<span>/100</span>`;
+      unoptBadge.className = 'card-score-badge badge-neutral score-idle';
     }
     const calibBadge = document.getElementById('calibrated-score-badge');
     if (calibBadge) {

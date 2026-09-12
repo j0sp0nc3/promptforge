@@ -337,6 +337,13 @@ promptforge/                    ← App Web (Vercel)
 > - **Hairline divisoria** entre el header y el layout de la vista learn (`border-top` en `.learn-layout`).
 > - **Verificación:** suite 42/42 PASS; live probes: numerales 01–06 presentes (computed: stroke zinc −0.45 opacity, z −1, Inter 610), craft-grad activo (fill transparent + linear-gradient coral en dark y light), screenshots por vista y tema.
 > - **Estado migración DS:** U-4 (vistas) + U-5 (componentes vivos) + U-6 (craft) — **completada**. Pendiente menor fuera de UI: emojis de consola/docs (`cli.js`, `debug_top1.js`, `README.md`, `models.js` ViewData de badges que consume la vista Modelos).
+
+> **Sesión 2026-09-12 — U-6.1 Restos legacy post-auditoría visual del usuario ("no me convence"):**
+> - **Disparador:** auditoría de scroll EO-a-EO del Workbench en vivo detectó restos que rompían la coherencia DS pese a U-4..U-6.
+> - **Score idle** `--`→`···` + clase `.score-idle` (opacity 0.6) — aplica la lección fijada del DS que U-4 omitió (constelación + badge `···/100`; idle class se retira con `animateScore`/`renderOrbitalConstellationSVG` al llegar el score real → opacity 1).
+> - **`.constellation-title`** migrado de mono 700 coral uppercase (estética neón legacy) a patrón DS sans 620 tracking −0.02em sin uppercase; subtítulo a ink-faint.
+> - **Verificación:** suite 42/42; computed probes (central `···` idle→`49` live sin clase idle; título Inter 620/none); análisis E2E real 49/D con animación.
+> - Lección reforzada: tras git-pull de commits paralelos, releer HANDOFF (la lección del idle estaba en L296 — se omitió al migrar U-4.1).
 >
 > **Sesión 2026-09-11 — Features P3.1 Streaming SSE de Noticias & P3.2 PWA Offline First:**
 > - **Streaming SSE (`/api/ai-news`, `js/app.js`):** Implementada transmisión en tiempo real vía Server-Sent Events (SSE) en `/api/ai-news?sse=true` (`text/event-stream`) con eventos `news_init`, `news_update` y `ping` heartbeat, con fallback automático.
