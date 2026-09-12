@@ -653,6 +653,13 @@ const App = (() => {
       });
     }
 
+    // U-8 · toolbar del editor DS (.editor__tool) — mismo comportamiento que
+    // los botones legacy del header de la card (que quedan ocultos).
+    const toolbarPaste = document.getElementById('btn-paste-tb');
+    const toolbarClear = document.getElementById('btn-clear-tb');
+    if (toolbarPaste) toolbarPaste.addEventListener('click', () => btnPaste?.click());
+    if (toolbarClear) toolbarClear.addEventListener('click', () => btnClear?.click());
+
     const btnDeepAi = document.getElementById('btn-deep-domain-ai');
     if (btnDeepAi) {
       btnDeepAi.addEventListener('click', async () => {
@@ -726,6 +733,14 @@ const App = (() => {
     document.getElementById('stat-chars').textContent = t('stats.chars', { n: chars });
     document.getElementById('stat-words').textContent = t('stats.words', { n: words });
     document.getElementById('stat-tokens').textContent = t('stats.tokens', { n: tokens });
+    // U-8 · contador mono del toolbar DS (formato playground: "N chars · N palabras · ~N tok")
+    const wbCount = document.getElementById('wb-editor-count');
+    if (wbCount) {
+      const lang = I18n.getLang();
+      wbCount.textContent = lang === 'en'
+        ? `${chars} chars · ${words} words · ~${tokens} tok`
+        : `${chars} caracteres · ${words} palabras · ~${tokens} tok`;
+    }
   }
 
   // ── Analysis Pipeline ───────────────────────────────────

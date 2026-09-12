@@ -1057,7 +1057,8 @@ body.theme-editorial .score-ring-bg { stroke: #D9D2C4; }
 .dimension-card {
   background: var(--bg-paper);
   border: var(--rule);
-  border-left: 3px solid var(--dim-color, var(--ink-faint));
+  /* U-8: hairline neutra, sin código de color por fila */
+  border-left: none;
   border-radius: 0;
   overflow: hidden; transition: background var(--transition-fast);
 }
@@ -5398,6 +5399,29 @@ body:not(.theme-editorial) .hero-metrics-strip { border-color: rgba(255, 255, 25
   color: var(--ink);
 }
 .constellation-subtitle { font-size: 0.82rem; color: var(--ink-faint); }
+
+/* ── U-8 · Convergencia estructural con el DS (sección 08 playground) ── */
+/* El editor del Workbench usa la gramática IN-1 canónica: un contenedor
+   .editor con focus-within; textarea transparente sin anillo propio. */
+.wb-editor {
+  max-width: none;
+  border-color: var(--rule-color);
+  background: var(--bg-surface);
+}
+.wb-editor .editor__input { font-size: var(--fs-small, 0.875rem); min-height: 180px; padding-block: var(--s-4); }
+/* textarea legacy sin doble caja: */
+.wb-editor-input.prompt-textarea, .prompt-textarea { border: none; outline: none; box-shadow: none; padding: var(--s-4); background: transparent; }
+.prompt-textarea:focus { border: none; outline: none; box-shadow: none; }
+/* Los botones legacy del header de card quedan fuera de la vista del editor
+   (la toolbar DS es la única superficie de acciones del editor) */
+#editor-panel .workbench-card-header { display: none !important; }
+/* results-panel (calibrated): mismo criterio flat — secciones sin header-caja */
+#results-panel .workbench-card-header { display: none !important; }
+/* Editor-footer pasa a fila de acciones plana (sin cajas anidadas) */
+.editor-footer { border-top: 1px solid var(--rule-color); padding-top: var(--s-3); }
+/* Dual grid → breath: gap DS, cards sin sombra pesada */
+.comparison-workbench-grid { gap: var(--s-6); }
+.comparison-workbench-grid .workbench-card { box-shadow: none; }
 
 /* ── U-7 · de-IA: flat DS en zonas que conservaban glow/glass/azul ── */
 /* Toggle de tema: sin glow cyan-neón en hover (luz sin causa física prohibida) */

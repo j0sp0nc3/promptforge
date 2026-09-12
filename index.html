@@ -389,8 +389,7 @@
                   <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
                 </svg>
                 <span data-i18n="objectives.label">Objetivo del Prompt</span>:
-              </label>
-              <!-- U-5.4 · SE-2 listbox custom (DS) espejando un <select> oculto
+              </label>              <!-- U-5.4 · SE-2 listbox custom (DS) espejando un <select> oculto
                    state-holder: el contrato .value de los lectores JS no cambia. -->
               <select id="prompt-objective-select" class="u-hidden-select" aria-hidden="true" tabindex="-1">
                 <option value="general" selected>General / Conversacional</option>
@@ -417,10 +416,20 @@
                 </div>
               </div>
             </div>
-            <textarea id="prompt-input" class="prompt-textarea"
-              placeholder="Write or paste your prompt here to evaluate and calibrate..." data-i18n-placeholder="editor.placeholder"
-              aria-label="Prompt a evaluar" data-i18n-aria="a11y.promptInput"
-              spellcheck="false"></textarea>
+            <!-- U-8 · IN-1 editor en gramática DS: un contenedor .editor con
+                 focus-within (el textarea nunca pinta su propio ring) -->
+            <div class="editor wb-editor">
+              <div class="editor__toolbar">
+                <button type="button" class="editor__tool" id="btn-paste-tb" title="Pegar" aria-label="Pegar"><i class="ph ph-clipboard-text" aria-hidden="true"></i></button>
+                <button type="button" class="editor__tool" id="btn-clear-tb" title="Limpiar" aria-label="Limpiar"><i class="ph ph-eraser" aria-hidden="true"></i></button>
+                <span class="editor__sep" aria-hidden="true"></span>
+                <span class="editor__count" id="wb-editor-count">0 chars · 0 palabras · ~0 tokens</span>
+              </div>
+              <textarea id="prompt-input" class="editor__input wb-editor-input"
+                placeholder="Escribe o pega tu prompt… El análisis corre localmente a medida que escribes." data-i18n-placeholder="editor.placeholder"
+                aria-label="Prompt a evaluar" data-i18n-aria="a11y.promptInput"
+                spellcheck="false"></textarea>
+            </div>
             <div class="editor-footer">
               <div class="editor-stats">
                 <span class="stat" id="stat-chars">0 chars</span>
@@ -565,7 +574,7 @@
                   <span class="calibrated-pill-tag tag-format" data-i18n="workbench.pillStrictSchema">[Strict Schema]</span>
                 </div>
               </div>
-              <div class="card-score-badge badge-neutral" id="calibrated-score-badge">--<span>/100</span></div>
+              <div class="card-score-badge badge-neutral score-idle" id="calibrated-score-badge">···<span>/100</span></div>
             </div>
 
             <!-- Empty State before analysis -->

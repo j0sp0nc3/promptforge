@@ -355,6 +355,14 @@ promptforge/                    ← App Web (Vercel)
 > - **Métricas hero:** craft-grad tipográfico (añadido en U-6) retirado — el playground usa numerales planos; ahora coral plano (`--accent-text`).
 > - **Podio SOTA top-3 (vista Modelos):** emojis 🥇🥈🥉 del `badge/badgeEn` en data → stripped regex + icono Phosphor por posición (`ph-crown/ph-medal/ph-trophy`) con colores medalla existentes (semántica de ranking legítima). FIX requiere bypass SW — el SW P3.2 sirve JS viejo tras recarga normal.
 > - **Verificación:** suite 42/42 PASS; probes computed (toggle flat, orbital transparente+hairline, métricas coral plano, chip accent-soft, card raised+hairline sin sombra, podium icons/0-emoji); screenshots por sección comparadas contra playground en dark coral.
+
+> **Sesión 2026-09-12 — U-8 Convergencia estructural con el DS (feedback «está totalmente lejos de lograrlo»):**
+> - **Diagnóstico honesto:** el Workbench mantenía la ESTRUCTURA del app viejo (cards anidadas con header-bar, editor caja-dentro-de-caja) con pintura DS por encima — el DS canónico es flat + hairline + editor IN-1 de un solo contenedor.
+> - **Editor → gramática IN-1 exacta:** `.editor.wb-editor` (toolbar con acciones Phosphor + separator + contador mono `0 chars · 0 palabras · ~0 tok`, textarea transparente SIN border propio, focus ring coral en el CONTENEDOR via focus-within). Los header-bar legacy de `#editor-panel`/`#results-panel` → `display:none`; botones legacy re-cableados a la toolbar (`btn-paste-tb`/`btn-clear-tb` delegan a los originales).
+> - **`updateEditorStats` extendido** para poblar `#wb-editor-count` (es/en).
+> - **Acordeón 8D:** `border-left` coloreado por fila eliminado (hairline neutra por fila, igual que el playground; el color vive SOLO en el icono-chip y la barra mini).
+> - **Score idle calibrated:** `···/100` opacity .6 (consistente con U-6.1).
+> - **Verificación:** suite 42/42; screenshots vivos: hero→editor-focus-within coral→constelación flat→mini-cards border-top 2px→acordeón hairline neutra→footer plano; diffuse border-top en `.dimension-card` corregido tras typo-malform comment (verificable con `grep "border-left: none"`).
 >
 > **Sesión 2026-09-11 — Features P3.1 Streaming SSE de Noticias & P3.2 PWA Offline First:**
 > - **Streaming SSE (`/api/ai-news`, `js/app.js`):** Implementada transmisión en tiempo real vía Server-Sent Events (SSE) en `/api/ai-news?sse=true` (`text/event-stream`) con eventos `news_init`, `news_update` y `ping` heartbeat, con fallback automático.
