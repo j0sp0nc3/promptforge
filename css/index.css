@@ -835,17 +835,18 @@ body.theme-editorial .central-score-value {
 }
 
 .eval-dim-card {
-  background: rgba(17, 20, 32, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-md);
+  background: var(--bg-raised);
+  border: 1px solid var(--rule-color);
+  border-radius: var(--r-2);
   padding: 14px 12px;
   text-align: center;
   cursor: pointer;
-  transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+  transition: border-color var(--dur-fast) var(--ease-standard), transform var(--dur-fast) var(--ease-standard);
 }
 .eval-dim-card:hover {
-  transform: translateY(-4px);
-  filter: brightness(1.2);
+  transform: translateY(-2px);
+  border-color: var(--ink-faint);
+  filter: none;
 }
 .eval-dim-name {
   font-family: var(--font-sans);
@@ -2964,18 +2965,19 @@ body.theme-editorial .score-legend-table th {
   font-size: 0.8rem;
   display: inline-block;
 }
-.grade-a-plus { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
-.grade-a      { background: rgba(16, 185, 129, 0.15); color: #34d399; }
-.grade-b      { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
-.grade-c      { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
-.grade-d      { background: rgba(249, 115, 22, 0.15); color: #fb923c; }
-.grade-f      { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+/* U-7 de-IA: escala de grados → tokens semánticos DS (antes hex Tailwind) */
+.grade-a-plus { background: var(--ok-bg); color: var(--ok); border: 1px solid color-mix(in srgb, var(--ok) 40%, transparent); }
+.grade-a      { background: var(--ok-bg); color: var(--ok); }
+.grade-b      { background: var(--info-bg); color: var(--info); }
+.grade-c      { background: var(--warn-bg); color: var(--warn); }
+.grade-d      { background: color-mix(in srgb, var(--sev-high) 15%, transparent); color: var(--sev-high); }
+.grade-f      { background: var(--err-bg); color: var(--err); border: 1px solid color-mix(in srgb, var(--err) 40%, transparent); }
 
-.grade-status-emerald { color: #10b981; }
-.grade-status-blue    { color: #3b82f6; }
-.grade-status-amber   { color: #f59e0b; }
-.grade-status-orange  { color: #f97316; }
-.grade-status-red     { color: #ef4444; }
+.grade-status-emerald { color: var(--ok); }
+.grade-status-blue    { color: var(--info); }
+.grade-status-amber   { color: var(--warn); }
+.grade-status-orange  { color: var(--sev-high); }
+.grade-status-red     { color: var(--err); }
 
 /* ── Domain Archetype & Context Gaps Styling ────────────────────────── */
 .domain-intelligence-panel {
@@ -3060,31 +3062,32 @@ body.theme-editorial .gaps-card-title {
   gap: 6px;
 }
 
-/* Modificador: chips de inyección de contexto de dominio (mono, pill azul) */
+/* Modificador: chips de inyección de contexto (U-7 de-IA: flat accent DS,
+   era azul Tailwind glass — estética no autorizada) */
 .action-chip.action-chip--inject {
   padding: 4px 10px;
-  border-radius: var(--radius-pill, 9999px);
+  border-radius: var(--r-full);
   font-family: var(--font-mono);
   font-size: 0.74rem;
-  background: rgba(59, 130, 246, 0.12);
-  color: #60a5fa;
-  border-color: rgba(59, 130, 246, 0.3);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  border-color: transparent;
   box-shadow: none;
 }
 .action-chip.action-chip--inject:hover {
-  background: rgba(59, 130, 246, 0.25);
-  border-color: #60a5fa;
-  color: #60a5fa;
+  background: color-mix(in srgb, var(--accent) 26%, transparent);
+  border-color: transparent;
+  color: var(--accent-text);
 }
 body.theme-editorial .action-chip.action-chip--inject {
-  background: #E5EFFE;
-  color: #1D4ED8;
-  border-color: #BFDBFE;
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  border-color: transparent;
 }
 body.theme-editorial .action-chip.action-chip--inject:hover {
-  background: #DBEAFE;
-  border-color: #93C5FD;
-  color: #1D4ED8;
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  border-color: transparent;
+  color: var(--accent-text);
 }
 
 .domain-justification-banner {
@@ -3613,6 +3616,7 @@ body.theme-editorial .grade-status-emerald { color: #4F7942; }
   margin-bottom: 12px;
   align-self: flex-start;
 }
+.podium-card-badge-top .ph { font-size: 1em; display: inline-flex; }
 
 .podium-card--gold .podium-card-badge-top {
   background: rgba(255, 193, 7, 0.2);
@@ -5362,15 +5366,13 @@ body:not(.theme-editorial) .listbox__label { color: var(--ink-faint); }
 .view-title { font-family: var(--font-sans); font-size: 1.55rem; font-weight: 610; letter-spacing: -0.032em; margin-bottom: var(--s-2); }
 .view-subtitle { font-size: 0.95rem; letter-spacing: -0.011em; max-width: 62ch; margin-bottom: var(--s-8); }
 
-/* Métricas del hero: numerales mono con craft-grad */
+/* Métricas del hero: numerales mono — U-7 de-IA: color plano (era craft-grad
+   tipográfico, patrón que el playground NO usa en métricas) */
 .hero-metrics-strip strong {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
-  background: linear-gradient(135deg, var(--ink) 30%, var(--accent) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+  color: var(--accent-text);
+  -webkit-text-fill-color: var(--accent-text);
 }
 
 /* Hairline de cierre del hero (U-5.1 ya define border-top; aquí lo reafirma
@@ -5396,3 +5398,27 @@ body:not(.theme-editorial) .hero-metrics-strip { border-color: rgba(255, 255, 25
   color: var(--ink);
 }
 .constellation-subtitle { font-size: 0.82rem; color: var(--ink-faint); }
+
+/* ── U-7 · de-IA: flat DS en zonas que conservaban glow/glass/azul ── */
+/* Toggle de tema: sin glow cyan-neón en hover (luz sin causa física prohibida) */
+.theme-toggle-btn {
+  background: transparent;
+  border: 1px solid var(--rule-color);
+  color: var(--ink-soft);
+  backdrop-filter: none;
+}
+.theme-toggle-btn:hover {
+  background: var(--bg-sunken);
+  border-color: var(--rule-color);
+  color: var(--ink);
+  box-shadow: none;
+}
+/* Sección orbital: glass 16px + borde coral-alpha → superficie DS room */
+.orbital-constellation-section {
+  background: transparent;
+  border: none;
+  backdrop-filter: none;
+  box-shadow: none;
+  padding-inline: 0;
+}
+.spectral-prism { display: none; }

@@ -1270,7 +1270,7 @@ const App = (() => {
       const scoreDec = (scoreVal / 10).toFixed(1);
 
       return `
-        <div class="eval-dim-card" data-dim="${d.key}" style="border-top: 2px solid ${d.color}; box-shadow: 0 4px 16px ${d.color}15;">
+        <div class="eval-dim-card" data-dim="${d.key}" style="border-top: 2px solid ${d.color};">
           <div class="eval-dim-name">${escapeHtml(d.label)}</div>
           <div class="eval-dim-score" style="color: ${d.color}">${scoreDec}</div>
         </div>
@@ -3335,11 +3335,12 @@ const App = (() => {
         const podiumClasses = ['podium-card--gold', 'podium-card--silver', 'podium-card--bronze'];
         
         podiumContainer.innerHTML = top3.map((m, idx) => {
-          const badgeText = lang === 'en' ? (m.badgeEn || m.badge) : m.badge;
+          const badgeText = (lang === 'en' ? (m.badgeEn || m.badge) : m.badge).replace(/^[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]+\s*/u, '');
+          const badgeIcon = ['ph-crown', 'ph-medal', 'ph-trophy'][idx] || 'ph-medal';
           const descText = m.desc[lang] || m.desc.es;
           return `
             <div class="podium-card ${podiumClasses[idx]}" data-id="${escapeAttr(m.id)}">
-              <div class="podium-card-badge-top">${escapeHtml(badgeText)}</div>
+              <div class="podium-card-badge-top"><i class="ph ${badgeIcon}" aria-hidden="true"></i> ${escapeHtml(badgeText)}</div>
               <h3 class="podium-card-title">#${m.rank} ${escapeHtml(m.name)}</h3>
               <div class="podium-card-provider">${escapeHtml(m.provider)} · <span class="model-type-tag model-type-tag--${m.type}">${m.type === 'frontier' ? (lang === 'en' ? 'Frontier' : 'Frontera') : 'Open Weights'}</span></div>
               <p class="podium-card-desc">${escapeHtml(descText)}</p>

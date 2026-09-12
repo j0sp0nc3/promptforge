@@ -344,6 +344,17 @@ promptforge/                    ← App Web (Vercel)
 > - **`.constellation-title`** migrado de mono 700 coral uppercase (estética neón legacy) a patrón DS sans 620 tracking −0.02em sin uppercase; subtítulo a ink-faint.
 > - **Verificación:** suite 42/42; computed probes (central `···` idle→`49` live sin clase idle; título Inter 620/none); análisis E2E real 49/D con animación.
 > - Lección reforzada: tras git-pull de commits paralelos, releer HANDOFF (la lección del idle estaba en L296 — se omitió al migrar U-4.1).
+
+> **Sesión 2026-09-12 — U-7 de-IA: erradicar estética no autorizada post-comparación 1:1 con playground («se ve muy IA»):**
+> - **Disparador:** el usuario reporta que el Workbench «se ve muy IA, revisa design-system.html». Auditoría comparativa lado-a-lado playground/workbench + grep de glows/radiales/blur/azul-Tailwind.
+> - **Chips de inyección de contexto:** azul Tailwind glass (`rgba(59,130,246,.12)` + borde #3B82F6) → flat accent DS (`--accent-soft` + `--accent-text`, hover color-mix 26%). Eran el mayor信号 "IA'.
+> - **Mini-cards 8D:** sombra de color inline `0 4px 16px ${color}15` eliminada del render JS; base `.eval-dim-card` glass `rgba(17,20,32,.8)` → `--bg-raised` + hairline; hover sin `brightness(1.2)` (translateY −2px + border zinc).
+> - **Grade badges:** hex Tailwind (`#60a5fa/#3b82f6/#10b981/...`) → tokens DS (`--ok/--info/--warn/--sev-high/--err` + `--*-bg`).
+> - **Toggle de tema:** hover cyan-neón con glow → flat DS (bg-sunken + hairline, sin glow — regla «luz sin causa física prohibida»).
+> - **Sección orbital:** glass 16px + borde coral-alpha + sombra negra 48px → transparente flat (el stage interior ya tiene su spotlight U-4.2); prisms blur muertos en display:none.
+> - **Métricas hero:** craft-grad tipográfico (añadido en U-6) retirado — el playground usa numerales planos; ahora coral plano (`--accent-text`).
+> - **Podio SOTA top-3 (vista Modelos):** emojis 🥇🥈🥉 del `badge/badgeEn` en data → stripped regex + icono Phosphor por posición (`ph-crown/ph-medal/ph-trophy`) con colores medalla existentes (semántica de ranking legítima). FIX requiere bypass SW — el SW P3.2 sirve JS viejo tras recarga normal.
+> - **Verificación:** suite 42/42 PASS; probes computed (toggle flat, orbital transparente+hairline, métricas coral plano, chip accent-soft, card raised+hairline sin sombra, podium icons/0-emoji); screenshots por sección comparadas contra playground en dark coral.
 >
 > **Sesión 2026-09-11 — Features P3.1 Streaming SSE de Noticias & P3.2 PWA Offline First:**
 > - **Streaming SSE (`/api/ai-news`, `js/app.js`):** Implementada transmisión en tiempo real vía Server-Sent Events (SSE) en `/api/ai-news?sse=true` (`text/event-stream`) con eventos `news_init`, `news_update` y `ping` heartbeat, con fallback automático.
