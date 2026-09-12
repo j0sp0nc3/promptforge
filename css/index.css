@@ -242,14 +242,14 @@ body.theme-editorial .orbital-node-label {
   fill: #1A1612 !important;
 }
 body.theme-editorial .eval-dim-card {
-  background: #EFE9DD;
-  border: 1px solid #D9D2C4;
+  background: var(--bg-raised);
+  border-color: var(--rule-color);
 }
 body.theme-editorial .eval-dim-name {
-  color: #4A4239 !important;
+  color: var(--ink-faint) !important;
 }
 body.theme-editorial .eval-dim-score {
-  color: #1A1612 !important;
+  color: var(--ink) !important;
 }
 
 body.theme-editorial .improved-prompt-highlighted {
@@ -834,11 +834,13 @@ body.theme-editorial .central-score-value {
 }
 .eval-dim-name {
   font-family: var(--font-sans);
-  font-size: 0.78rem; font-weight: 500; color: var(--ink-faint);
+  font-size: var(--fs-micro, 0.8rem); font-weight: 550; color: var(--ink-faint);
+  letter-spacing: 0.01em;
 }
 .eval-dim-score {
-  font-family: var(--font-serif);
-  font-size: 1.8rem; font-weight: 700; color: var(--ink);
+  font-family: var(--font-sans); font-variant-numeric: tabular-nums;
+  font-size: 1.55rem; font-weight: 650; letter-spacing: -0.035em;
+  color: var(--ink);
   margin-top: 2px;
 }
 
@@ -847,8 +849,8 @@ body.theme-editorial .central-score-value {
 }
 
 @keyframes pulseDimHighlight {
-  0% { transform: scale(1); box-shadow: 0 0 0 rgba(0, 229, 255, 0); }
-  30% { transform: scale(1.02); box-shadow: 0 0 25px var(--dim-color, #00e5ff); border-color: var(--dim-color, #00e5ff); }
+  0% { transform: scale(1); box-shadow: 0 0 0 rgba(0, 0, 0, 0); }
+  30% { transform: scale(1.02); border-color: var(--ink-soft); }
   100% { transform: scale(1); box-shadow: none; }
 }
 
@@ -1087,12 +1089,12 @@ body .tab-bar {
 .dimension-right { display: flex; align-items: center; gap: var(--space-md); }
 
 .dimension-bar {
-  width: 100px; height: 3px; background: #D9D2C4; overflow: hidden;
+  width: 100px; height: 3px; background: var(--bg-sunken); overflow: hidden;
 }
 .dimension-bar-fill { height: 100%; transition: width 0.6s ease; }
 .dimension-bar-fill.good    { background: var(--ok); }
 .dimension-bar-fill.warning { background: var(--warn); }
-.dimension-bar-fill.bad     { background: var(--accent); }
+.dimension-bar-fill.bad     { background: var(--err); }
 
 .dimension-score {
   font-family: var(--font-mono); font-weight: 600; font-size: 0.9rem;
@@ -1100,7 +1102,7 @@ body .tab-bar {
 }
 .dimension-score.good { color: var(--ok); }
 .dimension-score.warning { color: var(--warn); }
-.dimension-score.bad { color: var(--accent); }
+.dimension-score.bad { color: var(--err); }
 
 .dimension-chevron { color: var(--ink-faint); transition: transform var(--transition-normal); }
 .dimension-card.expanded .dimension-chevron { transform: rotate(180deg); }

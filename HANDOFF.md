@@ -364,6 +364,13 @@ promptforge/                    ← App Web (Vercel)
 > - **Score idle calibrated:** `···/100` opacity .6 (consistente con U-6.1).
 > - **Verificación:** suite 42/42; screenshots vivos: hero→editor-focus-within coral→constelación flat→mini-cards border-top 2px→acordeón hairline neutra→footer plano; diffuse border-top en `.dimension-card` corregido tras typo-malform comment (verificable con `grep "border-left: none"`).
 >
+> **Sesión 2026-09-12 — U-11.2/11.3 Secciones del workbench a canon dark exacto (feedback «mejora las siguientes secciones»):**
+> - **Tokens dark alineados al DS (la corrección base):** LEGACY COMPAT de `css/ds/tokens.css` (`body.theme-cosmic:not(.theme-editorial)`) tenía `--bg-body:#0D0E12` y `--bg-sunken:.04` que divergían del canon (`--pm-z950 #121317`, sunken `.06`); ahora var() al token del propio archivo + `--bg-modal-overlay` canon (rgba(4,5,8,.7)). Fondo del app = `body.theme-dark` del playground.
+> - **Mini-cards de dimensiones des-rainbow (U-11.2):** render en `js/app.js` retiraba `style="border-top: 2px solid ${d.color}"` y `color:${d.color}` del score (identidad-de-dato por color Tailwind en CH fluía sola); ahora hairline neutral + score ink (`.eval-dim-score` → sans 650 tabular −0.035em, `.eval-dim-name` → micro 550 faint); pulse-pulse `box-shadow: 0 0 25px var(--dim-color)` eliminado; override editorial #EFE9DD → tokens.
+> - **Acordeón 8D a tokens de estado (U-11.3):** track `.dimension-bar` #D9D2C4 → `--bg-sunken`; fill `bad` accent→`--err` (accent=reservado acción); `.dimension-score.bad` ídem. good/warning keep semánticas `--ok/--warn`.
+> - **SVG orbital:** se conserva la paleta por-dimensión (mapa de datos; identidad legítima en el diagrama, dados los estados del playground vs criterios semánticos), con strokes al hairline (rgba .08) intáctos.
+> - **Verificación:** suite **42/42** ×2 (pre/post fix barras); probes vivos tras SW-purge+reload+análisis: body #121317, mini-cards score rgb(244,245,247) 24.8px border rgba(255,255,255,.08), acordeón track rgba(255,255,255,.06) fills ok/warn/err, tab-bar seg preservado (show re-fix de especificidad sobrevive al reload).
+>
 > **Sesión 2026-09-12 — U-11 Pulido capa 2 (feedback «aún falta, pulir el diseño»):**
 > - **Método:** segunda pasada de diff computado (probes playground vs app sobre editor/chips/tabs/ticker/footer/manifiesto).
 > - **Chips → CH-1 pill:** `.action-chip` fondo opaco + radius-sm + shadow → transparente + hairline `--rule-color` + `--r-full` + 500 `--ink-soft` (hover via tokens).

@@ -159,15 +159,17 @@ body.theme-dark {
    el mapping dark de cosmic pisa el light de editorial por orden de
    carga de tokens.css (ambos 0-2-0). Dark efectivo = NO editorial. */
 body.theme-cosmic:not(.theme-editorial) {
-  /* L2 dark mappings (U-4.6): legacy theme del app = DS dark */
-  --bg-body: #0D0E12;
+  /* L2 dark mappings (U-4.6 → U-11.2): alineados al canon DS dark exacto
+     (body.theme-dark de este mismo archivo); bg-body/sunken/overlay = DS. */
+  --bg-body: var(--pm-z950);
   --bg-paper: #171921;
   --bg-surface: rgba(255, 255, 255, 0.035);
   --bg-raised: #1B1F28;
-  --bg-sunken: rgba(255, 255, 255, 0.04);
+  --bg-sunken: rgba(255, 255, 255, 0.06);
   --bg-inverse: #F4F5F7;
   --ink: #F4F5F7;
   --ink-soft: #A2A6AE;
+  --bg-modal-overlay: rgba(4, 5, 8, 0.7);
   --ink-faint: #6F737C;
   --accent: #818CF8;
   --accent-secondary: #22D3EE;

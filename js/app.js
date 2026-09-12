@@ -1285,9 +1285,11 @@ const App = (() => {
       const scoreDec = (scoreVal / 10).toFixed(1);
 
       return `
-        <div class="eval-dim-card" data-dim="${d.key}" style="border-top: 2px solid ${d.color};">
+        <!-- U-11.2: sin color por dimensión — hairline neutral + score ink
+             (datos no llevan accent; la identidad vive en el acordeón 8D) -->
+        <div class="eval-dim-card" data-dim="${d.key}">
           <div class="eval-dim-name">${escapeHtml(d.label)}</div>
-          <div class="eval-dim-score" style="color: ${d.color}">${scoreDec}</div>
+          <div class="eval-dim-score">${scoreDec}</div>
         </div>
       `;
     }).join('');
