@@ -328,6 +328,15 @@ promptforge/                    ← App Web (Vercel)
 >   - **i18n es+en limpiado de emojis** en claves UI migradas (changes.*, adversarialLab.botones, mcpInspector.*, ab.calibratedLabel).
 > - **Fix toast en dark (regresión U-4.3 detectada):** la regla TO-1 de `css/ds/components.css` (`.toast { background: var(--bg-inverse) }`) gana por orden de carga a la U-4.3 de index.css y pintaba toasts blancos sobre cosmic. Fix: subida de especificidad en index.css (`.toast-container .toast` con `--bg-raised` + hairline). Verificado: cosmic `#1B1F28`/ink claro, editorial `#FBF8F2`.
 > - **Verificación:** suite 42/42 PASS; live probes: análisis legal → badge `ph-scales` + "Cumplimiento Legal & Financiero" (0 emoji), change-items con icono por tipo, sugerencias con `ph-lightbulb`, modal MCP audit OK/miss/info/warn Phosphor (0 emoji), toasts success/warning/info con check/warn/info Phosphor en ambos temas.
+
+> **Sesión 2026-09-12 — U-6 Craft Layer en vistas del Workbench (cierre estético migración DS):**
+> - **Numerales fantasma 01–06** (`craft-numeral` del DS) anclados a los headers de las 6 vistas: templates/history/learn/radar/models/leaderboard. Ancla = clase header (no `.view`) para no alterar containing blocks de absolutos existentes (prism, score-box, search wrappers).
+> - **Calibración workbench:** override `.view .craft-numeral` (clamp 3.2–5.4rem, opacity 0.45, top −8px right 16px) — el default DS es para secciones altas del playground. Regla stacking v3.9 reforzada: numeral `z-index:-1` dentro de contexto propio (`position:relative` solo en el header ancla), hermanos static, ningún overlay depende de `:not()`.
+> - **Tipografía vistas:** `.view-title` → Inter 610 tracking −0.032em, `.view-subtitle` → 0.95rem/62ch (completa el manifest U-4.1).
+> - **craft-grad en métricas del hero:** `.hero-metrics-strip strong` (numerales mono) con gradiente ink→accent + background-clip:text. Hairline del hero con contraste dark.
+> - **Hairline divisoria** entre el header y el layout de la vista learn (`border-top` en `.learn-layout`).
+> - **Verificación:** suite 42/42 PASS; live probes: numerales 01–06 presentes (computed: stroke zinc −0.45 opacity, z −1, Inter 610), craft-grad activo (fill transparent + linear-gradient coral en dark y light), screenshots por vista y tema.
+> - **Estado migración DS:** U-4 (vistas) + U-5 (componentes vivos) + U-6 (craft) — **completada**. Pendiente menor fuera de UI: emojis de consola/docs (`cli.js`, `debug_top1.js`, `README.md`, `models.js` ViewData de badges que consume la vista Modelos).
 >
 > **Sesión 2026-09-11 — Features P3.1 Streaming SSE de Noticias & P3.2 PWA Offline First:**
 > - **Streaming SSE (`/api/ai-news`, `js/app.js`):** Implementada transmisión en tiempo real vía Server-Sent Events (SSE) en `/api/ai-news?sse=true` (`text/event-stream`) con eventos `news_init`, `news_update` y `ping` heartbeat, con fallback automático.
