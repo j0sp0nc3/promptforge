@@ -364,6 +364,14 @@ promptforge/                    ← App Web (Vercel)
 > - **Score idle calibrated:** `···/100` opacity .6 (consistente con U-6.1).
 > - **Verificación:** suite 42/42; screenshots vivos: hero→editor-focus-within coral→constelación flat→mini-cards border-top 2px→acordeón hairline neutra→footer plano; diffuse border-top en `.dimension-card` corregido tras typo-malform comment (verificable con `grep "border-left: none"`).
 >
+> **Sesión 2026-09-12 — U-10 Espíritu DS: medida, ritmo y chrome del playground (feedback «sigue feísimo, no logra tener el espíritu»):**
+> - **Diagnóstico por diff computado 1:1 (probes playground vs app):** la brecha era ESTRUCTURAL, no cosmética: (1) contenido full-bleed sin medida de columna, (2) métricas del hero con regla superior + columnas apiladas, (3) kicker sin geometría pill, (4) numerales de datos pintados accent, (5) header plano donde el canon es translúcido.
+> - **Medida DS (la corrección madre):** `.view` → `max-width: 1080px` (pg-wrap) + `padding-inline: 32px`. Todas las vistas heredan la medida exacta del playground; se eliminó la regla top y apilado del strip.
+> - **Métricas hero → posición 04 del playground:** filas baseline (strong + span en línea), divisores `border-left` entre items, sin regla superior, `margin-top 64px`, strong 1.3rem/640 ink plano (accent retirado de datos — regla «accent solo para acción»).
+> - **Kicker → pill del playground:** `inline-flex` + `bg-sunken` 5px 14px `--r-full` + `margin-bottom 32px` (antes texto desnudo).
+> - **Header → chrome pg-nav:** `color-mix(bg-body 82%, transparent)` + `backdrop-filter: blur(12px)` — translúcido sobre el flujo, hairline de cierre (reemplaza el plano U-5.4).
+> - **Verificación:** suite 42/42; probes vivos post-reload: view 1080/32px, kicker pill (bg rgba(255,255,255,.04), radius 9999, mb 32px), stats mt 64 sin border-top, strong rgb(244,245,247) 20.8px 640 (ya NO coral), divisores 1px rgba(255,255,255,.08), header color(srgb .05/.05/.07 / .82) + blur(12px) — la gramática computada del playground replicada 1:1.
+>
 > **Sesión 2026-09-12 — U-9.1 Numerales fantasma retirados (feedback «quita los números de fondo, no aplican»):**
 > - **HTML:** 6 spans `craft-numeral` (01–06) eliminados de los headers de Templates/History/Learn/Radar/Models/Leaderboard.
 > - **CSS:** bloque U-6 de posicionamiento de numerales → `.view .craft-numeral { display: none; }` como salvaguarda DOM; los `position:relative` de headers se conservan (inofensivos, el wrapper de búsqueda de Learn depende de su contexto).

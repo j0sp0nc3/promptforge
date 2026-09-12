@@ -374,10 +374,11 @@ body.theme-editorial .app-header {
 
 .view {
   display: none;
-  max-width: var(--maxw-app, 1280px);
+  max-width: var(--maxw-ds, 1080px);
   margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
+  padding-inline: var(--s-8, 32px);
 }
 .view.active { display: block; animation: fadeIn 0.25s ease; }
 
@@ -4900,12 +4901,13 @@ body.theme-cosmic {
   -webkit-backdrop-filter: none;
 }
 
-/* ── Header → plano, hairline zinc (sin glass) ────────────────── */
+/* ── Header → chrome pg-nav del playground (superficie translúcida
+   sobre el cuerpo + blur 12; hairline de cierre) ─────────────── */
 .app-header {
-  background: var(--bg-body) !important;
+  background: color-mix(in srgb, var(--bg-body) 82%, transparent) !important;
   border-bottom: 1px solid var(--rule-color);
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 /* ── Nav Btns → DS tab underline fino + typografía Inter ──────── */
@@ -5260,7 +5262,7 @@ body.theme-editorial .orbital-constellation-container {
 
 /* ── U-5.1 · Hero DS v3.5 (manifiesto tipográfico + métricas) ──── */
 .hero-header-content { text-align: center; max-width: 62ch; margin-inline: auto; }
-.hero-header-content .t-micro { display: inline-block; margin-bottom: var(--s-3); color: var(--ink-soft); letter-spacing: 0.08em; text-transform: none; font-size: var(--fs-micro, 0.8rem); font-weight: 550; }
+.hero-header-content .t-micro { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; padding: 5px 14px; border-radius: var(--r-full, 9999px); background: var(--bg-sunken); color: var(--ink-soft); letter-spacing: 0.08em; text-transform: none; font-size: var(--fs-micro, 0.8rem); font-weight: 550; margin-bottom: var(--s-8, 32px); }
 .hero-main-title {
   font-size: clamp(2.4rem, 5vw, 3.6rem);
   font-weight: 640;
@@ -5271,15 +5273,16 @@ body.theme-editorial .orbital-constellation-container {
 }
 .hero-main-subtitle { color: var(--ink-soft); max-width: 52ch; margin: var(--s-4) auto 0; font-size: 0.95rem; }
 .hero-metrics-strip {
-  display: flex; justify-content: center; gap: var(--s-12);
-  margin-top: var(--s-10);
-  padding-top: var(--s-6);
-  border-top: 1px solid var(--rule-color);
+  display: flex; justify-content: center; gap: var(--s-2, 8px);
+  margin-top: var(--s-16, 64px);
+  padding-top: 0;
+  border-top: none;
 }
-.hero-metrics-strip > div { display: flex; flex-direction: column; gap: 2px; min-width: 72px; }
+.hero-metrics-strip > div { display: flex; align-items: baseline; gap: 10px; padding-inline: var(--s-6, 24px); }
+.hero-metrics-strip > div + div { border-left: 1px solid var(--rule-color); }
 .hero-metrics-strip strong {
   font-family: var(--font-mono); font-variant-numeric: tabular-nums;
-  font-size: 1.4rem; font-weight: 650; letter-spacing: -0.04em; color: var(--ink);
+  font-size: 1.3rem; font-weight: 640; letter-spacing: -0.02em; color: var(--ink);
 }
 .hero-metrics-strip span { font-size: 0.72rem; color: var(--ink-faint); letter-spacing: 0.02em; }
 @media (max-width: 560px) { .hero-metrics-strip { gap: var(--s-6); flex-wrap: wrap; } }
@@ -5352,13 +5355,13 @@ body:not(.theme-editorial) .listbox__label { color: var(--ink-faint); }
 .view-title { font-family: var(--font-sans); font-size: 1.55rem; font-weight: 610; letter-spacing: -0.032em; margin-bottom: var(--s-2); }
 .view-subtitle { font-size: 0.95rem; letter-spacing: -0.011em; max-width: 62ch; margin-bottom: var(--s-8); }
 
-/* Métricas del hero: numerales mono — U-7 de-IA: color plano (era craft-grad
-   tipográfico, patrón que el playground NO usa en métricas) */
+/* Métricas del hero: numerales mono — U-10: color plano ink como el playground
+   (los datos no llevan accent; "accent solo para acción" — regla 01 · Color) */
 .hero-metrics-strip strong {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
-  color: var(--accent-text);
-  -webkit-text-fill-color: var(--accent-text);
+  color: var(--ink);
+  -webkit-text-fill-color: var(--ink);
 }
 
 /* Hairline de cierre del hero (U-5.1 ya define border-top; aquí lo reafirma
