@@ -327,15 +327,18 @@ body.theme-editorial ::-webkit-scrollbar-thumb { background: #C7BBA3; border-rad
   height: var(--header-height);
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 var(--space-xl);
-  background: rgba(17, 20, 32, 0.85);
-  backdrop-filter: blur(12px);
+  background: rgba(13, 15, 23, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-bottom: var(--rule-strong);
-  z-index: 100;
+  z-index: 1100;
 }
 
 body.theme-editorial .app-header {
-  background: var(--bg-paper);
-  backdrop-filter: none;
+  background: #FBF8F2 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-bottom: 1px solid var(--rule-color) !important;
 }
 
 .header-left, .header-right { display: flex; align-items: center; gap: var(--space-md); flex: 1; }
@@ -4999,11 +5002,20 @@ body.theme-cosmic {
 
 /* ── Header → chrome pg-nav del playground (superficie translúcida
    sobre el cuerpo + blur 12; hairline de cierre) ─────────────── */
-.app-header {
-  background: color-mix(in srgb, var(--bg-body) 82%, transparent) !important;
+body:not(.theme-editorial) .app-header {
+  background: rgba(13, 15, 23, 0.95) !important;
   border-bottom: 1px solid var(--rule-color);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 1100 !important;
+}
+
+body.theme-editorial .app-header {
+  background: #FBF8F2 !important;
+  border-bottom: 1px solid var(--rule-color) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  z-index: 1100 !important;
 }
 
 /* ── Nav Btns → DS tab underline fino + typografía Inter ──────── */

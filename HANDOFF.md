@@ -432,10 +432,11 @@ promptforge/                    ← App Web (Vercel)
 > - **Fix Fondo de Encabezado Fijo (`css/index.css`):** Reemplazada la propiedad `background: transparent !important;` en `.app-header` por `background: var(--bg-body) !important;`. Esto soluciona la transparencia completa del encabezado que provocaba que el contenido del elemento `<main>` se visualizara desplazándose por detrás del menú al hacer scroll.
 > - **Verificación Total:** 42/42 pruebas unitarias y de integración PASS en `node test_edge_cases.js`.
 >
-> **Sesión 2026-09-12 — Armonización Visual del Sistema de Diseño Dual (Modo Black Hole & Modo Luna):**
-> - **Fix Token `--bg-raised` Faltante en Modo Luna (`css/ds/tokens.css`, `css/index.css`):** Incorporadas las variables `--bg-surface: #FFFFFF;`, `--bg-raised: #FFFFFF;` y `--bg-hover: #F2ECE1;` en `body.theme-editorial`. Corregido el problema de cajas oscuras `#1B1F28` que aparecían en modales, tarjetas e inputs en el Modo Luna / Editorial Clásico.
-> - **Armonización del Ticker & Live Feed Modal (`#modal-ticker-feed`):** Ajustados los componentes del Radar de Noticias IA (tarjetas de noticias, filas, chips de filtro y controles) para usar tonos crema `#FBF8F2` y `#FFFFFF` armónicos con contraste legible tinta `#1A1612` y acento bermellón `#C73E2D`.
-> - **Armonización de Bloques de Código y Modales Agénticos:** Estilizados fragmentos `<pre>`, bloques de código de producción (Python, TS, cURL SDKs), entradas de texto y reportes OWASP LLM07 para conmutar limpiamente a fondo `#F3EDE2` y texto `#1A1612` en Modo Luna.
-> - **Verificación Total:** 42/42 pruebas PASS en `node test_edge_cases.js`.
+> **Sesión 2026-09-13 — Bugfix Opacidad Header en Modo Luna & Arquitectura 3 Partes para Modales:**
+> - **Fix Opacidad de Encabezado Fijo (`css/index.css`):** Corregido problema donde `.app-header` quedaba semi-transparente en Modo Luna (Editorial Clásico) permitiendo ver el contenido del body al desplazarse por scroll. Se definió `body.theme-editorial .app-header` con `background: #FBF8F2 !important; backdrop-filter: none !important; z-index: 1100 !important;` y `body:not(.theme-editorial) .app-header` con `background: rgba(13, 15, 23, 0.95) !important; z-index: 1100 !important;`.
+> - **Arquitectura de 3 Partes para Modales (`index.html`, `css/index.css`):** Refactorizados los modales del Radar (`#modal-ticker-feed`), Inspector MCP (`#modal-mcp-inspector`), Laboratorio Adversarial (`#modal-adversarial-lab`) y Exportación de Código (`#modal-code-export`) con estructura canónica de 3 partes (`.modal-header`, `.modal-body`, `.modal-footer`), `max-height: 88vh`, y `overflow-y: auto`.
+> - **Limpieza Visual i18n & Iconos Phosphor (`js/i18n.js`, `js/app.js`):** Eliminados emojis de las pestañas e interfaces de modales, reemplazados por iconos Phosphor semánticos (`ph-lightning`, `ph-cpu`, `ph-robot`, `ph-shield-check`) y eliminada la flecha redundante `↗` en enlaces a fuentes originales.
+> - **Verificación Total:** 42/42 pruebas PASS en `node test_edge_cases.js`. Verificado por agente de navegador sin bleed-through ni desbordes.
+
 
 
