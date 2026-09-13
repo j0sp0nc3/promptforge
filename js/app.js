@@ -210,6 +210,8 @@ const App = (() => {
     modal.classList.remove('hidden');
     setupModalA11y(modal, closeTickerFeedModal);
     renderTickerFeedModalContent();
+    const modalBody = modal.querySelector('.ticker-feed-modal-body');
+    if (modalBody) modalBody.scrollTop = 0;
   }
 
   function closeTickerFeedModal() {
@@ -225,16 +227,17 @@ const App = (() => {
     const feed = getTickerFeed();
 
     const tabs = [
-      { id: 'all', labelKey: 'radar.tabAll' },
-      { id: 'models', labelKey: 'radar.tabModels' },
-      { id: 'agents', labelKey: 'radar.tabAgents' },
-      { id: 'evals', labelKey: 'radar.tabEvals' }
+      { id: 'all', labelKey: 'radar.tabAll', icon: 'ph-lightning' },
+      { id: 'models', labelKey: 'radar.tabModels', icon: 'ph-cpu' },
+      { id: 'agents', labelKey: 'radar.tabAgents', icon: 'ph-robot' },
+      { id: 'evals', labelKey: 'radar.tabEvals', icon: 'ph-shield-check' }
     ];
 
     if (filterBar) {
       filterBar.innerHTML = tabs.map(tab => `
         <button class="editorial-tab-btn ${activeTickerFeedCategory === tab.id ? 'active' : ''}" data-tab="${tab.id}">
-          ${t(tab.labelKey)}
+          <i class="ph ${tab.icon}" aria-hidden="true"></i>
+          <span>${t(tab.labelKey)}</span>
         </button>
       `).join('');
 
@@ -245,6 +248,9 @@ const App = (() => {
         renderTickerFeedModalContent();
       };
     }
+
+    const modalBody = document.querySelector('#modal-ticker-feed .ticker-feed-modal-body');
+    if (modalBody) modalBody.scrollTop = 0;
 
     const query = tickerModalSearchQuery.toLowerCase().trim();
     const filtered = feed.filter(item => {

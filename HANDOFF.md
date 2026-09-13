@@ -175,14 +175,22 @@ promptforge/                    ← App Web (Vercel)
 
 ## 🔄 Última Actualización
 
-- **Fecha:** 2026-09-12
-- **Último commit:** `2da631e` ("docs: backup task roadmap and domain intelligence engine completion")
+- **Fecha:** 2026-09-13
+- **Último commit:** `663903d` ("docs: backup task roadmap and domain intelligence engine completion")
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
 - **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
-- **Último hito:** Motor Híbrido de Análisis de Intención y Enriquecimiento de Contexto de Dominio (Opción 3) + Fallback Transparente + Backup de Plan y Roadmap.
+- **Último hito:** Reparación Estética y Funcional del Modal de Novedades del Radar (`#modal-ticker-feed`) + Aclaración de Advertencia de Consola de Extensiones Chrome.
 - **Estado:** 42/42 tests JS en PASS (15 suites) | 14/14 tests Python en PASS | 10/10 endpoints y carga en PASS. Entorno local verificado bajo Spec-Driven Development (SDD).
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (reciente):**
+>
+> **Sesión 2026-09-13 — Reparación de Estilos y Funcionalidad del Modal de Novedades / Hitos (`#modal-ticker-feed`):**
+> - **Filtros e Iconografía DS (0 Emojis):** Reemplazados emojis en las pestañas por iconos Phosphor (`ph-lightning`, `ph-cpu`, `ph-robot`, `ph-shield-check`) y limpiadas las claves i18n ES/EN (`js/i18n.js`, `js/app.js`).
+> - **Estilos de Hover Sensibles al Tema:** Ajustadas las tarjetas `.editorial-feed-card:hover` en `css/index.css` usando variables semánticas (`var(--bg-hover)`) para evitar el destello blanco estático en Modo Cósmico (Oscuro).
+> - **Eliminación de Flecha Duplicada:** Eliminado el carácter `↗` de los textos i18n `readSource` (`Ver publicación` / `Read dispatch`), conservando un único icono SVG limpio.
+> - **Reset de Scroll en Filtros:** Añadido `scrollTop = 0` en `.ticker-feed-modal-body` al abrir el modal y al cambiar de categoría o buscar.
+> - **Verificación Vía Browser Subagent:** Inspección visual y funcional completa con 42/42 tests PASS en `node test_edge_cases.js`.
+>
 >
 > **Playground de Comparación A/B (Original vs. Calibrado) — Sesión 2026-09-09:**
 > - **Vista Side-by-Side (`index.html`, `css/index.css`):** Pestaña `Comparar A/B` (`#tab-ab`) añadida al panel de resultados del Workbench con grid responsivo de 2 columnas para escritorio y apilado para móviles.

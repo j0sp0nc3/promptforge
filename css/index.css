@@ -4375,13 +4375,13 @@ body.theme-editorial .grade-status-emerald { color: #4F7942; }
 .editorial-feed-card:hover {
   border-color: var(--rule-color);
   border-left: 3px solid var(--vermilion);
-  background: #fbf8f2 !important;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  background: var(--bg-hover) !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
   transform: translateY(-1px);
 }
 
 .editorial-feed-card:hover .editorial-card-text {
-  color: #110e0c !important;
+  color: var(--ink) !important;
 }
 
 .editorial-feed-card:hover .editorial-author-name {
@@ -5470,6 +5470,11 @@ body.theme-editorial .ticker-feed-card {
   background: #F3EDE2 !important;
   color: #1A1612 !important;
   border: 1px solid #E2DACB;
+}
+
+body.theme-editorial .editorial-feed-card:hover {
+  background: #F2ECE1 !important;
+  border-color: #C73E2D !important;
 }
 
 body.theme-editorial .ticker-ctrl-btn {
