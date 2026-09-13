@@ -179,10 +179,17 @@ promptforge/                    ← App Web (Vercel)
 - **Último commit:** `663903d` ("docs: backup task roadmap and domain intelligence engine completion")
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
 - **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
-- **Último hito:** Reparación Estética y Funcional del Modal de Novedades del Radar (`#modal-ticker-feed`) + Aclaración de Advertencia de Consola de Extensiones Chrome.
+- **Último hito:** Reparación Estética y Layout Responsivo de los Modales de Inspección (`#modal-mcp-inspector`, `#modal-adversarial-lab`, `.modal-card--lg`).
 - **Estado:** 42/42 tests JS en PASS (15 suites) | 14/14 tests Python en PASS | 10/10 endpoints y carga en PASS. Entorno local verificado bajo Spec-Driven Development (SDD).
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (reciente):**
+>
+> **Sesión 2026-09-13 — Reparación de Overflow y Layout Responsivo de Modales de Inspección (`.modal-card--lg`):**
+> - **Redimensionamiento y Max-Height Containment:** Definida la clase `.modal-card--lg` con `max-width: 680px !important`, `max-height: 88vh` y `overflow-y: auto`, evitando que los botones y áreas de texto se desborden verticalmente fuera de la tarjeta emergente.
+> - **Grids Responsivos:** Removidos los estilos inline de `grid-template-columns: 1fr 1fr` en `.mcp-inspector-grid` y `.advlab-grid` y reemplazados por CSS responsivo con apilado a 1 columna en pantallas de alto reducido/móviles.
+> - **Ajuste de Altura de Textareas:** Ajustadas las alturas inline fijas (`220px` → `140px`) permitiendo que la columna de resultados y botones queden perfectamente contenidos dentro del viewport.
+> - **Verificación Vía Browser Subagent:** Confirmada contención del modal e inspección con 42/42 tests PASS en `node test_edge_cases.js`.
+>
 >
 > **Sesión 2026-09-13 — Reparación de Estilos y Funcionalidad del Modal de Novedades / Hitos (`#modal-ticker-feed`):**
 > - **Filtros e Iconografía DS (0 Emojis):** Reemplazados emojis en las pestañas por iconos Phosphor (`ph-lightning`, `ph-cpu`, `ph-robot`, `ph-shield-check`) y limpiadas las claves i18n ES/EN (`js/i18n.js`, `js/app.js`).

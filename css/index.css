@@ -2007,16 +2007,66 @@ body .tab-bar {
   -webkit-backdrop-filter: none;
 }
 .modal-card {
-  background: var(--bg-paper);
-  border: var(--rule);
-  border-radius: var(--radius-lg);
-  width: 100%;
-  max-width: 520px;
-  box-shadow: var(--shadow-lg);
+  background: var(--bg-raised);
+  border: 1px solid var(--rule-color);
+  border-radius: var(--r-3, 12px);
+  box-shadow: var(--shadow-modal, 0 16px 40px rgba(0, 0, 0, 0.35));
+  width: 95vw;
+  max-width: 540px;
+  max-height: calc(100vh - 32px);
+  max-height: 88vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  box-sizing: border-box;
+  padding: 20px 24px;
+  overflow-y: auto;
+  margin: auto;
+  position: relative;
   animation: modalFadeIn 0.2s ease-out;
+}
+
+.modal-card--lg {
+  max-width: 680px !important;
+}
+
+.modal-card .modal-header {
+  padding: 0 0 12px 0;
+  border-bottom: 1px solid var(--rule-color);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.modal-card .modal-subtitle {
+  font-family: var(--font-sans);
+  font-size: 0.84rem;
+  color: var(--ink-soft);
+  margin: 0 0 12px 0;
+  line-height: 1.45;
+  flex-shrink: 0;
+}
+
+.mcp-inspector-grid,
+.advlab-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+@media (max-width: 680px) {
+  .modal-card--lg {
+    width: 96vw !important;
+    padding: 14px 16px !important;
+  }
+  
+  .mcp-inspector-grid,
+  .advlab-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
 }
 @keyframes modalFadeIn {
   from { opacity: 0; transform: translateY(8px) scale(0.98); }
