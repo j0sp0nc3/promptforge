@@ -154,13 +154,22 @@ body.theme-dark {
    LEGACY COMPAT (index.html theme names → modern system)
    Deprecated — remove at U-1.
    ============================================================ */
-body.theme-cosmic {
-  --bg-body: #0D0E12;
+/* U-5.4: `:not(.theme-editorial)` — el toggle REAL del app añade
+   theme-editorial sin quitar theme-cosmic (conviven). Sin esta guard,
+   el mapping dark de cosmic pisa el light de editorial por orden de
+   carga de tokens.css (ambos 0-2-0). Dark efectivo = NO editorial. */
+body.theme-cosmic:not(.theme-editorial) {
+  /* L2 dark mappings (U-4.6 → U-11.2): alineados al canon DS dark exacto
+     (body.theme-dark de este mismo archivo); bg-body/sunken/overlay = DS. */
+  --bg-body: var(--pm-z950);
   --bg-paper: #171921;
-  --bg-sunken: rgba(255, 255, 255, 0.04);
+  --bg-surface: rgba(255, 255, 255, 0.035);
+  --bg-raised: #1B1F28;
+  --bg-sunken: rgba(255, 255, 255, 0.06);
   --bg-inverse: #F4F5F7;
   --ink: #F4F5F7;
   --ink-soft: #A2A6AE;
+  --bg-modal-overlay: rgba(4, 5, 8, 0.7);
   --ink-faint: #6F737C;
   --accent: #818CF8;
   --accent-secondary: #22D3EE;
@@ -187,10 +196,18 @@ body.theme-cosmic {
 }
 
 body.theme-editorial {
-  --bg-body: var(--pm-w050);
+  /* U-5.4: convive con theme-cosmic (el toggle real añade editorial sin quitar
+     cosmic), así los tokens dark de cosmic pisan los light. raised/surface al
+     cream DS editorial; gana por orden fuente (L192 > L157 de LEGACY COMPAT) */
+  --bg-raised: #FBF8F2;
+  --bg-surface: #FBF8F2;
   --bg-paper: var(--pm-w000);
+  --bg-surface: var(--pm-w000);
+  --bg-raised: var(--pm-w000);
   --bg-sunken: var(--pm-w100);
+  --bg-hover: #F2ECE1;
   --bg-inverse: var(--pm-z950);
+  --bg-modal-overlay: rgba(26, 22, 18, 0.55);
   --ink: var(--pm-z950);
   --ink-soft: var(--pm-z500);
   --ink-faint: var(--pm-z400);
@@ -330,7 +347,7 @@ body[data-accent="coral"] {
   --accent-text: #C22F00;
   --accent-ink: #ffffff;
 }
-body.theme-dark[data-accent="coral"] {
+body:is(.theme-dark, .theme-cosmic)[data-accent="coral"] {
   --accent: #FF6A33;
   --accent-hover: #FF7E4D;
   --accent-soft: rgba(255, 106, 51, 0.16);
@@ -345,7 +362,7 @@ body[data-accent="volt"] {
   --accent-text: #3F6212;
   --accent-ink: #131A04;
 }
-body.theme-dark[data-accent="volt"] {
+body:is(.theme-dark, .theme-cosmic)[data-accent="volt"] {
   --accent: #A3E635;
   --accent-hover: #B9F04E;
   --accent-soft: rgba(163, 230, 53, 0.15);
@@ -360,7 +377,7 @@ body[data-accent="cyan"] {
   --accent-text: #0E7490;
   --accent-ink: #04222B;
 }
-body.theme-dark[data-accent="cyan"] {
+body:is(.theme-dark, .theme-cosmic)[data-accent="cyan"] {
   --accent: #22D3EE;
   --accent-hover: #3DE0FF;
   --accent-soft: rgba(34, 211, 238, 0.14);
@@ -375,7 +392,7 @@ body[data-accent="magenta"] {
   --accent-text: #A21CAF;
   --accent-ink: #ffffff;
 }
-body.theme-dark[data-accent="magenta"] {
+body:is(.theme-dark, .theme-cosmic)[data-accent="magenta"] {
   --accent: #F472D0;
   --accent-hover: #F980DA;
   --accent-soft: rgba(244, 114, 208, 0.15);
@@ -390,7 +407,7 @@ body[data-accent="amber"] {
   --accent-text: #B45309;
   --accent-ink: #231500;
 }
-body.theme-dark[data-accent="amber"] {
+body:is(.theme-dark, .theme-cosmic)[data-accent="amber"] {
   --accent: #FFB742;
   --accent-hover: #FFC863;
   --accent-soft: rgba(255, 183, 66, 0.15);
@@ -405,7 +422,7 @@ body[data-accent="iris"] {
   --accent-text: #4F46E5;
   --accent-ink: #ffffff;
 }
-body.theme-dark[data-accent="iris"] {
+body:is(.theme-dark, .theme-cosmic)[data-accent="iris"] {
   --accent: #818CF8;
   --accent-hover: #9BA3F9;
   --accent-soft: rgba(129, 140, 248, 0.14);

@@ -32,18 +32,21 @@ window.Constellation3D = (function() {
   let transitionStartTime = 0;
   const TRANSITION_DURATION = 3500;     // ms total (2000 phase 1 + 1500 phase 2)
   const PHASE_1_RATIO = 0.57;           // 2000/3500 ≈ 0.57
-  const PROTOSTAR_COLOR = 0x88ccff;     // blue-white young star
+  const PROTOSTAR_COLOR = 0xFF6A33;     // coral eléctrico DS (young star)
   const PROTOSTAR_SCALE = 0.7;
 
+  // U-5.3 · DS v3.8: paleta de dimensiones sincronizada con app.js (rampas
+  // dark-safe — dark: rgb suave, light: el mismo tono saturado). Tema "luna"
+  // (editorial) usa los valores saturados; "black hole" los brillantes.
   const DIMENSIONS_CONFIG = [
-    { key: 'clarity',        labelES: 'Claridad',      labelEN: 'Clarity',          radius: 3.2,  speed: 0.012,  size: 0.35, shape: 'sphere',       color: 0x00e5ff },
-    { key: 'specificity',    labelES: 'Especificidad', labelEN: 'Specificity',      radius: 4.4,  speed: 0.009,  size: 0.38, shape: 'icosahedron',  color: 0x7c3aed },
-    { key: 'structure',      labelES: 'Estructura',    labelEN: 'Structure',        radius: 5.6,  speed: 0.007,  size: 0.42, shape: 'octahedron',   color: 0xf59e0b },
-    { key: 'robustness',     labelES: 'Robustez',      labelEN: 'Robustness',       radius: 6.8,  speed: 0.0055, size: 0.40, shape: 'dodecahedron', color: 0x10b981 },
-    { key: 'context',        labelES: 'Contexto',      labelEN: 'Context',          radius: 8.0,  speed: 0.0045, size: 0.36, shape: 'sphere',       color: 0xec4899 },
-    { key: 'outputFormat',   labelES: 'Formato',       labelEN: 'Output Format',    radius: 9.2,  speed: 0.0035, size: 0.39, shape: 'torus',        color: 0x38bdf8 },
-    { key: 'chainOfThought', labelES: 'Razonamiento',  labelEN: 'CoT Reasoning',    radius: 10.5, speed: 0.0028, size: 0.37, shape: 'tetrahedron',  color: 0xf97316 },
-    { key: 'safety',         labelES: 'Seguridad',     labelEN: 'Safety Guardrails', radius: 11.8, speed: 0.0022, size: 0.34, shape: 'sphere',       color: 0xef4444 }
+    { key: 'clarity',        labelES: 'Claridad',      labelEN: 'Clarity',          radius: 3.2,  speed: 0.012,  size: 0.35, shape: 'sphere',       color: 0x818CF8 },
+    { key: 'specificity',    labelES: 'Especificidad', labelEN: 'Specificity',      radius: 4.4,  speed: 0.009,  size: 0.38, shape: 'icosahedron',  color: 0x22D3EE },
+    { key: 'structure',      labelES: 'Estructura',    labelEN: 'Structure',        radius: 5.6,  speed: 0.007,  size: 0.42, shape: 'octahedron',   color: 0xFBBF24 },
+    { key: 'robustness',     labelES: 'Robustez',      labelEN: 'Robustness',       radius: 6.8,  speed: 0.0055, size: 0.40, shape: 'dodecahedron', color: 0x34D399 },
+    { key: 'context',        labelES: 'Contexto',      labelEN: 'Context',          radius: 8.0,  speed: 0.0045, size: 0.36, shape: 'sphere',       color: 0x38BDF8 },
+    { key: 'outputFormat',   labelES: 'Formato',       labelEN: 'Output Format',    radius: 9.2,  speed: 0.0035, size: 0.39, shape: 'torus',        color: 0xE879B9 },
+    { key: 'chainOfThought', labelES: 'Razonamiento',  labelEN: 'CoT Reasoning',    radius: 10.5, speed: 0.0028, size: 0.37, shape: 'tetrahedron',  color: 0xB39AF8 },
+    { key: 'safety',         labelES: 'Seguridad',     labelEN: 'Safety Guardrails', radius: 11.8, speed: 0.0022, size: 0.34, shape: 'sphere',       color: 0xF87171 }
   ];
 
   function resolveScore(key, scores) {
@@ -52,9 +55,10 @@ window.Constellation3D = (function() {
   }
 
   function getScoreColor(val) {
-    if (val >= 7.5) return { hex: 0x10b981, css: '#10b981' }; // Emerald
-    if (val >= 5.0) return { hex: 0xf59e0b, css: '#f59e0b' }; // Amber
-    return { hex: 0xef4444, css: '#ef4444' }; // Crimson
+    // DS v3.8: semántica de feedback (--ok/--warn/--err tokens)
+    if (val >= 7.5) return { hex: 0x34D399, css: '#34D399' }; // ok DS
+    if (val >= 5.0) return { hex: 0xFBBF24, css: '#FBBF24' }; // warn DS
+    return { hex: 0xF87171, css: '#F87171' }; // err DS
   }
 
   // ── Easing functions ───────────────────────────────────────

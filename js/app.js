@@ -17,6 +17,7 @@ const App = (() => {
     setupThemeSwitcher();
     setupNavigation();
     setupEditor();
+    setupObjectiveListbox();
     setupTabs();
     setupDimensionAccordion();
     setupExport();
@@ -28,6 +29,8 @@ const App = (() => {
     setupRadarView();
     setupModelsView();
     setupLeaderboardView();
+    setupMcpInspectorHandlers();
+    setupAdversarialLabHandlers();
     setupTickerControls();
     renderNewsTicker();
     // Live AI news: fetch on load, then refresh every 5 minutes (and when the
@@ -37,6 +40,17 @@ const App = (() => {
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) refreshAiNews();
     });
+    // PWA Offline-First Service Worker (Feature P3.2)
+    if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').then(reg => {
+          console.log('[PWA] ServiceWorker registered with scope:', reg.scope);
+        }).catch(err => {
+          console.warn('[PWA] ServiceWorker registration failed:', err.message);
+        });
+      });
+    }
+
     checkShareURL();
     updateEditorStats();
 
@@ -196,6 +210,8 @@ const App = (() => {
     modal.classList.remove('hidden');
     setupModalA11y(modal, closeTickerFeedModal);
     renderTickerFeedModalContent();
+    const modalBody = modal.querySelector('.ticker-feed-modal-body');
+    if (modalBody) modalBody.scrollTop = 0;
   }
 
   function closeTickerFeedModal() {
@@ -211,16 +227,17 @@ const App = (() => {
     const feed = getTickerFeed();
 
     const tabs = [
-      { id: 'all', labelKey: 'radar.tabAll' },
-      { id: 'models', labelKey: 'radar.tabModels' },
-      { id: 'agents', labelKey: 'radar.tabAgents' },
-      { id: 'evals', labelKey: 'radar.tabEvals' }
+      { id: 'all', labelKey: 'radar.tabAll', icon: 'ph-lightning' },
+      { id: 'models', labelKey: 'radar.tabModels', icon: 'ph-cpu' },
+      { id: 'agents', labelKey: 'radar.tabAgents', icon: 'ph-robot' },
+      { id: 'evals', labelKey: 'radar.tabEvals', icon: 'ph-shield-check' }
     ];
 
     if (filterBar) {
       filterBar.innerHTML = tabs.map(tab => `
         <button class="editorial-tab-btn ${activeTickerFeedCategory === tab.id ? 'active' : ''}" data-tab="${tab.id}">
-          ${t(tab.labelKey)}
+          <i class="ph ${tab.icon}" aria-hidden="true"></i>
+          <span>${t(tab.labelKey)}</span>
         </button>
       `).join('');
 
@@ -231,6 +248,9 @@ const App = (() => {
         renderTickerFeedModalContent();
       };
     }
+
+    const modalBody = document.querySelector('#modal-ticker-feed .ticker-feed-modal-body');
+    if (modalBody) modalBody.scrollTop = 0;
 
     const query = tickerModalSearchQuery.toLowerCase().trim();
     const filtered = feed.filter(item => {
@@ -309,36 +329,71 @@ const App = (() => {
     return lang === 'es' ? `hace ${diffD}d` : `${diffD}d ago`;
   }
 
+  function _processLiveNewsData(items) {
+    if (!Array.isArray(items)) return;
+    const lang = I18n.getLang();
+    liveAiNews = items
+      .filter(it => it && it.title && it.url)
+      .map(it => ({
+        id: it.id,
+        author: it.source === 'arxiv'
+          ? ('📄 ' + (it.category || 'arXiv'))
+          : ('@' + (it.author || 'hn')),
+        tag: it.source === 'arxiv'
+          ? ('arXiv · ' + _timeAgo(it.publishedAt, lang))
+          : ('HN · ' + (it.points || 0) + ' pts'),
+        text: { es: it.title, en: it.title },
+        url: it.url,
+        timestamp: _timeAgo(it.publishedAt, lang),
+      }));
+
+    // Re-render so fresh items show up immediately.
+    renderNewsTicker();
+    const modal = document.getElementById('modal-ticker-feed');
+    if (modal && !modal.classList.contains('hidden')) renderTickerFeedModalContent();
+  }
+
+  let newsEventSource = null;
+
   async function refreshAiNews() {
+    // Try SSE stream first if available and not already connected (Feature P3.1)
+    if (typeof EventSource !== 'undefined' && !newsEventSource) {
+      try {
+        const sseUrl = API_CONFIG.getUrl('/api/ai-news?sse=true');
+        newsEventSource = new EventSource(sseUrl);
+
+        const handleStreamData = (e) => {
+          try {
+            const data = JSON.parse(e.data);
+            if (data && Array.isArray(data.items)) {
+              _processLiveNewsData(data.items);
+            }
+          } catch (_) {}
+        };
+
+        newsEventSource.addEventListener('news_init', handleStreamData);
+        newsEventSource.addEventListener('news_update', handleStreamData);
+        newsEventSource.addEventListener('ping', () => {});
+
+        newsEventSource.onerror = () => {
+          if (newsEventSource) {
+            newsEventSource.close();
+            newsEventSource = null;
+          }
+        };
+      } catch (e) {
+        newsEventSource = null;
+      }
+    }
+
     try {
       const res = await fetch(API_CONFIG.getUrl('/api/ai-news'));
       if (!res.ok) return;
       const data = await res.json();
       if (!data || !Array.isArray(data.items)) return;
-
-      const lang = I18n.getLang();
-      liveAiNews = data.items
-        .filter(it => it.title && it.url)
-        .map(it => ({
-          id: it.id,
-          author: it.source === 'arxiv'
-            ? ('📄 ' + (it.category || 'arXiv'))
-            : ('@' + (it.author || 'hn')),
-          tag: it.source === 'arxiv'
-            ? ('arXiv · ' + _timeAgo(it.publishedAt, lang))
-            : ('HN · ' + (it.points || 0) + ' pts'),
-          text: { es: it.title, en: it.title },
-          url: it.url,
-          timestamp: _timeAgo(it.publishedAt, lang),
-        }));
-
-      // Re-render so the fresh items show up immediately.
-      renderNewsTicker();
-      const modal = document.getElementById('modal-ticker-feed');
-      if (modal && !modal.classList.contains('hidden')) renderTickerFeedModalContent();
+      _processLiveNewsData(data.items);
     } catch (e) {
-      // Network/offline: keep the last successful live items (or, if none
-      // has ever loaded, the curated fallback via getTickerFeed).
+      // Network/offline: keep the last successful live items
     }
   }
 
@@ -481,6 +536,74 @@ const App = (() => {
     return active ? active.dataset.sub : 'glossary';
   }
 
+  // ── U-5.4 · SE-2 objective listbox — espeja un <select> oculto ────
+  // El select nativo (oculto) sigue siendo el state-holder único: runAnalysis,
+  // deep-domain-AI y genetic tuner leen .value sin cambiar contrato.
+  const OBJECTIVE_ICONS = {
+    general: 'ph-target',
+    coding: 'ph-code',
+    reasoning: 'ph-brain',
+    json_schema: 'ph-brackets-curly',
+    safety_rag: 'ph-shield-check',
+    creative: 'ph-pencil-circle',
+  };
+
+  function refreshObjectiveTrigger() {
+    const select = document.getElementById('prompt-objective-select');
+    if (!select) return;
+    const val = select.value || 'general';
+    const item = I18n.t(`objectives.items.${val}`) || {};
+    const title = (item && item.title) || I18n.t(`objectives.${val}`) || val;
+    const lbBtn = document.getElementById('objective-lb-btn');
+    const lbVal = document.getElementById('objective-lb-val');
+    if (lbVal) lbVal.textContent = (typeof title === 'string') ? title : val;
+    if (lbBtn) {
+      const icon = lbBtn.querySelector('.lb-ic');
+      if (icon) icon.className = `ph ${OBJECTIVE_ICONS[val] || 'ph-target'} lb-ic`;
+    }
+    // aria-selected + check de cada opción
+    document.querySelectorAll('#objective-lb-menu .listbox__opt').forEach(opt => {
+      opt.setAttribute('aria-selected', String(opt.dataset.val === val));
+    });
+  }
+
+  function setupObjectiveListbox() {
+    const lb = document.getElementById('objective-listbox');
+    const lbBtn = document.getElementById('objective-lb-btn');
+    const lbMenu = document.getElementById('objective-lb-menu');
+    const hiddenSelect = document.getElementById('prompt-objective-select');
+    if (!lb || !lbBtn || !lbMenu || !hiddenSelect) return;
+    let closeTimer = null;
+    const closeMenu = () => {
+      lbBtn.setAttribute('aria-expanded', 'false');
+      closeTimer = setTimeout(() => { lbMenu.hidden = true; }, 120);
+    };
+    const openMenu = () => {
+      clearTimeout(closeTimer);
+      lbMenu.hidden = false;
+      if (lbMenu.animate) {
+        lbMenu.animate(
+          [{ transform: 'translateY(4px) scale(0.98)' }, { transform: 'none' }],
+          { duration: 140, easing: 'cubic-bezier(.2, 0, 0, 1)' }
+        );
+      }
+      lbBtn.setAttribute('aria-expanded', 'true');
+    };
+    lbBtn.addEventListener('click', () => (lbMenu.hidden ? openMenu() : closeMenu()));
+    document.addEventListener('click', (e) => { if (!e.target.closest('#objective-listbox')) closeMenu(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+    lbMenu.querySelectorAll('.listbox__opt').forEach(opt => {
+      opt.addEventListener('click', () => {
+        hiddenSelect.value = opt.dataset.val;
+        refreshObjectiveTrigger();
+        closeMenu();
+      });
+    });
+    // Estado inicial + re-sync al cambiar idioma (trigger/títulos i18n)
+    refreshObjectiveTrigger();
+    document.addEventListener('langchange', refreshObjectiveTrigger);
+  }
+
   // ── Editor ──────────────────────────────────────────────
   function setupEditor() {
     const textarea = document.getElementById('prompt-input');
@@ -536,6 +659,13 @@ const App = (() => {
       });
     }
 
+    // U-8 · toolbar del editor DS (.editor__tool) — mismo comportamiento que
+    // los botones legacy del header de la card (que quedan ocultos).
+    const toolbarPaste = document.getElementById('btn-paste-tb');
+    const toolbarClear = document.getElementById('btn-clear-tb');
+    if (toolbarPaste) toolbarPaste.addEventListener('click', () => btnPaste?.click());
+    if (toolbarClear) toolbarClear.addEventListener('click', () => btnClear?.click());
+
     const btnDeepAi = document.getElementById('btn-deep-domain-ai');
     if (btnDeepAi) {
       btnDeepAi.addEventListener('click', async () => {
@@ -579,8 +709,8 @@ const App = (() => {
               justBanner.classList.remove('hidden');
             }
 
-            const toastMsg = result.justification ? `✨ ${result.justification}` : t('contextGaps.deepAiSuccess');
-            showToast(toastMsg, 'success', 6000);
+            const toastMsg = result.justification ? result.justification : t('contextGaps.deepAiSuccess');
+            showToast(toastMsg, 'success', 6000, 'ph-sparkle');
           }
         } catch (e) {
           const arch = currentAnalysis?.analysis?.domainArchetype || 'general_task';
@@ -609,6 +739,14 @@ const App = (() => {
     document.getElementById('stat-chars').textContent = t('stats.chars', { n: chars });
     document.getElementById('stat-words').textContent = t('stats.words', { n: words });
     document.getElementById('stat-tokens').textContent = t('stats.tokens', { n: tokens });
+    // U-8 · contador mono del toolbar DS (formato playground: "N chars · N palabras · ~N tok")
+    const wbCount = document.getElementById('wb-editor-count');
+    if (wbCount) {
+      const lang = I18n.getLang();
+      wbCount.textContent = lang === 'en'
+        ? `${chars} chars · ${words} words · ~${tokens} tok`
+        : `${chars} caracteres · ${words} palabras · ~${tokens} tok`;
+    }
   }
 
   // ── Analysis Pipeline ───────────────────────────────────
@@ -757,12 +895,23 @@ const App = (() => {
 
     const archetypeKey = analysis.domainArchetype || 'general_task';
     const translatedArchetype = t(`domain.${archetypeKey}`) || t(`domain.archetypes.${archetypeKey}`) || archetypeKey;
-    badge.textContent = translatedArchetype;
+    // U-5.5 · icono Phosphor por arquetipo (mapa JS; las claves i18n domain.* quedaron limpias de emojis)
+    const DOMAIN_ICONS = {
+      software_engineering: 'ph-cursor-text',
+      data_extraction: 'ph-table',
+      marketing_copy: 'ph-megaphone',
+      rhetoric_creative: 'ph-pencil-circle',
+      rag_knowledge: 'ph-book-open-text',
+      agentic_tool_use: 'ph-robot',
+      financial_legal: 'ph-scales',
+      general_task: 'ph-target',
+    };
+    badge.innerHTML = `<i class="ph ${DOMAIN_ICONS[archetypeKey] || 'ph-target'}" aria-hidden="true"></i> ${escapeHtml(translatedArchetype)}`;
     panel.classList.remove('hidden');
 
     const gaps = analysis.contextGaps || [];
     if (gaps.length > 0 && card && gapsList && chipsContainer) {
-      gapsList.innerHTML = gaps.map(g => `<div class="gap-item">⚠️ ${escapeHtml(t(g.key) || g.id)}</div>`).join('');
+      gapsList.innerHTML = gaps.map(g => `<div class="gap-item"><i class="ph ph-warning-circle gap-item-icon" aria-hidden="true"></i> ${escapeHtml(t(g.key) || g.id)}</div>`).join('');
       chipsContainer.innerHTML = gaps.map(g => `<button class="action-chip action-chip--inject" data-snippet="${escapeAttr(g.snippetToInject)}">${escapeHtml(t(g.actionChipKey) || '+ Inyectar Contexto')}</button>`).join('');
       card.classList.remove('hidden');
 
@@ -785,6 +934,7 @@ const App = (() => {
   function animateScore(targetScore, grade) {
     const numberEl = document.getElementById('score-number');
     const gradeEl = document.getElementById('score-grade');
+    numberEl?.classList.remove('score-idle');
 
     let current = 0;
     const duration = 1200;
@@ -811,21 +961,34 @@ const App = (() => {
   function renderDimensions(dimensions) {
     const container = document.getElementById('dimensions-list');
     if (!container) return;
+    // DS v3.8: paleta de dimensiones por tokens CSS (dark-safe, sin hex legacy)
+    const _dk = document.body.classList.contains('theme-editorial');
+    const dimPalette = {
+      clarity:        _dk ? '#6366F1' : '#818CF8',  // iris (indigo DS)
+      specificity:    _dk ? '#00B7D4' : '#22D3EE',  // cyan DS
+      structure:      _dk ? '#B45309' : '#FBBF24',  // amber DS
+      robustness:     _dk ? '#16A34A' : '#34D399',  // ok DS
+      context:        _dk ? '#0284C7' : '#38BDF8',  // sky DS
+      outputFormat:   _dk ? '#A21CAF' : '#E879B9',  // fuchsia suavizada
+      chainOfThought: _dk ? '#9333EA' : '#B39AF8',  // violet DS
+      safety:         _dk ? '#DC2626' : '#F87171',  // err DS
+    };
+    // U-5.3: iconos Phosphor (ADR ID-6 — emojis fuera de la UI)
     const dimConfig = {
-      clarity:        { icon: '🎯', name: t('dimensions.clarity'),        color: '#00e5ff' },
-      specificity:    { icon: '📐', name: t('dimensions.specificity'),    color: '#7c3aed' },
-      structure:      { icon: '🏗️', name: t('dimensions.structure'),      color: '#f59e0b' },
-      robustness:     { icon: '🛡️', name: t('dimensions.robustness'),     color: '#10b981' },
-      context:        { icon: '🧩', name: t('dimensions.context'),        color: '#ec4899' },
-      outputFormat:   { icon: '📝', name: t('dimensions.outputFormat'),   color: '#38bdf8' },
-      chainOfThought: { icon: '🔗', name: t('dimensions.chainOfThought'), color: '#f97316' },
-      safety:         { icon: '⚠️', name: t('dimensions.safety'),         color: '#ef4444' },
+      clarity:        { icon: 'ph-focus',            ph: true, name: t('dimensions.clarity'),        color: dimPalette.clarity },
+      specificity:    { icon: 'ph-brackets-angle',   ph: true, name: t('dimensions.specificity'),    color: dimPalette.specificity },
+      structure:      { icon: 'ph-structure',        ph: true, name: t('dimensions.structure'),      color: dimPalette.structure },
+      robustness:     { icon: 'ph-shield-check',     ph: true, name: t('dimensions.robustness'),     color: dimPalette.robustness },
+      context:        { icon: 'ph-puzzle-piece',     ph: true, name: t('dimensions.context'),        color: dimPalette.context },
+      outputFormat:   { icon: 'ph-list-numbers',     ph: true, name: t('dimensions.outputFormat'),   color: dimPalette.outputFormat },
+      chainOfThought: { icon: 'ph-link',             ph: true, name: t('dimensions.chainOfThought'), color: dimPalette.chainOfThought },
+      safety:         { icon: 'ph-warning',          ph: true, name: t('dimensions.safety'),         color: dimPalette.safety },
     };
 
     container.innerHTML = '';
 
     for (const [key, dim] of Object.entries(dimensions)) {
-      const config = dimConfig[key] || { icon: '🔍', name: key, color: '#00e5ff' };
+      const config = dimConfig[key] || { icon: 'ph-magnifying-glass', ph: true, name: key, color: _dk ? '#6366F1' : '#818CF8' };
       const card = document.createElement('div');
       card.className = 'dimension-card';
       card.dataset.dim = key;
@@ -836,7 +999,7 @@ const App = (() => {
       card.innerHTML = `
         <div class="dimension-header" role="button" tabindex="0" aria-expanded="false">
           <div class="dimension-left">
-            <span class="dimension-icon">${config.icon}</span>
+            <span class="dimension-icon"><i class="ph ${config.icon}" aria-hidden="true"></i></span>
             <span class="dimension-name">${escapeHtml(config.name)}</span>
           </div>
           <div class="dimension-right">
@@ -922,11 +1085,11 @@ const App = (() => {
       apList.innerHTML = antiPatterns.map(ap => `
         <div class="finding-card finding-card-${ap.severity}">
           <div class="finding-card-header">
-            <span class="badge badge-${ap.severity}">${ap.severity.toUpperCase()}</span>
+            <span class="badge badge-${ap.severity}">${t('learn.sev_' + (ap.severity || 'low'))}</span>
             <strong>${escapeHtml(ap.name)}</strong>
           </div>
           <p class="finding-card-desc">${escapeHtml(ap.description)}</p>
-          <p class="finding-card-suggestion">💡 ${escapeHtml(ap.suggestion)}</p>
+          <p class="finding-card-suggestion"><i class="ph ph-lightbulb" aria-hidden="true"></i> ${escapeHtml(ap.suggestion)}</p>
         </div>
       `).join('');
     }
@@ -952,17 +1115,19 @@ const App = (() => {
 
     list.innerHTML = adversarial.tests.map(test => {
       const statusLabel = t(`status.${test.status}`);
-      const icon = test.status === 'pass' ? '✅' : test.status === 'warning' ? '⚠️' : '❌';
+      // U-5.5 · icono Phosphor por estado (antes: emoji ✅⚠️❌ inline)
+      const statusIcon = test.status === 'pass' ? 'ph-check-circle'
+        : test.status === 'warning' ? 'ph-warning-circle' : 'ph-x-circle';
       return `
         <div class="finding-card adversarial-card adversarial-${test.status}">
           <div class="finding-card-header">
             <span class="adversarial-status adversarial-status-${test.status}">
-              ${icon} ${escapeHtml(statusLabel)}
+              <i class="ph ${statusIcon}" aria-hidden="true"></i> ${escapeHtml(statusLabel)}
             </span>
             <strong>${escapeHtml(test.name)}</strong>
           </div>
           <p class="finding-card-desc">${escapeHtml(test.detail)}</p>
-          ${test.suggestion ? `<p class="finding-card-suggestion">💡 ${escapeHtml(test.suggestion)}</p>` : ''}
+          ${test.suggestion ? `<p class="finding-card-suggestion"><i class="ph ph-lightbulb" aria-hidden="true"></i> ${escapeHtml(test.suggestion)}</p>` : ''}
         </div>
       `;
     }).join('');
@@ -989,9 +1154,12 @@ const App = (() => {
     const changesList = document.getElementById('changes-list');
     if (changesList && improved.changes) {
       const typeLabel = (type) => t(`changes.${type === 'added' ? 'added' : type === 'modified' ? 'modified' : 'restructured'}`);
+      // U-5.5 · icono Phosphor por tipo de cambio (antes: emoji en la clave i18n)
+      const typeIcon = (type) => type === 'added' ? 'ph-plus-circle'
+        : type === 'modified' ? 'ph-pencil-simple' : 'ph-arrows-counter-clockwise';
       changesList.innerHTML = improved.changes.map(c => `
         <div class="change-item change-${c.type}">
-          <span class="change-type">${escapeHtml(typeLabel(c.type))}</span>
+          <span class="change-type"><i class="ph ${typeIcon(c.type)}" aria-hidden="true"></i> ${escapeHtml(typeLabel(c.type))}</span>
           <span class="change-desc">${escapeHtml(c.description)}</span>
         </div>
       `).join('');
@@ -1025,15 +1193,30 @@ const App = (() => {
     const centerY = 225;
     const orbits = [110, 160, 200];
 
+    // DS v3.8: paleta por tokens (misma rampa que renderDimensions, dark-safe)
+    const _dkOrb = document.body.classList.contains('theme-editorial');
+    const _pal = {
+      clarity:        _dkOrb ? '#6366F1' : '#818CF8',
+      specificity:    _dkOrb ? '#00B7D4' : '#22D3EE',
+      structure:      _dkOrb ? '#B45309' : '#FBBF24',
+      robustness:     _dkOrb ? '#16A34A' : '#34D399',
+      context:        _dkOrb ? '#0284C7' : '#38BDF8',
+      outputFormat:   _dkOrb ? '#A21CAF' : '#E879B9',
+      chainOfThought: _dkOrb ? '#9333EA' : '#B39AF8',
+      safety:         _dkOrb ? '#DC2626' : '#F87171',
+      role:           _dkOrb ? '#6366F1' : '#818CF8',
+      constraints:    _dkOrb ? '#9333EA' : '#B39AF8',
+    };
+
     const dimList = [
-      { key: 'clarity',        label: 'Clarity',     color: '#00e5ff', angle: 270, orbitIdx: 1 },
-      { key: 'role',           label: 'Role',        color: '#fbbf24', angle: 30,  orbitIdx: 1 },
-      { key: 'outputFormat',   label: 'Output',      color: '#38bdf8', angle: 90,  orbitIdx: 1 },
-      { key: 'constraints',    label: 'Constraints', color: '#a78bfa', angle: 150, orbitIdx: 1 },
-      { key: 'context',        label: 'Context',     color: '#f472b6', angle: 210, orbitIdx: 1 },
-      { key: 'chainOfThought', label: 'CoT',         color: '#f97316', angle: 330, orbitIdx: 2 },
-      { key: 'safety',         label: 'Safety',      color: '#f87171', angle: 120, orbitIdx: 2 },
-      { key: 'robustness',     label: 'Robustness',  color: '#34d399', angle: 240, orbitIdx: 2 },
+      { key: 'clarity',        label: 'Clarity',     color: _pal.clarity,        angle: 270, orbitIdx: 1 },
+      { key: 'role',           label: 'Role',        color: _pal.role,           angle: 30,  orbitIdx: 1 },
+      { key: 'outputFormat',   label: 'Output',      color: _pal.outputFormat,   angle: 90,  orbitIdx: 1 },
+      { key: 'constraints',    label: 'Constraints', color: _pal.constraints,    angle: 150, orbitIdx: 1 },
+      { key: 'context',        label: 'Context',     color: _pal.context,        angle: 210, orbitIdx: 1 },
+      { key: 'chainOfThought', label: 'CoT',         color: _pal.chainOfThought, angle: 330, orbitIdx: 2 },
+      { key: 'safety',         label: 'Safety',      color: _pal.safety,         angle: 120, orbitIdx: 2 },
+      { key: 'robustness',     label: 'Robustness',  color: _pal.robustness,     angle: 240, orbitIdx: 2 },
     ];
 
     const isEditorial = document.body.classList.contains('theme-editorial');
@@ -1080,6 +1263,7 @@ const App = (() => {
     const scoreNumEl = document.getElementById('score-number');
     if (scoreNumEl && overallScore !== undefined) {
       scoreNumEl.textContent = overallScore;
+      scoreNumEl.classList.remove('score-idle');
     }
   }
 
@@ -1088,15 +1272,17 @@ const App = (() => {
     const container = document.getElementById('evaluation-dimensions-row');
     if (!container || !dimensions) return;
 
+    // DS v3.8: paleta semántica compartida (dark-safe)
+    const _dkC = document.body.classList.contains('theme-editorial');
     const dimList = [
-      { key: 'clarity',        label: t('dimensions.clarity'),        color: '#00e5ff' },
-      { key: 'specificity',    label: t('dimensions.specificity'),    color: '#7c3aed' },
-      { key: 'structure',      label: t('dimensions.structure'),      color: '#f59e0b' },
-      { key: 'robustness',     label: t('dimensions.robustness'),     color: '#10b981' },
-      { key: 'context',        label: t('dimensions.context'),        color: '#ec4899' },
-      { key: 'outputFormat',   label: t('dimensions.outputFormat'),   color: '#38bdf8' },
-      { key: 'chainOfThought', label: t('dimensions.chainOfThought'), color: '#f97316' },
-      { key: 'safety',         label: t('dimensions.safety'),         color: '#ef4444' },
+      { key: 'clarity',        label: t('dimensions.clarity'),        color: _dkC ? '#6366F1' : '#818CF8' },
+      { key: 'specificity',    label: t('dimensions.specificity'),    color: _dkC ? '#00B7D4' : '#22D3EE' },
+      { key: 'structure',      label: t('dimensions.structure'),      color: _dkC ? '#B45309' : '#FBBF24' },
+      { key: 'robustness',     label: t('dimensions.robustness'),     color: _dkC ? '#16A34A' : '#34D399' },
+      { key: 'context',        label: t('dimensions.context'),        color: _dkC ? '#0284C7' : '#38BDF8' },
+      { key: 'outputFormat',   label: t('dimensions.outputFormat'),   color: _dkC ? '#A21CAF' : '#E879B9' },
+      { key: 'chainOfThought', label: t('dimensions.chainOfThought'), color: _dkC ? '#9333EA' : '#B39AF8' },
+      { key: 'safety',         label: t('dimensions.safety'),         color: _dkC ? '#DC2626' : '#F87171' },
     ];
 
     container.innerHTML = dimList.map(d => {
@@ -1105,9 +1291,11 @@ const App = (() => {
       const scoreDec = (scoreVal / 10).toFixed(1);
 
       return `
-        <div class="eval-dim-card" data-dim="${d.key}" style="border-top: 2px solid ${d.color}; box-shadow: 0 4px 16px ${d.color}15;">
+        <!-- U-11.2: sin color por dimensión — hairline neutral + score ink
+             (datos no llevan accent; la identidad vive en el acordeón 8D) -->
+        <div class="eval-dim-card" data-dim="${d.key}">
           <div class="eval-dim-name">${escapeHtml(d.label)}</div>
-          <div class="eval-dim-score" style="color: ${d.color}">${scoreDec}</div>
+          <div class="eval-dim-score">${scoreDec}</div>
         </div>
       `;
     }).join('');
@@ -1381,7 +1569,7 @@ const App = (() => {
           </div>
           <div class="variant-footer">
             <button class="btn btn-primary btn-xs btn-apply-variant" data-prompt="${escapeAttr(v.prompt)}">
-              ${escapeHtml(t('genetic.applyVariant') || '✨ Cargar Variante')}
+              ${escapeHtml(t('genetic.applyVariant') || 'Cargar Variante')}
             </button>
           </div>
         </div>
@@ -1414,15 +1602,16 @@ const App = (() => {
     }
 
     // Reset central score display
+    // U-6.1 · lección DS v3.8: score idle = "···" (opacity 0.6), NUNCA "--"
     const scoreNum = document.getElementById('score-number');
     const scoreGrade = document.getElementById('score-grade');
-    if (scoreNum) scoreNum.textContent = '--';
+    if (scoreNum) { scoreNum.textContent = '···'; scoreNum.classList.add('score-idle'); }
     if (scoreGrade) scoreGrade.textContent = t('constellation.awaitingEvaluation');
 
     const unoptBadge = document.getElementById('unoptimized-score-badge');
     if (unoptBadge) {
-      unoptBadge.innerHTML = `--<span>/100</span>`;
-      unoptBadge.className = 'card-score-badge badge-neutral';
+      unoptBadge.innerHTML = `···<span>/100</span>`;
+      unoptBadge.className = 'card-score-badge badge-neutral score-idle';
     }
     const calibBadge = document.getElementById('calibrated-score-badge');
     if (calibBadge) {
@@ -1876,7 +2065,271 @@ const App = (() => {
   }
 
   function closeScoreLegendModal() {
-    document.getElementById('modal-score-legend')?.classList.add('hidden');
+    const modal = document.getElementById('modal-score-legend');
+    if (modal) {
+      modal.classList.add('hidden');
+    }
+  }
+
+  // ── MCP Schema Inspector & Auto-Validator (P2.1) ───────────────
+  function openMcpInspectorModal() {
+    const modal = document.getElementById('modal-mcp-inspector');
+    if (modal) {
+      modal.classList.remove('hidden');
+      focusModal(modal);
+    }
+  }
+
+  function closeMcpInspectorModal() {
+    document.getElementById('modal-mcp-inspector')?.classList.add('hidden');
+  }
+
+  function setupMcpInspectorHandlers() {
+    const btnOpen = document.getElementById('btn-mcp-inspector');
+    const btnCloseTop = document.getElementById('btn-close-mcp-modal');
+    const btnCloseBottom = document.getElementById('btn-close-mcp-bottom');
+    const btnSample = document.getElementById('btn-mcp-sample-schema');
+    const btnAudit = document.getElementById('btn-mcp-audit');
+    const btnInject = document.getElementById('btn-mcp-inject');
+
+    if (btnOpen) btnOpen.addEventListener('click', openMcpInspectorModal);
+    if (btnCloseTop) btnCloseTop.addEventListener('click', closeMcpInspectorModal);
+    if (btnCloseBottom) btnCloseBottom.addEventListener('click', closeMcpInspectorModal);
+
+    if (btnSample) {
+      btnSample.addEventListener('click', () => {
+        const input = document.getElementById('mcp-schema-input');
+        if (input && typeof McpInspector !== 'undefined') {
+          input.value = McpInspector.getSampleSchema();
+        }
+      });
+    }
+
+    if (btnAudit) {
+      btnAudit.addEventListener('click', () => {
+        const schemaInput = document.getElementById('mcp-schema-input');
+        const promptInput = document.getElementById('prompt-input');
+        const schemaText = schemaInput ? schemaInput.value.trim() : '';
+        const promptText = promptInput ? promptInput.value.trim() : '';
+
+        if (!schemaText) {
+          showToast(t('mcpInspector.invalidSchema'), 'error');
+          return;
+        }
+
+        if (typeof McpInspector === 'undefined') return;
+
+        const audit = McpInspector.inspect(schemaText, promptText);
+        renderMcpAuditResults(audit);
+      });
+    }
+
+    if (btnInject) {
+      btnInject.addEventListener('click', () => {
+        const schemaInput = document.getElementById('mcp-schema-input');
+        const promptInput = document.getElementById('prompt-input');
+        if (!schemaInput || !promptInput || typeof McpInspector === 'undefined') return;
+
+        const tools = McpInspector.parseSchema(schemaInput.value);
+        if (!tools.length) return;
+
+        const xmlContract = McpInspector.generateXmlContract(tools);
+        if (!xmlContract) return;
+
+        promptInput.value = Rewriter.injectSnippet(promptInput.value, xmlContract);
+        updateEditorStats();
+        closeMcpInspectorModal();
+        showToast(t('mcpInspector.contractInjected'), 'success');
+        runAnalysis();
+      });
+    }
+  }
+
+  function renderMcpAuditResults(audit) {
+    const container = document.getElementById('mcp-audit-results');
+    const contractContainer = document.getElementById('mcp-contract-container');
+    const xmlPreview = document.getElementById('mcp-contract-xml');
+
+    if (!container) return;
+
+    if (!audit || !audit.isValidSchema) {
+      container.innerHTML = `<div class="mcp-empty-audit" style="color: var(--accent-red);">${escapeHtml(t('mcpInspector.invalidSchema'))}</div>`;
+      contractContainer?.classList.add('hidden');
+      return;
+    }
+
+    const scoreClass = audit.score >= 75 ? 'badge-emerald' : audit.score >= 50 ? 'badge-amber' : 'badge-red';
+
+    let html = `
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+        <span style="font-weight:600;">${escapeHtml(t('mcpInspector.scoreLabel'))}:</span>
+        <span class="card-score-badge ${scoreClass}" style="font-size:0.9rem; padding: 2px 8px;">${audit.score}/100</span>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:6px; font-size:0.8rem;">
+        <div>${audit.hasToolsContract ? '<i class="ph ph-check-circle mcp-ok" aria-hidden="true"></i>' : '<i class="ph ph-x-circle mcp-miss" aria-hidden="true"></i>'} ${escapeHtml(audit.hasToolsContract ? t('mcpInspector.hasContract') : t('mcpInspector.missingContract'))}</div>
+        <div>${audit.hasLoopGuard ? '<i class="ph ph-check-circle mcp-ok" aria-hidden="true"></i>' : '<i class="ph ph-x-circle mcp-miss" aria-hidden="true"></i>'} ${escapeHtml(audit.hasLoopGuard ? t('mcpInspector.hasLoopGuard') : t('mcpInspector.missingLoopGuard'))}</div>
+        <div><i class="ph ph-info mcp-info" aria-hidden="true"></i> ${escapeHtml(t('mcpInspector.coverageStat', { pct: audit.toolCoverage }))} (${audit.toolDetails.filter(t=>t.isMentioned).length}/${audit.toolsCount})</div>
+        <div>${audit.hasTypedParams ? '<i class="ph ph-check-circle mcp-ok" aria-hidden="true"></i>' : '<i class="ph ph-warning-circle mcp-warn" aria-hidden="true"></i>'} ${escapeHtml(audit.hasTypedParams ? t('mcpInspector.typedParams') : t('mcpInspector.untypedParams'))}</div>
+      </div>
+    `;
+
+    container.innerHTML = html;
+
+    if (contractContainer && xmlPreview) {
+      const xml = McpInspector.generateXmlContract(audit.tools);
+      xmlPreview.textContent = xml;
+      contractContainer.classList.remove('hidden');
+    }
+  }
+
+  // ── Custom Adversarial Injection & Local Fuzzing Lab (P2.2) ───────
+  function openAdversarialLabModal() {
+    const modal = document.getElementById('modal-adversarial-lab');
+    if (modal) {
+      modal.classList.remove('hidden');
+      focusModal(modal);
+      renderAdversarialLabPresets();
+    }
+  }
+
+  function closeAdversarialLabModal() {
+    document.getElementById('modal-adversarial-lab')?.classList.add('hidden');
+  }
+
+  function renderAdversarialLabPresets() {
+    const container = document.getElementById('advlab-presets-container');
+    if (!container || typeof AdversarialFuzzer === 'undefined') return;
+
+    const lang = I18n.getLang();
+    const presets = AdversarialFuzzer.PRESET_VECTORS;
+
+    container.innerHTML = presets.map(p => {
+      const name = lang === 'en' ? p.nameEn : p.nameEs;
+      return `<button class="action-chip advlab-preset-chip" data-id="${p.id}" style="font-size:0.75rem;"><i class="ph ph-lightning" aria-hidden="true"></i> ${escapeHtml(name)}</button>`;
+    }).join('');
+
+    container.querySelectorAll('.advlab-preset-chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        const preset = presets.find(x => x.id === id);
+        if (preset) {
+          const input = document.getElementById('advlab-custom-input');
+          if (input) input.value = preset.payload;
+        }
+      });
+    });
+  }
+
+  function setupAdversarialLabHandlers() {
+    const btnOpen = document.getElementById('btn-adversarial-lab');
+    const btnCloseTop = document.getElementById('btn-close-advlab-modal');
+    const btnCloseBottom = document.getElementById('btn-close-advlab-bottom');
+    const btnTestCustom = document.getElementById('btn-advlab-test-custom');
+    const btnRunFuzzing = document.getElementById('btn-advlab-run-fuzzing');
+    const btnInjectGuardrails = document.getElementById('btn-advlab-inject-guardrails');
+
+    if (btnOpen) btnOpen.addEventListener('click', openAdversarialLabModal);
+    if (btnCloseTop) btnCloseTop.addEventListener('click', closeAdversarialLabModal);
+    if (btnCloseBottom) btnCloseBottom.addEventListener('click', closeAdversarialLabModal);
+    setupModalA11y('modal-adversarial-lab', closeAdversarialLabModal);
+
+    if (btnTestCustom) {
+      btnTestCustom.addEventListener('click', () => {
+        const customInput = document.getElementById('advlab-custom-input');
+        const promptInput = document.getElementById('prompt-input');
+        const customPayload = customInput ? customInput.value.trim() : '';
+        const promptText = promptInput ? promptInput.value.trim() : '';
+
+        if (!customPayload) {
+          showToast(t('adversarialLab.customPlaceholder'), 'warning');
+          return;
+        }
+
+        if (typeof AdversarialFuzzer === 'undefined') return;
+
+        const res = AdversarialFuzzer.evaluateCustomPayload(promptText, customPayload);
+        const resultCard = document.getElementById('advlab-custom-result');
+        const lang = I18n.getLang();
+
+        if (resultCard) {
+          resultCard.classList.remove('hidden');
+          const badgeClass = res.resilient ? 'badge-success' : 'badge-danger';
+          const statusText = res.resilient ? t('adversarialLab.pass') : t('adversarialLab.fail');
+          const detail = lang === 'en' ? res.detailEn : res.detailEs;
+
+          resultCard.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <strong>${escapeHtml(t('adversarialLab.customLabel'))}</strong>
+              <span class="badge ${badgeClass}">${escapeHtml(statusText)} (${res.score}/100)</span>
+            </div>
+            <p style="margin:0; color:var(--ink-soft);">${escapeHtml(detail)}</p>
+          `;
+        }
+      });
+    }
+
+    if (btnRunFuzzing) {
+      btnRunFuzzing.addEventListener('click', () => {
+        const promptInput = document.getElementById('prompt-input');
+        const promptText = promptInput ? promptInput.value.trim() : '';
+
+        if (typeof AdversarialFuzzer === 'undefined') return;
+
+        const audit = AdversarialFuzzer.fuzzPrompt(promptText);
+        renderAdversarialFuzzingResults(audit);
+      });
+    }
+
+    if (btnInjectGuardrails) {
+      btnInjectGuardrails.addEventListener('click', () => {
+        const promptInput = document.getElementById('prompt-input');
+        if (!promptInput || typeof AdversarialFuzzer === 'undefined') return;
+
+        const guardrailsXml = AdversarialFuzzer.generateHardenedGuardrails(promptInput.value);
+        promptInput.value = Rewriter.injectSnippet(promptInput.value, guardrailsXml);
+        updateEditorStats();
+        closeAdversarialLabModal();
+        showToast(t('adversarialLab.guardrailsInjected'), 'success');
+        runAnalysis();
+      });
+    }
+  }
+
+  function renderAdversarialFuzzingResults(audit) {
+    const summaryCard = document.getElementById('advlab-fuzzing-summary');
+    const container = document.getElementById('advlab-transcripts-container');
+    if (!summaryCard || !container) return;
+
+    const lang = I18n.getLang();
+    const riskBadgeClass = audit.riskLevel === 'critical' ? 'badge-danger' : audit.riskLevel === 'high' ? 'badge-warning' : 'badge-success';
+    const riskKey = audit.riskLevel === 'critical' ? 'riskCritical' : audit.riskLevel === 'high' ? 'riskHigh' : audit.riskLevel === 'medium' ? 'riskMedium' : 'riskLow';
+    const riskLabel = t(`adversarialLab.${riskKey}`);
+    const summaryText = lang === 'en' ? audit.summaryEn : audit.summaryEs;
+
+    summaryCard.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <strong>${escapeHtml(t('adversarialLab.resilienceScore'))} <span style="font-size:1.1rem; color:var(--accent);">${audit.overallResilience}%</span></strong>
+        <span class="badge ${riskBadgeClass}">${escapeHtml(riskLabel)}</span>
+      </div>
+      <p style="margin:0; color:var(--ink-soft); font-size:0.8rem;">${escapeHtml(summaryText)}</p>
+    `;
+
+    container.innerHTML = audit.transcripts.map(t => {
+      const name = lang === 'en' ? t.nameEn : t.nameEs;
+      const statusIcon = t.resilient ? '<i class="ph ph-check-circle" style="color:var(--ok);" aria-hidden="true"></i>' : '<i class="ph ph-x-circle" style="color:var(--err);" aria-hidden="true"></i>';
+      const statusClass = t.resilient ? 'color:var(--emerald);' : 'color:var(--vermilion);';
+      const reason = lang === 'en' ? t.reasonEn : t.reasonEs;
+
+      return `
+        <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:4px; padding:6px 8px; margin-bottom:4px;">
+          <div style="display:flex; justify-content:space-between;">
+            <strong style="font-size:0.76rem;">${statusIcon} #${t.id} ${escapeHtml(name)}</strong>
+            <span style="${statusClass} font-weight:600; font-size:0.72rem;">${t.resilient ? 'PASS' : 'FAIL'}</span>
+          </div>
+          <p style="margin:2px 0 0 0; color:var(--ink-soft); font-size:0.73rem;">${escapeHtml(reason)}</p>
+        </div>
+      `;
+    }).join('');
   }
 
   function checkShareURL() {
@@ -1890,21 +2343,24 @@ const App = (() => {
   }
 
   // ── Toast Notifications ────────────────────────────────
-  function showToast(message, type = 'info') {
+  function showToast(message, type = 'info', duration = null, iconOverride = null) {
     const container = document.getElementById('toast-container');
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
 
+    // U-5.5 · icono Phosphor por tipo (antes: emoji ✅❌⚠️ℹ️)
     const icons = {
-      success: '✅',
-      error: '❌',
-      warning: '⚠️',
-      info: 'ℹ️'
+      success: 'ph-check-circle',
+      error: 'ph-x-circle',
+      warning: 'ph-warning-circle',
+      info: 'ph-info'
     };
 
     const iconSpan = document.createElement('span');
     iconSpan.className = 'toast-icon';
-    iconSpan.textContent = icons[type] || icons.info;
+    iconSpan.innerHTML = iconOverride
+      ? `<i class="ph ${iconOverride}" aria-hidden="true"></i>`
+      : `<i class="ph ${icons[type] || icons.info}" aria-hidden="true"></i>`;
 
     const msgSpan = document.createElement('span');
     msgSpan.className = 'toast-msg';
@@ -2902,11 +3358,12 @@ const App = (() => {
         const podiumClasses = ['podium-card--gold', 'podium-card--silver', 'podium-card--bronze'];
         
         podiumContainer.innerHTML = top3.map((m, idx) => {
-          const badgeText = lang === 'en' ? (m.badgeEn || m.badge) : m.badge;
+          const badgeText = (lang === 'en' ? (m.badgeEn || m.badge) : m.badge).replace(/^[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]+\s*/u, '');
+          const badgeIcon = ['ph-crown', 'ph-medal', 'ph-trophy'][idx] || 'ph-medal';
           const descText = m.desc[lang] || m.desc.es;
           return `
             <div class="podium-card ${podiumClasses[idx]}" data-id="${escapeAttr(m.id)}">
-              <div class="podium-card-badge-top">${escapeHtml(badgeText)}</div>
+              <div class="podium-card-badge-top"><i class="ph ${badgeIcon}" aria-hidden="true"></i> ${escapeHtml(badgeText)}</div>
               <h3 class="podium-card-title">#${m.rank} ${escapeHtml(m.name)}</h3>
               <div class="podium-card-provider">${escapeHtml(m.provider)} · <span class="model-type-tag model-type-tag--${m.type}">${m.type === 'frontier' ? (lang === 'en' ? 'Frontier' : 'Frontera') : 'Open Weights'}</span></div>
               <p class="podium-card-desc">${escapeHtml(descText)}</p>

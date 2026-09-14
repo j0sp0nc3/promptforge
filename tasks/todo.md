@@ -7,36 +7,53 @@ Este backlog consolida mejoras funcionales, arquitectónicas y de innovación pr
 
 ---
 
-## 📌 Prioridad 1: ALTA (Innovación Core & DX de Producción)
+## 📌 Motor Híbrido de Análisis de Intención & Enriquecimiento de Contexto de Dominio (Opción 3) — COMPLETADO ✅
 
-- [ ] **P1.1 — Exportador Multi-SDK Native Code Snippets (Python / TS / Curl)**
-  - **Descripción:** Botón en el Workbench que convierte el prompt calibrado con sus 7 bloques XML en fragmentos de código listos para producción usando los SDKs oficiales de 2026 (OpenAI Python v2, Anthropic TS SDK, Google GenAI SDK y Curl con contratos de herramientas MCP).
-  - **Validación Industrial:** Elimina la fricción de reescribir prompts calibrados a código de API.
-  - **Criterios de Aceptación:** Generación instantánea client-side en `js/export.js`, botón de copia en 1-click y tabs por lenguaje.
+- [x] **Fase 1: Motor Local de Arquetipos y Brechas de Contexto (`js/domain-analyzer.js`)**
+  - Detección de 8 Arquetipos de Dominio (`software_engineering`, `data_extraction`, `marketing_copy`, `rhetoric_creative`, `rag_knowledge`, `agentic_tool_use`, `financial_legal`, `general_task`).
+  - Matriz de Brechas de Contexto (`DomainRequirements`): Identificación de elementos faltantes según el dominio (ej. stack técnico, esquema JSON, audiencias, fallbacks RAG, etc.).
+  - Integración en `Signals` y `Analyzer` para enriquecer la puntuación de contexto y recomendaciones.
 
-- [ ] **P1.2 — Multi-Model Cost & Token Latency Simulator (Simulador Live de Presupuesto y Latencia)**
-  - **Descripción:** Módulo de cálculo en tiempo real en el Workbench que estima el costo financiero (por 1,000 / 100,000 ejecuciones) y la latencia promedio esperada del prompt activo en el Top 10 de modelos SOTA (Claude Mythos, GPT-5.6 Sol, Gemini 3.1 Pro, DeepSeek V4, Llama 4).
-  - **Validación Industrial:** Permite calibrar la relación costo-eficiencia antes del envío a producción.
-  - **Criterios de Aceptación:** Cálculo automático en `js/analyzer.js` usando telemetría live de `js/models.js`.
+- [x] **Fase 2: Reescritor de Dominio y Chips de Inyección Rápida (`js/rewriter.js`, `js/app.js`)**
+  - Plantillas de reescritura dinámicas que inyectan secciones XML específicas del dominio (`<stack_tecnico>`, `<audiencia_objetivo>`, `<fallbacks_error>`).
+  - Chips de acción rápida en UI para insertar contextos faltantes en 1-click (`+ Inyectar Stack`, `+ Inyectar Errores HTTP`, etc.).
+
+- [x] **Fase 3: Endpoint Serverless de Análisis Semántico Profundo (`api/index.js` / `/api/analyze-intent`)**
+  - Endpoint de análisis semántico mediante Gemini 1.5 Flash Free Tier API con fallback automático y transparente al sintetizador heurístico local `DomainSynthesizer`.
+  - Extracción de Objetivo Primario, Supuestos Implícitos y Reescritura Experta de Dominio.
+
+- [x] **Fase 4: Interfaz de Usuario y Tab de Intención & Dominio (`index.html`, `js/app.js`, `css/index.css`)**
+  - Insignia visual del Arquetipo de Dominio detectado en la cabecera del Workbench.
+  - Panel de Brechas de Contexto de Dominio con acciones de reparación instantánea.
+  - Botón *"✨ Optimizar Contexto Profundo con IA"* conectado al endpoint Serverless.
+
+- [x] **Fase 5: Internacionalización (i18n) y Pruebas Automatizadas**
+  - Diccionario i18n bilingüe ES/EN (`domain.*`, `contextGaps.*`).
+  - Suite de pruebas de estrés `node test_edge_cases.js` (42/42 PASS en 15 suites).
 
 ---
 
-## 📌 Prioridad 2: MEDIA (Seguridad & Herramientas Agénticas MCP)
+## 📌 Prioridad 1: ALTA (Innovación Core & DX de Producción) — COMPLETADO ✅
 
-- [ ] **P2.1 — MCP Schema Inspector & Auto-Validator (Model Context Protocol)**
-  - **Descripción:** Herramienta interactiva para pegar contratos de herramientas en formato JSON/YAML de servidores MCP y auditar si el prompt declara correctamente los tipos, descripciones y guardrails (`<loop_guard>`).
-  - **Validación Industrial:** Esencial para prevenir ejecuciones no tipadas (AP049) y envenenamiento de herramientas en flujos agénticos.
-
-- [ ] **P2.2 — Playground de Inyección Adversarial Personalizada & Local Fuzzing**
-  - **Descripción:** Permitir al usuario ingresar sus propias reglas de prueba de estrés y ejecutar un mini-fuzzing local contra vulnerabilidades OWASP LLM07, exfiltración de contexto e inyección indirecta.
-  - **Validación Industrial:** Aumenta la robustez de seguridad en entornos corporativos.
+- [x] **P1.1 — Exportador Multi-SDK Native Code Snippets (Python / TS / Curl)**
+  - Generación de código nativo para Python (OpenAI v2), TypeScript (Anthropic SDK) y cURL con contratos MCP.
+- [x] **P1.2 — Multi-Model Cost & Token Latency Simulator (Simulador Live de Presupuesto y Latencia)**
+  - Telemetría y calculadora de presupuestos para el Top 10 de modelos SOTA 2026.
 
 ---
 
-## 📌 Prioridad 3: BAJA / MANTENIMIENTO (Rendimiento & PWA)
+## 📌 Prioridad 2: MEDIA (Seguridad & Herramientas Agénticas MCP) — COMPLETADO ✅
 
-- [ ] **P3.1 — Streaming SSE de Noticias e Investigaciones en Tiempo Real (`/api/ai-news`)**
-  - **Descripción:** Reemplazar el polling de noticias por Server-Sent Events (SSE) en Vercel Serverless para empujar novedades instantáneas de arXiv y Hacker News a la UI.
+- [x] **P2.1 — MCP Schema Inspector & Auto-Validator (Model Context Protocol)**
+  - Inspector de esquemas JSON/YAML MCP con auditoría de 5 criterios y generación de contrato XML `<tools>`.
+- [x] **P2.2 — Playground de Inyección Adversarial Personalizada & Local Fuzzing**
+  - Fuzzer local con 20 mutaciones de prueba contra OWASP LLM07 y guardrails de seguridad en 1-click.
 
-- [ ] **P3.2 — PWA Offline First & Service Worker Cache**
-  - **Descripción:** Service Worker para funcionamiento 100% offline (Scoring 8D, Motor Genético, Comparación A/B, Hub de Conocimiento).
+---
+
+## 📌 Prioridad 3: MANTENIMIENTO & PERMITIVIDAD — COMPLETADO ✅
+
+- [x] **P3.1 — Streaming SSE de Noticias e Investigaciones en Tiempo Real (`/api/ai-news`)**
+  - Server-Sent Events (SSE) para noticias en vivo desde Hacker News y arXiv.
+- [x] **P3.2 — PWA Offline First & Service Worker Cache (`sw.js`)**
+  - Soporte 100% offline para el motor de scoring, tuner genético y herramientas del Workbench.

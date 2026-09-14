@@ -73,12 +73,12 @@ interactiva desplegada en Vercel.
 - [x] **P1.2 — Multi-Model Cost & Token Latency Simulator:** Calculadora en tiempo real en Workbench que estima el costo exacto (por 1k / 100k ejecuciones) y latencia en el Top 10 de modelos (Claude Mythos, GPT-5.6 Sol, Gemini 3.1 Pro, DeepSeek V4, Llama 4).
 
 ### 📌 Prioridad 2: MEDIA (Seguridad & MCP)
-- [ ] **P2.1 — MCP Schema Inspector & Auto-Validator:** Inspector interactivo para pegar esquemas JSON/YAML de servidores MCP y auditar si el prompt declara correctamente las herramientas (`<tools>`) y guardrails (`<loop_guard>`).
-- [ ] **P2.2 — Playground de Inyección Adversarial Personalizada & Fuzzing local:** Generador interactivo para ingresar vectores de ataque propios y testear resistencia contra OWASP LLM07.
+- [x] **P2.1 — MCP Schema Inspector & Auto-Validator (`js/mcp-inspector.js`, `#modal-mcp-inspector`):** Inspector interactivo para pegar esquemas JSON/YAML de servidores MCP y auditar la cobertura de herramientas (`<tools>`), argumentos tipados y guardrails (`<loop_guard>`).
+- [x] **P2.2 — Playground de Inyección Adversarial Personalizada & Fuzzing local (`js/adversarial-fuzzer.js`, `#modal-adversarial-lab`):** Generador interactivo para ingresar vectores de ataque propios, ejecutar 20 mutaciones de fuzzing contra OWASP LLM07 e inyectar guardrails de seguridad en 1-Click.
 
 ### 📌 Prioridad 3: MANTENIMIENTO & PERMITIVIDAD
-- [ ] **P3.1 — Streaming SSE de Noticias en Vivo (`/api/ai-news`):** Sustitución de polling por Server-Sent Events (SSE) para noticias e investigaciones.
-- [ ] **P3.2 — PWA Offline First & Service Worker Cache:** Soporte 100% offline para el motor de scoring, tuner genético y hub de conocimiento.
+- [x] **P3.1 — Streaming SSE de Noticias en Vivo (`/api/ai-news`, `js/app.js`):** Sustitución de polling por Server-Sent Events (SSE) con conexión persistente en vivo y pings de liveness.
+- [x] **P3.2 — PWA Offline First & Service Worker Cache (`sw.js`, `manifest.json`):** Estrategia Stale-While-Revalidate para assets estáticos y soporte 100% offline para el motor de scoring, tuner genético y laboratorio de fuzzing.
 
 ---
 
@@ -175,14 +175,29 @@ promptforge/                    ← App Web (Vercel)
 
 ## 🔄 Última Actualización
 
-- **Fecha:** 2026-09-09
-- **Último commit:** `50f833f` ("feat: Playground de Comparacion A/B en Vivo (Version A Original vs Version B Calibrada) en Web UI")
+- **Fecha:** 2026-09-13
+- **Último commit:** `663903d` ("docs: backup task roadmap and domain intelligence engine completion")
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
 - **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
-- **Último hito:** Playground de Comparación A/B (Versión A Original vs Versión B Calibrada) en la Web UI + Paridad 1.1.0.
-- **Estado:** 31/31 tests JS en PASS (10 suites) | 14/14 tests Python en PASS | 10/10 endpoints y carga en PASS. Entorno local verificado bajo Spec-Driven Development (SDD).
+- **Último hito:** Reparación Estética y Layout Responsivo de los Modales de Inspección (`#modal-mcp-inspector`, `#modal-adversarial-lab`, `.modal-card--lg`).
+- **Estado:** 42/42 tests JS en PASS (15 suites) | 14/14 tests Python en PASS | 10/10 endpoints y carga en PASS. Entorno local verificado bajo Spec-Driven Development (SDD).
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (reciente):**
+>
+> **Sesión 2026-09-13 — Reparación de Overflow y Layout Responsivo de Modales de Inspección (`.modal-card--lg`):**
+> - **Redimensionamiento y Max-Height Containment:** Definida la clase `.modal-card--lg` con `max-width: 680px !important`, `max-height: 88vh` y `overflow-y: auto`, evitando que los botones y áreas de texto se desborden verticalmente fuera de la tarjeta emergente.
+> - **Grids Responsivos:** Removidos los estilos inline de `grid-template-columns: 1fr 1fr` en `.mcp-inspector-grid` y `.advlab-grid` y reemplazados por CSS responsivo con apilado a 1 columna en pantallas de alto reducido/móviles.
+> - **Ajuste de Altura de Textareas:** Ajustadas las alturas inline fijas (`220px` → `140px`) permitiendo que la columna de resultados y botones queden perfectamente contenidos dentro del viewport.
+> - **Verificación Vía Browser Subagent:** Confirmada contención del modal e inspección con 42/42 tests PASS en `node test_edge_cases.js`.
+>
+>
+> **Sesión 2026-09-13 — Reparación de Estilos y Funcionalidad del Modal de Novedades / Hitos (`#modal-ticker-feed`):**
+> - **Filtros e Iconografía DS (0 Emojis):** Reemplazados emojis en las pestañas por iconos Phosphor (`ph-lightning`, `ph-cpu`, `ph-robot`, `ph-shield-check`) y limpiadas las claves i18n ES/EN (`js/i18n.js`, `js/app.js`).
+> - **Estilos de Hover Sensibles al Tema:** Ajustadas las tarjetas `.editorial-feed-card:hover` en `css/index.css` usando variables semánticas (`var(--bg-hover)`) para evitar el destello blanco estático en Modo Cósmico (Oscuro).
+> - **Eliminación de Flecha Duplicada:** Eliminado el carácter `↗` de los textos i18n `readSource` (`Ver publicación` / `Read dispatch`), conservando un único icono SVG limpio.
+> - **Reset de Scroll en Filtros:** Añadido `scrollTop = 0` en `.ticker-feed-modal-body` al abrir el modal y al cambiar de categoría o buscar.
+> - **Verificación Vía Browser Subagent:** Inspección visual y funcional completa con 42/42 tests PASS en `node test_edge_cases.js`.
+>
 >
 > **Playground de Comparación A/B (Original vs. Calibrado) — Sesión 2026-09-09:**
 > - **Vista Side-by-Side (`index.html`, `css/index.css`):** Pestaña `Comparar A/B` (`#tab-ab`) añadida al panel de resultados del Workbench con grid responsivo de 2 columnas para escritorio y apilado para móviles.
@@ -283,15 +298,145 @@ promptforge/                    ← App Web (Vercel)
 > - **Resolución Bug ReferenceError `currentPromptText` (`js/app.js`):** Corregido fallo de runtime en `renderABComparison` y `runGeneticEvolution` al cambiar de idioma (`onLangChange`). Reemplazada variable no declarada por lectura segura de `currentAnalysis?.prompt`.
 > - **Multi-SDK Export (P1.1) & Simulador de Presupuesto (P1.2):** Implementados `toPythonCode()`, `toTypeScriptCode()`, `toCurlCode()` en `js/export.js` y `estimateCostAndLatency()` en `js/models.js`.
 > - **Vercel Static Serving Fix (`vercel.json`):** Restaurada matriz explícita de builds `@vercel/static` y `@vercel/node` para resolver fallos 404 MIME type (`text/html`) en producción.
-> - **Verificación:** 34/34 tests PASS en `node test_edge_cases.js`. Commits en `dev` y `main` completamente sincronizados.
+> - **Verificación:** 34/34 tests PASS en `node test_edge_cases.js`.
 >
 > **Sistema de Diseño Promptometer DS v3.8 (2026-09-10):**
 > - **Archivos fuente (`dev`, no tocados por la suite del motor):**
 >   - `css/ds/tokens.css` — L1 primitivas zinc `--pm-*` → L2 semánticos light/dark → L3 componente + **paletas conmutables** (`body[data-accent]`: coral·volt·cyan·magenta·amber·iris; **default coral eléctrico #FF5200**) + craft layer (grad ambient, dots, grad text, numerales fantasma, featured) + legacy compat `theme-cosmic/theme-editorial` (deprecar en U-1 real).
 >   - `css/ds/base.css` — reset, roles tipográficos Inter ( jerarquía por peso 550–640, tracking −0.03 a −0.05), ritmo de headings (¡todo h1/h2/h3 con `margin-block-end`!), skip-link, focus-ring AA, **Phosphor `.ph` + `.icon-btn`**, utilidades.
 >   - `css/ds/components.css` — registro canónico BT/IB/CH/TB/BA/SD/DM/PC/TO/MD/SR/EM/CR; paneles sin cajas (hairline groups), featured única por vista (superficie gradiente + aura accent), modal canónico con header 80px/icon/lista/footer.
->   - `design-system.html` — playground vivo (9 secciones, hero Apple/Linear, switch tema + 6 acentos, coreografía de score, Phosphor activo, sección 08 con IN-1/SE-2/DA-1/DD-1).
+>   - `design-system.html` — playground vivo (9 sections, hero Apple/Linear, switch tema + 6 acentos, coreografía de score, Phosphor activo, sección 08 con IN-1/SE-2/DA-1/DD-1).
 > - **Fix stacking v3.8 (crítico, aplicar en U-4):** la regla `.pg-section > :not(.craft-numeral) { z-index:1 }` aplanaba todos los hermanos a z-1; el último del DOM (tabla posterior al listbox) pintaba ENCIMA del menú z900 atrapado en un contexto z1. Solución: numeral fantasma a `z-index:-1` (nunca empujar hermanos arriba); overlays nunca dependen de `:not()` que suba a todos los hermanos.
 > - **Iconos:** Phosphor (`.ph`) via CDN en playground; **en U-4 self-hostear subset** usado con `font-display: swap`.
 > - **Lecciones fijadas (no repetir):** `--s-5: 20px` debe existir (tokens fantasma rompen silencioso); headings necesitan `margin-block-end` post-reset; máx 1 panel featured por vista; glows/zuecos sin causa física prohibidos; score idle `···` en opacity 0.6 (nunca `--` a 0.35).
 > - **Doc completa:** `tasks/ui-redesign-plan.md` §5/§5.b (gap: IN-1 textarea, SE-1 select, DA-1 tabla modelos, DD-1 dropdown, FT-1 footer, FR-1 forms, CT-1 search, LB-1, TP-1, SW-1) + ADRs §13.
+>
+> **Sesión 2026-09-11 — Feature P2.1 MCP Schema Inspector & Auto-Validator:**
+> - **Módulo Core `js/mcp-inspector.js`:** Creado analizador de esquemas JSON/YAML de herramientas MCP (Model Context Protocol, OpenAI tools, Anthropic tools). Evalúa 5 criterios agénticos (`hasToolsContract`, `hasLoopGuard`, `toolCoverage`, `typedParameters`, `errorHandling`) y genera el contrato XML `<tools>` formalizado.
+> - **Modal Interactivo `#modal-mcp-inspector` (`index.html`, `css/index.css`, `js/app.js`):** Interfaz para pegar definiciones MCP, botón *"Cargar Ejemplo MCP"*, tarjeta con el reporte de la auditoría y botón de *"Inyectar Contrato XML en 1-Click"* al prompt activo del editor.
+> - **Paridad i18n (`js/i18n.js`):** Agregado objeto `mcpInspector` en español e inglés con 0 llaves faltantes verificadas en Suite 4.
+> - **Suite 13 de Pruebas (`test_edge_cases.js`):** Añadida Suite 13 evaluando parseo de esquemas MCP, auditoría de 5 vectores agénticos y generación de contratos XML con **37/37 PASS**.
+>
+> **Sesión 2026-09-11 — Feature P2.2 Playground de Inyección Adversarial & Fuzzing Local:**
+> - **Módulo Core `js/adversarial-fuzzer.js`:** Motor de fuzzing local con 20 mutaciones de ataques OWASP LLM07 (Leakage, Delimiter Hijack, Roleplay Jailbreak, Tool Poisoning, Obfuscation), evaluador de vectores personalizados y generador de guardrails XML de seguridad.
+> - **Modal Interactivo `#modal-adversarial-lab` (`index.html`, `js/app.js`):** Interfaz para probar vectores personalizados, chips de ataques preset OWASP LLM07, auditoría de 20 mutaciones de fuzzing y botón de *"Inyectar Guardrails OWASP LLM07 (1-Click)"*.
+> - **Paridad i18n (`js/i18n.js`):** Diccionario `adversarialLab` con paridad 100% en español e inglés.
+> - **Suite 14 de Pruebas (`test_edge_cases.js`):** Añadida Suite 14 evaluando fuzzing local de 20 mutaciones, vectores personalizados y guardrails OWASP LLM07 con **40/40 PASS**.
+
+> **Sesión 2026-09-11 — U-5.4 Select de Objetivos → SE-2 Listbox DS:**
+> - **Migración del `<select>` nativo de objetivos (`#prompt-objective-select`) al componente SE-2 listbox custom del DS** (`css/ds/components.css` L407-474): trigger con icono Phosphor por objetivo + título, menú flotante opaco con filas ricas (icono chip + título 600 + descripción), `aria-selected` + check accent, animación WAAPI 140ms, cierre por Escape/outside-click.
+> - **Patrón state-holder oculto:** el `<select>` real se conserva como `.u-hidden-select` (clip absoluto) — única fuente de verdad; `runAnalysis`, deep-domain-AI y genetic tuner leen `.value` SIN cambiar contrato (3 call sites intactos).
+> - **i18n reestructurado (`js/i18n.js` ×3 bloques es/ses/en):** claves `objectives.{general..creative}` puras de texto (0 emojis) + nueva subclave `objectives.items.{key}.{title,desc}` para las filas ricas y el trigger; `refreshObjectiveTrigger()` re-sincroniza trigger/aria al evento `langchange`. Fix hero.title: `data-i18n-html` (el `<br />` del valor se parseaba como texto literal con `data-i18n`).
+> - **Fix U-4.6 gap (crítico, `css/ds/tokens.css` L157):** el toggle real del app AÑADE `theme-editorial` sin quitar `theme-cosmic` (conviven) — el mapping dark de cosmic pisaba el light de editorial por orden de carga. Guía inviolable: `body.theme-cosmic:not(.theme-editorial)` en el bloque LEGACY COMPAT + re-map editorial de `--bg-raised/--bg-surface` a `#FBF8F2`. Regla fijada: **en LEGACY COMPAT, dark = NO editorial (`:not(.theme-editorial)`), nunca specificity-war por orden de archivo.**
+> - **CSS (`css/index.css` bloque U-5.4):** `.u-hidden-select` (clip), trigger full-width, overflow visible de `.workbench-card` vía `:has()` cuando el menú está abierto, y reglas dark `body:not(.theme-editorial)` para el menú del listbox (mismo principio de la guard de tokens).
+> - **Verificación:** suite 42/42 PASS (`node test_edge_cases.js`); smoke E2E en vivo (localhost:3001): selección coding → análisis → píldora calibrada `[Meta: Generación de Código y Repos]` sin emojis, score 51/100; computed styles por tema (cosmic: menú/trigger `#1B1F28`, editorial: menú blanco + trigger cream `#FBF8F2`, body `#F7F3EC`); i18n ES↔EN en vivo.
+> - **Pendiente siguiente tanda (U-5.5):** emojis residuales JS — arquetipos de dominio `domain.*` (badge `#domain-archetype-badge` aún renderiza 📊💻📣…), `⚠️💡` en strings de hallazgos/cambios de `app.js`, `justification-icon 💡` en `index.html`, y badges de modelos en `js/models.js`.
+
+> **Sesión 2026-09-11 — U-5.5 Iconografía Phosphor de flags de UI dinámica (0 emojis en UI):**
+> - **Inventario limpiado (patrón icono-fuera-del-span / iconos estáticos `<i class="ph">`):**
+>   - **Badge de arquetipo de dominio `#domain-archetype-badge`** — nuevo mapa `DOMAIN_ICONS` en `renderDomainIntelligence` (Phosphor por arquetipo: `ph-cursor-text/table/megaphone/pencil-circle/book-open-text/robot/scales/target`); claves `domain.*` de i18n limpiadas (es+en).
+>   - **Badges del modal MCP** (`mcp-*`: check/x/info/warn con color `--ok/--err/--info/--warn`), icono del modal a `ph-wrench`, botones audit (`ph-magnifying-glass`) e inject (`ph-sparkle`).
+>   - **Modal Adversarial Lab** (icono a `ph-shield-warning`, botones `ph-lightning`/`ph-shield-check`); presets `⚡`→`ph-lightning`.
+>   - **Estados adversariales** `✅⚠️❌`→`ph-check-circle/warning-circle/x-circle`; **sugerencias** `💡`→`ph-lightbulb` (2 render sites); **brechas de dominio** `⚠️`→`ph-warning-circle` en `.gap-item`.
+>   - **Cambio-item** `➕✏️🔄`→`ph-plus-circle/pencil-simple/arrows-counter-clockwise`; **toasts** `✅❌⚠️ℹ️`→Phosphor por tipo con firma extendida `showToast(msg, type, duration, iconOverride)`; **transcripts del fuzzer** → `ph-check-circle`/`ph-x-circle`.
+>   - **AB badge calibrado** `✨`→`ph-sparkle` estático fuera del span; `justification-icon 💡` → `ph-lightbulb` estático en HTML.
+>   - **i18n es+en limpiado de emojis** en claves UI migradas (changes.*, adversarialLab.botones, mcpInspector.*, ab.calibratedLabel).
+> - **Fix toast en dark (regresión U-4.3 detectada):** la regla TO-1 de `css/ds/components.css` (`.toast { background: var(--bg-inverse) }`) gana por orden de carga a la U-4.3 de index.css y pintaba toasts blancos sobre cosmic. Fix: subida de especificidad en index.css (`.toast-container .toast` con `--bg-raised` + hairline). Verificado: cosmic `#1B1F28`/ink claro, editorial `#FBF8F2`.
+> - **Verificación:** suite 42/42 PASS; live probes: análisis legal → badge `ph-scales` + "Cumplimiento Legal & Financiero" (0 emoji), change-items con icono por tipo, sugerencias con `ph-lightbulb`, modal MCP audit OK/miss/info/warn Phosphor (0 emoji), toasts success/warning/info con check/warn/info Phosphor en ambos temas.
+
+> **Sesión 2026-09-12 — U-6 Craft Layer en vistas del Workbench (cierre estético migración DS):**
+> - **Numerales fantasma 01–06** (`craft-numeral` del DS) anclados a los headers de las 6 vistas: templates/history/learn/radar/models/leaderboard. Ancla = clase header (no `.view`) para no alterar containing blocks de absolutos existentes (prism, score-box, search wrappers).
+> - **Calibración workbench:** override `.view .craft-numeral` (clamp 3.2–5.4rem, opacity 0.45, top −8px right 16px) — el default DS es para secciones altas del playground. Regla stacking v3.9 reforzada: numeral `z-index:-1` dentro de contexto propio (`position:relative` solo en el header ancla), hermanos static, ningún overlay depende de `:not()`.
+> - **Tipografía vistas:** `.view-title` → Inter 610 tracking −0.032em, `.view-subtitle` → 0.95rem/62ch (completa el manifest U-4.1).
+> - **craft-grad en métricas del hero:** `.hero-metrics-strip strong` (numerales mono) con gradiente ink→accent + background-clip:text. Hairline del hero con contraste dark.
+> - **Hairline divisoria** entre el header y el layout de la vista learn (`border-top` en `.learn-layout`).
+> - **Verificación:** suite 42/42 PASS; live probes: numerales 01–06 presentes (computed: stroke zinc −0.45 opacity, z −1, Inter 610), craft-grad activo (fill transparent + linear-gradient coral en dark y light), screenshots por vista y tema.
+> - **Estado migración DS:** U-4 (vistas) + U-5 (componentes vivos) + U-6 (craft) — **completada**. Pendiente menor fuera de UI: emojis de consola/docs (`cli.js`, `debug_top1.js`, `README.md`, `models.js` ViewData de badges que consume la vista Modelos).
+
+> **Sesión 2026-09-12 — U-6.1 Restos legacy post-auditoría visual del usuario ("no me convence"):**
+> - **Disparador:** auditoría de scroll EO-a-EO del Workbench en vivo detectó restos que rompían la coherencia DS pese a U-4..U-6.
+> - **Score idle** `--`→`···` + clase `.score-idle` (opacity 0.6) — aplica la lección fijada del DS que U-4 omitió (constelación + badge `···/100`; idle class se retira con `animateScore`/`renderOrbitalConstellationSVG` al llegar el score real → opacity 1).
+> - **`.constellation-title`** migrado de mono 700 coral uppercase (estética neón legacy) a patrón DS sans 620 tracking −0.02em sin uppercase; subtítulo a ink-faint.
+> - **Verificación:** suite 42/42; computed probes (central `···` idle→`49` live sin clase idle; título Inter 620/none); análisis E2E real 49/D con animación.
+> - Lección reforzada: tras git-pull de commits paralelos, releer HANDOFF (la lección del idle estaba en L296 — se omitió al migrar U-4.1).
+
+> **Sesión 2026-09-12 — U-7 de-IA: erradicar estética no autorizada post-comparación 1:1 con playground («se ve muy IA»):**
+> - **Disparador:** el usuario reporta que el Workbench «se ve muy IA, revisa design-system.html». Auditoría comparativa lado-a-lado playground/workbench + grep de glows/radiales/blur/azul-Tailwind.
+> - **Chips de inyección de contexto:** azul Tailwind glass (`rgba(59,130,246,.12)` + borde #3B82F6) → flat accent DS (`--accent-soft` + `--accent-text`, hover color-mix 26%). Eran el mayor信号 "IA'.
+> - **Mini-cards 8D:** sombra de color inline `0 4px 16px ${color}15` eliminada del render JS; base `.eval-dim-card` glass `rgba(17,20,32,.8)` → `--bg-raised` + hairline; hover sin `brightness(1.2)` (translateY −2px + border zinc).
+> - **Grade badges:** hex Tailwind (`#60a5fa/#3b82f6/#10b981/...`) → tokens DS (`--ok/--info/--warn/--sev-high/--err` + `--*-bg`).
+> - **Toggle de tema:** hover cyan-neón con glow → flat DS (bg-sunken + hairline, sin glow — regla «luz sin causa física prohibida»).
+> - **Sección orbital:** glass 16px + borde coral-alpha + sombra negra 48px → transparente flat (el stage interior ya tiene su spotlight U-4.2); prisms blur muertos en display:none.
+> - **Métricas hero:** craft-grad tipográfico (añadido en U-6) retirado — el playground usa numerales planos; ahora coral plano (`--accent-text`).
+> - **Podio SOTA top-3 (vista Modelos):** emojis 🥇🥈🥉 del `badge/badgeEn` en data → stripped regex + icono Phosphor por posición (`ph-crown/ph-medal/ph-trophy`) con colores medalla existentes (semántica de ranking legítima). FIX requiere bypass SW — el SW P3.2 sirve JS viejo tras recarga normal.
+> - **Verificación:** suite 42/42 PASS; probes computed (toggle flat, orbital transparente+hairline, métricas coral plano, chip accent-soft, card raised+hairline sin sombra, podium icons/0-emoji); screenshots por sección comparadas contra playground en dark coral.
+
+> **Sesión 2026-09-12 — U-8 Convergencia estructural con el DS (feedback «está totalmente lejos de lograrlo»):**
+> - **Diagnóstico honesto:** el Workbench mantenía la ESTRUCTURA del app viejo (cards anidadas con header-bar, editor caja-dentro-de-caja) con pintura DS por encima — el DS canónico es flat + hairline + editor IN-1 de un solo contenedor.
+> - **Editor → gramática IN-1 exacta:** `.editor.wb-editor` (toolbar con acciones Phosphor + separator + contador mono `0 chars · 0 palabras · ~0 tok`, textarea transparente SIN border propio, focus ring coral en el CONTENEDOR via focus-within). Los header-bar legacy de `#editor-panel`/`#results-panel` → `display:none`; botones legacy re-cableados a la toolbar (`btn-paste-tb`/`btn-clear-tb` delegan a los originales).
+> - **`updateEditorStats` extendido** para poblar `#wb-editor-count` (es/en).
+> - **Acordeón 8D:** `border-left` coloreado por fila eliminado (hairline neutra por fila, igual que el playground; el color vive SOLO en el icono-chip y la barra mini).
+> - **Score idle calibrated:** `···/100` opacity .6 (consistente con U-6.1).
+> - **Verificación:** suite 42/42; screenshots vivos: hero→editor-focus-within coral→constelación flat→mini-cards border-top 2px→acordeón hairline neutra→footer plano; diffuse border-top en `.dimension-card` corregido tras typo-malform comment (verificable con `grep "border-left: none"`).
+>
+> **Sesión 2026-09-12 — U-11.2/11.3 Secciones del workbench a canon dark exacto (feedback «mejora las siguientes secciones»):**
+> - **Tokens dark alineados al DS (la corrección base):** LEGACY COMPAT de `css/ds/tokens.css` (`body.theme-cosmic:not(.theme-editorial)`) tenía `--bg-body:#0D0E12` y `--bg-sunken:.04` que divergían del canon (`--pm-z950 #121317`, sunken `.06`); ahora var() al token del propio archivo + `--bg-modal-overlay` canon (rgba(4,5,8,.7)). Fondo del app = `body.theme-dark` del playground.
+> - **Mini-cards de dimensiones des-rainbow (U-11.2):** render en `js/app.js` retiraba `style="border-top: 2px solid ${d.color}"` y `color:${d.color}` del score (identidad-de-dato por color Tailwind en CH fluía sola); ahora hairline neutral + score ink (`.eval-dim-score` → sans 650 tabular −0.035em, `.eval-dim-name` → micro 550 faint); pulse-pulse `box-shadow: 0 0 25px var(--dim-color)` eliminado; override editorial #EFE9DD → tokens.
+> - **Acordeón 8D a tokens de estado (U-11.3):** track `.dimension-bar` #D9D2C4 → `--bg-sunken`; fill `bad` accent→`--err` (accent=reservado acción); `.dimension-score.bad` ídem. good/warning keep semánticas `--ok/--warn`.
+> - **SVG orbital:** se conserva la paleta por-dimensión (mapa de datos; identidad legítima en el diagrama, dados los estados del playground vs criterios semánticos), con strokes al hairline (rgba .08) intáctos.
+> - **Verificación:** suite **42/42** ×2 (pre/post fix barras); probes vivos tras SW-purge+reload+análisis: body #121317, mini-cards score rgb(244,245,247) 24.8px border rgba(255,255,255,.08), acordeón track rgba(255,255,255,.06) fills ok/warn/err, tab-bar seg preservado (show re-fix de especificidad sobrevive al reload).
+>
+> **Sesión 2026-09-12 — U-11 Pulido capa 2 (feedback «aún falta, pulir el diseño»):**
+> - **Método:** segunda pasada de diff computado (probes playground vs app sobre editor/chips/tabs/ticker/footer/manifiesto).
+> - **Chips → CH-1 pill:** `.action-chip` fondo opaco + radius-sm + shadow → transparente + hairline `--rule-color` + `--r-full` + 500 `--ink-soft` (hover via tokens).
+> - **Tab-bar → seg SE-0:** la innen L1014 se declaró seg; el invasor era **TB-1 de `css/ds/components.css`** (`display:flex + border-bottom + gap s-6`) que carga DESPUÉS de index.css y ganaba por orden de fuente — el walker de CSSOM del navegador lo identificó y neutralizado con `body .tab-bar` (0-1-1 > 0-1-0, especificidad sobre orden). Además retirados: L4971 underline `.tab` huérfano (`border-bottom: 2px` + margin -1px) y editorial hardcode #D9D2C4. Resultado exacto: seg `padding 3px/gap 2px/r-full/bg-sunken, border-bottom 0`; tab activo `bg-raised + shadow-1` (playground canónico).
+> - **Título hero → manifiesto exacto del playground:** `clamp(2.9rem, 6.5vw, 4.6rem)` (antes 3.6) con tracking -0.042em — el manifiesto del playground a 73.6px reales. `line-height 1.05`.
+> - **Ticker → DS:** barra `--bg-body` (antes bg-paper) + hairline + altura 44px del `.ticker` canon; label sin fondo (transparent; separador hairline).
+> - **Footer → superficie DS:** `--bg-sunken` + padding 32/40 → muestra el fondo igual que el fin del playground; `footer-inner` → 1080px (medida unificada).
+> - **Verificación:** suite 42/42; probes vivos post-reload: tab-bar seg con tab activo bg-raised, chip pill, título 73.6px, ticker 44px bg-body, footer-inner 1080px.
+>
+> **Sesión 2026-09-12 — U-10 Espíritu DS: medida, ritmo y chrome del playground (feedback «sigue feísimo, no logra tener el espíritu»):**
+> - **Diagnóstico por diff computado 1:1 (probes playground vs app):** la brecha era ESTRUCTURAL, no cosmética: (1) contenido full-bleed sin medida de columna, (2) métricas del hero con regla superior + columnas apiladas, (3) kicker sin geometría pill, (4) numerales de datos pintados accent, (5) header plano donde el canon es translúcido.
+> - **Medida DS (la corrección madre):** `.view` → `max-width: 1080px` (pg-wrap) + `padding-inline: 32px`. Todas las vistas heredan la medida exacta del playground; se eliminó la regla top y apilado del strip.
+> - **Métricas hero → posición 04 del playground:** filas baseline (strong + span en línea), divisores `border-left` entre items, sin regla superior, `margin-top 64px`, strong 1.3rem/640 ink plano (accent retirado de datos — regla «accent solo para acción»).
+> - **Kicker → pill del playground:** `inline-flex` + `bg-sunken` 5px 14px `--r-full` + `margin-bottom 32px` (antes texto desnudo).
+> - **Header → chrome pg-nav:** `color-mix(bg-body 82%, transparent)` + `backdrop-filter: blur(12px)` — translúcido sobre el flujo, hairline de cierre (reemplaza el plano U-5.4).
+> - **Verificación:** suite 42/42; probes vivos post-reload: view 1080/32px, kicker pill (bg rgba(255,255,255,.04), radius 9999, mb 32px), stats mt 64 sin border-top, strong rgb(244,245,247) 20.8px 640 (ya NO coral), divisores 1px rgba(255,255,255,.08), header color(srgb .05/.05/.07 / .82) + blur(12px) — la gramática computada del playground replicada 1:1.
+>
+> **Sesión 2026-09-12 — U-9.1 Numerales fantasma retirados (feedback «quita los números de fondo, no aplican»):**
+> - **HTML:** 6 spans `craft-numeral` (01–06) eliminados de los headers de Templates/History/Learn/Radar/Models/Leaderboard.
+> - **CSS:** bloque U-6 de posicionamiento de numerales → `.view .craft-numeral { display: none; }` como salvaguarda DOM; los `position:relative` de headers se conservan (inofensivos, el wrapper de búsqueda de Learn depende de su contexto).
+> - **Verificación:** suite 42/42; probe vivo post-reload: 0 `.craft-numeral` en DOM, header Templates Intact ('Template Library' Inter 24.8px, cards renderizando).
+>
+> **Sesión 2026-09-12 — U-9 Tipografía & componentes DS completos («aplica el design system», barrido final):**
+> - **Fin de ALL-CAPS tipográfico (14 restos):** `.score-label`, `.badge`, `.dimension-section-title` (mono→Inter 550), `.adversarial-status` (mono→Inter pill), `.learn-example-label`/`.learn-detail-label`, `.constellation-title`, `.score-legend-table th`, `.gaps-card-title` (amber hardcode→`--warn`), `.metric-lbl`, `.model-modal-subtitle` (ink-bright→ink-soft 600), `.editorial-live-badge`, `.hero-header-content .t-micro` (respetada geometría kicker del playground: tracking 0.08em), `.central-score-title/label` (mono clamp→t-micro Inter). `grep "text-transform: uppercase" css/index.css` → **0 vivos** en el app (solo queda el legit del listbox en `css/ds/components.css`).
+> - **Strings i18n sentence-case (es/en):** `score.centralLabel` ('Puntuación del prompt'/'Prompt score'), `status.{pass,warning,fail}` ('Pasa/Advertencia/Falla' — 'Pass/Warning/Fail'), `ticker.{badge,badgeText}` ('Radar en vivo'/'Live AI Radar' — emoji ⚡ al badge en), `adversarial.{riskCritical..riskLow,pass,fail,warn}` ('Riesgo crítico'…/'Critical risk'…), fix de render `js/app.js:1082` (`ap.severity.toUpperCase()` hardcode → `t('learn.sev_' + severity)` con claves ya existentes). Acrónimos legítimos intactos (JSON, OWASP, NLP, RAG…).
+> - **Badges → BA-1 pill:** `.badge` base (padding 4px 10px, gap 6px, `--r-full`, letter-spacing 0, sin uppercase), `.badge-neutral` → `--bg-sunken/--ink-soft` sin rgba blancos, `.badge-grade` → pill `--r-full` 600, `.count-badge` → pill sin borde, añadida variante `.badge-danger` (err-bg/err) que se usaba en JS sin definición CSS.
+> - **Lang-switcher → SE-0 seg DS:** contenedor `--bg-sunken` sin borde ni blur; tab inactivo `--ink-soft`, hover `--ink` transparente; activo `--bg-raised` + `box-shadow: var(--shadow-1)` (glow cyan + glass + overrides editorial hardcode eliminados). Probe vivo: activo `rgb(27,31,40)` dark / `#FBF8F2` editorial.
+> - **Scrims MD-1 planos:** `.modal-backdrop` (rgba 26,22,18 → `--bg-modal-overlay`), `.modal-overlay` aliases (blur 3px→none), `.modal-overlay` U-4.3 (blur 4px→none). `backdrop-filter: blur` remanentes = 5 declaraciones MUERTAS sobrepasadas por bloques U-5.4/U-7 (convención override del repo).
+> - **Neón de score fuera:** `.central-score-box` text-shadow dual (0 0 18px amber + editorial glow) → `none` en ambos temas; `text-shadow: blur/rgba` fuera del app.
+> - **Zona domain-intelligence a tokens:** panel rgba-blancos → transparent + hairline `--rule-color`; `.domain-archetype-badge` rgba vermilion + `#ff7b6b` → chip `--accent-soft`/`--accent-text` Inter; `.domain-context-gaps-card` dashed amber → sólida `--warn-bg` + hairline; `.gaps-card-title` → `--warn` Inter.
+> - **HTML hardcodes:** score central 'PROMPT SCORE'→'Puntuación del prompt', ticker 'LIVE AI RADAR'→'Live AI Radar', hero-kicker '8 dimensions · local'→'8 dimensiones · 100% local' (paridad con i18n es).
+> - **Verificación:** `node -c` OK ×3, suite **42/42** dos corridas (pre y post-fix badge); probes vivos dark+editorial: lang seg, badges pill 9999px Inter sin transform, 'High'/'Fail'/'Findings'/'Key Strengths' sentence-case, acordeón borderLeft 0px, DOM caps-sweep → solo nombres propios del ticker (datos, no UI).
+>
+> **Sesión 2026-09-11 — Features P3.1 Streaming SSE de Noticias & P3.2 PWA Offline First:**
+> - **Streaming SSE (`/api/ai-news`, `js/app.js`):** Implementada transmisión en tiempo real vía Server-Sent Events (SSE) en `/api/ai-news?sse=true` (`text/event-stream`) con eventos `news_init`, `news_update` y `ping` heartbeat, con fallback automático.
+> - **PWA Offline First (`sw.js`, `manifest.json`):** Creado Service Worker `sw.js` con estrategia Stale-While-Revalidate para los 29 assets estáticos del core y Network-First para llamados API, permitiendo ejecución 100% offline del motor de scoring y herramientas.
+> - **Suite 15 de Pruebas (`test_edge_cases.js`):** Añadida Suite 15 validando la integridad del SW/PWA Manifest y la transmisión del endpoint SSE con **42/42 PASS**.
+>
+> **Sesión 2026-09-11 — Sincronización `dev` & Bugfix ReferenceError / HTML Meta Deprecation / Vercel SW MIME Type:**
+> - **Sincronización Git `dev`:** Ejecutada verificación y sincronización `git pull origin dev` (rama en la versión más reciente `b7bcbcb`).
+> - **Bugfix `closeScoreLegendModal` (`js/app.js`):** Definida la función `closeScoreLegendModal()` faltante en `js/app.js` para ocultar `#modal-score-legend`, resolviendo la excepción de JavaScript `Uncaught ReferenceError: closeScoreLegendModal is not defined` durante la inicialización de la app.
+> - **Eliminación de Deprecation Warning PWA (`index.html`):** Añadido `<meta name="mobile-web-app-capable" content="yes">` en el `<head>` de `index.html` para cumplir con las especificaciones modernas de navegadores web y PWA.
+> - **Fix Enrutamiento Vercel PWA Service Worker (`vercel.json`):** Registrado `sw.js` en las secciones `builds` (`@vercel/static`), `headers` (`Content-Type: application/javascript; charset=utf-8`, `Service-Worker-Allowed: /`) y `routes` (`/sw.js` → `/sw.js`) de `vercel.json`. Esto corrige la captura de la ruta por el comodín `/(.*)` → `index.html` que provocaba el fallo `unsupported MIME type ('text/html')` al registrar el Service Worker en Vercel.
+> - **Fix Fondo de Encabezado Fijo (`css/index.css`):** Reemplazada la propiedad `background: transparent !important;` en `.app-header` por `background: var(--bg-body) !important;`. Esto soluciona la transparencia completa del encabezado que provocaba que el contenido del elemento `<main>` se visualizara desplazándose por detrás del menú al hacer scroll.
+> - **Verificación Total:** 42/42 pruebas unitarias y de integración PASS en `node test_edge_cases.js`.
+>
+> **Sesión 2026-09-13 — Bugfix Opacidad Header en Modo Luna & Arquitectura 3 Partes para Modales:**
+> - **Fix Opacidad de Encabezado Fijo (`css/index.css`):** Corregido problema donde `.app-header` quedaba semi-transparente en Modo Luna (Editorial Clásico) permitiendo ver el contenido del body al desplazarse por scroll. Se definió `body.theme-editorial .app-header` con `background: #FBF8F2 !important; backdrop-filter: none !important; z-index: 1100 !important;` y `body:not(.theme-editorial) .app-header` con `background: rgba(13, 15, 23, 0.95) !important; z-index: 1100 !important;`.
+> - **Arquitectura de 3 Partes para Modales (`index.html`, `css/index.css`):** Refactorizados los modales del Radar (`#modal-ticker-feed`), Inspector MCP (`#modal-mcp-inspector`), Laboratorio Adversarial (`#modal-adversarial-lab`) y Exportación de Código (`#modal-code-export`) con estructura canónica de 3 partes (`.modal-header`, `.modal-body`, `.modal-footer`), `max-height: 88vh`, y `overflow-y: auto`.
+> - **Limpieza Visual i18n & Iconos Phosphor (`js/i18n.js`, `js/app.js`):** Eliminados emojis de las pestañas e interfaces de modales, reemplazados por iconos Phosphor semánticos (`ph-lightning`, `ph-cpu`, `ph-robot`, `ph-shield-check`) y eliminada la flecha redundante `↗` en enlaces a fuentes originales.
+> - **Verificación Total:** 42/42 pruebas PASS en `node test_edge_cases.js`. Verificado por agente de navegador sin bleed-through ni desbordes.
+
+
+
