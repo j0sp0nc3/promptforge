@@ -175,14 +175,20 @@ promptforge/                    ← App Web (Vercel)
 
 ## 🔄 Última Actualización
 
-- **Fecha:** 2026-09-13
-- **Último commit:** `663903d` ("docs: backup task roadmap and domain intelligence engine completion")
+- **Fecha:** 2026-09-26
+- **Último commit:** `efe378f` ("fix(ui): fix header opacity in Modo Luna and elevate z-index to 1100")
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
 - **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
-- **Último hito:** Reparación Estética y Layout Responsivo de los Modales de Inspección (`#modal-mcp-inspector`, `#modal-adversarial-lab`, `.modal-card--lg`).
+- **Último hito:** Higiene de repositorio, exclusión de temporales `.yunta/` y `scratch/` en `.gitignore`, failover resiliente en runner de Yunta y preparación de promoción a producción.
 - **Estado:** 42/42 tests JS en PASS (15 suites) | 14/14 tests Python en PASS | 10/10 endpoints y carga en PASS. Entorno local verificado bajo Spec-Driven Development (SDD).
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (reciente):**
+>
+> **Sesión 2026-09-26 — Higiene de Repositorio, Failover de Runner y Preparación de Promoción:**
+> - **Limpieza e Higiene Git (`.gitignore`):** Se eliminaron scripts temporales fuera del proyecto (`scratch/`) y registros de sesión transitoria (`.yunta/`). Se añadieron formalmente `.yunta/` y `scratch/` a `.gitignore` para blindar el repositorio contra rastreo innecesario.
+> - **Failover Resiliente en Runner Yunta (`scripts/yunta_runner.py`):** Configurada cadena de fallback automático de modelos (`openai/glm-4.7`, `gemini/gemini-1.5-flash`, `groq/llama-3.3-70b-versatile`, `openai/gpt-4o-mini`) con limpieza preventiva de `OPENAI_BASE_URL` para evitar conflictos con proveedores alternativos ante límites de cuota o rate limits.
+> - **Verificación:** 42/42 tests PASS en `node test_edge_cases.js`. Árbol de trabajo 100% limpio y alineado con `origin/dev`.
+>
 >
 > **Sesión 2026-09-13 — Reparación de Overflow y Layout Responsivo de Modales de Inspección (`.modal-card--lg`):**
 > - **Redimensionamiento y Max-Height Containment:** Definida la clase `.modal-card--lg` con `max-width: 680px !important`, `max-height: 88vh` y `overflow-y: auto`, evitando que los botones y áreas de texto se desborden verticalmente fuera de la tarjeta emergente.
