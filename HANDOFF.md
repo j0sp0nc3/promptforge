@@ -69,6 +69,12 @@ interactiva desplegada en Vercel.
 ## 📋 Backlog de Funcionalidades Pendientes (Priorizado 2026)
 
 ### 📌 Prioridad 1: ALTA (Innovación Core & DX de Producción)
+- [x] **Core `assess()` Fase 1 — Evaluación de pedidos para agentes (Python, experimental):** `TaskAssessor.assess(prompt, context)` en `packages/core/promptometer_core.py`, harness-agnostic y sin I/O (el host pasa `known_files`, `turn`, `is_voice`, `lang`). Devuelve score/quality, grounding (`targets.verified/missing/modules`), `exploration_risk`, `scope.suggest_split` (anti mega-prompt), `recommended_tier`, `correction` (drift turnos 2+), `issues` TA000–TA010 ES/EN, `tip` y `scaffold`. CLI `promptometer assess … --files-from git` (JSON), `pyproject.toml`, spec compartida `fixtures/assess-cases.json` (27 casos) y `test_assess.py` (7/7). Heurísticas portadas de `yunta/intent.py` v2.15.1, corrigiendo el bug que puntuaba "reviértelo" como steering sin marcar corrección.
+- [x] **Core `assess()` Fase 2 — Paridad JS (v1.2.0):** `TaskAssessor` portado a `promptometer-core.js` (export `assess`/`classifyTask`, CLI `node promptometer-core.js assess …`). Regex, keywords y mensajes se definen solo en Python y se embeben en JS como `TA_SPEC` (`python test_assess.py --sync-js`); JS traduce `\b`/`\w` a clases Unicode para igualar a `re`. `test_assess.py` (9/9) verifica sincronía del spec y paridad JS/Python sobre fixtures + corpus Unicode aleatorio. `VERSION` 1.2.0 en JS/Python/`package.json`/`pyproject.toml`; README del paquete. `node_modules/promptometer-core` es un link a `packages/core` (sin copia manual).
+- [x] **Workflow `.github/workflows/publish-core.yml`:** publica `packages/core` en npm al pushear un tag `core-vX.Y.Z` (valida tag = versión, corre `test_assess.py`, `npm publish --provenance`).
+- [x] **Publicado `promptometer-core@1.2.0` en npm (2026-09-26, `latest`, con provenance SLSA):** tag `core-v1.2.0` → `41be799`, vía npm Trusted Publishing (OIDC; trusted publisher = `j0sp0nc3/promptforge` + `publish-core.yml`, sin environment). El paquete exige 2FA y rechaza tokens, por eso no se usa `NPM_TOKEN` (se puede borrar de ambos repos). `package.json` ahora apunta `repository/homepage/bugs` a `promptforge` (requisito de trusted publishing). Próximos releases: subir versión en JS/Python/`package.json`/`pyproject.toml` y pushear `core-vX.Y.Z`.
+- [ ] **Core `assess()` Fase 3 — Yunta consume el core:** `pip install -e` en Yunta; `IntentClassifier.evaluate_prompt` como adaptador sobre `assess()` (índice `git ls-files` cacheado por sesión); eliminar el motor paralelo manteniendo los 454 tests.
+- [ ] **Consolidar las 3 copias del motor:** el repo canónico `j0sp0nc3/promptometer` tiene `objective`/LLM07/gate de sustancia en JS pero Python v1.0.0; `packages/core` tiene AP048/AP049/BP017 + `assess()` pero no `objective`/LLM07; `js/analyzer.js` diverge de ambos. Unificar y sincronizar el canónico.
 - [x] **P1.1 — Exportador Multi-SDK Native Code Snippets (Python / TS / Curl):** Botón en Workbench que convierte cualquier prompt calibrado en código listo para producción usando SDKs oficiales 2026 (OpenAI Python v2, Anthropic TS SDK, Google GenAI SDK, Curl con headers MCP).
 - [x] **P1.2 — Multi-Model Cost & Token Latency Simulator:** Calculadora en tiempo real en Workbench que estima el costo exacto (por 1k / 100k ejecuciones) y latencia en el Top 10 de modelos (Claude Mythos, GPT-5.6 Sol, Gemini 3.1 Pro, DeepSeek V4, Llama 4).
 
@@ -175,14 +181,29 @@ promptforge/                    ← App Web (Vercel)
 
 ## 🔄 Última Actualización
 
-- **Fecha:** 2026-09-13
-- **Último commit:** `663903d` ("docs: backup task roadmap and domain intelligence engine completion")
+- **Fecha:** 2026-09-26
+- **Último commit:** `feat(core): port assess() to JS with enforced parity, v1.2.0 + npm publish workflow` (sobre `eaf61a6`)
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
 - **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
-- **Último hito:** Reparación Estética y Layout Responsivo de los Modales de Inspección (`#modal-mcp-inspector`, `#modal-adversarial-lab`, `.modal-card--lg`).
-- **Estado:** 42/42 tests JS en PASS (15 suites) | 14/14 tests Python en PASS | 10/10 endpoints y carga en PASS. Entorno local verificado bajo Spec-Driven Development (SDD).
+- **Último hito:** Core `assess()` Fases 1-2: evaluación de pedidos para agentes en Python y JS con paridad verificada; `promptometer-core` 1.2.0 listo para publicar vía tag `core-v1.2.0`.
+- **Estado:** 42/42 tests JS en PASS (15 suites; el proceso node no termina solo por un handle abierto preexistente) | 14/14 tests Python en PASS (ahora incluye `assess`) | 9/9 `packages/core/test_assess.py` PASS (incluye paridad JS).
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (reciente):**
+>
+> **Sesión 2026-09-26 (c) — Core `assess()` Fase 2 (JS) + workflow de publicación npm:**
+> - **Port JS de `assess()`** con spec de regex/mensajes generado desde Python (`TA_SPEC`) y traducción Unicode de `\b`/`\w`; 0 divergencias en 1.500+ prompts aleatorios.
+> - **v1.2.0** en ambos motores y manifiestos; README del paquete; `publish-core.yml` (tag `core-v*` → tests → `npm publish`).
+>
+> **Sesión 2026-09-26 (b) — Core `assess()` Fase 1:**
+> - **Nueva API `assess()` en `packages/core/promptometer_core.py`:** evalúa el pedido de trabajo que se entrega a un agente (no un system prompt). Sin I/O: el índice de archivos lo aporta el harness. `analyze()` y `js/analyzer.js` no cambian.
+> - **CLI + empaquetado:** `python packages/core/promptometer_core.py assess|analyze …` y `pyproject.toml` (`pip install -e packages/core` → comando `promptometer`).
+> - **Spec compartida:** `packages/core/fixtures/assess-cases.json` + `packages/core/test_assess.py` (fixtures, guardia no-I/O, CLI). `test_edge_cases.py` ahora también ejercita `assess()`.
+>
+> **Sesión 2026-09-26 — Higiene de Repositorio, Failover de Runner y Preparación de Promoción:**
+> - **Limpieza e Higiene Git (`.gitignore`):** Se eliminaron scripts temporales fuera del proyecto (`scratch/`) y registros de sesión transitoria (`.yunta/`). Se añadieron formalmente `.yunta/` y `scratch/` a `.gitignore` para blindar el repositorio contra rastreo innecesario.
+> - **Failover Resiliente en Runner Yunta (`scripts/yunta_runner.py`):** Configurada cadena de fallback automático de modelos (`openai/glm-4.7`, `gemini/gemini-1.5-flash`, `groq/llama-3.3-70b-versatile`, `openai/gpt-4o-mini`) con limpieza preventiva de `OPENAI_BASE_URL` para evitar conflictos con proveedores alternativos ante límites de cuota o rate limits.
+> - **Verificación:** 42/42 tests PASS en `node test_edge_cases.js`. Árbol de trabajo 100% limpio y alineado con `origin/dev`.
+>
 >
 > **Sesión 2026-09-13 — Reparación de Overflow y Layout Responsivo de Modales de Inspección (`.modal-card--lg`):**
 > - **Redimensionamiento y Max-Height Containment:** Definida la clase `.modal-card--lg` con `max-width: 680px !important`, `max-height: 88vh` y `overflow-y: auto`, evitando que los botones y áreas de texto se desborden verticalmente fuera de la tarjeta emergente.

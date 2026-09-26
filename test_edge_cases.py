@@ -58,9 +58,10 @@ for test in edge_cases:
         analysis = promptometer_core.analyze(inp)
         adversarial = promptometer_core.run_adversarial(inp)
         improved = promptometer_core.improve(inp, analysis)
+        assessed = promptometer_core.assess(inp) if hasattr(promptometer_core, "assess") else {}
         elapsed = round((time.time() - t0) * 1000, 2)
 
-        raw_dump = json.dumps(analysis) + json.dumps(adversarial) + json.dumps(improved)
+        raw_dump = json.dumps(analysis) + json.dumps(adversarial) + json.dumps(improved) + json.dumps(assessed)
         if "NaN" in raw_dump or "null" in raw_dump and inp and len(str(inp).strip()) > 0:
             failed += 1
             print(f" ❌ {name:<52} | FAIL (Respuesta inconsistente) | {elapsed} ms")
