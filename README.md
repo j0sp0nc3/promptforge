@@ -186,7 +186,7 @@ node packages/core/promptometer-core.js assess "arreglalo" --compact
 
 Shared spec: `packages/core/fixtures/assess-cases.json` (27 cases) — `python packages/core/test_assess.py` checks Python, verifies the JS-embedded regex spec (`TA_SPEC`, regenerate with `--sync-js`) and compares both engines over the fixtures plus a randomized Unicode corpus.
 
-Release: push a tag `core-vX.Y.Z` matching `packages/core/package.json` → `.github/workflows/publish-core.yml` runs the tests and publishes to npm (needs the `NPM_TOKEN` repo secret).
+Release: push a tag `core-vX.Y.Z` matching `packages/core/package.json` → `.github/workflows/publish-core.yml` runs the tests and publishes to npm via Trusted Publishing (OIDC, no stored token).
 
 ### 3. Universal REST API Microservice (`server.js` / Vercel)
 Native Node.js HTTP server or Vercel Serverless Function:

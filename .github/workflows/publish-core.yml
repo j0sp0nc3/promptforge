@@ -1,7 +1,8 @@
 name: Publish promptometer-core to npm
 
 # Publica packages/core al pushear un tag `core-vX.Y.Z` (debe coincidir con package.json).
-# Requiere el secret NPM_TOKEN (npm → Access Tokens → Automation/Granular con permiso de publish).
+# Autenticación por npm Trusted Publishing (OIDC): sin token guardado. El paquete tiene
+# configurado como trusted publisher j0sp0nc3/promptforge + este archivo (publish-core.yml).
 on:
   push:
     tags:
@@ -9,7 +10,7 @@ on:
 
 permissions:
   contents: read
-  id-token: write # npm provenance
+  id-token: write # OIDC para trusted publishing + provenance
 
 jobs:
   publish:
@@ -22,8 +23,11 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           registry-url: https://registry.npmjs.org
+
+      - name: npm >= 11.5.1 (required for trusted publishing)
+        run: npm install -g npm@latest && npm --version
 
       - uses: actions/setup-python@v5
         with:
@@ -42,5 +46,3 @@ jobs:
 
       - name: Publish
         run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
