@@ -26,13 +26,13 @@
   ],
   "license": "MIT",
   "author": "j0sp0nc3",
-  "homepage": "https://github.com/j0sp0nc3/promptometer#readme",
+  "homepage": "https://github.com/j0sp0nc3/promptforge/tree/dev/packages/core#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/j0sp0nc3/promptometer.git",
+    "url": "git+https://github.com/j0sp0nc3/promptforge.git",
     "directory": "packages/core"
   },
   "bugs": {
-    "url": "https://github.com/j0sp0nc3/promptometer/issues"
+    "url": "https://github.com/j0sp0nc3/promptforge/issues"
   }
 }

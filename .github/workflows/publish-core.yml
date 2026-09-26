@@ -45,4 +45,4 @@ jobs:
         run: python test_assess.py
 
       - name: Publish
-        run: npm publish --provenance --access public
+        run: npm publish --provenance --access public --loglevel verbose
