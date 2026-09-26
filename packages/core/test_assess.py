@@ -138,7 +138,8 @@ def sync_js():
 
 def test_js_spec_in_sync():
     src, i, j = _split_js()
-    assert src[i:j] == _render_spec_block(), "TA_SPEC desincronizado: corre `python test_assess.py --sync-js`"
+    # Normaliza CRLF (checkout en Windows con autocrlf) antes de comparar
+    assert src[i:j].replace("\r\n", "\n") == _render_spec_block(), "TA_SPEC desincronizado: corre `python test_assess.py --sync-js`"
 
 
 def _parity_jobs():
