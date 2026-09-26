@@ -1,7 +1,7 @@
 {
   "name": "promptometer-core",
-  "version": "1.1.0",
-  "description": "Zero-dependency prompt evaluation engine — scores, anti-patterns, adversarial tests, rewrites. JS/Python parity. Includes Agentic Loops & MCP Evaluation.",
+  "version": "1.2.0",
+  "description": "Zero-dependency prompt evaluation engine — scores, anti-patterns, adversarial tests, rewrites and harness-agnostic agent task assessment (assess). JS/Python parity.",
   "main": "promptometer-core.js",
   "module": "promptometer-core.js",
   "browser": "promptometer-core.js",

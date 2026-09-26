@@ -70,7 +70,9 @@ interactiva desplegada en Vercel.
 
 ### 📌 Prioridad 1: ALTA (Innovación Core & DX de Producción)
 - [x] **Core `assess()` Fase 1 — Evaluación de pedidos para agentes (Python, experimental):** `TaskAssessor.assess(prompt, context)` en `packages/core/promptometer_core.py`, harness-agnostic y sin I/O (el host pasa `known_files`, `turn`, `is_voice`, `lang`). Devuelve score/quality, grounding (`targets.verified/missing/modules`), `exploration_risk`, `scope.suggest_split` (anti mega-prompt), `recommended_tier`, `correction` (drift turnos 2+), `issues` TA000–TA010 ES/EN, `tip` y `scaffold`. CLI `promptometer assess … --files-from git` (JSON), `pyproject.toml`, spec compartida `fixtures/assess-cases.json` (27 casos) y `test_assess.py` (7/7). Heurísticas portadas de `yunta/intent.py` v2.15.1, corrigiendo el bug que puntuaba "reviértelo" como steering sin marcar corrección.
-- [ ] **Core `assess()` Fase 2 — Paridad JS:** portar `TaskAssessor` a `promptometer-core.js` (export `assess`, CLI node), runner JS sobre los mismos fixtures, subir `VERSION` a 1.2.0 en JS/Python/`package.json`/`pyproject.toml` y sincronizar `node_modules/promptometer-core/`.
+- [x] **Core `assess()` Fase 2 — Paridad JS (v1.2.0):** `TaskAssessor` portado a `promptometer-core.js` (export `assess`/`classifyTask`, CLI `node promptometer-core.js assess …`). Regex, keywords y mensajes se definen solo en Python y se embeben en JS como `TA_SPEC` (`python test_assess.py --sync-js`); JS traduce `\b`/`\w` a clases Unicode para igualar a `re`. `test_assess.py` (9/9) verifica sincronía del spec y paridad JS/Python sobre fixtures + corpus Unicode aleatorio. `VERSION` 1.2.0 en JS/Python/`package.json`/`pyproject.toml`; README del paquete. `node_modules/promptometer-core` es un link a `packages/core` (sin copia manual).
+- [x] **Workflow `.github/workflows/publish-core.yml`:** publica `packages/core` en npm al pushear un tag `core-vX.Y.Z` (valida tag = versión, corre `test_assess.py`, `npm publish --provenance`).
+- [ ] **Publicar `promptometer-core@1.2.0`:** falta crear el secret `NPM_TOKEN` en GitHub y pushear el tag `core-v1.2.0`.
 - [ ] **Core `assess()` Fase 3 — Yunta consume el core:** `pip install -e` en Yunta; `IntentClassifier.evaluate_prompt` como adaptador sobre `assess()` (índice `git ls-files` cacheado por sesión); eliminar el motor paralelo manteniendo los 454 tests.
 - [ ] **Consolidar las 3 copias del motor:** el repo canónico `j0sp0nc3/promptometer` tiene `objective`/LLM07/gate de sustancia en JS pero Python v1.0.0; `packages/core` tiene AP048/AP049/BP017 + `assess()` pero no `objective`/LLM07; `js/analyzer.js` diverge de ambos. Unificar y sincronizar el canónico.
 - [x] **P1.1 — Exportador Multi-SDK Native Code Snippets (Python / TS / Curl):** Botón en Workbench que convierte cualquier prompt calibrado en código listo para producción usando SDKs oficiales 2026 (OpenAI Python v2, Anthropic TS SDK, Google GenAI SDK, Curl con headers MCP).
@@ -180,13 +182,17 @@ promptforge/                    ← App Web (Vercel)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-09-26
-- **Último commit:** `feat(core): add harness-agnostic assess() for agent task prompts` (sobre `13c539f`, solo local — pendiente de push a `dev`)
+- **Último commit:** `feat(core): port assess() to JS with enforced parity, v1.2.0 + npm publish workflow` (sobre `eaf61a6`)
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
 - **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
-- **Último hito:** Core `assess()` Fase 1 (Python): evaluación de pedidos para agentes con grounding de workspace, riesgo de exploración, anti mega-prompt, tier de modelo, detección de corrección y scaffold.
-- **Estado:** 42/42 tests JS en PASS (15 suites; el proceso node no termina solo por un handle abierto preexistente) | 14/14 tests Python en PASS (ahora incluye `assess`) | 7/7 `packages/core/test_assess.py` PASS.
+- **Último hito:** Core `assess()` Fases 1-2: evaluación de pedidos para agentes en Python y JS con paridad verificada; `promptometer-core` 1.2.0 listo para publicar vía tag `core-v1.2.0`.
+- **Estado:** 42/42 tests JS en PASS (15 suites; el proceso node no termina solo por un handle abierto preexistente) | 14/14 tests Python en PASS (ahora incluye `assess`) | 9/9 `packages/core/test_assess.py` PASS (incluye paridad JS).
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (reciente):**
+>
+> **Sesión 2026-09-26 (c) — Core `assess()` Fase 2 (JS) + workflow de publicación npm:**
+> - **Port JS de `assess()`** con spec de regex/mensajes generado desde Python (`TA_SPEC`) y traducción Unicode de `\b`/`\w`; 0 divergencias en 1.500+ prompts aleatorios.
+> - **v1.2.0** en ambos motores y manifiestos; README del paquete; `publish-core.yml` (tag `core-v*` → tests → `npm publish`).
 >
 > **Sesión 2026-09-26 (b) — Core `assess()` Fase 1:**
 > - **Nueva API `assess()` en `packages/core/promptometer_core.py`:** evalúa el pedido de trabajo que se entrega a un agente (no un system prompt). Sin I/O: el índice de archivos lo aporta el harness. `analyze()` y `js/analyzer.js` no cambian.

@@ -1,6 +1,6 @@
 [project]
 name = "promptometer-core"
-version = "1.1.0"
+version = "1.2.0"
 description = "Zero-dependency prompt evaluation engine — scores, anti-patterns, adversarial tests, rewrites and agent task assessment."
 requires-python = ">=3.8"
 license = { text = "MIT" }

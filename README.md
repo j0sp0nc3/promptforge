@@ -157,11 +157,11 @@ analysis = PromptometerCore().analyze("Your prompt text here...")
 print("Score:", analysis["overallScore"], "Grade:", analysis["grade"])
 ```
 
-#### Task Assessment API — `assess()` (experimental, Python)
+#### Task Assessment API — `assess()` (experimental, JS + Python, v1.2.0)
 `analyze()` evaluates *designed* prompts (system prompts, templates). `assess()` evaluates the **work request handed to an agent** — typed by a person or emitted by an orchestrator — and is harness-agnostic: the host passes context as data, `assess()` never touches the disk (0 ms, 0 tokens).
 
 ```python
-import promptometer_core as pc
+import promptometer_core as pc   # JS: const { assess } = require('promptometer-core')
 
 r = pc.assess("edita auth/inexistente.py para validar el token",
               {"known_files": ["src/auth.py", "js/app.js"],  # optional workspace index (e.g. git ls-files)
@@ -181,9 +181,12 @@ CLI (JSON on stdout — usable from any harness, hook or script):
 pip install -e packages/core
 promptometer assess "agrega tests a analyzer" --files-from git   # or: python packages/core/promptometer_core.py assess ...
 promptometer assess "reviértelo, te equivocaste" --turn 2 --lang en --compact
+node packages/core/promptometer-core.js assess "arreglalo" --compact
 ```
 
-Shared spec: `packages/core/fixtures/assess-cases.json` (27 cases) — run with `python packages/core/test_assess.py`. The JS port must satisfy the same fixtures.
+Shared spec: `packages/core/fixtures/assess-cases.json` (27 cases) — `python packages/core/test_assess.py` checks Python, verifies the JS-embedded regex spec (`TA_SPEC`, regenerate with `--sync-js`) and compares both engines over the fixtures plus a randomized Unicode corpus.
+
+Release: push a tag `core-vX.Y.Z` matching `packages/core/package.json` → `.github/workflows/publish-core.yml` runs the tests and publishes to npm (needs the `NPM_TOKEN` repo secret).
 
 ### 3. Universal REST API Microservice (`server.js` / Vercel)
 Native Node.js HTTP server or Vercel Serverless Function:
@@ -292,12 +295,13 @@ promptforge/                    # Web App Repo (Vercel deployment)
 ├── PLAN.md                     # Incremental Development Roadmap (Phase 4 Completed ✅)
 ├── AGENTS.md                   # Ontological Rules & Guardrails for AI Agents
 ├── packages/
-│   └── core/                   # promptometer-core@1.1.0 (Dual JS/Python engine)
-│       ├── package.json        # v1.1.0 specification & metadata
+│   └── core/                   # promptometer-core@1.2.0 (Dual JS/Python engine)
+│       ├── package.json        # v1.2.0 specification & metadata
+│       ├── README.md           # npm package readme (analyze / assess / CLI)
 │       ├── promptometer-core.js# Universal JS evaluation engine
 │       ├── promptometer_core.py# Native zero-dependency Python port (+ assess() & CLI)
 │       ├── pyproject.toml      # pip install -e packages/core → `promptometer` CLI
-│       ├── test_assess.py      # assess() suite (fixtures, no-I/O guard, CLI)
+│       ├── test_assess.py      # assess() suite (fixtures, no-I/O guard, CLI, JS parity, --sync-js)
 │       ├── fixtures/
 │       │   └── assess-cases.json # Shared JS/Python spec for assess()
 │       └── promptometer-rules.json # Declarative rules schema & weights

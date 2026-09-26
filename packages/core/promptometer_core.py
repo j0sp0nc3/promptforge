@@ -1,6 +1,6 @@
 # ============================================================================
 # Promptometer Core — Universal Python Library (Zero Dependencies)
-# Full parity with promptometer-core.js (v1.1.0)
+# Full parity with promptometer-core.js (v1.2.0)
 # Supports camelCase and snake_case keys.
 # ============================================================================
 
@@ -8,7 +8,7 @@ import re
 import math
 from typing import Any, Dict, List, Optional, Union
 
-VERSION = "1.1.0"
+VERSION = "1.2.0"
 
 
 class Signals:
@@ -588,6 +588,15 @@ _RE_TA_RESEARCH_TOPIC = re.compile(
     re.IGNORECASE,
 )
 
+# Auxiliares nombrados para que el port JS los reciba vía TA_SPEC (ver test_assess.py --sync-js).
+_RE_TA_CODE_FILE = re.compile(r"\b[\w\-\./\\]+\.(py|js|ts|jsx|tsx|rs|go|c|cpp|cs)\b")
+_RE_TA_CODE_VOICE_FILE = re.compile(r"\b(punto|dot)\s+(py|js|ts|jsx|tsx|rs|go|c|cpp|cs)\b")
+_RE_TA_CODE_HINT = re.compile(r"\b(arregl|corrig|edit|deshaz|revi[eé]rt|refactori|ayuda)|\bno (anda|funciona)\b|\bfalla\b")
+_RE_TA_URL = re.compile(r"^(https?:|www\.)")
+_RE_TA_TOKEN = re.compile(r"[a-z_][\w\-]*")
+_RE_TA_VOICE_SEP = re.compile(r"\s+(barra|slash)\s+", re.IGNORECASE)
+_RE_TA_VOICE_DOT = re.compile(r"\s+(punto|dot)\s+(" + _TA_EXT + r")\b", re.IGNORECASE)
+
 _TA_SOFTWARE_KEYWORDS = [
     r"\bcode\b", r"\bcódigo\b", r"\bfix\b", r"\brefactor\b", r"\btest\b", r"\btests\b",
     r"\bpytest\b", r"\bdotnet\b", r"\bclass\b", r"\bfunction\b", r"\bfunción\b",
@@ -682,8 +691,8 @@ def _ta_norm_path(p: str) -> str:
 
 def _ta_voice_normalize(text: str) -> str:
     """Convierte dictado fonético a sintaxis ('yunta barra intent punto py' → 'yunta/intent.py')."""
-    out = re.sub(r"\s+(barra|slash)\s+", "/", text, flags=re.IGNORECASE)
-    return re.sub(r"\s+(punto|dot)\s+(" + _TA_EXT + r")\b", r".\2", out, flags=re.IGNORECASE)
+    out = _RE_TA_VOICE_SEP.sub("/", text)
+    return _RE_TA_VOICE_DOT.sub(lambda m: "." + m.group(2), out)
 
 
 class TaskAssessor:
@@ -696,13 +705,11 @@ class TaskAssessor:
         lower = prompt.lower()
         research = sum(1 for kw in _TA_RESEARCH_KEYWORDS if re.search(kw, lower))
         software = sum(1 for kw in _TA_SOFTWARE_KEYWORDS if re.search(kw, lower))
-        if re.search(r"\b[\w\-\./\\]+\.(py|js|ts|jsx|tsx|rs|go|c|cpp|cs)\b", lower) or re.search(
-            r"\b(punto|dot)\s+(py|js|ts|jsx|tsx|rs|go|c|cpp|cs)\b", lower
-        ):
+        if _RE_TA_CODE_FILE.search(lower) or _RE_TA_CODE_VOICE_FILE.search(lower):
             software += 2
         # Órdenes de reparación/edición y símbolos de código también son señal de software
         # ('arreglalo', 'no anda', `get_user()`), aunque no nombren archivo.
-        if re.search(r"\b(arregl|corrig|edit|deshaz|revi[eé]rt|refactori|ayuda)|\bno (anda|funciona)\b|\bfalla\b", lower):
+        if _RE_TA_CODE_HINT.search(lower):
             software += 1
         if _RE_TA_SYMBOLS.search(prompt):
             software += 1
@@ -732,7 +739,7 @@ class TaskAssessor:
         mentioned: List[str] = []
         for m in list(_RE_TA_FILE_EXT.finditer(text)) + list(_RE_TA_PATH.finditer(text)):
             p = _ta_norm_path(m.group(0))
-            if p and p not in mentioned and not re.match(r"^(https?:|www\.)", p):
+            if p and p not in mentioned and not _RE_TA_URL.search(p):
                 mentioned.append(p)
         verified: List[str] = []
         missing: List[str] = []
@@ -758,7 +765,7 @@ class TaskAssessor:
                     base = p.rsplit("/", 1)[-1]
                     covered.add(base.rsplit(".", 1)[0] if "." in base else base)
                     covered.update(p.split("/"))
-                for tok in re.findall(r"[a-z_][\w\-]*", text.lower()):
+                for tok in _RE_TA_TOKEN.findall(text.lower()):
                     if tok in stems and tok not in covered and tok not in modules:
                         modules.append(tok)
         return {"mentioned": mentioned, "verified": verified, "missing": missing, "modules": modules}

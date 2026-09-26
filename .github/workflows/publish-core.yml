@@ -1,0 +1,46 @@
+name: Publish promptometer-core to npm
+
+# Publica packages/core al pushear un tag `core-vX.Y.Z` (debe coincidir con package.json).
+# Requiere el secret NPM_TOKEN (npm → Access Tokens → Automation/Granular con permiso de publish).
+on:
+  push:
+    tags:
+      - "core-v*"
+
+permissions:
+  contents: read
+  id-token: write # npm provenance
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/core
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Tag must match package.json version
+        run: |
+          PKG_VERSION="$(node -p "require('./package.json').version")"
+          if [ "core-v${PKG_VERSION}" != "${GITHUB_REF_NAME}" ]; then
+            echo "Tag ${GITHUB_REF_NAME} != core-v${PKG_VERSION}" >&2
+            exit 1
+          fi
+
+      - name: Tests (Python spec + JS parity)
+        run: python test_assess.py
+
+      - name: Publish
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
