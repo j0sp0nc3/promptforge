@@ -69,6 +69,10 @@ interactiva desplegada en Vercel.
 ## 📋 Backlog de Funcionalidades Pendientes (Priorizado 2026)
 
 ### 📌 Prioridad 1: ALTA (Innovación Core & DX de Producción)
+- [x] **Core `assess()` Fase 1 — Evaluación de pedidos para agentes (Python, experimental):** `TaskAssessor.assess(prompt, context)` en `packages/core/promptometer_core.py`, harness-agnostic y sin I/O (el host pasa `known_files`, `turn`, `is_voice`, `lang`). Devuelve score/quality, grounding (`targets.verified/missing/modules`), `exploration_risk`, `scope.suggest_split` (anti mega-prompt), `recommended_tier`, `correction` (drift turnos 2+), `issues` TA000–TA010 ES/EN, `tip` y `scaffold`. CLI `promptometer assess … --files-from git` (JSON), `pyproject.toml`, spec compartida `fixtures/assess-cases.json` (27 casos) y `test_assess.py` (7/7). Heurísticas portadas de `yunta/intent.py` v2.15.1, corrigiendo el bug que puntuaba "reviértelo" como steering sin marcar corrección.
+- [ ] **Core `assess()` Fase 2 — Paridad JS:** portar `TaskAssessor` a `promptometer-core.js` (export `assess`, CLI node), runner JS sobre los mismos fixtures, subir `VERSION` a 1.2.0 en JS/Python/`package.json`/`pyproject.toml` y sincronizar `node_modules/promptometer-core/`.
+- [ ] **Core `assess()` Fase 3 — Yunta consume el core:** `pip install -e` en Yunta; `IntentClassifier.evaluate_prompt` como adaptador sobre `assess()` (índice `git ls-files` cacheado por sesión); eliminar el motor paralelo manteniendo los 454 tests.
+- [ ] **Consolidar las 3 copias del motor:** el repo canónico `j0sp0nc3/promptometer` tiene `objective`/LLM07/gate de sustancia en JS pero Python v1.0.0; `packages/core` tiene AP048/AP049/BP017 + `assess()` pero no `objective`/LLM07; `js/analyzer.js` diverge de ambos. Unificar y sincronizar el canónico.
 - [x] **P1.1 — Exportador Multi-SDK Native Code Snippets (Python / TS / Curl):** Botón en Workbench que convierte cualquier prompt calibrado en código listo para producción usando SDKs oficiales 2026 (OpenAI Python v2, Anthropic TS SDK, Google GenAI SDK, Curl con headers MCP).
 - [x] **P1.2 — Multi-Model Cost & Token Latency Simulator:** Calculadora en tiempo real en Workbench que estima el costo exacto (por 1k / 100k ejecuciones) y latencia en el Top 10 de modelos (Claude Mythos, GPT-5.6 Sol, Gemini 3.1 Pro, DeepSeek V4, Llama 4).
 
@@ -176,13 +180,18 @@ promptforge/                    ← App Web (Vercel)
 ## 🔄 Última Actualización
 
 - **Fecha:** 2026-09-26
-- **Último commit:** `efe378f` ("fix(ui): fix header opacity in Modo Luna and elevate z-index to 1100")
+- **Último commit:** `feat(core): add harness-agnostic assess() for agent task prompts` (sobre `13c539f`, solo local — pendiente de push a `dev`)
 - **Rama activa de desarrollo:** `dev` (`origin/dev`)
 - **Ambientes:** `dev` → https://promptometer.vercel.app/ | `main` → https://promptometer.tech/
-- **Último hito:** Higiene de repositorio, exclusión de temporales `.yunta/` y `scratch/` en `.gitignore`, failover resiliente en runner de Yunta y preparación de promoción a producción.
-- **Estado:** 42/42 tests JS en PASS (15 suites) | 14/14 tests Python en PASS | 10/10 endpoints y carga en PASS. Entorno local verificado bajo Spec-Driven Development (SDD).
+- **Último hito:** Core `assess()` Fase 1 (Python): evaluación de pedidos para agentes con grounding de workspace, riesgo de exploración, anti mega-prompt, tier de modelo, detección de corrección y scaffold.
+- **Estado:** 42/42 tests JS en PASS (15 suites; el proceso node no termina solo por un handle abierto preexistente) | 14/14 tests Python en PASS (ahora incluye `assess`) | 7/7 `packages/core/test_assess.py` PASS.
 
 > 📌 **RESUMEN DE TRABAJO COMPLETADO (reciente):**
+>
+> **Sesión 2026-09-26 (b) — Core `assess()` Fase 1:**
+> - **Nueva API `assess()` en `packages/core/promptometer_core.py`:** evalúa el pedido de trabajo que se entrega a un agente (no un system prompt). Sin I/O: el índice de archivos lo aporta el harness. `analyze()` y `js/analyzer.js` no cambian.
+> - **CLI + empaquetado:** `python packages/core/promptometer_core.py assess|analyze …` y `pyproject.toml` (`pip install -e packages/core` → comando `promptometer`).
+> - **Spec compartida:** `packages/core/fixtures/assess-cases.json` + `packages/core/test_assess.py` (fixtures, guardia no-I/O, CLI). `test_edge_cases.py` ahora también ejercita `assess()`.
 >
 > **Sesión 2026-09-26 — Higiene de Repositorio, Failover de Runner y Preparación de Promoción:**
 > - **Limpieza e Higiene Git (`.gitignore`):** Se eliminaron scripts temporales fuera del proyecto (`scratch/`) y registros de sesión transitoria (`.yunta/`). Se añadieron formalmente `.yunta/` y `scratch/` a `.gitignore` para blindar el repositorio contra rastreo innecesario.

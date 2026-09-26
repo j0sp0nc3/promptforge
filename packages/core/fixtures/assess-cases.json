@@ -1,0 +1,788 @@
+{
+  "$comment": "Especificación compartida de TaskAssessor.assess(): los runners Python y JS deben cumplirla tal cual.",
+  "cases": [
+    {
+      "name": "vacío",
+      "prompt": "",
+      "context": {},
+      "expect": {
+        "score": 0,
+        "quality": "vague",
+        "intent": "code",
+        "exploration_risk": "high",
+        "suggest_split": false,
+        "recommended_tier": "standard",
+        "steering": false,
+        "correction": false,
+        "issue_ids": [
+          "TA000"
+        ],
+        "targets": {
+          "mentioned": [],
+          "verified": [],
+          "missing": [],
+          "modules": []
+        },
+        "has_scaffold": true
+      }
+    },
+    {
+      "name": "solo espacios",
+      "prompt": "   \n\t  ",
+      "context": {},
+      "expect": {
+        "score": 0,
+        "quality": "vague",
+        "intent": "code",
+        "exploration_risk": "high",
+        "suggest_split": false,
+        "recommended_tier": "standard",
+        "steering": false,
+        "correction": false,
+        "issue_ids": [
+          "TA000"
+        ],
+        "targets": {
+          "mentioned": [],
+          "verified": [],
+          "missing": [],
+          "modules": []
+        },
+        "has_scaffold": true
+      }
+    },
+    {
+      "name": "antipatrón 'arreglalo'",
+      "prompt": "arreglalo",
+      "context": {},
+      "expect": {
+        "score": 5,
+        "quality": "vague",
+        "intent": "code",
+        "exploration_risk": "high",
+        "suggest_split": false,
+        "recommended_tier": "standard",
+        "steering": false,
+        "correction": false,
+        "issue_ids": [
+          "TA001",
+          "TA003"
+        ],
+        "targets": {
+          "mentioned": [],
+          "verified": [],
+          "missing": [],
+          "modules": []
+        },
+        "has_scaffold": true
+      }
+    },
+    {
+      "name": "antipatrón 'no anda'",
+      "prompt": "no anda",
+      "context": {},
+      "expect": {
+        "score": 5,
+        "quality": "vague",
+        "intent": "code",
+        "exploration_risk": "high",
+        "suggest_split": false,
+        "recommended_tier": "standard",
+        "steering": false,
+        "correction": false,
+        "issue_ids": [
+          "TA001",
+          "TA003"
+        ],
+        "targets": {
+          "mentioned": [],
+          "verified": [],
+          "missing": [],
+          "modules": []
+        },
+        "has_scaffold": true
+      }
+    },
+    {
+      "name": "moderado sin archivo",
+      "prompt": "explica cómo funciona la arquitectura de caché en memoria",
+      "context": {},
+      "expect": {
+        "score": 65,
+        "quality": "moderate",
+        "intent": "research",
+        "exploration_risk": "high",
+        "suggest_split": false,
+        "recommended_tier": "deep",
+        "steering": false,
+        "correction": false,
+        "issue_ids": [
+          "TA009",
+          "TA010"
+        ],
+        "targets": {
+          "mentioned": [],
+          "verified": [],
+          "missing": [],
+          "modules": []
+        },
+        "has_scaffold": false
+      }
+    },
+    {
+      "name": "específico con archivo (sin grounding)",
+      "prompt": "agrega tests unitarios para yunta/intent.py",
+      "context": {},
+      "expect": {
+        "score": 80,
+        "quality": "specific",
+        "intent": "code",
+        "exploration_risk": "medium",
+        "suggest_split": false,
+        "recommended_tier": "standard",
+        "steering": false,
+        "correction": false,
+        "issue_ids": [
+          "TA008"
+        ],
+        "targets": {
+          "mentioned": [
+            "yunta/intent.py"
+          ],
+          "verified": [],
+          "missing": [],
+          "modules": []
+        },
+        "has_scaffold": false
+      }
+    },
+    {
+      "name": "ejemplar software",
+      "prompt": "refactoriza la función `authenticate` en auth/login.py para corregir el error KeyError sin romper los tests existentes",
+      "context": {},
+      "expect": {
+        "score": 100,
+        "quality": "exemplary",
+        "intent": "code",
+        "exploration_risk": "low",
+        "suggest_split": false,
+        "recommended_tier": "standard",
+        "steering": false,
+        "correction": false,
+        "issue_ids": [],
+        "targets": {
+          "mentioned": [
+            "auth/login.py"
+          ],
+          "verified": [],
+          "missing": [],
+          "modules": []
+        },
+        "has_scaffold": false
+      }
+    },
+    {
+      "name": "research ejemplar",
+      "prompt": "resume la cátedra de medicina de cardiología en viñetas a partir del audio de hoy",
+      "context": {},
+      "expect": {
+        "score": 100,
+        "quality": "exemplary",
+        "intent": "research",
+        "exploration_risk": "low",
+        "suggest_split": false,
+        "recommended_tier": "cheap",
+        "steering": false,
+        "correction": false,
+        "issue_ids": [],
+        "targets": {
+          "mentioned": [],
+          "verified": [],
+          "missing": [],
+          "modules": []
+        },
+        "has_scaffold": false
+      }
+    },
+    {
+      "name": "research sin formato",
+      "prompt": "resume el audio de la cátedra de medicina",
+      "context": {},
+      "expect": {
+        "score": 85,
+        "quality": "specific",
+        "intent": "research",
+        "exploration_risk": "medium",
+        "suggest_split": false,
+        "recommended_tier": "cheap",
+        "steering": false,
+        "correction": false,
+        "issue_ids": [
+          "TA009"
+        ],
+        "targets": {
+          "mentioned": [],
+          "verified": [],
+          "missing": [],
+          "modules": []
+        },
+        "has_scaffold": false
+      }
+    },
+    {
+      "name": "steering turno 2",
+      "prompt": "ahora corre los tests",
+      "context": {
+        "turn": 2
+      },
+      "expect": {
+        "score": 80,
+        "quality": "specific",
+        "intent": "code",
+        "exploration_risk": "low",
+        "suggest_split": false,
+        "recommended_tier": "cheap",
+        "steering": true,
+        "correction": false,
+        "issue_ids": [],
+        "targets": {
+          "mentioned": [],
+          "verified": [],
+          "missing": [],
+          "modules": []
+        },
+        "has_scaffold": false
+      }
+    },
+    {
+      "name": "continúa turno 3",
+      "prompt": "continúa con el siguiente paso",
+      "context": {
+        "turn": 3
+      },
+      "expect": {
+        "score": 80,
+        "quality": "specific",
+        "intent": "research",
+        "exploration_risk": "low",
+        "suggest_split": false,
+        "recommended_tier": "cheap",
+        "steering": true,
+        "correction": false,
+        "issue_ids": [],
+        "targets": {
+          "mentioned": [],
+          "verified": [],
+          "missing": [],
+          "modules": []
+        },
+        "has_scaffold": false
+      }
+    },
+    {
+      "name": "reversión turno 2 (steering + corrección)",
+      "prompt": "deshaz eso",
+      "context": {
+        "turn": 2
+      },
+      "expect": {
+        "score": 80,
+        "quality": "specific",
+        "intent": "code",
+        "exploration_risk": "low",
+        "suggest_split": false,
+        "recommended_tier": "cheap",
+        "steering": true,
+        "correction": true,
+        "issue_ids": [
+          "TA006"
+        ],
+        "targets": {
+          "mentioned": [],
+          "verified": [],
+          "missing": [],
+          "modules": []
+        },
+        "has_scaffold": false
+      }
+    },
+    {
+      "name": "reversión turno 1 es vaga",
+      "prompt": "deshaz eso",
+      "context": {},
+      "expect": {
+        "score": 5,
+        "quality": "vague",
+        "intent": "code",
+        "exploration_risk": "high",
+        "suggest_split": false,
+        "recommended_tier": "standard",
+        "steering": false,
+        "correction": false,
+        "issue_ids": [
+          "TA002",
+          "TA003"
+        ],
+        "targets": {
+          "mentioned": [],
+          "verified": [],
+          "missing": [],
+          "modules": []
+        },
+        "has_scaffold": true
+      }
+    },
+    {
+      "name": "voz fonética",
+      "prompt": "en yunta barra intent punto py refactoriza la función authenticate para corregir KeyError",
+      "context": {},
+      "expect": {
+        "score": 100,
+        "quality": "exemplary",
+        "intent": "code",
+        "exploration_risk": "low",
+        "suggest_split": false,
+        "recommended_tier": "standard",
+        "steering": false,
+        "correction": false,
+        "issue_ids": [
+          "TA008"
+        ],
+        "targets": {
+          "mentioned": [
+            "yunta/intent.py"
+          ],
+          "verified": [],
+          "missing": [],
+          "modules": []
+        },
+        "has_scaffold": false
+      }
+    },
+    {
+      "name": "voz con flag",
+      "prompt": "revisa main punto py",
+      "context": {
+        "is_voice": true
+      },
+      "expect": {
+        "score": 60,
+        "quality": "moderate",
+        "intent": "code",
+        "exploration_risk": "medium",
+        "suggest_split": false,
+        "recommended_tier": "standard",
+        "steering": false,
+        "correction": false,
+        "issue_ids": [],
+        "targets": {
+          "mentioned": [
+            "main.py"
+          ],
+          "verified": [],
+          "missing": [],
+          "modules": []
+        },
+        "has_scaffold": false
+      }
+    },
+    {
+      "name": "grounding: archivo inexistente",
+      "prompt": "edita auth/inexistente.py para validar el token",
+      "context": {
+        "known_files": [
+          "js/analyzer.js",
+          "js/app.js",
+          "server.js",
+          "api/index.js",
+          "packages/core/promptometer_core.py",
+          "README.md"
+        ]
+      },
+      "expect": {
+        "score": 40,
+        "quality": "vague",
+        "intent": "code",
+        "exploration_risk": "high",
+        "suggest_split": false,
+        "recommended_tier": "standard",
+        "steering": false,
+        "correction": false,
+        "issue_ids": [
+          "TA004",
+          "TA008"
+        ],
+        "targets": {
+          "mentioned": [
+            "auth/inexistente.py"
+          ],
+          "verified": [],
+          "missing": [
+            "auth/inexistente.py"
+          ],
+          "modules": []
+        },
+        "has_scaffold": true
+      }
+    },
+    {
+      "name": "grounding: crear archivo nuevo no alerta",
+      "prompt": "crea el archivo nuevo auth/tokens.py con una función `issue_token()`",
+      "context": {
+        "known_files": [
+          "js/analyzer.js",
+          "js/app.js",
+          "server.js",
+          "api/index.js",
+          "packages/core/promptometer_core.py",
+          "README.md"
+        ]
+      },
+      "expect": {
+        "score": 95,
+        "quality": "exemplary",
+        "intent": "code",
+        "exploration_risk": "low",
+        "suggest_split": false,
+        "recommended_tier": "standard",
+        "steering": false,
+        "correction": false,
+        "issue_ids": [
+          "TA008"
+        ],
+        "targets": {
+          "mentioned": [
+            "auth/tokens.py"
+          ],
+          "verified": [],
+          "missing": [
+            "auth/tokens.py"
+          ],
+          "modules": []
+        },
+        "has_scaffold": false
+      }
+    },
+    {
+      "name": "grounding: archivo verificado por sufijo",
+      "prompt": "corrige el KeyError en `analyze()` de analyzer.js",
+      "context": {
+        "known_files": [
+          "js/analyzer.js",
+          "js/app.js",
+          "server.js",
+          "api/index.js",
+          "packages/core/promptometer_core.py",
+          "README.md"
+        ]
+      },
+      "expect": {
+        "score": 100,
+        "quality": "exemplary",
+        "intent": "code",
+        "exploration_risk": "low",
+        "suggest_split": false,
+        "recommended_tier": "standard",
+        "steering": false,
+        "correction": false,
+        "issue_ids": [
+          "TA008"
+        ],
+        "targets": {
+          "mentioned": [
+            "analyzer.js"
+          ],
+          "verified": [
+            "analyzer.js"
+          ],
+          "missing": [],
+          "modules": []
+        },
+        "has_scaffold": false
+      }
+    },
+    {
+      "name": "grounding: módulo sin extensión",
+      "prompt": "agrega tests a analyzer",
+      "context": {
+        "known_files": [
+          "js/analyzer.js",
+          "js/app.js",
+          "server.js",
+          "api/index.js",
+          "packages/core/promptometer_core.py",
+          "README.md"
+        ]
+      },
+      "expect": {
+        "score": 75,
+        "quality": "specific",
+        "intent": "code",
+        "exploration_risk": "medium",
+        "suggest_split": false,
+        "recommended_tier": "standard",
+        "steering": false,
+        "correction": false,
+        "issue_ids": [
+          "TA008"
+        ],
+        "targets": {
+          "mentioned": [],
+          "verified": [],
+          "missing": [],
+          "modules": [
+            "analyzer"
+          ]
+        },
+        "has_scaffold": false
+      }
+    },
+    {
+      "name": "grounding: voz normalizada y verificada",
+      "prompt": "en js barra app punto js corrige la función render",
+      "context": {
+        "known_files": [
+          "js/analyzer.js",
+          "js/app.js",
+          "server.js",
+          "api/index.js",
+          "packages/core/promptometer_core.py",
+          "README.md"
+        ]
+      },
+      "expect": {
+        "score": 100,
+        "quality": "exemplary",
+        "intent": "code",
+        "exploration_risk": "low",
+        "suggest_split": false,
+        "recommended_tier": "standard",
+        "steering": false,
+        "correction": false,
+        "issue_ids": [
+          "TA007",
+          "TA008"
+        ],
+        "targets": {
+          "mentioned": [
+            "js/app.js"
+          ],
+          "verified": [
+            "js/app.js"
+          ],
+          "missing": [],
+          "modules": []
+        },
+        "has_scaffold": false
+      }
+    },
+    {
+      "name": "mega-prompt",
+      "prompt": "refactoriza js/app.js, actualiza server.js, corrige api/index.js y agrega tests en js/analyzer.js y documenta",
+      "context": {
+        "known_files": [
+          "js/analyzer.js",
+          "js/app.js",
+          "server.js",
+          "api/index.js",
+          "packages/core/promptometer_core.py",
+          "README.md"
+        ]
+      },
+      "expect": {
+        "score": 75,
+        "quality": "specific",
+        "intent": "code",
+        "exploration_risk": "medium",
+        "suggest_split": true,
+        "recommended_tier": "deep",
+        "steering": false,
+        "correction": false,
+        "issue_ids": [
+          "TA007",
+          "TA008",
+          "TA005"
+        ],
+        "targets": {
+          "mentioned": [
+            "js/app.js",
+            "server.js",
+            "api/index.js",
+            "js/analyzer.js"
+          ],
+          "verified": [
+            "js/app.js",
+            "server.js",
+            "api/index.js",
+            "js/analyzer.js"
+          ],
+          "missing": [],
+          "modules": []
+        },
+        "has_scaffold": false
+      }
+    },
+    {
+      "name": "queja sin contra-ejemplo",
+      "prompt": "no, así no, te equivocaste",
+      "context": {
+        "turn": 2
+      },
+      "expect": {
+        "score": 45,
+        "quality": "vague",
+        "intent": "research",
+        "exploration_risk": "medium",
+        "suggest_split": false,
+        "recommended_tier": "standard",
+        "steering": false,
+        "correction": true,
+        "issue_ids": [
+          "TA006"
+        ],
+        "targets": {
+          "mentioned": [],
+          "verified": [],
+          "missing": [],
+          "modules": []
+        },
+        "has_scaffold": true
+      }
+    },
+    {
+      "name": "corrección con contra-ejemplo",
+      "prompt": "no, esperaba que retorne 404 en `get_user()`",
+      "context": {
+        "turn": 2
+      },
+      "expect": {
+        "score": 80,
+        "quality": "specific",
+        "intent": "code",
+        "exploration_risk": "medium",
+        "suggest_split": false,
+        "recommended_tier": "standard",
+        "steering": false,
+        "correction": true,
+        "issue_ids": [],
+        "targets": {
+          "mentioned": [],
+          "verified": [],
+          "missing": [],
+          "modules": []
+        },
+        "has_scaffold": false
+      }
+    },
+    {
+      "name": "tier deep por causa raíz",
+      "prompt": "encuentra la causa raíz del timeout en `fetch_models()` de server.js",
+      "context": {},
+      "expect": {
+        "score": 95,
+        "quality": "exemplary",
+        "intent": "code",
+        "exploration_risk": "low",
+        "suggest_split": false,
+        "recommended_tier": "deep",
+        "steering": false,
+        "correction": false,
+        "issue_ids": [],
+        "targets": {
+          "mentioned": [
+            "server.js"
+          ],
+          "verified": [],
+          "missing": [],
+          "modules": []
+        },
+        "has_scaffold": false
+      }
+    },
+    {
+      "name": "tier cheap solo lectura",
+      "prompt": "explica qué hace la función `render()` en js/app.js",
+      "context": {},
+      "expect": {
+        "score": 95,
+        "quality": "exemplary",
+        "intent": "code",
+        "exploration_risk": "low",
+        "suggest_split": false,
+        "recommended_tier": "cheap",
+        "steering": false,
+        "correction": false,
+        "issue_ids": [],
+        "targets": {
+          "mentioned": [
+            "js/app.js"
+          ],
+          "verified": [],
+          "missing": [],
+          "modules": []
+        },
+        "has_scaffold": false
+      }
+    },
+    {
+      "name": "english",
+      "prompt": "fix the null check in `parse_user()` in src/user.py, expected 404 but got 500",
+      "context": {
+        "lang": "en"
+      },
+      "expect": {
+        "score": 100,
+        "quality": "exemplary",
+        "intent": "code",
+        "exploration_risk": "low",
+        "suggest_split": false,
+        "recommended_tier": "standard",
+        "steering": false,
+        "correction": false,
+        "issue_ids": [
+          "TA008"
+        ],
+        "targets": {
+          "mentioned": [
+            "src/user.py"
+          ],
+          "verified": [],
+          "missing": [],
+          "modules": []
+        },
+        "has_scaffold": false
+      }
+    },
+    {
+      "name": "context inválido se ignora",
+      "prompt": "agrega tests unitarios para yunta/intent.py",
+      "context": {
+        "turn": "dos",
+        "known_files": "x",
+        "lang": "fr"
+      },
+      "expect": {
+        "score": 80,
+        "quality": "specific",
+        "intent": "code",
+        "exploration_risk": "medium",
+        "suggest_split": false,
+        "recommended_tier": "standard",
+        "steering": false,
+        "correction": false,
+        "issue_ids": [
+          "TA008"
+        ],
+        "targets": {
+          "mentioned": [
+            "yunta/intent.py"
+          ],
+          "verified": [],
+          "missing": [],
+          "modules": []
+        },
+        "has_scaffold": false
+      }
+    }
+  ]
+}
